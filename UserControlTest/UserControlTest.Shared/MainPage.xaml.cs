@@ -61,25 +61,17 @@ namespace UserControlTest
 
                 Canvas.SetLeft(_popup, point.X);
                 Canvas.SetTop(_popup, point.Y);
-                /*
-#if __WASM__
-#else
-#endif
-#if __ANDROID__
-                _popup.TranslationX = (float)(point.X * 3.5);
-                _popup.TranslationY = (float)(point.Y * 3.5);
-#elif NETFX_CORE
-                _popup.Translation = new System.Numerics.Vector3((float)point.X,(float)point.Y, 0);
-#elif __WASM__
-                //WebAssemblyRuntime.InvokeJS("alert(\"It works! \");");
-                var id = _popup.GetHtmlAttribute("id");
-                _popup.SetCssStyle("position",$"relative; left:{point.X}px; top:{point.Y}px;)");
-                //WebAssemblyRuntime.InvokeJS($"alert(\"It works! id:{id}  point:{point} \");");
-                //_popup.Translation = new System.Numerics.Vector3((float)point.X, (float)point.Y, 0);
-
-#endif
-                */
             }
+        }
+
+        private void OnCanvasTapped(object sender, TappedRoutedEventArgs e)
+        {
+            _button_Click(null, null);
+        }
+
+        private void OnContentControlTapped(object sender, TappedRoutedEventArgs e)
+        {
+            _button_Click(null, null);
         }
 
         bool _collapsing;
@@ -98,6 +90,7 @@ namespace UserControlTest
             _popup.Content = ". Visibility=" + _popup.Visibility + "  x:" + location.X + " y:" + location.Y;
             if (_popup.Visibility == Visibility.Visible)
             {
+                /*
                 _collapsing = true;
                 VisualStateManager.GoToState(_popup, "Collapsed", true);
                 DispatcherTimerSetup(TimeSpan.FromSeconds(0.2), () => 
@@ -106,17 +99,29 @@ namespace UserControlTest
                     _collapsing = false;
                     return false;
                 });
+                */
+                _popup.Visibility = Visibility.Collapsed;
+
             }
             else
             {
-                _appearing = true;
+                //_appearing = true;
                 _popup.Visibility = Visibility.Visible;
+                /*
                 VisualStateManager.GoToState(_popup, "Visible", true);
                 DispatcherTimerSetup(TimeSpan.FromSeconds(0.2), () =>
                 {
                     _appearing = false;
+                   
+                    //DispatcherTimerSetup(TimeSpan.FromSeconds(2), () => 
+                    //{
+                    //    _button_Click(sender, e);
+                    //    return false;
+                    //});
+                    
                     return false;
                 });
+                */
             }
 
         }
