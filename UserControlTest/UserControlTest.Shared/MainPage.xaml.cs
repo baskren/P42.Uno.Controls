@@ -48,7 +48,12 @@ namespace UserControlTest
 
         }
 
-        ModalPopup _popup = new ModalPopup();
+        ModalPopup _popup = new ModalPopup
+        {
+            HasShadow = true,
+            BorderThickness = new Thickness(1, 2, 3, 4),
+            CornerRadius = new CornerRadius(4,8,12,16)
+        };
 
         private void OnAltBorderTapped(object sender, TappedRoutedEventArgs e)
         {
@@ -70,8 +75,6 @@ namespace UserControlTest
             _button_Click(sender, e);
         }
 
-        bool _collapsing;
-        bool _appearing;
         async void _button_Click(object sender, RoutedEventArgs e)
         {
             if (sender is FrameworkElement element)
@@ -84,8 +87,8 @@ namespace UserControlTest
                 System.Diagnostics.Debug.WriteLine(GetType() + $".BorderTapped  sender:[{sender.GetType()}] args:[{e}] frame:[{frame}]");
                 _popup.Content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
 
-                Canvas.SetLeft(_popup, frame.X);
-                Canvas.SetTop(_popup, frame.Y);
+                //Canvas.SetLeft(_popup, frame.X);
+                //Canvas.SetTop(_popup, frame.Y);
 
                 await _popup.PushAsync();
             }

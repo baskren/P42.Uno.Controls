@@ -177,7 +177,7 @@ namespace UserControlTest.Popups
             nameof(OutsideCornersRadius),
             typeof(double),
             typeof(BubbleBorder),
-            new PropertyMetadata(default(double))
+            new PropertyMetadata(5.0)
         );
         public double OutsideCornersRadius
         {
@@ -244,19 +244,24 @@ namespace UserControlTest.Popups
         #region Fields
         const string ContentPresenterName = "ContentPresenter";
         ContentPresenter _contentPresenter;
+        TextBlock textBlock = new TextBlock();
         #endregion
 
+
+        #region Construction / Loading
         public BubbleBorder()
         {
             this.InitializeComponent();
         }
 
-
-        protected override void OnApplyTemplate() 
+        protected override void OnApplyTemplate()
         {
             _contentPresenter = GetTemplateChild(ContentPresenterName) as ContentPresenter;
         }
+        #endregion
 
+
+        #region LayoutUpdate
         void UpdateContentPresenterMargin()
         {
             var result = new Thickness(Padding.Left, Padding.Top, Padding.Right, Padding.Bottom);
@@ -285,8 +290,6 @@ namespace UserControlTest.Popups
             PathGeometry = PathConverter.StringToPathGeometryConverter.Current.Convert(data);
         }
 
-        TextBlock textBlock = new TextBlock();
-
         protected override Size MeasureOverride(Size availableSize)
         {
             base.MeasureOverride(availableSize);
@@ -313,25 +316,27 @@ namespace UserControlTest.Popups
             }
             result.Width += PointerDirection.IsHorizontal() ? PointerLength : 0;
             result.Height += PointerDirection.IsVertical() ? PointerLength : 0;
+
+            /*
+            if (BorderThickness is Thickness borderThickness && borderThickness.Left > 0 && BorderBrush is SolidColorBrush brush && brush.Color.A > 0)
+            {
+                result.Width += 2 * borderThickness.Left;
+                result.Height += 2 * borderThickness.Left;
+            }
+
+            if (HasShadow)
+            {
+                result.Width += 4.0;
+                result.Height += 4.0;
+            }
+            */
+
             RegeneratePath(result);
             return result;
         }
 
-        private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine(GetType() + ".");
-
-        }
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            return base.ArrangeOverride(finalSize);
-        }
-
-
-
         SKPath GeneratePath(Size measuredSize = default)
         {
-            System.Diagnostics.Debug.WriteLine(GetType() + ".GeneratePath   =========== measuredSize:" + measuredSize);
             var width = (float)Math.Min(DesiredSize.Width, MinWidth);
             var height = (float)Math.Min(DesiredSize.Height, MinHeight);
 
@@ -343,10 +348,8 @@ namespace UserControlTest.Popups
 
             if (width < 1 || height < 1)
                 return new SKPath();
-            System.Diagnostics.Debug.WriteLine(GetType() + ".GeneratePath      width:" + width + "   height:" + height);
 
-
-            var length = (float)PointerLength;
+            var length = PointerDirection == PointerDirection.None ? 0 : (float)PointerLength;
             width -= PointerDirection.IsHorizontal() ? length : 0;
             height -= PointerDirection.IsVertical() ? length : 0;
 
@@ -371,12 +374,8 @@ namespace UserControlTest.Popups
                 }
             }
 
-            //System.Diagnostics.Debug.WriteLineIf (element.PointerDirection == PointerDirection.Left, "L-Fr/2=["+(length-filetRadius/2.0)+"]  Tr/2=[" + (tipRadius/2.0) + "] length=["+length+"]");
             if (length - filetRadius / 2.0 < tipRadius / 2.0)
                 tipRadius = 2 * (length - filetRadius / 2.0f);
-            //System.Diagnostics.Debug.WriteLineIf (element.PointerDirection == PointerDirection.Left, "L-Fr/2=["+(length-filetRadius/2.0)+"]  Tr=/2[" + (tipRadius/2.0) + "] length=["+length+"]");
-
-
 
             var result = new SKPath();
             var position = (float)PointerAxialPosition;
@@ -392,18 +391,6 @@ namespace UserControlTest.Popups
 
             const float sqrt3 = (float)1.732050807568877;
             const float sqrt3d2 = (float)0.86602540378444;
-            //const float rad60 = (float)(Math.PI / 3.0);
-            //const float rad90 = (float)(Math.PI / 2.0);
-            //const float rad30 = (float)(Math.PI / 6.0);
-
-            /*
-             var pointerAngle = bubble.PointerAngle * Math.PI / 180;
-             var tipRadiusWidth = 2 * tipRadius * Math.Sin((Math.PI - pointerAngle) / 2);
-             var tipRadiusHeight = tipRadius * (1 - Math.Cos((Math.PI - pointerAngle) / 2) );
-             var tipC1 = tipRadiusHeight / Math.Tan(pointerAngle / 2);
-             var tipC0 = tipRadiusWidth / 2 - tipC1;
-             var tipProjection = tipC0 * Math.Tan(pointerAngle / 2);
-             */
 
             var tipCornerHalfWidth = tipRadius * sqrt3d2;
             var pointerToCornerIntercept = (float)Math.Sqrt((2 * radius * Math.Sin(Math.PI / 12.0)) * (2 * radius * Math.Sin(Math.PI / 12.0)) - (radius * radius / 4.0));
@@ -417,7 +404,16 @@ namespace UserControlTest.Popups
 
             var dir = 1;
 
-            if (PointerDirection.IsHorizontal())
+            if (PointerDirection == PointerDirection.None)
+            {
+                result.MoveTo(width - radius, 0);
+                result.ArcTo(width, 0, width, height - radius, radius);
+                result.ArcTo(width, height, radius, height, radius);
+                result.ArcTo(0, height, 0, radius, radius);
+                result.ArcTo(0, 0, width - radius, 0, radius);
+                result.Close();
+            }
+            else if (PointerDirection.IsHorizontal())
             {
                 var start = left;
                 var end = right;
@@ -444,7 +440,6 @@ namespace UserControlTest.Popups
                 {
                     result.LineTo(start + dir * (length + radius), bottom);
                     var endRatio = (float)((height - tipY) / (pointerAndFiletHalfWidth + radius));
-                    //System.Diagnostics.Debug.WriteLineIf (element.PointerDirection == PointerDirection.Left, "A endRatio=[" + endRatio + "]");
                     result.CubicTo(
                         start + dir * (length + radius - endRatio * 4 * radius / 3.0f), bottom,
                         start + dir * (length - filetRadius / 2.0f + filetRadius * sqrt3d2), top + tipY + pointerSansFiletHalfWidth + filetRadius / 2.0f,
@@ -452,50 +447,17 @@ namespace UserControlTest.Popups
                 }
                 else
                 {
-                    //result.ArcWithCenterTo(start + dir * (length + radius), bottom - radius, radius, 90, dir * 90);
                     result.ArcTo(baseX, bottom, baseX, top, radius);
-
-                    //result.LineTo(
-                    //    start + dir * length,
-                    //    top + tip + pointerAndFiletHalfWidth
-                    //);
-                    //result.AddRelativeArc(
-                    //    start + dir * (length - filetRadius),
-                    //    top + tip + pointerAndFiletHalfWidth,
-                    //    filetRadius, rad90 - dir * rad90, dir * -rad60);
                     result.ArcWithCenterTo(start + dir * (length - filetRadius), top + tipY + pointerAndFiletHalfWidth, filetRadius, 90 - 90 * dir, dir * -60);
-                    //result.ArcTo(baseX, top + tipY + pointerAndFiletHalfWidth, start, top + tipY, filetRadius);
                 }
 
                 //tip
-
-                //result.AddLineToPoint(
-                //    (float)(start + dir * tipRadius / 2.0),
-                //    top + tip + tipCornerHalfWidth
-                //);
-                //result.AddRelativeArc(
-                //    start + dir * tipRadius,
-                //    top + tip,
-                //    tipRadius,
-                //    rad90 + dir * rad30,
-                //    dir * 2 * rad60);
                 result.ArcWithCenterTo(start + dir * tipRadius, top + tipY, tipRadius, 90 + dir * 30, dir * 2 * 60);
-
 
                 // top half
                 if (tipY <= pointerAndFiletHalfWidth + radius)
                 {
                     var startRatio = tipY / (pointerAndFiletHalfWidth + radius);
-                    //result.AddLineToPoint(
-                    //    (float)(start + dir * (length - filetRadius / 2.0)),
-                    //    top + tip - pointerSansFiletHalfWidth
-                    //);
-                    //System.Diagnostics.Debug.WriteLineIf (element.PointerDirection == PointerDirection.Left, "C startRatio=[" + startRatio + "]");
-                    //result.AddCurveToPoint(
-                    //    new CGPoint(start + dir * (length - filetRadius / 2.0 + filetRadius * sqrt3d2), top + tip - pointerSansFiletHalfWidth - filetRadius / 2.0),
-                    //    new CGPoint(start + dir * (length + radius - startRatio * 4 * radius / 3.0), top),
-                    //    new CGPoint(start + dir * (length + radius), top)
-                    //);
                     result.CubicTo(
                         start + dir * (length - filetRadius / 2.0f + filetRadius * sqrt3d2), top + tipY - pointerSansFiletHalfWidth - filetRadius / 2.0f,
                         start + dir * (length + radius - startRatio * 4 * radius / 3.0f), top,
@@ -503,31 +465,10 @@ namespace UserControlTest.Popups
                 }
                 else
                 {
-                    //result.AddLineToPoint(
-                    //    (float)(start + dir * (length - filetRadius / 2.0)),
-                    //    top + tip - pointerSansFiletHalfWidth
-                    //);
-                    //System.Diagnostics.Debug.WriteLineIf (element.PointerDirection == PointerDirection.Left, "D");
-                    //result.AddRelativeArc(
-                    //    start + dir * (length - filetRadius),
-                    //    top + tip - pointerAndFiletHalfWidth,
-                    //    filetRadius,
-                    //    rad90 - dir * rad30,
-                    //    dir * -rad60);
                     result.ArcWithCenterTo(start + dir * (length - filetRadius), top + tipY - pointerAndFiletHalfWidth, filetRadius, 90 - dir * 30, dir * -60);
-
-                    //result.AddLineToPoint(
-                    //    start + dir * length,
-                    //    top + radius
-                    //);
-                    //result.AddRelativeArc(
-                    //    start + dir * (length + radius),
-                    //    top + radius,
-                    //    radius,
-                    //    rad90 + dir * rad90,
-                    //    dir * rad90);
                     result.ArcWithCenterTo(start + dir * (length + radius), top + radius, radius, 90 + dir * 90, dir * 90);
                 }
+
                 if (dir > 0)
                 {
                     var reverse = new SKPath();
@@ -557,12 +498,6 @@ namespace UserControlTest.Popups
                 if (tip > width - pointerAndFiletHalfWidth - radius)
                 {
                     var endRatio = (float)((width - tip) / (pointerAndFiletHalfWidth + radius));
-                    //result.AddLineToPoint(right, start + dir * (radius + length));
-                    //result.AddCurveToPoint(
-                    //    new CGPoint(right, start + dir * (length + radius - endRatio * 4 * radius / 3.0)),
-                    //    new CGPoint(left + tip + pointerSansFiletHalfWidth + filetRadius / 2.0, start + dir * (length - filetRadius / 2.0 + filetRadius * sqrt3d2)),
-                    //    new CGPoint(left + tip + pointerSansFiletHalfWidth, start + dir * (length - filetRadius / 2.0))
-                    //);
                     result.CubicTo(
                         right, start + dir * (length + radius - endRatio * 4 * radius / 3.0f),
                         left + tip + pointerSansFiletHalfWidth + filetRadius / 2.0f, start + dir * (length - filetRadius / 2.0f + filetRadius * sqrt3d2),
@@ -571,24 +506,11 @@ namespace UserControlTest.Popups
                 }
                 else
                 {
-                    //result.AddLineToPoint(right, start + dir * (radius + length));
-                    //result.AddRelativeArc(
-                    //    right - radius,
-                    //    start + dir * (length + radius),
-                    //    radius, 0, dir * -rad90);
                     result.ArcWithCenterTo(
                         right - radius,
                         start + dir * (length + radius),
                         radius, 0, dir * -90
                         );
-                    //result.AddLineToPoint(
-                    //    left + tip + pointerAndFiletHalfWidth,
-                    //    start + dir * length
-                    //);
-                    //result.AddRelativeArc(
-                    //    left + tip + pointerAndFiletHalfWidth,
-                    //    start + dir * (length - filetRadius),
-                    //    filetRadius, dir * rad90, dir * rad60);
                     result.ArcWithCenterTo(
                         left + tip + pointerAndFiletHalfWidth,
                         start + dir * (length - filetRadius),
@@ -597,19 +519,6 @@ namespace UserControlTest.Popups
                 }
 
                 //tip
-                /*
-                result.AddLineToPoint(
-                    left + tip + tipCornerHalfWidth,
-                    (float)(start + dir * tipRadius / 2.0)
-                );
-                result.AddRelativeArc(
-                    left + tip,
-                    start + dir * tipRadius,
-                    tipRadius,
-                    dir * -rad30,
-                    dir * -2 * rad60
-                    );
-                    */
                 result.ArcWithCenterTo(
                     left + tip,
                     start + dir * tipRadius,
@@ -623,26 +532,6 @@ namespace UserControlTest.Popups
                 if (tip < pointerAndFiletHalfWidth + radius)
                 {
                     var startRatio = tip / (pointerAndFiletHalfWidth + radius);
-                    /*
-                    result.AddLineToPoint(
-                        left + tip - pointerSansFiletHalfWidth,
-                        (float)(start + dir * (length - filetRadius / 2.0))
-                    );
-                    result.AddCurveToPoint(
-                        new CGPoint(
-                            left + tip - pointerSansFiletHalfWidth - filetRadius / 2.0,
-                            start + dir * (length - filetRadius / 2.0 + filetRadius * sqrt3d2)
-                        ),
-                        new CGPoint(
-                            left,
-                            start + dir * (length + radius - startRatio * 4 * radius / 3.0)
-                        ),
-                        new CGPoint(
-                            left,
-                            start + dir * (length + radius)
-                        )
-                    );
-                    */
                     result.CubicTo(
                             left + tip - pointerSansFiletHalfWidth - filetRadius / 2.0f,
                             start + dir * (length - filetRadius / 2.0f + filetRadius * sqrt3d2),
@@ -654,39 +543,13 @@ namespace UserControlTest.Popups
                 }
                 else
                 {
-                    /*
-                    result.AddLineToPoint(
-                        left + tip - pointerSansFiletHalfWidth,
-                        (float)(start + dir * (length - filetRadius / 2.0))
-                    );
-                    result.AddRelativeArc(
-                        left + tip - pointerAndFiletHalfWidth,
-                        start + dir * (length - filetRadius),
-                        filetRadius,
-                        dir * rad30,
-                        dir * rad60
-                        );
-                        */
-                    result.ArcWithCenterTo(
+                   result.ArcWithCenterTo(
                         left + tip - pointerAndFiletHalfWidth,
                         start + dir * (length - filetRadius),
                         filetRadius,
                         dir * 30,
                         dir * 60
                         );
-                    /*
-                    result.AddLineToPoint(
-                        left + radius,
-                        start + dir * length
-                    );
-                    result.AddRelativeArc(
-                        left + radius,
-                        start + dir * (length + radius),
-                        radius,
-                        dir * -rad90,
-                        dir * -rad90
-                        );
-                        */
                     result.ArcWithCenterTo(
                         left + radius,
                         start + dir * (length + radius),
@@ -705,7 +568,7 @@ namespace UserControlTest.Popups
             return result;
         }
 
-
+        #endregion
     }
 
 }

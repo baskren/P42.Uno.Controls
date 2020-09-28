@@ -324,6 +324,22 @@ namespace UserControlTest.Popups
         }
         #endregion BorderVerticalAlignment Property
 
+        #region OutsideCornersRadius Property
+        public static readonly DependencyProperty OutsideCornersRadiusProperty = DependencyProperty.Register(
+            nameof(OutsideCornersRadius),
+            typeof(double),
+            typeof(PopupBase),
+            new PropertyMetadata(default(double))
+        );
+        public double OutsideCornersRadius
+        {
+            get => (double)GetValue(OutsideCornersRadiusProperty);
+            set => SetValue(OutsideCornersRadiusProperty, value);
+        }
+        #endregion OutsideCornersRadius Property
+
+
+
         #endregion
 
 

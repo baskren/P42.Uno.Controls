@@ -12,7 +12,6 @@
     Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
     BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
     BorderThickness="2"
-    CornerRadius="5"
     FontSize="16"
     Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"
     mc:Ignorable="d">

@@ -58,7 +58,7 @@ namespace PathConverter
             if (null == geometry)
                 throw new ArgumentException("Path Geometry cannot be null!");
 
-            return parseBack(geometry);
+            return null;
         }
         #endregion
 
@@ -619,6 +619,7 @@ namespace PathConverter
             return numericSeparator;
         }
 
+        /*
         private string parseBack(PathGeometry geometry)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -684,6 +685,7 @@ namespace PathConverter
 
             return sb.ToString();
         }
+        */
         #endregion
 
         #region IValueConverter Members
