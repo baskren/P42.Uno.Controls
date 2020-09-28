@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:UserControlTest"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:popups="using:UserControlTest.Popups"
     Padding="10"
     mc:Ignorable="d">
 
@@ -69,6 +70,19 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                <popups:BubbleBorder
+                    Margin="10"
+                    Padding="20"
+                    HasShadow="true"
+                    Background="Orange"
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    OutsideCornersRadius="5"
+                    PointerDirection="Right">
+                    <Border Background="#3F88">
+                        <TextBlock Text="TEST TEST TEST" />
+                    </Border>
+                </popups:BubbleBorder>
             </Grid.Children>
         </Grid>
     </Page.Content>

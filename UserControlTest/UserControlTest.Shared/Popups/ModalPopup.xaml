@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:UserControlTest.Popups"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    MinWidth="120"
     MinHeight="55"
     Margin="24,12"
     Padding="24,12"
@@ -17,7 +18,6 @@
     FontSize="16"
     Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"
     IsHitTestVisible="False"
-    MinWidth="120"
     PageOverlay="#6888"
     mc:Ignorable="d">
     <local:PopupBase.Template>

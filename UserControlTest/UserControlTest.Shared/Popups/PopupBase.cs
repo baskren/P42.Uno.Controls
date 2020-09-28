@@ -31,7 +31,6 @@ namespace UserControlTest.Popups
         }
         #endregion IsAnimationEnabled Property
 
-
         #region AppearingStoryboard Property
         public static readonly DependencyProperty AppearingStoryboardProperty = DependencyProperty.Register(
             nameof(AppearingStoryboard),
@@ -49,7 +48,6 @@ namespace UserControlTest.Popups
             set => SetValue(AppearingStoryboardProperty, value);
         }
         #endregion AppearingStoryboard Property
-
 
         #region DisappearingStoryboard Property
         public static readonly DependencyProperty DisappearingStoryboardProperty = DependencyProperty.Register(
@@ -69,7 +67,6 @@ namespace UserControlTest.Popups
         }
         #endregion DisappearingStoryboard Property
 
-
         #region PageOverlay Property
         public static readonly DependencyProperty PageOverlayProperty = DependencyProperty.Register(
             nameof(PageOverlay),
@@ -84,7 +81,6 @@ namespace UserControlTest.Popups
             set => SetValue(PageOverlayProperty, value);
         }
         #endregion PageOverlay Property
-
 
         #region CancelOnPageOverlayTouch Property
         public static readonly DependencyProperty CancelOnPageOverlayTapProperty = DependencyProperty.Register(
@@ -101,7 +97,6 @@ namespace UserControlTest.Popups
         }
         #endregion CancelOnPageOverlayTouch Property
 
-
         #region CancelOnBackButtonTap Property
         public static readonly DependencyProperty CancelOnBackButtonTapProperty = DependencyProperty.Register(
             nameof(CancelOnBackButtonTap),
@@ -116,7 +111,6 @@ namespace UserControlTest.Popups
             set => SetValue(CancelOnBackButtonTapProperty, value);
         }
         #endregion CancelOnBackButtonTap Property
-
 
         #region PopAfter Property
         public static readonly DependencyProperty PopAfterProperty = DependencyProperty.Register(
@@ -133,7 +127,6 @@ namespace UserControlTest.Popups
         }
         #endregion PopAfter Property
 
-
         #region Parameter Property
         public static readonly DependencyProperty ParameterProperty = DependencyProperty.Register(
             nameof(Parameter),
@@ -148,7 +141,6 @@ namespace UserControlTest.Popups
             set => SetValue(ParameterProperty, value);
         }
         #endregion Parameter Property
-
 
         #region HasShadow Property
         public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
@@ -165,7 +157,6 @@ namespace UserControlTest.Popups
         }
         #endregion HasShadow Property
 
-
         #region Visibility Property
         public static new readonly DependencyProperty VisibilityProperty = DependencyProperty.Register(
             nameof(Visibility),
@@ -180,7 +171,6 @@ namespace UserControlTest.Popups
             private set => SetValue(VisibilityProperty, value);
         }
         #endregion Visibility Property
-
 
         #region Origin Property
         internal static readonly DependencyProperty OriginProperty = DependencyProperty.Register(
@@ -199,7 +189,6 @@ namespace UserControlTest.Popups
             set => SetValue(OriginProperty, value);
         }
         #endregion Origin Property
-
 
         #region Margin Property
         public static new readonly DependencyProperty MarginProperty = DependencyProperty.Register(
@@ -233,9 +222,6 @@ namespace UserControlTest.Popups
         }
         #endregion BorderMargin Property
 
-
-
-
         #region Padding Property
         public static new readonly DependencyProperty PaddingProperty = DependencyProperty.Register(
             nameof(Padding),
@@ -267,7 +253,6 @@ namespace UserControlTest.Popups
             set => SetValue(ContentPresenterMarginProperty, value);
         }
         #endregion CotentPresenterMargin Property
-
 
         #region HorizontalAlignment Property
         public static new readonly DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
@@ -304,8 +289,6 @@ namespace UserControlTest.Popups
         }
         #endregion BorderHorizontalAlignment Property
 
-
-
         #region VerticalAlignment Property
         public static new readonly DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register(
             nameof(VerticalAlignment),
@@ -340,9 +323,6 @@ namespace UserControlTest.Popups
             set => SetValue(BorderVerticalAlignmentProperty, value);
         }
         #endregion BorderVerticalAlignment Property
-
-
-
 
         #endregion
 

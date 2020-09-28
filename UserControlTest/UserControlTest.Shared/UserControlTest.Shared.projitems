@@ -6,7 +6,7 @@
     <SharedGUID>6279c845-92f8-4333-ab99-3d213163593c</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>UserControlTest.Shared</Import_RootNamespace>
+    <Import_RootNamespace>UserControlTest</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml">
@@ -23,19 +23,30 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)MainThreadExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Popups\IPopupAnimation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Popups\MarkupExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\BubbleBorder.xaml.cs">
+      <DependentUpon>BubbleBorder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\Extensions\SKPathExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\Enums\PointerDirection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\Extensions\PointerDirectionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\Interfaces\IPopupAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\Extensions\MarkupExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Popups\ModalPopup.xaml.cs">
       <DependentUpon>ModalPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Popups\PoppedTaskCompletionSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Popups\PopupBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Popups\PopupPoppedCause.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\Enums\PopupPoppedCause.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Popups\PopupPoppedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\StringToPathGeometryConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UIElementExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Popups\BubbleBorder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -49,5 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Popups\Enums\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Popups\Interfaces\" />
   </ItemGroup>
 </Project>
