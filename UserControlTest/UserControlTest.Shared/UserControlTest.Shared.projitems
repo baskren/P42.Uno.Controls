@@ -18,42 +18,28 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Device.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)MyUserControl1.xaml.cs">
-      <DependentUpon>MyUserControl1.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)MainThreadExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\IPopupAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\MarkupExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\ModalPopup.xaml.cs">
+      <DependentUpon>ModalPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Popup\NotificationOptions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Popup\Popup.AttachedProperties.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Popup\Popup.Constants.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Popup\Popup.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Popup\Popup.Events.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Popup\Popup.Properties.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Popup\PopupClosedEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Popup\PopupClosingEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Popup\PopupDismissKind.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Popup\PopupOpeningEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Popup\StackMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\PoppedTaskCompletionSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\PopupBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\PopupPoppedCause.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\PopupPoppedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UIElementExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)MyUserControl1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Popup\Popup.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Popup\Styles\MSEdgeNotificationStyle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Popup\Styles\VSCodeNotificationStyle.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Popups\ModalPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

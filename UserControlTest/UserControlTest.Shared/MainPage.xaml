@@ -32,14 +32,13 @@
     -->
 
     <Page.Content>
-        <Grid Background="Yellow">
+        <Grid x:Name="_grid" Background="Yellow">
             <Grid.RowDefinitions>
                 <RowDefinition Height="150" />
                 <RowDefinition Height="50" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.Children>
-                <local:MyUserControl1 />
                 <Button
                     x:Name="_button"
                     Grid.Row="1"
@@ -70,70 +69,6 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <ContentControl
-                    x:Name="_popup"
-                    Margin="10"
-                    Padding="20"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Background="AliceBlue"
-                    BorderBrush="Red"
-                    BorderThickness="1"
-                    CornerRadius="3"
-                    IsHitTestVisible="False"
-                    Visibility="Collapsed">
-                    <ContentControl.Content>
-                        <Border Background="Pink">
-                            <TextBlock Text="PIZZA IS GREAT" />
-                        </Border>
-                    </ContentControl.Content>
-                    <ContentControl.Template>
-                        <ControlTemplate TargetType="ContentControl">
-                            <Canvas
-                                Margin="0"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch">
-                                <Canvas.Children>
-                                    <Grid
-                                        x:Name="RootGrid"
-                                        Canvas.Left="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Canvas.Left)}"
-                                        Canvas.Top="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Canvas.Top)}"
-                                        MaxWidth="1000"
-                                        Margin="0"
-                                        Padding="{TemplateBinding Padding}"
-                                        Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        CornerRadius="{TemplateBinding CornerRadius}"
-                                        Opacity="{TemplateBinding Opacity}"
-                                        RenderTransformOrigin="{TemplateBinding RenderTransformOrigin}">
-                                        <Grid.RenderTransform>
-                                            <CompositeTransform />
-                                        </Grid.RenderTransform>
-
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <ContentPresenter
-                                            x:Name="ContentPresenter"
-                                            Margin="0"
-                                            Padding="0"
-                                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                            HorizontalContentAlignment="Stretch"
-                                            VerticalContentAlignment="Center"
-                                            Background="BurlyWood"
-                                            Content="{TemplateBinding Content}"
-                                            TextWrapping="WrapWholeWords" />
-                                    </Grid>
-                                </Canvas.Children>
-                            </Canvas>
-                        </ControlTemplate>
-                    </ContentControl.Template>
-
-                </ContentControl>
             </Grid.Children>
         </Grid>
     </Page.Content>

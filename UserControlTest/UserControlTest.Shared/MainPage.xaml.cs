@@ -13,6 +13,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using UserControlTest.Popups;
+using Windows.UI;
 
 #if NETFX_CORE
 #else
@@ -46,115 +48,49 @@ namespace UserControlTest
 
         }
 
+        ModalPopup _popup = new ModalPopup();
+
         private void OnAltBorderTapped(object sender, TappedRoutedEventArgs e)
         {
             BorderTapped(sender, e);
         }
 
-        private void BorderTapped(object sender, TappedRoutedEventArgs e)
+        async void BorderTapped(object sender, TappedRoutedEventArgs e)
         {
-            if (sender is UIElement element)
-            {
-                var point = ScreenCoorder(element);
-                System.Diagnostics.Debug.WriteLine(GetType() + $".BorderTapped  sender:[{sender.GetType()}] args:[{e}] point:[{point}]");
-                _popup.Content = $"point:[{point}]";
-
-                Canvas.SetLeft(_popup, point.X);
-                Canvas.SetTop(_popup, point.Y);
-            }
+            _button_Click(sender, e);
         }
 
         private void OnCanvasTapped(object sender, TappedRoutedEventArgs e)
         {
-            _button_Click(null, null);
+            _button_Click(sender, e);
         }
 
         private void OnContentControlTapped(object sender, TappedRoutedEventArgs e)
         {
-            _button_Click(null, null);
+            _button_Click(sender, e);
         }
 
         bool _collapsing;
         bool _appearing;
-        private void _button_Click(object sender, RoutedEventArgs e)
+        async void _button_Click(object sender, RoutedEventArgs e)
         {
-            if (_popup.Parent is Grid grid)
-                Grid.SetRowSpan(_popup, grid.RowDefinitions.Count);
-
-            if (_collapsing || _appearing)
-                return;
-
-            //var location = _popup.ActualOffset;
-            var location = ScreenCoorder(_popup);
-            System.Diagnostics.Debug.WriteLine(GetType() + ". Visibility=" + _popup.Visibility + "  x:" + location.X + " y:" + location.Y);
-            _popup.Content = ". Visibility=" + _popup.Visibility + "  x:" + location.X + " y:" + location.Y;
-            if (_popup.Visibility == Visibility.Visible)
+            if (sender is FrameworkElement element)
             {
-                /*
-                _collapsing = true;
-                VisualStateManager.GoToState(_popup, "Collapsed", true);
-                DispatcherTimerSetup(TimeSpan.FromSeconds(0.2), () => 
-                {
-                    _popup.Visibility = Visibility.Collapsed;
-                    _collapsing = false;
-                    return false;
-                });
-                */
-                _popup.Visibility = Visibility.Collapsed;
+                if (!_grid.Children.Contains(_popup))
+                    _grid.Children.Add(_popup);
 
-            }
-            else
-            {
-                //_appearing = true;
-                _popup.Visibility = Visibility.Visible;
-                /*
-                VisualStateManager.GoToState(_popup, "Visible", true);
-                DispatcherTimerSetup(TimeSpan.FromSeconds(0.2), () =>
-                {
-                    _appearing = false;
-                   
-                    //DispatcherTimerSetup(TimeSpan.FromSeconds(2), () => 
-                    //{
-                    //    _button_Click(sender, e);
-                    //    return false;
-                    //});
-                    
-                    return false;
-                });
-                */
-            }
+                //var point = ScreenCoorder(element);
+                var frame = element.GetFrame();
+                System.Diagnostics.Debug.WriteLine(GetType() + $".BorderTapped  sender:[{sender.GetType()}] args:[{e}] frame:[{frame}]");
+                _popup.Content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
 
-        }
+                Canvas.SetLeft(_popup, frame.X);
+                Canvas.SetTop(_popup, frame.Y);
 
-        DispatcherTimer dispatcherTimer;
-
-        Func<bool> Func;
-        public void DispatcherTimerSetup(TimeSpan span, Func<bool> func)
-        {
-            Func = func;
-            dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += DispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-            //IsEnabled defaults to false
-            dispatcherTimer.Start();
-            //IsEnabled should now be true after calling start
-        }
-
-        void DispatcherTimer_Tick(object sender, object e)
-        {
-            DateTimeOffset time = DateTimeOffset.Now;
-            //Time since last tick should be very very close to Interval
-            if (!Func.Invoke())
-            {
-                dispatcherTimer.Stop();
+                await _popup.PushAsync();
             }
         }
 
-        Point ScreenCoorder(UIElement element)
-        {
-            var ttv = element.TransformToVisual(Windows.UI.Xaml.Window.Current.Content);
-            var screenCoords = ttv.TransformPoint(new Point(0, 0));
-            return screenCoords;
-        }
+
     }
 }
