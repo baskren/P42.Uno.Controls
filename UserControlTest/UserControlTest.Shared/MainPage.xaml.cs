@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using UserControlTest.Popups;
 using Windows.UI;
+using System.Threading.Tasks;
 
 #if NETFX_CORE
 #else
@@ -48,12 +49,26 @@ namespace UserControlTest
 
         }
 
-        ModalPopup _popup = new ModalPopup
+        ModalPopup _modalPopup = new ModalPopup
         {
             HasShadow = true,
-            BorderThickness = new Thickness(1, 2, 3, 4),
-            CornerRadius = new CornerRadius(4,8,12,16)
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(4),
+            Background = new SolidColorBrush(Colors.White),
+            BorderBrush = new SolidColorBrush(Colors.Blue)
         };
+
+        BubblePopup _bubblePopup = new BubblePopup
+        {
+            HasShadow = true,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(4),
+            Margin= new Thickness(10),
+            Padding = new Thickness(20),
+            Background = new SolidColorBrush(Colors.White),
+            BorderBrush = new SolidColorBrush(Colors.Blue)
+        };
+
 
         private void OnAltBorderTapped(object sender, TappedRoutedEventArgs e)
         {
@@ -79,18 +94,45 @@ namespace UserControlTest
         {
             if (sender is FrameworkElement element)
             {
-                if (!_grid.Children.Contains(_popup))
-                    _grid.Children.Add(_popup);
+                /*
+                if (!_grid.Children.Contains(_modalPopup))
+                    _grid.Children.Add(_modalPopup);
+                if (!_grid.Children.Contains(_bubblePopup))
+                    _grid.Children.Add(_bubblePopup);
 
                 //var point = ScreenCoorder(element);
                 var frame = element.GetFrame();
                 System.Diagnostics.Debug.WriteLine(GetType() + $".BorderTapped  sender:[{sender.GetType()}] args:[{e}] frame:[{frame}]");
-                _popup.Content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
+                var content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
+                _bubblePopup.Content = content;
+                _modalPopup.Content = content;
 
                 //Canvas.SetLeft(_popup, frame.X);
                 //Canvas.SetTop(_popup, frame.Y);
 
-                await _popup.PushAsync();
+                if (_modalPopup.Visibility == Visibility.Visible)
+                {
+                    await _modalPopup.PopAsync();
+                    await _bubblePopup.PushAsync();
+                }
+                else
+                {
+                    if (_bubblePopup.Visibility == Visibility.Visible)
+                    await _bubblePopup.PopAsync();
+                    await _modalPopup.PushAsync();
+                }
+                */
+
+                UwpPopup _uwpPopup = new UwpPopup
+                {
+                    Text = "Pizza!"
+                };
+
+                _uwpPopup.OpenPopup();
+                await Task.Delay(5);
+                _uwpPopup.ClosePopup();
+                await Task.Delay(5);
+                _uwpPopup.OpenPopup();
             }
         }
 

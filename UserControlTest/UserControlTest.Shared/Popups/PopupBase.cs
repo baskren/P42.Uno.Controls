@@ -436,8 +436,9 @@ namespace UserControlTest.Popups
 
             _poppedTaskCompleteSource = _poppedTaskCompleteSource ?? new PoppedTaskCompletionSource(cause, trigger, callerName);
 
+            var tcs = _poppedTaskCompleteSource;
             await PopAsyncBegin();
-            return await _poppedTaskCompleteSource.Task;
+            return await tcs.Task;
         }
 
         async Task PopAsyncBegin()
@@ -467,6 +468,7 @@ namespace UserControlTest.Popups
                 : new PopupPoppedEventArgs(_poppedTaskCompleteSource.Cause, _poppedTaskCompleteSource.Trigger);
 
             _poppedTaskCompleteSource.SetResult(result);
+            _poppedTaskCompleteSource = null;
         }
 
         #endregion

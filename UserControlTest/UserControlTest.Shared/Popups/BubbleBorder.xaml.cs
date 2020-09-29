@@ -14,6 +14,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using SkiaSharp;
 using SkiaSharp.Views.UWP;
+using Windows.Graphics.Display;
+using Windows.UI;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -262,6 +264,55 @@ namespace UserControlTest.Popups
 
 
         #region LayoutUpdate
+        private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
+        {
+            // the canvas and properties
+            var canvas = e.Surface.Canvas;
+
+            // get the screen density for scaling
+            var display = DisplayInformation.GetForCurrentView();
+            var scale = display.LogicalDpi / 96.0f;
+            //var scaledSize = new SKSize(e.Info.Width / scale, e.Info.Height / scale);
+
+            // handle the device screen density
+            canvas.Scale(scale);
+
+            // make sure the canvas is blank
+            canvas.Clear(SKColors.Yellow);
+
+            SKColor fillColor =  SKColors.Transparent;
+            if (Background is SolidColorBrush backgroundBrush && backgroundBrush.Color is Color winBackgroundColor)
+                fillColor = new SKColor(winBackgroundColor.R, winBackgroundColor.G, winBackgroundColor.B, winBackgroundColor.A); // backgroundBrush.Color.ToSKColor();
+
+            SKColor strokeColor = SKColors.Transparent;
+            if (BorderBrush is SolidColorBrush borderBrush && borderBrush.Color is Color winStrokeColor)
+                strokeColor = new SKColor(winStrokeColor.R, winStrokeColor.G, winStrokeColor.B, winStrokeColor.A); //borderBrush.Color.ToSKColor();
+
+            //var scaledSize = new Size(DesiredSize.Width, DesiredSize.Height);
+            var borderSize = ContentPresenterSize();             
+            var path = GeneratePath(ContentPresenterSize());
+
+            // draw some text
+            var paint = new SKPaint
+            {
+                Color = fillColor,
+                IsAntialias = true,
+                Style = SKPaintStyle.Fill,
+            };
+            if (fillColor.Alpha > 0)
+                canvas.DrawPath(path, paint);
+
+            if (strokeColor.Alpha > 0 && BorderThickness.Left > 0)
+            {
+                paint.Color = strokeColor;
+                paint.Style = SKPaintStyle.Stroke;
+                paint.StrokeWidth = (float)(BorderThickness.Left);
+                canvas.DrawPath(path, paint);
+            }
+
+
+        }
+
         void UpdateContentPresenterMargin()
         {
             var result = new Thickness(Padding.Left, Padding.Top, Padding.Right, Padding.Bottom);
@@ -290,47 +341,25 @@ namespace UserControlTest.Popups
             PathGeometry = PathConverter.StringToPathGeometryConverter.Current.Convert(data);
         }
 
-        protected override Size MeasureOverride(Size availableSize)
+        Size ContentPresenterSize(Size availableSize=default)
         {
-            base.MeasureOverride(availableSize);
-            //PathData = string.Empty;
             Size result = Size.Empty;
             if (_contentPresenter is FrameworkElement element)
             {
-                element.Measure(availableSize);
+                if (availableSize != default)
+                    element.Measure(availableSize);
                 result = element.DesiredSize;
                 System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride element.DesiredSize:" + result);
             }
-            else if (Content is string text)
-            {
-                textBlock.Text = text;
-                textBlock.FontFamily = FontFamily;
-                textBlock.FontSize = FontSize;
-                textBlock.FontStretch = FontStretch;
-                textBlock.FontStyle = FontStyle;
-                textBlock.FontWeight = FontWeight;
-                textBlock.TextWrapping = TextWrapping.WrapWholeWords;
-                textBlock.Measure(availableSize);
-                result = textBlock.DesiredSize;
-                System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride textBlock.DesiredSize:" + result);
-            }
             result.Width += PointerDirection.IsHorizontal() ? PointerLength : 0;
             result.Height += PointerDirection.IsVertical() ? PointerLength : 0;
+            return result;
+        }
 
-            /*
-            if (BorderThickness is Thickness borderThickness && borderThickness.Left > 0 && BorderBrush is SolidColorBrush brush && brush.Color.A > 0)
-            {
-                result.Width += 2 * borderThickness.Left;
-                result.Height += 2 * borderThickness.Left;
-            }
-
-            if (HasShadow)
-            {
-                result.Width += 4.0;
-                result.Height += 4.0;
-            }
-            */
-
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            base.MeasureOverride(availableSize);
+            var result = ContentPresenterSize(availableSize);
             RegeneratePath(result);
             return result;
         }
@@ -349,9 +378,16 @@ namespace UserControlTest.Popups
             if (width < 1 || height < 1)
                 return new SKPath();
 
+            SKColor strokeColor = SKColors.Transparent;
+            if (BorderBrush is SolidColorBrush borderBrush && borderBrush.Color is Color winStrokeColor)
+                strokeColor = new SKColor(winStrokeColor.R, winStrokeColor.G, winStrokeColor.B, winStrokeColor.A); //borderBrush.Color.ToSKColor();
+            float borderWidth = 0.0f;
+            if (strokeColor.Alpha > 0 && BorderThickness.Left > 0)
+                borderWidth = (float)BorderThickness.Left;
+
             var length = PointerDirection == PointerDirection.None ? 0 : (float)PointerLength;
-            width -= PointerDirection.IsHorizontal() ? length : 0;
-            height -= PointerDirection.IsVertical() ? length : 0;
+            width -= (PointerDirection.IsHorizontal() ? length : 0);
+            height -= (PointerDirection.IsVertical() ? length : 0);
 
             var radius = (float)OutsideCornersRadius;
 
@@ -384,10 +420,10 @@ namespace UserControlTest.Popups
                     ? width * position
                     : height * position);
 
-            var left = 0.0f;
-            var right = width;
-            var top = 0.0f;
-            var bottom = height;
+            var left = 0.0f + borderWidth / 2;
+            var right = width - borderWidth / 2;
+            var top = 0.0f + borderWidth / 2;
+            var bottom = height - borderWidth / 2;
 
             const float sqrt3 = (float)1.732050807568877;
             const float sqrt3d2 = (float)0.86602540378444;
@@ -406,11 +442,11 @@ namespace UserControlTest.Popups
 
             if (PointerDirection == PointerDirection.None)
             {
-                result.MoveTo(width - radius, 0);
-                result.ArcTo(width, 0, width, height - radius, radius);
-                result.ArcTo(width, height, radius, height, radius);
-                result.ArcTo(0, height, 0, radius, radius);
-                result.ArcTo(0, 0, width - radius, 0, radius);
+                result.MoveTo(right - radius, top);
+                result.ArcTo(right, top, right, bottom - radius, radius);
+                result.ArcTo(right, bottom, left + radius, bottom, radius);
+                result.ArcTo(left, bottom, left, top + radius, radius);
+                result.ArcTo(left, top, right - radius, top, radius);
                 result.Close();
             }
             else if (PointerDirection.IsHorizontal())

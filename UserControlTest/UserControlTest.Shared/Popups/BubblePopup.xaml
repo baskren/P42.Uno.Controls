@@ -1,5 +1,5 @@
 ﻿<local:PopupBase
-    x:Class="UserControlTest.Popups.ModalPopup"
+    x:Class="UserControlTest.Popups.BubblePopup"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -21,18 +21,16 @@
     PageOverlay="#6888"
     mc:Ignorable="d">
     <local:PopupBase.Template>
-        <ControlTemplate TargetType="local:ModalPopup">
-            <Grid
-                x:Name="_grid"
+        <ControlTemplate TargetType="local:BubblePopup">
+            <Canvas
+                x:Name="_canvas"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Background="{TemplateBinding PageOverlay}"
                 IsHitTestVisible="{x:Bind local:MarkupExtensions.Negate(CancelOnPageOverlayTap)}">
-
-                <Grid.Children>
-
-                    <Border
-                        x:Name="_content"
+                <Canvas.Children>
+                    <local:BubbleBorder
+                        x:Name="_border"
                         MaxWidth="{TemplateBinding MaxWidth}"
                         MaxHeight="{TemplateBinding MaxHeight}"
                         Margin="{TemplateBinding BorderMargin}"
@@ -53,13 +51,12 @@
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                             Content="{TemplateBinding Content}"
                             TextWrapping="WrapWholeWords" />
-                    </Border>
-                </Grid.Children>
-            </Grid>
+
+                    </local:BubbleBorder>
+                </Canvas.Children>
+            </Canvas>
         </ControlTemplate>
     </local:PopupBase.Template>
+
+
 </local:PopupBase>
-<!--
-    Canvas.Left="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Canvas.Left)}"
-    Canvas.Top="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Canvas.Top)}"
--->

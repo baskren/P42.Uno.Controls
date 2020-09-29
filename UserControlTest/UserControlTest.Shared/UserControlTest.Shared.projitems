@@ -26,6 +26,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Popups\BubbleBorder.xaml.cs">
       <DependentUpon>BubbleBorder.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\BubblePopup.xaml.cs">
+      <DependentUpon>BubblePopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Popups\Extensions\SKPathExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Popups\Enums\PointerDirection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Popups\Extensions\PointerDirectionExtensions.cs" />
@@ -39,6 +42,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Popups\Enums\PopupPoppedCause.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Popups\PopupPoppedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Popups\StringToPathGeometryConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Popups\UwpPopup.xaml.cs">
+      <DependentUpon>UwpPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)UIElementExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -50,7 +56,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Popups\BubblePopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)Popups\ModalPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Popups\UwpPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
