@@ -69,6 +69,11 @@ namespace UserControlTest
             BorderBrush = new SolidColorBrush(Colors.Blue)
         };
 
+        UwpPopup _uwpPopup = new UwpPopup
+        {
+            Text = "Pizza!",
+            Margin = new Thickness(10)
+        };
 
         private void OnAltBorderTapped(object sender, TappedRoutedEventArgs e)
         {
@@ -128,12 +133,7 @@ namespace UserControlTest
                 if (_lastHorizontalAlignment > HorizontalAlignment.Stretch)
                     _lastHorizontalAlignment = HorizontalAlignment.Left;
 
-                UwpPopup _uwpPopup = new UwpPopup
-                {
-                    Text = "Pizza!",
-                    HorizontalAlignment = _lastHorizontalAlignment,
-                    Margin = new Thickness(10)
-                };
+                _uwpPopup.HorizontalAlignment = _lastHorizontalAlignment;
 
                 await _uwpPopup.OpenPopupAsync();
             }

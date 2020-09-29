@@ -7,6 +7,8 @@
     xmlns:local="using:UserControlTest.Popups"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:skia="using:SkiaSharp.Views.UWP"
+    HorizontalAlignment="Left"
+    VerticalAlignment="Top"
     d:DesignHeight="300"
     d:DesignWidth="400"
     Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"

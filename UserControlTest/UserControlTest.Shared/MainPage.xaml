@@ -76,16 +76,18 @@
                     Fill="Beige" />
                 <popups:BubbleBorder
                     Margin="0"
-                    Padding="10"
-                    HorizontalContentAlignment="Right"
+                    Padding="0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Left"
                     VerticalContentAlignment="Bottom"
                     Background="Orange"
                     BorderBrush="Black"
                     BorderThickness="1"
                     HasShadow="true"
                     OutsideCornersRadius="5"
-                    PointerDirection="Bottom">
-                    <Border Background="#3F88">
+                    PointerDirection="Down">
+                    <Border Background="#1F88">
                         <TextBlock Text="TEST TEST TEST" />
                     </Border>
                 </popups:BubbleBorder>

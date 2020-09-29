@@ -265,6 +265,7 @@ namespace UserControlTest.Popups
 
 
         #region LayoutUpdate
+        /*
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             // the canvas and properties
@@ -310,25 +311,24 @@ namespace UserControlTest.Popups
                 paint.StrokeWidth = (float)(BorderThickness.Left);
                 canvas.DrawPath(path, paint);
             }
-
-
         }
+        */
 
         void UpdateContentPresenterMargin()
         {
             var result = new Thickness(Padding.Left, Padding.Top, Padding.Right, Padding.Bottom);
-            switch (PointerDirection)
+            switch ((int)PointerDirection)
             {
-                case PointerDirection.Left:
+                case (int)PointerDirection.Left:
                     result.Left += PointerLength;
                     break;
-                case PointerDirection.Up:
+                case (int)PointerDirection.Up:
                     result.Top += PointerLength;
                     break;
-                case PointerDirection.Right:
+                case (int)PointerDirection.Right:
                     result.Right += PointerLength;
                     break;
-                case PointerDirection.Down:
+                case (int)PointerDirection.Down:
                     result.Bottom += PointerLength;
                     break;
             }
@@ -349,8 +349,14 @@ namespace UserControlTest.Popups
         }
         
 
-        Size ContentPresenterSize(Size availableSize=default)
+        protected override Size MeasureOverride(Size availableSize)
         {
+            if (double.IsInfinity(availableSize.Width))
+                availableSize.Width = ((Frame)Window.Current.Content).ActualWidth;
+            if (double.IsInfinity(availableSize.Height))
+                availableSize.Height = ((Frame)Window.Current.Content).ActualHeight;
+
+            base.MeasureOverride(availableSize);
             Size result = Size.Empty;
             if (_contentPresenter is FrameworkElement element)
             {
@@ -359,38 +365,10 @@ namespace UserControlTest.Popups
                 result = element.DesiredSize;
                 System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride element.DesiredSize:" + result);
             }
-            result.Width += PointerDirection.IsHorizontal() ? PointerLength : 0;
-            result.Height += PointerDirection.IsVertical() ? PointerLength : 0;
-            return result;
-        }
-
-        /*
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            //GeneratePath(finalSize);
-            //return finalSize;
-            return base.ArrangeOverride(finalSize);
-        }
-        */
-
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            //if (HorizontalAlignment == HorizontalAlignment.Stretch && VerticalAlignment == VerticalAlignment.Stretch)
-            //    return availableSize;
-
-            if (double.IsInfinity(availableSize.Width))
-                availableSize.Width = ((Frame)Window.Current.Content).ActualWidth;
-            if (double.IsInfinity(availableSize.Height))
-                availableSize.Height = ((Frame)Window.Current.Content).ActualHeight;
-            //if (double.IsInfinity(availableSize.Height))
-
-            base.MeasureOverride(availableSize);
-            var result = ContentPresenterSize(availableSize);
             if (HorizontalAlignment == HorizontalAlignment.Stretch)
                 result.Width = availableSize.Width;
             if (VerticalAlignment == VerticalAlignment.Stretch)
                 result.Height = availableSize.Height;
-            //RegeneratePath(result);
             return result;
         }
 

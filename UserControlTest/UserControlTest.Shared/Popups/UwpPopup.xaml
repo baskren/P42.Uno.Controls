@@ -5,23 +5,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:UserControlTest.Popups"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    HorizontalAlignment="Center"
-    VerticalAlignment="Center"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
 
     <Popup
         x:Name="ParentPopup"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
         IsLightDismissEnabled="True"
         IsOpen="False"
         LightDismissOverlayMode="On"
         Loaded="OnPopupLoaded">
         <local:BubbleBorder
             x:Name="_bubbleBorder"
-            Margin="20"
+            Margin="{x:Bind ParentPopup.Margin, Mode=OneWay}"
             Background="LightBlue"
             BorderBrush="DarkBlue"
             BorderThickness="2"
