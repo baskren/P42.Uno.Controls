@@ -20,12 +20,14 @@
         LightDismissOverlayMode="On"
         Loaded="OnPopupLoaded">
         <local:BubbleBorder
+            x:Name="_bubbleBorder"
+            Margin="20"
             Background="LightBlue"
             BorderBrush="DarkBlue"
             BorderThickness="2"
             OutsideCornersRadius="4"
-            Margin="20"
-            >
+            PointerDirection="Up"
+            SizeChanged="OnSizeChanged">
             <Grid x:Name="gdChild">
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -39,16 +41,20 @@
                     Grid.Column="0"
                     Width="40"
                     Height="40"
-                    Margin="20"
+                    Margin="10"
+                    Background="White"
                     IsActive="true" />
-                <TextBlock
-                    x:Name="CustomTextBlock"
+                <Border
                     Grid.Column="1"
-                    Width="auto"
-                    Height="auto"
-                    Margin="20"
-                    VerticalAlignment="Center"
-                    FontSize="25" />
+                    Margin="10"
+                    Background="White">
+                    <TextBlock
+                        x:Name="CustomTextBlock"
+                        Width="auto"
+                        Height="auto"
+                        VerticalAlignment="Center"
+                        FontSize="25" />
+                </Border>
             </Grid>
         </local:BubbleBorder>
         <!--

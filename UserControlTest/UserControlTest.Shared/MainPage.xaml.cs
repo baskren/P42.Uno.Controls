@@ -90,6 +90,7 @@ namespace UserControlTest
             _button_Click(sender, e);
         }
 
+        HorizontalAlignment _lastHorizontalAlignment = HorizontalAlignment.Stretch;
         async void _button_Click(object sender, RoutedEventArgs e)
         {
             if (sender is FrameworkElement element)
@@ -123,16 +124,18 @@ namespace UserControlTest
                 }
                 */
 
+                _lastHorizontalAlignment++;
+                if (_lastHorizontalAlignment > HorizontalAlignment.Stretch)
+                    _lastHorizontalAlignment = HorizontalAlignment.Left;
+
                 UwpPopup _uwpPopup = new UwpPopup
                 {
-                    Text = "Pizza!"
+                    Text = "Pizza!",
+                    HorizontalAlignment = _lastHorizontalAlignment,
+                    Margin = new Thickness(10)
                 };
 
-                _uwpPopup.OpenPopup();
-                await Task.Delay(5);
-                _uwpPopup.ClosePopup();
-                await Task.Delay(5);
-                _uwpPopup.OpenPopup();
+                await _uwpPopup.OpenPopupAsync();
             }
         }
 

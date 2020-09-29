@@ -120,7 +120,7 @@ namespace UserControlTest.Popups
             nameof(PointerDirection),
             typeof(PointerDirection),
             typeof(BubbleBorder),
-            new PropertyMetadata(PointerDirection.Any, new PropertyChangedCallback((d, e) => ((BubbleBorder)d).OnPointerDirectionChanged(e)))
+            new PropertyMetadata(PointerDirection.None, new PropertyChangedCallback((d, e) => ((BubbleBorder)d).OnPointerDirectionChanged(e)))
         );
         protected virtual void OnPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -254,6 +254,7 @@ namespace UserControlTest.Popups
         public BubbleBorder()
         {
             this.InitializeComponent();
+            UpdateContentPresenterMargin();
         }
 
         protected override void OnApplyTemplate()
