@@ -17,7 +17,14 @@
     mc:Ignorable="d">
     <ContentControl.Template>
         <ControlTemplate TargetType="local:BubbleBorder">
-            <Grid>
+            <Grid SizeChanged="OnSizeChanged">
+                <Path
+                    Data="{TemplateBinding PathGeometry}"
+                    Fill="{TemplateBinding Background}"
+                    Stroke="{TemplateBinding BorderBrush}"
+                    StrokeThickness="{TemplateBinding BorderThickness}" />
+                <!--
+                <skia:SKXamlCanvas x:Name="_skCanvas" PaintSurface="OnPaintSurface" />
                 <controls:DropShadowPanel
                     BlurRadius="4.0"
                     OffsetX="4.0"
@@ -30,14 +37,6 @@
                         Stroke="{TemplateBinding BorderBrush}"
                         StrokeThickness="{TemplateBinding BorderThickness}" />
                 </controls:DropShadowPanel>
-                <!--
-                <skia:SKXamlCanvas x:Name="_skCanvas" PaintSurface="OnPaintSurface" />
-                <Path
-                    Fill="{TemplateBinding Background}"
-                    Data="{TemplateBinding PathGeometry}"
-                    Data="M0 28.6667C0 28.6667 -6.35085 28.6667 -0.866025 38.1667Q-0.732051 38.3987 -0.5 38.5327Q-0.414704 38.5819 -0.321439 38.6136Q-0.228175 38.6452 -0.130526 38.6581Q-0.0328774 38.671 0.0654031 38.6645Q0.163684 38.6581 0.258819 38.6326Q0.353954 38.6071 0.442289 38.5635Q0.530623 38.52 0.608761 38.46Q0.6869 38.4001 0.75184 38.326Q0.81678 38.252 0.866025 38.1667L6.35085 28.6667C6.35085 28.6667 116 28.6667 116 0L0 0L0 28.6667"
-                    Stroke="{TemplateBinding BorderBrush}"
-                    StrokeThickness="{TemplateBinding BorderThickness}" />
                 -->
                 <ContentPresenter
                     x:Name="ContentPresenter"

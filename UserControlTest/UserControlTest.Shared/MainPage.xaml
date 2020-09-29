@@ -70,15 +70,21 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                <Rectangle
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Fill="Beige" />
                 <popups:BubbleBorder
-                    Margin="10"
-                    Padding="20"
-                    HasShadow="true"
+                    Margin="0"
+                    Padding="10"
+                    HorizontalContentAlignment="Right"
+                    VerticalContentAlignment="Bottom"
                     Background="Orange"
                     BorderBrush="Black"
                     BorderThickness="1"
+                    HasShadow="true"
                     OutsideCornersRadius="5"
-                    PointerDirection="Right">
+                    PointerDirection="Bottom">
                     <Border Background="#3F88">
                         <TextBlock Text="TEST TEST TEST" />
                     </Border>

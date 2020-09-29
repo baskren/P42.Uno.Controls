@@ -342,6 +342,13 @@ namespace UserControlTest.Popups
             PathGeometry = PathConverter.StringToPathGeometryConverter.Current.Convert(data);
         }
 
+        
+        private void OnSizeChanged(object sender, SizeChangedEventArgs args)
+        {
+            RegeneratePath(DesiredSize);
+        }
+        
+
         Size ContentPresenterSize(Size availableSize=default)
         {
             Size result = Size.Empty;
@@ -357,11 +364,33 @@ namespace UserControlTest.Popups
             return result;
         }
 
+        /*
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            //GeneratePath(finalSize);
+            //return finalSize;
+            return base.ArrangeOverride(finalSize);
+        }
+        */
+
         protected override Size MeasureOverride(Size availableSize)
         {
+            //if (HorizontalAlignment == HorizontalAlignment.Stretch && VerticalAlignment == VerticalAlignment.Stretch)
+            //    return availableSize;
+
+            if (double.IsInfinity(availableSize.Width))
+                availableSize.Width = ((Frame)Window.Current.Content).ActualWidth;
+            if (double.IsInfinity(availableSize.Height))
+                availableSize.Height = ((Frame)Window.Current.Content).ActualHeight;
+            //if (double.IsInfinity(availableSize.Height))
+
             base.MeasureOverride(availableSize);
             var result = ContentPresenterSize(availableSize);
-            RegeneratePath(result);
+            if (HorizontalAlignment == HorizontalAlignment.Stretch)
+                result.Width = availableSize.Width;
+            if (VerticalAlignment == VerticalAlignment.Stretch)
+                result.Height = availableSize.Height;
+            //RegeneratePath(result);
             return result;
         }
 
@@ -387,6 +416,12 @@ namespace UserControlTest.Popups
                 borderWidth = (float)BorderThickness.Left;
 
             var length = PointerDirection == PointerDirection.None ? 0 : (float)PointerLength;
+
+            var left = 0.0f + borderWidth / 2;
+            var right = (float)(width - Margin.Left - Margin.Right - borderWidth / 2);
+            var top = 0.0f + borderWidth / 2;
+            var bottom = (float)(height - Margin.Top - Margin.Bottom - borderWidth / 2);
+
             width -= (PointerDirection.IsHorizontal() ? length : 0);
             height -= (PointerDirection.IsVertical() ? length : 0);
 
@@ -421,10 +456,6 @@ namespace UserControlTest.Popups
                     ? width * position
                     : height * position);
 
-            var left = 0.0f + borderWidth / 2;
-            var right = width - borderWidth / 2;
-            var top = 0.0f + borderWidth / 2;
-            var bottom = height - borderWidth / 2;
 
             const float sqrt3 = (float)1.732050807568877;
             const float sqrt3d2 = (float)0.86602540378444;
