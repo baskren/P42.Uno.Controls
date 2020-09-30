@@ -13,15 +13,17 @@ namespace P42.Utils.Uno
     {
         public static void DebugLogProperties(this ContentControl control)
         {
+            /*
             Debug.WriteLine("\t ContentTemplate: " + control.ContentTemplate);
             Debug.WriteLine("\t Content: " + control.Content);
             Debug.WriteLine("\t ContentTemplateRoot: " + control.ContentTemplateRoot);
-
+            */
             DebugLogProperties((Control)control);
         }
 
         public static void DebugLogProperties(this Control control)
         {
+            /*
             Debug.WriteLine("\t Padding: " + control.Padding);
             Debug.WriteLine("\t IsTabStop: " + control.IsTabStop);
             Debug.WriteLine("\t IsEnabled: " + control.IsEnabled);
@@ -54,12 +56,13 @@ namespace P42.Utils.Uno
             Debug.WriteLine("\t DefaultStyleResourceUri: " + control.DefaultStyleResourceUri);
             Debug.WriteLine("\t CornerRadius: " + control.CornerRadius);
             Debug.WriteLine("\t BackgroundSizing: " + control.BackgroundSizing);
-
+            */
             DebugLogProperties((FrameworkElement)control);
         }
 
         public static void DebugLogProperties(this FrameworkElement element)
         {
+            /*
             Debug.WriteLine("\t ActualHeight: " + element.ActualHeight);
             Debug.WriteLine("\t ActualTheme: " + element.ActualTheme);
             Debug.WriteLine("\t ActualWidth: " + element.ActualWidth);
@@ -91,13 +94,14 @@ namespace P42.Utils.Uno
             Debug.WriteLine("\t Triggers: " + element.Triggers);
             Debug.WriteLine("\t VerticalAlignment: " + element.VerticalAlignment);
             Debug.WriteLine("\t Width: " + element.Width);
-
+            */
             DebugLogProperties((UIElement)element);
         }
 
 
         public static void DebugLogProperties(this UIElement element)
         {
+            /*
             Debug.WriteLine("\t AccessKey: " + element.AccessKey);
             Debug.WriteLine("\t AccessKeyScopeOwner: " + element.AccessKeyScopeOwner);
             //Debug.WriteLine("\t ActualOffset: " + element.ActualOffset);
@@ -140,7 +144,7 @@ namespace P42.Utils.Uno
             Debug.WriteLine("\t UseLayoutRounding: " + element.UseLayoutRounding);
             Debug.WriteLine("\t Visibility: " + element.Visibility);
             //Debug.WriteLine("\t XamlRoot: " + element.XamlRoot);
-
+            */
         }
     }
 }

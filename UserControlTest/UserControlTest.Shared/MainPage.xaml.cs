@@ -70,6 +70,17 @@ namespace UserControlTest
 
         */
 
+        UwpPopup _bubblePopup = new UwpPopup
+        {
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(4),
+            Margin = new Thickness(10),
+            Padding = new Thickness(20),
+            Background = new SolidColorBrush(Colors.White),
+            BorderBrush = new SolidColorBrush(Colors.Blue)
+        };
+
+
         private void OnAltBorderTapped(object sender, TappedRoutedEventArgs e)
         {
             BorderTapped(sender, e);
@@ -125,7 +136,7 @@ namespace UserControlTest
                 */
                 var frame = element.GetFrame();
                 var content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
-                //_bubblePopup.Content = new TextBlock { Text = content };
+                _bubblePopup.Content = new TextBlock { Text = content };
 
 
 
@@ -133,10 +144,10 @@ namespace UserControlTest
                 if (_lastHorizontalAlignment > HorizontalAlignment.Stretch)
                     _lastHorizontalAlignment = HorizontalAlignment.Left;
 
-                //_bubblePopup.HorizontalAlignment = _lastHorizontalAlignment;
+                _bubblePopup.HorizontalAlignment = _lastHorizontalAlignment;
                 _bubbleBorder.HorizontalAlignment = _lastHorizontalAlignment;
 
-               // await _bubblePopup.PushAsync();
+               await _bubblePopup.PushAsync();
             }
         }
 
