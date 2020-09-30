@@ -17,6 +17,7 @@ using SkiaSharp.Views.UWP;
 using Windows.Graphics.Display;
 using Windows.UI;
 using P42.Utils.Uno;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -24,6 +25,7 @@ namespace P42.Uno.Popups
 {
     [TemplatePart(Name = ContentPresenterName, Type=typeof(ContentPresenter))]
     [TemplatePart(Name = PathElementName, Type = typeof(Path))]
+    [TemplatePart(Name = DropShadowPanelElementName, Type = typeof(DropShadowPanel))]
     public partial class BubbleBorder : ContentControl
     {
         #region Properties
@@ -35,7 +37,7 @@ namespace P42.Uno.Popups
             nameof(HorizontalAlignment),
             typeof(HorizontalAlignment),
             typeof(BubbleBorder),
-            new PropertyMetadata(default(HorizontalAlignment), new PropertyChangedCallback((d, e) => ((BubbleBorder)d).OnHorizontalAlignmentChanged(e)))
+            new PropertyMetadata(DefaultHorizontalAlignment, new PropertyChangedCallback((d, e) => ((BubbleBorder)d).OnHorizontalAlignmentChanged(e)))
         );
         protected virtual void OnHorizontalAlignmentChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -52,12 +54,12 @@ namespace P42.Uno.Popups
         }
 #endregion HorizontalAlignment Property
 
-#region VerticalAlignment Property
+        #region VerticalAlignment Property
         public static readonly new DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register(
             nameof(VerticalAlignment),
             typeof(VerticalAlignment),
             typeof(BubbleBorder),
-            new PropertyMetadata(default(VerticalAlignment), new PropertyChangedCallback((d, e) => ((BubbleBorder)d).OnVerticalAlignmentChanged(e)))
+            new PropertyMetadata(DefaultVerticalAlignment, new PropertyChangedCallback((d, e) => ((BubbleBorder)d).OnVerticalAlignmentChanged(e)))
         );
         protected virtual void OnVerticalAlignmentChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -70,14 +72,13 @@ namespace P42.Uno.Popups
             get => (VerticalAlignment)GetValue(VerticalAlignmentProperty);
             set => SetValue(VerticalAlignmentProperty, value);
         }
-#endregion VerticalAlignment Property
+        #endregion VerticalAlignment Property
 
+        #endregion
 
-#endregion
+        #region Unique Properties
 
-#region Unique Properties
-
-#region TargetBias Property
+        #region TargetBias Property
         public static readonly DependencyProperty TargetBiasProperty = DependencyProperty.Register(
             nameof(TargetBias),
             typeof(double),
@@ -93,10 +94,10 @@ namespace P42.Uno.Popups
             get => (double)GetValue(TargetBiasProperty);
             set => SetValue(TargetBiasProperty, value);
         }
-#endregion TargetBias Property
+        #endregion TargetBias Property
 
 
-#region PointerLength Property
+        #region PointerLength Property
         public static readonly DependencyProperty PointerLengthProperty = DependencyProperty.Register(
             nameof(PointerLength),
             typeof(double),
@@ -117,10 +118,10 @@ namespace P42.Uno.Popups
             get => (double)GetValue(PointerLengthProperty);
             set => SetValue(PointerLengthProperty, value);
         }
-#endregion PointerLength Property
+        #endregion PointerLength Property
 
 
-#region PointerTipRadius Property
+        #region PointerTipRadius Property
         public static readonly DependencyProperty PointerTipRadiusProperty = DependencyProperty.Register(
             nameof(PointerTipRadius),
             typeof(double),
@@ -140,10 +141,10 @@ namespace P42.Uno.Popups
             get => (double)GetValue(PointerTipRadiusProperty);
             set => SetValue(PointerTipRadiusProperty, value);
         }
-#endregion PointerTipRadius Property
+        #endregion PointerTipRadius Property
 
 
-#region PointerAxialPosition Property
+        #region PointerAxialPosition Property
         public static readonly DependencyProperty PointerAxialPositionProperty = DependencyProperty.Register(
             nameof(PointerAxialPosition),
             typeof(double),
@@ -163,10 +164,10 @@ namespace P42.Uno.Popups
             get => (double)GetValue(PointerAxialPositionProperty);
             set => SetValue(PointerAxialPositionProperty, value);
         }
-#endregion PointerAxialPosition Property
+        #endregion PointerAxialPosition Property
 
 
-#region PointerDirection Property
+        #region PointerDirection Property
         public static readonly DependencyProperty PointerDirectionProperty = DependencyProperty.Register(
             nameof(PointerDirection),
             typeof(PointerDirection),
@@ -188,10 +189,10 @@ namespace P42.Uno.Popups
             get => (PointerDirection)GetValue(PointerDirectionProperty);
             set => SetValue(PointerDirectionProperty, value);
         }
-#endregion PointerDirection Property
+        #endregion PointerDirection Property
 
 
-#region PointerCornerRadius Property
+        #region PointerCornerRadius Property
         public static readonly DependencyProperty PointerCornerRadiusProperty = DependencyProperty.Register(
             nameof(PointerCornerRadius),
             typeof(double),
@@ -207,10 +208,10 @@ namespace P42.Uno.Popups
             get => (double)GetValue(PointerCornerRadiusProperty);
             set => SetValue(PointerCornerRadiusProperty, value);
         }
-#endregion PointerCornerRadius Property
+        #endregion PointerCornerRadius Property
 
 
-#region ContentPresenterMargin Property
+        #region ContentPresenterMargin Property
         internal static readonly DependencyProperty ContentPresenterMarginProperty = DependencyProperty.Register(
             nameof(ContentPresenterMargin),
             typeof(Thickness),
@@ -222,10 +223,10 @@ namespace P42.Uno.Popups
             get => (Thickness)GetValue(ContentPresenterMarginProperty);
             set => SetValue(ContentPresenterMarginProperty, value);
         }
-#endregion ContentPresenterMargin Property
+        #endregion ContentPresenterMargin Property
 
 
-#region PathGeometry Property
+        #region PathGeometry Property
         internal static readonly DependencyProperty PathGeometryProperty = DependencyProperty.Register(
             nameof(PathGeometry),
             typeof(PathGeometry),
@@ -237,10 +238,10 @@ namespace P42.Uno.Popups
             get => (PathGeometry)GetValue(PathGeometryProperty);
             set => SetValue(PathGeometryProperty, value);
         }
-#endregion PathGeometry Property
+        #endregion PathGeometry Property
 
 
-#region HasShadow Property
+        #region HasShadow Property
         public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
             nameof(HasShadow),
             typeof(bool),
@@ -256,10 +257,10 @@ namespace P42.Uno.Popups
             get => (bool)GetValue(HasShadowProperty);
             set => SetValue(HasShadowProperty, value);
         }
-#endregion HasShadow Property
+        #endregion HasShadow Property
 
 
-#region ShadowOpacity Property
+        #region ShadowOpacity Property
         internal static readonly DependencyProperty ShadowOpacityProperty = DependencyProperty.Register(
             nameof(ShadowOpacity),
             typeof(double),
@@ -271,25 +272,31 @@ namespace P42.Uno.Popups
             get => (double)GetValue(ShadowOpacityProperty);
             set => SetValue(ShadowOpacityProperty, value);
         }
-#endregion ShadowOpacity Property
+        #endregion ShadowOpacity Property
 
-#endregion
-
-
-#endregion
+        #endregion
 
 
-#region Fields
+        #endregion
+
+
+        #region Fields
+        const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Left;
+        const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Top;
         const string ContentPresenterName = "ContentPresenter";
         const string PathElementName = "_path";
+        const string DropShadowPanelElementName = "_dropShadow";
         ContentPresenter _contentPresenter;
         Windows.UI.Xaml.Shapes.Path _path;
-#endregion
+        DropShadowPanel _dropShadow;
+        #endregion
 
 
-#region Construction / Loading
+        #region Construction / Loading
         public BubbleBorder()
         {
+            base.HorizontalAlignment = DefaultHorizontalAlignment;
+            base.VerticalAlignment = DefaultVerticalAlignment;
             this.InitializeComponent();
             UpdateContentPresenterMargin();
         }
@@ -299,11 +306,12 @@ namespace P42.Uno.Popups
         {
             _contentPresenter = GetTemplateChild(ContentPresenterName) as ContentPresenter;
             _path = GetTemplateChild(PathElementName) as Windows.UI.Xaml.Shapes.Path;
+            _dropShadow = GetTemplateChild(DropShadowPanelElementName) as DropShadowPanel;
         }
-#endregion
+        #endregion
 
 
-#region LayoutUpdate
+        #region LayoutUpdate
         /*
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
@@ -425,17 +433,12 @@ namespace P42.Uno.Popups
             borderSize.Height += Margin.Vertical();
             RegeneratePath(borderSize);
 
-#if __ANDROID__
-            if (_path is FrameworkElement path)
-            {
-                //_path.ClipBounds.Set(0, 0, (int)borderSize.Width, (int)borderSize.Height);
-                var clip = _path.Clip;
-                var x = _path.ClipToPadding;
-                var x2 = _path.ClipChildren;
-                this.SetClipToPadding(false);
-                this.SetClipChildren(false);
-            }
+#if NETFX_CORE
+#else
+            // the following fixes the DropShadowPanel clipping issue
+            _dropShadow.Measure(borderSize);
 #endif
+
             return result;
         }
 
