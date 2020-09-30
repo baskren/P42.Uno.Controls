@@ -510,8 +510,8 @@ namespace P42.Uno.Popups
             var position = (float)PointerAxialPosition;
             if (position <= 1.0)
                 position = (float)(PointerDirection == PointerDirection.Down || PointerDirection == PointerDirection.Up
-                    ? width * position
-                    : height * position);
+                    ? left + (right - left) * position
+                    : top + (bottom - top)  * position);
 
 
             const float sqrt3 = (float)1.732050807568877;
