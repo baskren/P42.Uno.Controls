@@ -23,6 +23,7 @@ using P42.Utils.Uno;
 namespace P42.Uno.Popups
 {
     [TemplatePart(Name = ContentPresenterName, Type=typeof(ContentPresenter))]
+    [TemplatePart(Name = PathElementName, Type = typeof(Path))]
     public partial class BubbleBorder : ContentControl
     {
         #region Properties
@@ -42,9 +43,6 @@ namespace P42.Uno.Popups
             if ((HorizontalAlignment)e.NewValue == HorizontalAlignment.Stretch || (HorizontalAlignment)e.OldValue == HorizontalAlignment.Stretch)
             {
                 InvalidateMeasure();
-#if __ANDROID__
-                Invalidate();
-#endif
             }
         }
         public new HorizontalAlignment HorizontalAlignment
@@ -283,7 +281,9 @@ namespace P42.Uno.Popups
 
 #region Fields
         const string ContentPresenterName = "ContentPresenter";
+        const string PathElementName = "_path";
         ContentPresenter _contentPresenter;
+        Windows.UI.Xaml.Shapes.Path _path;
 #endregion
 
 
@@ -298,6 +298,7 @@ namespace P42.Uno.Popups
         protected override void OnApplyTemplate()
         {
             _contentPresenter = GetTemplateChild(ContentPresenterName) as ContentPresenter;
+            _path = GetTemplateChild(PathElementName) as Windows.UI.Xaml.Shapes.Path;
         }
 #endregion
 
@@ -424,7 +425,25 @@ namespace P42.Uno.Popups
             borderSize.Height += Margin.Vertical();
             RegeneratePath(borderSize);
 
+#if __ANDROID__
+            if (_path is FrameworkElement path)
+            {
+                //_path.ClipBounds.Set(0, 0, (int)borderSize.Width, (int)borderSize.Height);
+                var clip = _path.Clip;
+                var x = _path.ClipToPadding;
+                var x2 = _path.ClipChildren;
+                this.SetClipToPadding(false);
+                this.SetClipChildren(false);
+            }
+#endif
             return result;
+        }
+
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            System.Diagnostics.Debug.WriteLine(GetType() + ".ArrangeOverride(" + finalSize + ")");
+            return base.ArrangeOverride(finalSize);
         }
 
         SKPath GeneratePath(Size measuredSize = default)

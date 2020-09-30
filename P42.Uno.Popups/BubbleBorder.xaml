@@ -19,6 +19,16 @@
     <ContentControl.Template>
         <ControlTemplate TargetType="local:BubbleBorder">
             <Grid SizeChanged="OnSizeChanged">
+                <Path
+                    x:Name="_path"
+                    Data="{TemplateBinding PathGeometry}"
+                    Fill="{TemplateBinding Background}"
+                    Stroke="{TemplateBinding BorderBrush}"
+                    StrokeThickness="{TemplateBinding BorderThickness}" />
+                <!--
+                xmlns:skia="using:SkiaSharp.Views.UWP"
+                <skia:SKXamlCanvas x:Name="_skCanvas" PaintSurface="OnPaintSurface" />
+                // DropShadowPanel causes BubbleBorder 
                 <controls:DropShadowPanel
                     BlurRadius="4.0"
                     OffsetX="4.0"
@@ -26,25 +36,11 @@
                     ShadowOpacity="{TemplateBinding ShadowOpacity}"
                     Color="{StaticResource SystemBaseMediumHighColor}">
                     <Path
+                        x:Name="_path"
                         Data="{TemplateBinding PathGeometry}"
                         Fill="{TemplateBinding Background}"
                         Stroke="{TemplateBinding BorderBrush}"
                         StrokeThickness="{TemplateBinding BorderThickness}" />
-                </controls:DropShadowPanel>
-                <!--
-                xmlns:skia="using:SkiaSharp.Views.UWP"
-                <skia:SKXamlCanvas x:Name="_skCanvas" PaintSurface="OnPaintSurface" />
-                <controls:DropShadowPanel
-                    BlurRadius="4.0"
-                    OffsetX="4.0"
-                    OffsetY="4.0"
-                    ShadowOpacity="{TemplateBinding ShadowOpacity}"
-                    Color="{StaticResource SystemBaseMediumHighColor}">
-                <Path
-                    Data="{TemplateBinding PathGeometry}"
-                    Fill="{TemplateBinding Background}"
-                    Stroke="{TemplateBinding BorderBrush}"
-                    StrokeThickness="{TemplateBinding BorderThickness}" />
                 </controls:DropShadowPanel>
                 -->
                 <ContentPresenter
