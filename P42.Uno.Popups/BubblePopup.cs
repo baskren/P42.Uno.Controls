@@ -246,16 +246,26 @@ namespace P42.Uno.Popups
         public BubblePopup()
         {
             DefaultStyleKey = typeof(BubblePopup);
-            //this.InitializeComponent();
+
+            var xstyle = Application.Current.Resources["BubblePopupStyle"] as Style;
+            Style = xstyle;
+            bool rebuilt = ApplyTemplate();
+
+        }
 
 
-            //var xstyle = Application.Current.Resources["BubblePopupStyle"] as Style;
-            //var template = Application.Current.Resources["BubblePopupTemplate"] as ControlTemplate;
-            //Template = template;
-            //Style = xstyle;
-            //var ytemplate = Template;
-            //OnApplyTemplate();
+        protected override void OnBringIntoViewRequested(BringIntoViewRequestedEventArgs e)
+        {
+            base.OnBringIntoViewRequested(e);
+        }
+        protected override void OnContentChanged(object oldContent, object newContent)
+        {
+            base.OnContentChanged(oldContent, newContent);
+        }
 
+        protected override void OnContentTemplateChanged(DataTemplate oldContentTemplate, DataTemplate newContentTemplate)
+        {
+            base.OnContentTemplateChanged(oldContentTemplate, newContentTemplate);
         }
 
         protected override void OnApplyTemplate()
