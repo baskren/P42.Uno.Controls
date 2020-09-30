@@ -24,23 +24,16 @@
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="BubbleBorder.xaml" />
-    <None Remove="BubblePopup.xaml" />
-    <None Remove="Themes\generic.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <UpToDateCheckInput Remove="BubbleBorder.xaml" />
-    <UpToDateCheckInput Remove="BubblePopup.xaml" />
-    <UpToDateCheckInput Remove="Themes\generic.xaml" />
+    <EmbeddedResource Include="Properties\P42.Uno.Popups.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="BubbleBorder.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Themes\generic.xaml">
+    <Page Update="BubblePopup.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="BubblePopup.xaml">
+    <Page Include="Themes\Generic.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
