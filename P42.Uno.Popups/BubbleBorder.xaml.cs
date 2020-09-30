@@ -16,6 +16,7 @@ using SkiaSharp;
 using SkiaSharp.Views.UWP;
 using Windows.Graphics.Display;
 using Windows.UI;
+using P42.Utils.Uno;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -25,6 +26,53 @@ namespace P42.Uno.Popups
     public partial class BubbleBorder : ContentControl
     {
         #region Properties
+
+        #region Override Properties
+
+        #region HorizontalAlignment Property
+        public static readonly new DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
+            nameof(HorizontalAlignment),
+            typeof(HorizontalAlignment),
+            typeof(BubbleBorder),
+            new PropertyMetadata(default(HorizontalAlignment), new PropertyChangedCallback((d, e) => ((BubbleBorder)d).OnHorizontalAlignmentChanged(e)))
+        );
+        protected virtual void OnHorizontalAlignmentChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.HorizontalAlignment = HorizontalAlignment;
+            if ((HorizontalAlignment)e.NewValue == HorizontalAlignment.Stretch || (HorizontalAlignment)e.OldValue == HorizontalAlignment.Stretch)
+                InvalidateMeasure();
+        }
+        public new HorizontalAlignment HorizontalAlignment
+        {
+            get => (HorizontalAlignment)GetValue(HorizontalAlignmentProperty);
+            set => SetValue(HorizontalAlignmentProperty, value);
+        }
+        #endregion HorizontalAlignment Property
+
+        #region VerticalAlignment Property
+        public static readonly new DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register(
+            nameof(VerticalAlignment),
+            typeof(VerticalAlignment),
+            typeof(BubbleBorder),
+            new PropertyMetadata(default(VerticalAlignment), new PropertyChangedCallback((d, e) => ((BubbleBorder)d).OnVerticalAlignmentChanged(e)))
+        );
+        protected virtual void OnVerticalAlignmentChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.VerticalAlignment = VerticalAlignment;
+            if ((VerticalAlignment)e.NewValue == VerticalAlignment.Stretch || (VerticalAlignment)e.OldValue == VerticalAlignment.Stretch)
+                InvalidateMeasure();
+        }
+        public new VerticalAlignment VerticalAlignment
+        {
+            get => (VerticalAlignment)GetValue(VerticalAlignmentProperty);
+            set => SetValue(VerticalAlignmentProperty, value);
+        }
+        #endregion VerticalAlignment Property
+
+
+        #endregion
+
+        #region Unique Properties
 
         #region TargetBias Property
         public static readonly DependencyProperty TargetBiasProperty = DependencyProperty.Register(
@@ -222,7 +270,7 @@ namespace P42.Uno.Popups
         }
         #endregion ShadowOpacity Property
 
-
+        #endregion
 
 
         #endregion
@@ -240,6 +288,7 @@ namespace P42.Uno.Popups
             this.InitializeComponent();
             UpdateContentPresenterMargin();
         }
+
 
         protected override void OnApplyTemplate()
         {
@@ -329,12 +378,21 @@ namespace P42.Uno.Popups
         
         private void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
-            RegeneratePath(DesiredSize);
+            System.Diagnostics.Debug.WriteLine(GetType() + ".OnSizeChanged()");
+            //RegeneratePath(DesiredSize);
         }
         
 
+
         protected override Size MeasureOverride(Size availableSize)
         {
+            UpdateContentPresenterMargin();
+            System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") =======");
+            //System.Diagnostics.Debug.WriteLine("\t Window.ActualWidth: " + ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualWidth);
+            //System.Diagnostics.Debug.WriteLine("\t Window.ActualHeight: " + ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualHeight);
+            System.Diagnostics.Debug.WriteLine("\t ContentPresenterMargin: " + ContentPresenterMargin);
+            //this.DebugLogProperties();
+
             if (double.IsInfinity(availableSize.Width))
                 availableSize.Width = ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualWidth;
             if (double.IsInfinity(availableSize.Height))
@@ -349,15 +407,25 @@ namespace P42.Uno.Popups
                 result = element.DesiredSize;
                 System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride element.DesiredSize:" + result);
             }
+            System.Diagnostics.Debug.WriteLine("\t HorizontalAlignment: " + HorizontalAlignment);
             if (HorizontalAlignment == HorizontalAlignment.Stretch)
                 result.Width = availableSize.Width;
             if (VerticalAlignment == VerticalAlignment.Stretch)
                 result.Height = availableSize.Height;
+            System.Diagnostics.Debug.WriteLine("\t RESULT: " + result);
+
+            var borderSize = result;
+            borderSize.Width += Margin.Horizontal();
+            borderSize.Height += Margin.Vertical();
+            RegeneratePath(borderSize);
+
             return result;
         }
 
         SKPath GeneratePath(Size measuredSize = default)
         {
+
+
             var width = (float)Math.Min(DesiredSize.Width, MinWidth);
             var height = (float)Math.Min(DesiredSize.Height, MinHeight);
 

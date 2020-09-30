@@ -8,13 +8,14 @@
         <Setter Property="Background" Value="{StaticResource SystemControlBackgroundChromeMediumBrush}" />
         <Setter Property="BorderBrush" Value="{StaticResource SystemControlForegroundBaseLowBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="FontSize" Value="16" />
         <Setter Property="MinHeight" Value="35" />
         <Setter Property="Foreground" Value="{StaticResource SystemControlForegroundBaseLowBrush}" />
         <Setter Property="Margin" Value="50" />
         <Setter Property="Padding" Value="20" />
+        <Setter Property="CornerRadius" Value="4" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:BubblePopup">
@@ -30,11 +31,14 @@
                             MaxWidth="{TemplateBinding MaxWidth}"
                             MaxHeight="{TemplateBinding MaxHeight}"
                             Padding="{TemplateBinding Padding}"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
+                            Content="{TemplateBinding Content}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             HasShadow="{TemplateBinding HasShadow}"
                             PointerAxialPosition="{TemplateBinding PointerAxialPosition}"
@@ -42,17 +46,7 @@
                             PointerLength="{TemplateBinding PointerLength}"
                             PointerTipRadius="{TemplateBinding PointerTipRadius}"
                             SizeChanged="OnSizeChanged"
-                            TargetBias="{TemplateBinding TargetBias}">
-                            <ContentPresenter
-                                x:Name="_contentPresenter"
-                                Content="{TemplateBinding Content}"
-                                FontFamily="{TemplateBinding FontFamily}"
-                                FontSize="{TemplateBinding FontSize}"
-                                FontStretch="{TemplateBinding FontStretch}"
-                                FontStyle="{TemplateBinding FontStyle}"
-                                FontWeight="{TemplateBinding FontWeight}"
-                                TextWrapping="WrapWholeWords" />
-                        </local:BubbleBorder>
+                            TargetBias="{TemplateBinding TargetBias}" />
                     </Popup>
                 </ControlTemplate>
             </Setter.Value>

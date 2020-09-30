@@ -94,6 +94,16 @@
   <ItemGroup>
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\P42.Uno.Popups\P42.Uno.Popups.csproj">
+      <Project>{cd121e71-57be-4a32-807c-62e00df1e640}</Project>
+      <Name>P42.Uno.Popups</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\P42.Utils.Uno\P42.Utils.Uno.csproj">
+      <Project>{aa39dc26-7164-48ba-ba57-156e634e390d}</Project>
+      <Name>P42.Utils.Uno</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\UserControlTest.Shared\UserControlTest.Shared.projitems" Label="Shared" Condition="Exists('..\UserControlTest.Shared\UserControlTest.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- This will force the generation of the APK when not building inside visual studio -->
