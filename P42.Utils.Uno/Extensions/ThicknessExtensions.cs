@@ -17,5 +17,8 @@ namespace P42.Utils.Uno
 
         public static double Average(this Thickness thickness)
             => (thickness.Horizontal() + thickness.Vertical()) / 4.0;
+
+        public static Thickness Add(this Thickness t1, Thickness t2)
+            => new Thickness(t1.Left + t2.Left, t1.Top + t2.Top, t1.Right + t2.Right, t1.Bottom + t2.Bottom);
     }
 }

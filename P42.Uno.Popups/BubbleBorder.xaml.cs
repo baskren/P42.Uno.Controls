@@ -40,16 +40,21 @@ namespace P42.Uno.Popups
         {
             base.HorizontalAlignment = HorizontalAlignment;
             if ((HorizontalAlignment)e.NewValue == HorizontalAlignment.Stretch || (HorizontalAlignment)e.OldValue == HorizontalAlignment.Stretch)
+            {
                 InvalidateMeasure();
+#if __ANDROID__
+                Invalidate();
+#endif
+            }
         }
         public new HorizontalAlignment HorizontalAlignment
         {
             get => (HorizontalAlignment)GetValue(HorizontalAlignmentProperty);
             set => SetValue(HorizontalAlignmentProperty, value);
         }
-        #endregion HorizontalAlignment Property
+#endregion HorizontalAlignment Property
 
-        #region VerticalAlignment Property
+#region VerticalAlignment Property
         public static readonly new DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register(
             nameof(VerticalAlignment),
             typeof(VerticalAlignment),
@@ -67,14 +72,14 @@ namespace P42.Uno.Popups
             get => (VerticalAlignment)GetValue(VerticalAlignmentProperty);
             set => SetValue(VerticalAlignmentProperty, value);
         }
-        #endregion VerticalAlignment Property
+#endregion VerticalAlignment Property
 
 
-        #endregion
+#endregion
 
-        #region Unique Properties
+#region Unique Properties
 
-        #region TargetBias Property
+#region TargetBias Property
         public static readonly DependencyProperty TargetBiasProperty = DependencyProperty.Register(
             nameof(TargetBias),
             typeof(double),
@@ -90,10 +95,10 @@ namespace P42.Uno.Popups
             get => (double)GetValue(TargetBiasProperty);
             set => SetValue(TargetBiasProperty, value);
         }
-        #endregion TargetBias Property
+#endregion TargetBias Property
 
 
-        #region PointerLength Property
+#region PointerLength Property
         public static readonly DependencyProperty PointerLengthProperty = DependencyProperty.Register(
             nameof(PointerLength),
             typeof(double),
@@ -114,10 +119,10 @@ namespace P42.Uno.Popups
             get => (double)GetValue(PointerLengthProperty);
             set => SetValue(PointerLengthProperty, value);
         }
-        #endregion PointerLength Property
+#endregion PointerLength Property
 
 
-        #region PointerTipRadius Property
+#region PointerTipRadius Property
         public static readonly DependencyProperty PointerTipRadiusProperty = DependencyProperty.Register(
             nameof(PointerTipRadius),
             typeof(double),
@@ -137,10 +142,10 @@ namespace P42.Uno.Popups
             get => (double)GetValue(PointerTipRadiusProperty);
             set => SetValue(PointerTipRadiusProperty, value);
         }
-        #endregion PointerTipRadius Property
+#endregion PointerTipRadius Property
 
 
-        #region PointerAxialPosition Property
+#region PointerAxialPosition Property
         public static readonly DependencyProperty PointerAxialPositionProperty = DependencyProperty.Register(
             nameof(PointerAxialPosition),
             typeof(double),
@@ -160,10 +165,10 @@ namespace P42.Uno.Popups
             get => (double)GetValue(PointerAxialPositionProperty);
             set => SetValue(PointerAxialPositionProperty, value);
         }
-        #endregion PointerAxialPosition Property
+#endregion PointerAxialPosition Property
 
 
-        #region PointerDirection Property
+#region PointerDirection Property
         public static readonly DependencyProperty PointerDirectionProperty = DependencyProperty.Register(
             nameof(PointerDirection),
             typeof(PointerDirection),
@@ -185,10 +190,10 @@ namespace P42.Uno.Popups
             get => (PointerDirection)GetValue(PointerDirectionProperty);
             set => SetValue(PointerDirectionProperty, value);
         }
-        #endregion PointerDirection Property
+#endregion PointerDirection Property
 
 
-        #region PointerCornerRadius Property
+#region PointerCornerRadius Property
         public static readonly DependencyProperty PointerCornerRadiusProperty = DependencyProperty.Register(
             nameof(PointerCornerRadius),
             typeof(double),
@@ -204,10 +209,10 @@ namespace P42.Uno.Popups
             get => (double)GetValue(PointerCornerRadiusProperty);
             set => SetValue(PointerCornerRadiusProperty, value);
         }
-        #endregion PointerCornerRadius Property
+#endregion PointerCornerRadius Property
 
 
-        #region ContentPresenterMargin Property
+#region ContentPresenterMargin Property
         internal static readonly DependencyProperty ContentPresenterMarginProperty = DependencyProperty.Register(
             nameof(ContentPresenterMargin),
             typeof(Thickness),
@@ -219,10 +224,10 @@ namespace P42.Uno.Popups
             get => (Thickness)GetValue(ContentPresenterMarginProperty);
             set => SetValue(ContentPresenterMarginProperty, value);
         }
-        #endregion ContentPresenterMargin Property
+#endregion ContentPresenterMargin Property
 
 
-        #region PathGeometry Property
+#region PathGeometry Property
         internal static readonly DependencyProperty PathGeometryProperty = DependencyProperty.Register(
             nameof(PathGeometry),
             typeof(PathGeometry),
@@ -234,10 +239,10 @@ namespace P42.Uno.Popups
             get => (PathGeometry)GetValue(PathGeometryProperty);
             set => SetValue(PathGeometryProperty, value);
         }
-        #endregion PathGeometry Property
+#endregion PathGeometry Property
 
 
-        #region HasShadow Property
+#region HasShadow Property
         public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
             nameof(HasShadow),
             typeof(bool),
@@ -253,10 +258,10 @@ namespace P42.Uno.Popups
             get => (bool)GetValue(HasShadowProperty);
             set => SetValue(HasShadowProperty, value);
         }
-        #endregion HasShadow Property
+#endregion HasShadow Property
 
 
-        #region ShadowOpacity Property
+#region ShadowOpacity Property
         internal static readonly DependencyProperty ShadowOpacityProperty = DependencyProperty.Register(
             nameof(ShadowOpacity),
             typeof(double),
@@ -268,21 +273,21 @@ namespace P42.Uno.Popups
             get => (double)GetValue(ShadowOpacityProperty);
             set => SetValue(ShadowOpacityProperty, value);
         }
-        #endregion ShadowOpacity Property
+#endregion ShadowOpacity Property
 
-        #endregion
-
-
-        #endregion
+#endregion
 
 
-        #region Fields
+#endregion
+
+
+#region Fields
         const string ContentPresenterName = "ContentPresenter";
         ContentPresenter _contentPresenter;
-        #endregion
+#endregion
 
 
-        #region Construction / Loading
+#region Construction / Loading
         public BubbleBorder()
         {
             this.InitializeComponent();
@@ -294,10 +299,10 @@ namespace P42.Uno.Popups
         {
             _contentPresenter = GetTemplateChild(ContentPresenterName) as ContentPresenter;
         }
-        #endregion
+#endregion
 
 
-        #region LayoutUpdate
+#region LayoutUpdate
         /*
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
@@ -666,7 +671,7 @@ namespace P42.Uno.Popups
             return result;
         }
 
-        #endregion
+#endregion
     }
 
 }
