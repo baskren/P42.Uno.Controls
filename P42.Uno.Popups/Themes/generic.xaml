@@ -1,0 +1,69 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:P42.Uno.Popups">
+
+    <!-- Removal of the following allows the app to run.  Otherwise, an exeception that says cannot us string as a uri for Source.
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="BubblePopup.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    -->
+
+    <Style x:Key="BubblePopupStyle" TargetType="local:BubblePopup">
+        <!--  Setter Property="Background" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}" /  -->
+        <Setter Property="Background" Value="Red" />
+        <Setter Property="BorderBrush" Value="{StaticResource SystemControlForegroundBaseLowBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="MinHeight" Value="35" />
+        <Setter Property="Foreground" Value="{StaticResource SystemControlForegroundBaseLowBrush}" />
+        <Setter Property="Margin" Value="50" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:BubblePopup">
+                    <Popup
+                        x:Name="_popup"
+                        Margin="{TemplateBinding Margin}"
+                        IsLightDismissEnabled="{TemplateBinding IsLightDismissEnabled}"
+                        IsOpen="False"
+                        LightDismissOverlayMode="{TemplateBinding LightDismissOverlayMode}"
+                        Opacity="{TemplateBinding Opacity}">
+                        <local:BubbleBorder
+                            x:Name="_border"
+                            MaxWidth="{TemplateBinding MaxWidth}"
+                            MaxHeight="{TemplateBinding MaxHeight}"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{ThemeResource HorizontalContentAlignment}"
+                            VerticalContentAlignment="{ThemeResource VerticalContentAlignment}"
+                            Background="{ThemeResource Background}"
+                            BorderBrush="{ThemeResource BorderBrush}"
+                            BorderThickness="{ThemeResource BorderThickness}"
+                            CornerRadius="{ThemeResource CornerRadius}"
+                            HasShadow="{TemplateBinding HasShadow}"
+                            PointerAxialPosition="{ThemeResource PointerAxialPosition}"
+                            PointerDirection="{ThemeResource PointerDirection}"
+                            PointerLength="{ThemeResource PointerLength}"
+                            PointerTipRadius="{ThemeResource PointerTipRadius}"
+                            SizeChanged="OnSizeChanged"
+                            TargetBias="{ThemeResource TargetBias}">
+                            <ContentPresenter
+                                x:Name="_contentPresenter"
+                                Content="{TemplateBinding Content}"
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontSize="{TemplateBinding FontSize}"
+                                FontStretch="{TemplateBinding FontStretch}"
+                                FontStyle="{TemplateBinding FontStyle}"
+                                FontWeight="{TemplateBinding FontWeight}"
+                                TextWrapping="WrapWholeWords" />
+                        </local:BubbleBorder>
+                    </Popup>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+</ResourceDictionary>

@@ -8,7 +8,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
-namespace UserControlTest
+namespace P42.Utils.Uno
 {
     public class Device
     {

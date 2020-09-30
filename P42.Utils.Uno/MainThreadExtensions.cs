@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 
-namespace UserControlTest
+namespace P42.Utils.Uno
 {
     internal static class MainThreadExtensions
     {

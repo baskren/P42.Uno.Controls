@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+  <PropertyGroup>
+    <TargetFrameworks>uap10.0.17763;netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid90;monoandroid10.0</TargetFrameworks>
+    <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Uno.UI" Version="3.1.0-dev.536" />
+    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.191.gc988bdd4ff" />
+    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.2" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.17763'">
+    <!--PackageReference Include="Microsoft.UI.Xaml" Version="2.4.3" /-->
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="BubbleBorder.xaml" />
+    <None Remove="BubblePopup.xaml" />
+    <None Remove="Themes\generic.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Remove="BubbleBorder.xaml" />
+    <UpToDateCheckInput Remove="BubblePopup.xaml" />
+    <UpToDateCheckInput Remove="Themes\generic.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="BubbleBorder.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\generic.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="BubblePopup.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\P42.Utils.Uno\P42.Utils.Uno.csproj" />
+  </ItemGroup>
+</Project>

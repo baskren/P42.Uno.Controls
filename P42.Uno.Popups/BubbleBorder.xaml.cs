@@ -19,7 +19,7 @@ using Windows.UI;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace UserControlTest.Popups
+namespace P42.Uno.Popups
 {
     [TemplatePart(Name = ContentPresenterName, Type=typeof(ContentPresenter))]
     public partial class BubbleBorder : ContentControl
@@ -160,33 +160,18 @@ namespace UserControlTest.Popups
 
 
         #region ContentPresenterMargin Property
-        public static readonly DependencyProperty ContentPresenterMarginProperty = DependencyProperty.Register(
+        internal static readonly DependencyProperty ContentPresenterMarginProperty = DependencyProperty.Register(
             nameof(ContentPresenterMargin),
             typeof(Thickness),
             typeof(BubbleBorder),
             new PropertyMetadata(default(Thickness))
         );
-        public Thickness ContentPresenterMargin
+        internal Thickness ContentPresenterMargin
         {
             get => (Thickness)GetValue(ContentPresenterMarginProperty);
             set => SetValue(ContentPresenterMarginProperty, value);
         }
         #endregion ContentPresenterMargin Property
-
-
-        #region OutsideCornersRadius Property
-        public static readonly DependencyProperty OutsideCornersRadiusProperty = DependencyProperty.Register(
-            nameof(OutsideCornersRadius),
-            typeof(double),
-            typeof(BubbleBorder),
-            new PropertyMetadata(5.0)
-        );
-        public double OutsideCornersRadius
-        {
-            get => (double)GetValue(OutsideCornersRadiusProperty);
-            set => SetValue(OutsideCornersRadiusProperty, value);
-        }
-        #endregion CornerRadius Property
 
 
         #region PathGeometry Property
@@ -246,7 +231,6 @@ namespace UserControlTest.Popups
         #region Fields
         const string ContentPresenterName = "ContentPresenter";
         ContentPresenter _contentPresenter;
-        TextBlock textBlock = new TextBlock();
         #endregion
 
 
@@ -339,7 +323,7 @@ namespace UserControlTest.Popups
         {
             var path = GeneratePath(size);
             var data = path.ToSvgPathData();
-            PathGeometry = PathConverter.StringToPathGeometryConverter.Current.Convert(data);
+            PathGeometry = P42.Utils.Uno.StringToPathGeometryConverter.Current.Convert(data);
         }
 
         
@@ -352,9 +336,9 @@ namespace UserControlTest.Popups
         protected override Size MeasureOverride(Size availableSize)
         {
             if (double.IsInfinity(availableSize.Width))
-                availableSize.Width = ((Frame)Window.Current.Content).ActualWidth;
+                availableSize.Width = ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualWidth;
             if (double.IsInfinity(availableSize.Height))
-                availableSize.Height = ((Frame)Window.Current.Content).ActualHeight;
+                availableSize.Height = ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualHeight;
 
             base.MeasureOverride(availableSize);
             Size result = Size.Empty;
@@ -403,7 +387,7 @@ namespace UserControlTest.Popups
             width -= (PointerDirection.IsHorizontal() ? length : 0);
             height -= (PointerDirection.IsVertical() ? length : 0);
 
-            var radius = (float)OutsideCornersRadius;
+            var radius = (float)((CornerRadius.TopLeft + CornerRadius.TopRight + CornerRadius.BottomLeft + CornerRadius.BottomRight)/4.0);
 
             if (radius * 2 > width)
                 radius = width / 2.0f;

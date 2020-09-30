@@ -1,12 +1,11 @@
 ﻿<ContentControl
-    x:Class="UserControlTest.Popups.BubbleBorder"
+    x:Class="P42.Uno.Popups.BubbleBorder"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:UserControlTest.Popups"
+    xmlns:local="using:P42.Uno.Popups"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:skia="using:SkiaSharp.Views.UWP"
     HorizontalAlignment="Left"
     VerticalAlignment="Top"
     d:DesignHeight="300"
@@ -20,13 +19,6 @@
     <ContentControl.Template>
         <ControlTemplate TargetType="local:BubbleBorder">
             <Grid SizeChanged="OnSizeChanged">
-                <Path
-                    Data="{TemplateBinding PathGeometry}"
-                    Fill="{TemplateBinding Background}"
-                    Stroke="{TemplateBinding BorderBrush}"
-                    StrokeThickness="{TemplateBinding BorderThickness}" />
-                <!--
-                <skia:SKXamlCanvas x:Name="_skCanvas" PaintSurface="OnPaintSurface" />
                 <controls:DropShadowPanel
                     BlurRadius="4.0"
                     OffsetX="4.0"
@@ -38,6 +30,21 @@
                         Fill="{TemplateBinding Background}"
                         Stroke="{TemplateBinding BorderBrush}"
                         StrokeThickness="{TemplateBinding BorderThickness}" />
+                </controls:DropShadowPanel>
+                <!--
+                xmlns:skia="using:SkiaSharp.Views.UWP"
+                <skia:SKXamlCanvas x:Name="_skCanvas" PaintSurface="OnPaintSurface" />
+                <controls:DropShadowPanel
+                    BlurRadius="4.0"
+                    OffsetX="4.0"
+                    OffsetY="4.0"
+                    ShadowOpacity="{TemplateBinding ShadowOpacity}"
+                    Color="{StaticResource SystemBaseMediumHighColor}">
+                <Path
+                    Data="{TemplateBinding PathGeometry}"
+                    Fill="{TemplateBinding Background}"
+                    Stroke="{TemplateBinding BorderBrush}"
+                    StrokeThickness="{TemplateBinding BorderThickness}" />
                 </controls:DropShadowPanel>
                 -->
                 <ContentPresenter

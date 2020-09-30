@@ -13,9 +13,10 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using UserControlTest.Popups;
+using P42.Uno.Popups;
 using Windows.UI;
 using System.Threading.Tasks;
+using P42.Utils.Uno;
 
 #if NETFX_CORE
 #else
@@ -46,9 +47,8 @@ namespace UserControlTest
         {
             this.InitializeComponent();
             _listView.ItemsSource = new List<int> { 1, 2, 3, 4 };
-
         }
-
+        /*
         ModalPopup _modalPopup = new ModalPopup
         {
             HasShadow = true,
@@ -68,19 +68,14 @@ namespace UserControlTest
             Background = new SolidColorBrush(Colors.White),
             BorderBrush = new SolidColorBrush(Colors.Blue)
         };
-
-        UwpPopup _uwpPopup = new UwpPopup
-        {
-            Text = "Pizza!",
-            Margin = new Thickness(10)
-        };
+        */
 
         private void OnAltBorderTapped(object sender, TappedRoutedEventArgs e)
         {
             BorderTapped(sender, e);
         }
 
-        async void BorderTapped(object sender, TappedRoutedEventArgs e)
+        void BorderTapped(object sender, TappedRoutedEventArgs e)
         {
             _button_Click(sender, e);
         }
@@ -128,14 +123,19 @@ namespace UserControlTest
                     await _modalPopup.PushAsync();
                 }
                 */
+                var frame = element.GetFrame();
+                var content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
+                _p42UnoPopup.Content = new TextBlock { Text = content };
+
+
 
                 _lastHorizontalAlignment++;
                 if (_lastHorizontalAlignment > HorizontalAlignment.Stretch)
                     _lastHorizontalAlignment = HorizontalAlignment.Left;
 
-                _uwpPopup.HorizontalAlignment = _lastHorizontalAlignment;
+                _p42UnoPopup.HorizontalAlignment = _lastHorizontalAlignment;
 
-                await _uwpPopup.OpenPopupAsync();
+                await _p42UnoPopup.PushAsync();
             }
         }
 

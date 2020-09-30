@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace UserControlTest.Popups
+namespace P42.Uno.Popups
 {
     static class SKPathExtensions
     {

@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:UserControlTest"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:popups="using:UserControlTest.Popups"
+    xmlns:popups="using:P42.Uno.Popups"
     Padding="10"
     mc:Ignorable="d">
 
@@ -84,13 +84,14 @@
                     Background="Orange"
                     BorderBrush="Black"
                     BorderThickness="1"
+                    CornerRadius="5"
                     HasShadow="true"
-                    OutsideCornersRadius="5"
                     PointerDirection="Down">
                     <Border Background="#1F88">
                         <TextBlock Text="TEST TEST TEST" />
                     </Border>
                 </popups:BubbleBorder>
+                <popups:BubblePopup x:Name="_p42UnoPopup" Margin="10" />
             </Grid.Children>
         </Grid>
     </Page.Content>

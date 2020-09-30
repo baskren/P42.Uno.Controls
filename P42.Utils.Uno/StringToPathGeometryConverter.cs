@@ -5,7 +5,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
-namespace PathConverter
+namespace P42.Utils.Uno
 {
     public class StringToPathGeometryConverter : IValueConverter
     {

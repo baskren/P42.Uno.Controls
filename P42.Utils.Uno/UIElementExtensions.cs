@@ -7,7 +7,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Shapes;
 
-namespace UserControlTest
+namespace P42.Utils.Uno
 {
     public static class UIElementExtensions
     {

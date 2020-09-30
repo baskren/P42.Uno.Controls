@@ -4,4 +4,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UserControlTest">
 
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--
+                <ResourceDictionary Source="ms-appx:///P42.Uno.Popups/Styles.xaml" />
+                <ResourceDictionary Source="ms-appx:///P42.Uno.Popups/Themes/Generic.xaml" />
+                <ResourceDictionary Source="Popups/BubblePopup.xaml" />
+                -->
+            </ResourceDictionary.MergedDictionaries>
+
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>
