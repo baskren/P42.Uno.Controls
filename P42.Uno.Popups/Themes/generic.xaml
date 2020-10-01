@@ -3,16 +3,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:P42.Uno.Popups">
 
-    <!-- Test if this file is being loaded
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pizza"/>
+        <ResourceDictionary Source="ms-appx:///P42.Uno.Popups/ModalPopup.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    -->
 
     <!-- IMPORTANT NOTE: REMOVING THE x:Key from the following <Style> tag fixed the issue with the failure to automatically apply the template-->
 
 
-
+    <!--
     <Style TargetType="local:BubblePopup">
         <Setter Property="Background" Value="{StaticResource SystemControlBackgroundChromeMediumBrush}" />
         <Setter Property="BorderBrush" Value="{StaticResource SystemControlForegroundBaseLowBrush}" />
@@ -62,8 +60,8 @@
         </Setter>
     </Style>
 
-    <!--
-    <Style TargetType="local:ModalPopup">
+
+    <Style x:Key="ModalPopupDefaultStyle" TargetType="local:ModalPopup">
         <Setter Property="Background" Value="{StaticResource SystemControlBackgroundChromeMediumBrush}" />
         <Setter Property="BorderBrush" Value="{StaticResource SystemControlForegroundBaseLowBrush}" />
         <Setter Property="BorderThickness" Value="1" />
@@ -111,6 +109,5 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
-    -->
+    </Style>-->
 </ResourceDictionary>

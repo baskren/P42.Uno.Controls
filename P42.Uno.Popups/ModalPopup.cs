@@ -15,6 +15,13 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+#if NETFX_CORE
+using Popup = Windows.UI.Xaml.Controls.Primitives.Popup;
+#else
+using Popup = Windows.UI.Xaml.Controls.Popup;
+#endif
+
+
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace P42.Uno.Popups
@@ -25,11 +32,11 @@ namespace P42.Uno.Popups
     [TemplatePart(Name = PopupElementName, Type = typeof(Windows.UI.Xaml.Controls.Primitives.Popup))]
     public partial class ModalPopup : ContentControl
     {
-        #region Properties
+#region Properties
 
-        #region Overridden Properties
+#region Overridden Properties
         
-        #region HorizontalAlignment Property
+#region HorizontalAlignment Property
         public static readonly new DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
             nameof(HorizontalAlignment),
             typeof(HorizontalAlignment),
@@ -55,9 +62,9 @@ namespace P42.Uno.Popups
             get => (HorizontalAlignment)GetValue(HorizontalAlignmentProperty);
             set => SetValue(HorizontalAlignmentProperty, value);
         }
-        #endregion HorizontalAlignment Property
+#endregion HorizontalAlignment Property
 
-        #region VerticalAlignment Property
+#region VerticalAlignment Property
         public static readonly new DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register(
             nameof(VerticalAlignment),
             typeof(VerticalAlignment),
@@ -83,10 +90,10 @@ namespace P42.Uno.Popups
             get => (VerticalAlignment)GetValue(VerticalAlignmentProperty);
             set => SetValue(VerticalAlignmentProperty, value);
         }
-        #endregion VerticalAlignment Property
+#endregion VerticalAlignment Property
 
         
-        #region Margin Property
+#region Margin Property
         public static readonly new DependencyProperty MarginProperty = DependencyProperty.Register(
             nameof(Margin),
             typeof(Thickness),
@@ -103,12 +110,12 @@ namespace P42.Uno.Popups
             get => (Thickness)GetValue(MarginProperty);
             set => SetValue(MarginProperty, value);
         }
-        #endregion Margin Property
+#endregion Margin Property
         
 
-        #endregion
+#endregion
 
-        #region HasShadow Property
+#region HasShadow Property
         public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
             nameof(HasShadow),
             typeof(bool),
@@ -121,29 +128,34 @@ namespace P42.Uno.Popups
             set => SetValue(HasShadowProperty, value);
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Fields
+#region Fields
         const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Center;
         const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Center;
-        const string ContentPresenterName = "_contentPresenter";
-        const string BorderElementName = "_border";
-        const string PopupElementName = "_popup";
+        const string ContentPresenterName = "ModalPopup_Popup_Border_ContentPresenter";
+        const string BorderElementName = "ModalPopup_Popup_Border";
+        const string PopupElementName = "ModalPopup_Popup";
         ContentPresenter _contentPresenter;
         BubbleBorder _border;
-        Windows.UI.Xaml.Controls.Primitives.Popup _popup;
-        #endregion
+        Popup _popup;
+#endregion
 
 
         public ModalPopup()
         {
             //base.HorizontalAlignment = HorizontalAlignment.Stretch;
             //base.VerticalAlignment = VerticalAlignment.Stretch;
-            this.InitializeComponent();
-
-            //this.DefaultStyleKey = typeof(ModalPopup);
+            //this.InitializeComponent();
+            this.DefaultStyleKey = typeof(ModalPopup);
+            /*
+            var startStyle = Style;
+            var defaultStyleObject = Application.Current.Resources["BaseModalPopupStyle"];
+            if (defaultStyleObject is Style defaultStyle)
+                Style = defaultStyle;
+            */
         }
 
         protected override void OnApplyTemplate()
@@ -153,7 +165,15 @@ namespace P42.Uno.Popups
             _border = GetTemplateChild(BorderElementName) as BubbleBorder;
             _border.HorizontalAlignment = HorizontalAlignment;
             _border.VerticalAlignment = VerticalAlignment;
-            _popup = GetTemplateChild(PopupElementName) as Windows.UI.Xaml.Controls.Primitives.Popup;
+            var popupChild = GetTemplateChild(PopupElementName);
+            
+            _popup = popupChild as Popup;
+
+            if (_popup is null)
+            {
+                var borderParent = _border.Parent;
+                _popup = borderParent as Popup;
+            }
             UpdateAlignment();
         }
 

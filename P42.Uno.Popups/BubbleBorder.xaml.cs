@@ -439,10 +439,11 @@ namespace P42.Uno.Popups
 
             RegeneratePath(borderSize);
 
+
 #if NETFX_CORE
 #else
             // the following fixes the DropShadowPanel clipping issue
-            _dropShadow.Measure(borderSize);
+            _dropShadow?.Measure(borderSize);
 #endif
             System.Diagnostics.Debug.WriteLine("\t RESULT: " + result);
             return result;

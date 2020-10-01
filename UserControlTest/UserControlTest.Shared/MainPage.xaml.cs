@@ -69,7 +69,7 @@ namespace UserControlTest
             BorderBrush = new SolidColorBrush(Colors.Blue)
         };
         */
-        UwpPopup _modalPopup = new UwpPopup
+        UwpPopup _uwpPopup = new UwpPopup
         {
             Margin = new Thickness(10),
             Padding = new Thickness(5),
@@ -138,8 +138,8 @@ namespace UserControlTest
                 var content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
 
                 _modalPopup.Margin = new Thickness(5);
-                _modalPopup.BorderThickness = 1; // new Thickness(1);
-                _modalPopup.CornerRadius = 4; //     new CornerRadius(4);
+                _modalPopup.BorderThickness = new Thickness(1);
+                _modalPopup.CornerRadius = new CornerRadius(4);
                 _modalPopup.Background = new SolidColorBrush(Colors.White);
                 _modalPopup.BorderBrush = new SolidColorBrush(Colors.Blue);
 

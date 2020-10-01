@@ -47,21 +47,30 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
   </ItemGroup>
+  <!--
   <ItemGroup>
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="Themes\Generic.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Themes\Generic.xaml" />
-  </ItemGroup>
+  -->
   <ItemGroup>
     <ProjectReference Include="..\P42.Utils.Uno\P42.Utils.Uno.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Themes\Generic.xaml">
+    <EmbeddedResource Include="BubbleBorder.xaml">
+      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UwpPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource >
   </ItemGroup>
 </Project>
