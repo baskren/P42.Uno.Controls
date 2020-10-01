@@ -1,0 +1,61 @@
+﻿<ContentControl
+    x:Class="P42.Uno.Popups.ModalPopup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:P42.Uno.Popups"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="_contentControl"
+    Margin="0"
+    Padding="0"
+    HorizontalAlignment="Left"
+    VerticalAlignment="Center"
+    HorizontalContentAlignment="Right"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+    BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
+    BorderThickness="2"
+    CornerRadius="10"
+    FontSize="16"
+    Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"
+    mc:Ignorable="d">
+    
+    <ContentControl.Template>
+        <ControlTemplate TargetType="local:ModalPopup">
+            <Popup
+                x:Name="_popup"
+                IsLightDismissEnabled="True"
+                IsOpen="False"
+                LightDismissOverlayMode="On">
+                <local:BubbleBorder
+                    x:Name="_border"
+                    Margin="0"
+                    Padding="{TemplateBinding Padding}"
+                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    HasShadow="{TemplateBinding HasShadow}"
+                    PointerDirection="None"
+                    SizeChanged="OnSizeChanged">
+                    <ContentPresenter
+                        x:Name="_contentPresenter"
+                        Margin="0"
+                        Padding="0"
+                        Content="{TemplateBinding Content}"
+                        FontFamily="{TemplateBinding FontFamily}"
+                        FontSize="{TemplateBinding FontSize}"
+                        FontStretch="{TemplateBinding FontStretch}"
+                        FontStyle="{TemplateBinding FontStyle}"
+                        FontWeight="{TemplateBinding FontWeight}"
+                        TextWrapping="WrapWholeWords" />
+                </local:BubbleBorder>
+            </Popup>
+        </ControlTemplate>
+    </ContentControl.Template>
+
+</ContentControl>

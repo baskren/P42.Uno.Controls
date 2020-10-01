@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:P42.Uno.Popups"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="_contentControl"
     HorizontalAlignment="Left"
     VerticalAlignment="Top"
     d:DesignHeight="300"
@@ -38,7 +39,7 @@
                 <skia:SKXamlCanvas x:Name="_skCanvas" PaintSurface="OnPaintSurface" />
                 -->
                 <ContentPresenter
-                    x:Name="ContentPresenter"
+                    x:Name="_contentPresenter"
                     Margin="{TemplateBinding ContentPresenterMargin}"
                     HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                     VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"

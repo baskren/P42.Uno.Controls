@@ -5,25 +5,30 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:P42.Uno.Popups"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    x:Name="_userControl"
+    x:Name="parent"
+    Margin="0"
+    Padding="0"
     d:DesignHeight="300"
     d:DesignWidth="400"
+    Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+    BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
     mc:Ignorable="d">
 
     <Popup
         x:Name="_popup"
+        Margin="{x:Bind parent.Margin, Mode=OneWay}"
         IsLightDismissEnabled="True"
         IsOpen="False"
+        DataContext="parent"
         LightDismissOverlayMode="On">
         <local:BubbleBorder
             x:Name="_border"
-            Margin="{x:Bind _popup.Margin, Mode=OneWay}"
-            Background="LightBlue"
-            BorderBrush="DarkBlue"
-            BorderThickness="2"
-            CornerRadius="4"
-            HasShadow="true"
-            PointerDirection="Up"
+            Padding="{Binding Padding, ElementName=parent, Mode=OneWay}"
+            Background="{Binding Background, ElementName=parent, Mode=OneWay}"
+            BorderBrush="{Binding BorderBrush, ElementName=parent, Mode=OneWay}"
+            BorderThickness="{Binding BorderThickness, ElementName=parent, Mode=OneWay}"
+            CornerRadius="{Binding CornerRadius, ElementName=parent, Mode=OneWay}"
+            PointerDirection="None"
             SizeChanged="OnSizeChanged">
             <Grid x:Name="gdChild">
                 <Grid.RowDefinitions>

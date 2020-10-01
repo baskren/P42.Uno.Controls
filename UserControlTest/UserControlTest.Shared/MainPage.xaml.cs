@@ -48,15 +48,6 @@ namespace UserControlTest
             this.InitializeComponent();
             _listView.ItemsSource = new List<int> { 1, 2, 3, 4 };
         }
-        /*
-        ModalPopup _modalPopup = new ModalPopup
-        {
-            HasShadow = true,
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Background = new SolidColorBrush(Colors.White),
-            BorderBrush = new SolidColorBrush(Colors.Blue)
-        };
         BubblePopup _bubblePopup = new BubblePopup
         {
             HasShadow = true,
@@ -67,10 +58,8 @@ namespace UserControlTest
             Background = new SolidColorBrush(Colors.White),
             BorderBrush = new SolidColorBrush(Colors.Blue)
         };
-
-        */
-
-        UwpPopup _bubblePopup = new UwpPopup
+        /*
+        ModalPopup _modalPopup = new ModalPopup
         {
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(4),
@@ -79,6 +68,17 @@ namespace UserControlTest
             Background = new SolidColorBrush(Colors.White),
             BorderBrush = new SolidColorBrush(Colors.Blue)
         };
+        */
+        UwpPopup _modalPopup = new UwpPopup
+        {
+            Margin = new Thickness(10),
+            Padding = new Thickness(5),
+            BorderThickness = 10,
+            CornerRadius = 10,
+            Background = new SolidColorBrush(Colors.Green),
+            BorderBrush = new SolidColorBrush(Colors.Blue),
+        };
+
 
 
         private void OnAltBorderTapped(object sender, TappedRoutedEventArgs e)
@@ -136,18 +136,28 @@ namespace UserControlTest
                 */
                 var frame = element.GetFrame();
                 var content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
-                _bubblePopup.Content = new TextBlock { Text = content };
 
+                _modalPopup.Margin = new Thickness(5);
+                _modalPopup.BorderThickness = 1; // new Thickness(1);
+                _modalPopup.CornerRadius = 4; //     new CornerRadius(4);
+                _modalPopup.Background = new SolidColorBrush(Colors.White);
+                _modalPopup.BorderBrush = new SolidColorBrush(Colors.Blue);
 
+                _modalPopup.Content = new TextBlock { Text = content };
+
+                //_modalPopup.Padding = new Thickness( _modalPopup.Padding.Left+1);
+
+                if (_modalPopup.Parent is Grid grid)
+                    grid.Children.Remove(_modalPopup);
 
                 _lastHorizontalAlignment++;
                 if (_lastHorizontalAlignment > HorizontalAlignment.Stretch)
                     _lastHorizontalAlignment = HorizontalAlignment.Left;
 
-                _bubblePopup.HorizontalAlignment = _lastHorizontalAlignment;
+                _modalPopup.HorizontalAlignment = _lastHorizontalAlignment;
                 _bubbleBorder.HorizontalAlignment = _lastHorizontalAlignment;
 
-               await _bubblePopup.PushAsync();
+               await _modalPopup.PushAsync();
             }
         }
 

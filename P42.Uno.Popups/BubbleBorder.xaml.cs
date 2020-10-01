@@ -279,11 +279,10 @@ namespace P42.Uno.Popups
 
         #endregion
 
-
         #region Fields
         const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Left;
         const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Top;
-        const string ContentPresenterName = "ContentPresenter";
+        const string ContentPresenterName = "_contentPresenter";
         const string PathElementName = "_path";
         const string DropShadowPanelElementName = "_dropShadow";
         ContentPresenter _contentPresenter;
@@ -392,7 +391,7 @@ namespace P42.Uno.Popups
         
         private void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
-            System.Diagnostics.Debug.WriteLine(GetType() + ".OnSizeChanged()");
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".OnSizeChanged()");
             //RegeneratePath(DesiredSize);
         }
         
@@ -401,16 +400,19 @@ namespace P42.Uno.Popups
         protected override Size MeasureOverride(Size availableSize)
         {
             UpdateContentPresenterMargin();
-            System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") =======");
-            //System.Diagnostics.Debug.WriteLine("\t Window.ActualWidth: " + ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualWidth);
-            //System.Diagnostics.Debug.WriteLine("\t Window.ActualHeight: " + ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualHeight);
-            System.Diagnostics.Debug.WriteLine("\t ContentPresenterMargin: " + ContentPresenterMargin);
+            System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") ======= hzAlign: " + HorizontalAlignment + " ======= margin: " + Margin + " ====== WindowSize: " + AppWindow.Size());
+
+            var windowWidth = AppWindow.Size().Width;
+            var windowHeight = AppWindow.Size().Height;
+
+            //System.Diagnostics.Debug.WriteLine("\t ContentPresenterMargin: " + ContentPresenterMargin);
             //this.DebugLogProperties();
 
+
             if (double.IsInfinity(availableSize.Width))
-                availableSize.Width = ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualWidth;
+                availableSize.Width = windowWidth;
             if (double.IsInfinity(availableSize.Height))
-                availableSize.Height = ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualHeight;
+                availableSize.Height = windowHeight;
 
             base.MeasureOverride(availableSize);
             Size result = Size.Empty;
@@ -419,18 +421,22 @@ namespace P42.Uno.Popups
                 if (availableSize != default)
                     element.Measure(availableSize);
                 result = element.DesiredSize;
-                System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride element.DesiredSize:" + result);
+                //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride element.DesiredSize:" + result);
             }
-            System.Diagnostics.Debug.WriteLine("\t HorizontalAlignment: " + HorizontalAlignment);
+            //System.Diagnostics.Debug.WriteLine("\t HorizontalAlignment: " + HorizontalAlignment);
             if (HorizontalAlignment == HorizontalAlignment.Stretch)
                 result.Width = availableSize.Width;
             if (VerticalAlignment == VerticalAlignment.Stretch)
                 result.Height = availableSize.Height;
-            System.Diagnostics.Debug.WriteLine("\t RESULT: " + result);
+
+
+            result.Width = Math.Max(0,Math.Min(windowWidth - Margin.Horizontal(), result.Width));
+            result.Height = Math.Max(0,Math.Min(windowHeight - Margin.Vertical(), result.Height));
 
             var borderSize = result;
             borderSize.Width += Margin.Horizontal();
             borderSize.Height += Margin.Vertical();
+
             RegeneratePath(borderSize);
 
 #if NETFX_CORE
@@ -438,23 +444,24 @@ namespace P42.Uno.Popups
             // the following fixes the DropShadowPanel clipping issue
             _dropShadow.Measure(borderSize);
 #endif
-
+            System.Diagnostics.Debug.WriteLine("\t RESULT: " + result);
             return result;
         }
 
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            System.Diagnostics.Debug.WriteLine(GetType() + ".ArrangeOverride(" + finalSize + ")");
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".ArrangeOverride(" + finalSize + ")");
             return base.ArrangeOverride(finalSize);
         }
 
         SKPath GeneratePath(Size measuredSize = default)
         {
+            var windowWidth = AppWindow.Size().Width;
+            var windowHeight = AppWindow.Size().Height;
 
-
-            var width = (float)Math.Min(DesiredSize.Width, MinWidth);
-            var height = (float)Math.Min(DesiredSize.Height, MinHeight);
+            var width = (float)Math.Min(DesiredSize.Width, windowWidth - Margin.Horizontal());
+            var height = (float)Math.Min(DesiredSize.Height, windowHeight - Margin.Vertical());
 
             if (measuredSize != default)
             {

@@ -92,6 +92,9 @@
                         <TextBlock Text="TEST TEST TEST" />
                     </Border>
                 </popups:BubbleBorder>
+                <!--
+                <popups:ModalPopup x:Name="_modalPopup" />
+                -->
             </Grid.Children>
         </Grid>
     </Page.Content>

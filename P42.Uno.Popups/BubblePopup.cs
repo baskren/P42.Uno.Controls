@@ -1,4 +1,5 @@
-﻿using System;
+﻿using P42.Utils.Uno;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,14 +16,14 @@ namespace P42.Uno.Popups
 {
     [TemplatePart(Name = PopupElementName, Type = typeof(Windows.UI.Xaml.Controls.Primitives.Popup))]
     [TemplatePart(Name = BorderElementName, Type = typeof(BubbleBorder))]
-    [TemplatePart(Name = ContentPresenterElementName, Type = typeof(ContentPresenter))]
+    //[TemplatePart(Name = ContentPresenterElementName, Type = typeof(ContentPresenter))]
     public partial class BubblePopup
         : ContentControl
     {
         #region Properties
 
         #region Override Properties
-
+        /*
         #region HorizontalAlignment Property
         public static readonly new DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
             nameof(HorizontalAlignment),
@@ -58,7 +59,7 @@ namespace P42.Uno.Popups
             set => SetValue(VerticalAlignmentProperty, value);
         }
         #endregion VerticalAlignment Property
-
+        */
         #endregion
 
         #region Popup Emumlated Properties
@@ -225,7 +226,7 @@ namespace P42.Uno.Popups
         const string BorderElementName = "_border";
         const string PopupElementName = "_popup";
 
-        ContentPresenter _contentPresenter;
+        //ContentPresenter _contentPresenter;
         BubbleBorder _border;
         Windows.UI.Xaml.Controls.Primitives.Popup _popup;
         #endregion
@@ -259,7 +260,7 @@ namespace P42.Uno.Popups
 
             _popup = (Windows.UI.Xaml.Controls.Primitives.Popup)GetTemplateChild(PopupElementName);
             _border = (BubbleBorder)GetTemplateChild(BorderElementName);
-            _contentPresenter = (ContentPresenter)GetTemplateChild(ContentPresenterElementName);
+            //_contentPresenter = (ContentPresenter)GetTemplateChild(ContentPresenterElementName);
         }
 
         #endregion
@@ -356,9 +357,9 @@ namespace P42.Uno.Popups
         {
             System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride("+availableSize+")");
             if (double.IsInfinity(availableSize.Width))
-                availableSize.Width = ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualWidth;
+                availableSize.Width = AppWindow.Size().Width;
             if (double.IsInfinity(availableSize.Height))
-                availableSize.Height = ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualHeight;
+                availableSize.Height = AppWindow.Size().Height;
 
             var result = base.MeasureOverride(availableSize);
             if (HorizontalAlignment == HorizontalAlignment.Stretch)
@@ -383,24 +384,27 @@ namespace P42.Uno.Popups
 
         void UpdateAlignment()
         {
+            var windowWidth = AppWindow.Size().Width;
+            var windowHeight = AppWindow.Size().Height;
+
             double hOffset = 0.0;
             _border.Width = double.NaN;
             if (HorizontalAlignment == HorizontalAlignment.Center)
-                hOffset = (Windows.UI.Xaml.Window.Current.Bounds.Width - _border.ActualWidth) / 2;
+                hOffset = (windowWidth - _border.ActualWidth) / 2;
             else if (HorizontalAlignment == HorizontalAlignment.Right)
-                hOffset = (Windows.UI.Xaml.Window.Current.Bounds.Width - _border.ActualWidth) - Margin.Right;
+                hOffset = windowWidth - _border.ActualWidth - Margin.Right;
             else if (HorizontalAlignment == HorizontalAlignment.Stretch)
-                _border.Width = ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualWidth - Margin.Left - Margin.Right;
+                _border.Width = windowWidth - Margin.Left - Margin.Right;
             hOffset = Math.Max(Margin.Left, hOffset);
 
             double vOffset = 0.0;
             _border.Height = double.NaN;
             if (VerticalAlignment == VerticalAlignment.Center)
-                vOffset = (Windows.UI.Xaml.Window.Current.Bounds.Height - _border.ActualHeight) / 2;
+                vOffset = (windowHeight - _border.ActualHeight) / 2;
             else if (VerticalAlignment == VerticalAlignment.Bottom)
-                vOffset = (Windows.UI.Xaml.Window.Current.Bounds.Height - _border.ActualHeight) - Margin.Bottom;
+                vOffset = windowHeight - _border.ActualHeight - Margin.Bottom;
             else if (VerticalAlignment == VerticalAlignment.Stretch)
-                _border.Height = ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualHeight - Margin.Top - Margin.Bottom;
+                _border.Height = windowHeight - Margin.Top - Margin.Bottom;
             vOffset = Math.Max(Margin.Top, vOffset);
 
             // works on UWP and WASM - not Android
