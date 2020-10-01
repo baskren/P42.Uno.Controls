@@ -11,7 +11,7 @@ namespace P42.Utils.Uno
 {
     public static class UIElementExtensions
     {
-        public static Rect GetFrame(this UIElement element)
+        public static Rect GetBounds(this UIElement element)
         {
             var ttv = element.TransformToVisual(Windows.UI.Xaml.Window.Current.Content);
             var location = ttv.TransformPoint(new Point(0, 0));

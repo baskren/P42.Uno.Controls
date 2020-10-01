@@ -31,7 +31,11 @@
                 BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="{TemplateBinding CornerRadius}"
                 HasShadow="{TemplateBinding HasShadow}"
+                PointerBias="{TemplateBinding PointerBias}"
+                PointerCornerRadius="{TemplateBinding PointerCornerRadius}"
                 PointerDirection="None"
+                PointerLength="{TemplateBinding PointerLength}"
+                PointerTipRadius="{TemplateBinding PointerTipRadius}"
                 SizeChanged="OnSizeChanged">
                 <ContentPresenter
                     x:Name="BasePopup_Popup_Border_ContentPresenter"

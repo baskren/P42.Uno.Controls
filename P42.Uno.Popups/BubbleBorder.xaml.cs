@@ -78,23 +78,23 @@ namespace P42.Uno.Popups
 
         #region Unique Properties
 
-        #region TargetBias Property
-        public static readonly DependencyProperty TargetBiasProperty = DependencyProperty.Register(
-            nameof(TargetBias),
+        #region PointerBias Property
+        public static readonly DependencyProperty PointerBiasProperty = DependencyProperty.Register(
+            nameof(PointerBias),
             typeof(double),
             typeof(BubbleBorder),
-            new PropertyMetadata(0.5, new PropertyChangedCallback((d, e) => ((BubbleBorder)d).OnTargetBiasChanged(e)))
+            new PropertyMetadata(0.5, new PropertyChangedCallback((d, e) => ((BubbleBorder)d).OnPointerBiasChanged(e)))
         );
-        protected virtual void OnTargetBiasChanged(DependencyPropertyChangedEventArgs e)
+        protected virtual void OnPointerBiasChanged(DependencyPropertyChangedEventArgs e)
         {
             RegeneratePath();
         }
-        public double TargetBias
+        public double PointerBias
         {
-            get => (double)GetValue(TargetBiasProperty);
-            set => SetValue(TargetBiasProperty, value);
+            get => (double)GetValue(PointerBiasProperty);
+            set => SetValue(PointerBiasProperty, value);
         }
-        #endregion TargetBias Property
+        #endregion PointerBias Property
 
 
         #region PointerLength Property
@@ -562,7 +562,7 @@ namespace P42.Uno.Popups
 
             var dir = 1;
 
-            if (PointerDirection == PointerDirection.None)
+            if (length <= 1)
             {
                 result.MoveTo(right - radius, top);
                 result.ArcTo(right, top, right, bottom - radius, radius);

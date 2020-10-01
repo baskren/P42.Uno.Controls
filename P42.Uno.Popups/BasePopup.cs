@@ -46,15 +46,7 @@ namespace P42.Uno.Popups
         protected virtual void OnHorizontalAlignmentChanged(DependencyPropertyChangedEventArgs e)
         {
             if (_border != null)
-            {
-                //base.HorizontalAlignment = HorizontalAlignment.Stretch;
-                if ((HorizontalAlignment)e.NewValue == HorizontalAlignment.Stretch)
-                {
-                    _border.HorizontalAlignment = HorizontalAlignment.Stretch;
-                }
-                else
-                    _border.HorizontalAlignment = HorizontalAlignment;
-            }
+                _border.HorizontalAlignment = HorizontalAlignment;
             if ((HorizontalAlignment)e.OldValue == HorizontalAlignment.Stretch || (HorizontalAlignment)e.NewValue == HorizontalAlignment.Stretch)
                 InvalidateMeasure();
             UpdateAlignment();
@@ -76,13 +68,7 @@ namespace P42.Uno.Popups
         protected virtual void OnVerticalAlignmentChanged(DependencyPropertyChangedEventArgs e)
         {
             if (_border != null)
-            {
-                //base.VerticalAlignment = VerticalAlignment.Stretch;
-                if ((VerticalAlignment)e.NewValue == VerticalAlignment.Stretch)
-                    _border.VerticalAlignment = VerticalAlignment.Stretch;
-                else
                     _border.VerticalAlignment = VerticalAlignment;
-            }
             if ((VerticalAlignment)e.OldValue == VerticalAlignment.Stretch || (VerticalAlignment)e.NewValue == VerticalAlignment.Stretch)
                 InvalidateMeasure();
             UpdateAlignment();
@@ -103,8 +89,7 @@ namespace P42.Uno.Popups
         );
         protected virtual void OnMarginChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (_border!=null)
-                _border.Margin = Margin;
+            UpdateBorderMargin();
         }
         public new Thickness Margin
         {
@@ -130,6 +115,22 @@ namespace P42.Uno.Popups
 
         #endregion
 
+        #region PopAfter Property
+        public static readonly DependencyProperty PopAfterProperty = DependencyProperty.Register(
+            nameof(PopAfter),
+            typeof(TimeSpan),
+            typeof(BasePopup),
+            new PropertyMetadata(default(TimeSpan))
+        );
+        public TimeSpan PopAfter
+        {
+            get => (TimeSpan)GetValue(PopAfterProperty);
+            set => SetValue(PopAfterProperty, value);
+        }
+        #endregion PopAfter Property
+
+        #region Target Properties
+
         #region Target Property
         public static readonly DependencyProperty TargetProperty = DependencyProperty.Register(
             nameof(Target),
@@ -139,12 +140,7 @@ namespace P42.Uno.Popups
         );
         protected virtual void OnTargetChanged(DependencyPropertyChangedEventArgs e)
         {
-            // where is the target?
-            if (Target != null)
-            {
-                var frame = Target.GetFrame();
-            }
-
+            UpdateBorderMargin();
         }
         public UIElement Target
         {
@@ -152,6 +148,168 @@ namespace P42.Uno.Popups
             set => SetValue(TargetProperty, value);
         }
         #endregion Target Property
+
+        #region TargetPoint Property
+        public static readonly DependencyProperty TargetPointProperty = DependencyProperty.Register(
+            nameof(TargetPoint),
+            typeof(Point),
+            typeof(BasePopup),
+            new PropertyMetadata(default(Point), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnTargetPointChanged(e)))
+        );
+        protected virtual void OnTargetPointChanged(DependencyPropertyChangedEventArgs e)
+        {
+            UpdateBorderMargin();
+        }
+        public Point TargetPoint
+        {
+            get => (Point)GetValue(TargetPointProperty);
+            set => SetValue(TargetPointProperty, value);
+        }
+        #endregion TargetPoint Property
+
+        #endregion
+
+        #region Pointer Properties
+
+        #region PointerBias Property
+        public static readonly DependencyProperty PointerBiasProperty = DependencyProperty.Register(
+            nameof(PointerBias),
+            typeof(double),
+            typeof(BasePopup),
+            new PropertyMetadata(0.5, new PropertyChangedCallback((d, e) => ((BasePopup)d).OnPointerBiasChanged(e)))
+        );
+        protected virtual void OnPointerBiasChanged(DependencyPropertyChangedEventArgs e)
+        {
+            
+        }
+        /// <summary>
+        /// Gets or sets the bias (0.0 is start; 0.5 is center;  1.0 is end; greater than 1.0 is pixels from start; less than 0.0 is pixels from end)of the pointer relative to the chosen face on the target.
+        /// </summary>
+        /// <value>The target bias.</value>
+        public double PointerBias
+        {
+            get => (double)GetValue(PointerBiasProperty);
+            set => SetValue(PointerBiasProperty, value);
+        }
+        #endregion PointerBias Property
+
+        #region PointerCornerRadius Property
+        public static readonly DependencyProperty PointerCornerRadiusProperty = DependencyProperty.Register(
+            nameof(PointerCornerRadius),
+            typeof(double),
+            typeof(BasePopup),
+            new PropertyMetadata(default(double))
+        );
+        public double PointerCornerRadius
+        {
+            get => (double)GetValue(PointerCornerRadiusProperty);
+            set => SetValue(PointerCornerRadiusProperty, value);
+        }
+        #endregion PointerCornerRadius Property
+
+        #region Pointer Directions
+
+        #region ActualPointerDirection Property
+        public static readonly DependencyProperty ActualPointerDirectionProperty = DependencyProperty.Register(
+            nameof(ActualPointerDirection),
+            typeof(PointerDirection),
+            typeof(BasePopup),
+            new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnActualPointerDirectionChanged(e)))
+        );
+        protected virtual void OnActualPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
+        {
+            
+        }
+        public PointerDirection ActualPointerDirection
+        {
+            get => (PointerDirection)GetValue(ActualPointerDirectionProperty);
+            set => SetValue(ActualPointerDirectionProperty, value);
+        }
+        #endregion ActualPointerDirection Property
+
+        #region PreferredPointerDirection Property
+        public static readonly DependencyProperty PreferredPointerDirectionProperty = DependencyProperty.Register(
+            nameof(PreferredPointerDirection),
+            typeof(PointerDirection),
+            typeof(BasePopup),
+            new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnPreferredPointerDirectionChanged(e)))
+        );
+        protected virtual void OnPreferredPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
+        {
+            UpdateBorderMargin();
+        }
+        public PointerDirection PreferredPointerDirection
+        {
+            get => (PointerDirection)GetValue(PreferredPointerDirectionProperty);
+            set => SetValue(PreferredPointerDirectionProperty, value);
+        }
+        #endregion PreferredPointerDirection Property
+
+        #region FallbackPointerDirection Property
+        public static readonly DependencyProperty FallbackPointerDirectionProperty = DependencyProperty.Register(
+            nameof(FallbackPointerDirection),
+            typeof(PointerDirection),
+            typeof(BasePopup),
+            new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnFallbackPointerDirectionChanged(e)))
+        );
+        protected virtual void OnFallbackPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
+        {
+            UpdateBorderMargin();
+        }
+        public PointerDirection FallbackPointerDirection
+        {
+            get => (PointerDirection)GetValue(FallbackPointerDirectionProperty);
+            set => SetValue(FallbackPointerDirectionProperty, value);
+        }
+        #endregion FallbackPointerDirection Property
+
+        #endregion
+
+        #region PointerLength Property
+        public static readonly DependencyProperty PointerLengthProperty = DependencyProperty.Register(
+            nameof(PointerLength),
+            typeof(double),
+            typeof(BasePopup),
+            new PropertyMetadata(default(double), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnPointerLengthChanged(e)))
+        );
+        protected virtual void OnPointerLengthChanged(DependencyPropertyChangedEventArgs e)
+        {
+            UpdateBorderMargin();
+        }
+        /// <summary>
+        /// Gets or sets the length of the bubble layout's pointer.
+        /// </summary>
+        /// <value>The length of the pointer.</value>
+        public double PointerLength
+        {
+            get => (double)GetValue(PointerLengthProperty);
+            set => SetValue(PointerLengthProperty, value);
+        }
+        #endregion PointerLength Property
+
+        #region PointerTipRadius Property
+        public static readonly DependencyProperty PointerTipRadiusProperty = DependencyProperty.Register(
+            nameof(PointerTipRadius),
+            typeof(double),
+            typeof(BasePopup),
+            new PropertyMetadata(default(double), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnPointerTipRadiusChanged(e)))
+        );
+        protected virtual void OnPointerTipRadiusChanged(DependencyPropertyChangedEventArgs e)
+        {
+            // if done correctly, BubbleBorder would calculate the difference between sharp and rounded tip and adjust margins
+        }
+        /// <summary>
+        /// Gets or sets the radius of the bubble's pointer tip.
+        /// </summary>
+        /// <value>The pointer tip radius.</value>
+        public double PointerTipRadius
+        {
+            get => (double)GetValue(PointerTipRadiusProperty);
+            set => SetValue(PointerTipRadiusProperty, value);
+        }
+        #endregion PointerTipRadius Property
+
+        #endregion 
 
         #endregion
 
@@ -188,6 +346,7 @@ namespace P42.Uno.Popups
             _border = GetTemplateChild(BorderElementName) as BubbleBorder;
             _border.HorizontalAlignment = HorizontalAlignment;
             _border.VerticalAlignment = VerticalAlignment;
+            UpdateBorderMargin();
             var popupChild = GetTemplateChild(PopupElementName);
             
             _popup = popupChild as Popup;
@@ -202,9 +361,6 @@ namespace P42.Uno.Popups
 
 
         #region Push / Pop
-#if DEPRECATED // __WASM__ || NETSTANDARD
-        bool _hasAppeared;
-#endif
         public async Task PushAsync()
         {
             if (Parent is Grid grid)
@@ -214,16 +370,6 @@ namespace P42.Uno.Popups
 
             await OnPushBeginAsync();
             _popup.IsOpen = true;
-#if DEPRECATED // __WASM__ || NETSTANDARD
-            if (!_hasAppeared)
-            {
-                _hasAppeared = true;
-                await Task.Delay(5);
-                _popup.IsOpen = false;
-                await Task.Delay(5);
-                _popup.IsOpen = true;
-            }
-#endif
             await OnPushEndAsync();
         }
 
@@ -368,6 +514,101 @@ namespace P42.Uno.Popups
             _popup.VerticalOffset = vOffset;
             
         }
+
+        protected Thickness FreeSpace(PointerDirection pointerDirection)
+        {
+            if (Target != null || (TargetPoint.X > 0 || TargetPoint.Y > 0) )
+            {
+                var windowBounds = AppWindow.Size();
+                var targetBounds = Target is null ? Rect.Empty : Target.GetBounds();
+                
+                double left = Target is null ? TargetPoint.X : targetBounds.Left;
+                double right = Target is null ? TargetPoint.X : targetBounds.Right;
+                double top = Target is null ? TargetPoint.Y : targetBounds.Top;
+                double bottom = Target is null ? TargetPoint.Y : targetBounds.Bottom;
+
+                if (right > 0 && left < windowBounds.Width && bottom > 0 && top < windowBounds.Height)
+                {
+                    var pointerLength = pointerDirection == PointerDirection.None ? 0 : PointerLength;
+                    var availL = left - Margin.Left -  pointerLength;
+                    var availR = windowBounds.Width - right - Margin.Right - pointerLength;
+                    var availT = top - Margin.Top - pointerLength;
+                    var availB = windowBounds.Height - bottom - Margin.Bottom - pointerLength;
+
+                    var maxWidth = MaxWidth;
+                    if (Width > 0 && Width < maxWidth)
+                        maxWidth = Width;
+                    if (maxWidth > 0 && HorizontalAlignment != HorizontalAlignment.Stretch)
+                    {
+                        availL = Math.Min(availL, maxWidth);
+                        availR = Math.Min(availR, maxWidth);
+                    }
+
+                    var maxHeight = MaxHeight;
+                    if (Height > 0 && Height < maxHeight)
+                        maxHeight = Height;
+                    if (maxHeight > 0 && VerticalAlignment != VerticalAlignment.Stretch)
+                    {
+                        availT = Math.Min(availT, maxHeight);
+                        availB = Math.Min(availB, maxHeight);
+                    }
+                    return new Thickness(availL - _lastMeasuredSize.Width, availT - _lastMeasuredSize.Height, 
+                        availR - _lastMeasuredSize.Width, availB - _lastMeasuredSize.Height);
+                }
+            }
+            return new Thickness(-1, -1, -1, -1);
+
+        }
+
+
+        protected void UpdateBorderMargin()
+        {
+            if (_border is null)
+                return;
+
+            var margin = Margin;
+            var pointerDirection = PointerDirection.None;
+            if (Target is null && TargetPoint.X == default)
+            {
+                _border.Margin = margin;
+            }
+            else
+            {
+                var available = FreeSpace(PreferredPointerDirection);
+                var bestDirection = PreferredPointerDirection.BestFitDirection(available);
+                if (bestDirection == PointerDirection.None)
+                {
+                    available = FreeSpace(FallbackPointerDirection);
+                    bestDirection = FallbackPointerDirection.BestFitDirection(available);
+                }
+                if (bestDirection == PointerDirection.None)
+                {
+                    _border.Margin = margin;
+                }
+                else
+                {
+                    var targetBounds = Target is null ? Rect.Empty : Target.GetBounds();
+
+                    double right = (Target is null ? TargetPoint.X : targetBounds.Left) + Margin.Right;
+                    double left = (Target is null ? TargetPoint.X : targetBounds.Right) + Margin.Left;
+                    double bottom = (Target is null ? TargetPoint.Y : targetBounds.Top) + Margin.Bottom;
+                    double top = (Target is null ? TargetPoint.Y : targetBounds.Bottom) + Margin.Top;
+
+                    pointerDirection = bestDirection;
+                    if (bestDirection == PointerDirection.Left)
+                        margin.Left = left;
+                    else if (bestDirection == PointerDirection.Right)
+                        margin.Right = right;
+                    else if (bestDirection == PointerDirection.Up)
+                        margin.Top = top;
+                    else if (bestDirection == PointerDirection.Down)
+                        margin.Bottom = bottom;
+                }
+            }
+            _border.Margin = margin;
+            ActualPointerDirection = _border.PointerDirection  = pointerDirection;
+        }
+
 
         #endregion
 

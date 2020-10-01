@@ -114,9 +114,11 @@ namespace UserControlTest
                     await _BasePopup.PushAsync();
                 }
                 */
-                var frame = element.GetFrame();
+                var frame = element.GetBounds();
                 var content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
 
+                _BasePopup.Target = _altBorder;
+                _BasePopup.PreferredPointerDirection = PointerDirection.Any;
                 _BasePopup.Margin = new Thickness(5);
                 _BasePopup.Padding = new Thickness(10);
                 _BasePopup.BorderThickness = new Thickness(1);
