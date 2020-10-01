@@ -279,7 +279,7 @@ namespace P42.Uno.Popups
 
             await OnPushBeginAsync();
             _popup.IsOpen = true;
-#if __WASM__
+#if DEPRECATED // __WASM__ || NETSTANDARD
             if (!_hasAppeared)
             {
                 _hasAppeared = true;

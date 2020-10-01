@@ -317,19 +317,19 @@ namespace P42.Uno.Popups
 
         protected override void OnApplyTemplate()
         {
-            System.Diagnostics.Debug.WriteLine(GetType() + ".OnApplyTemplate ==============================================================");
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".OnApplyTemplate ==============================================================");
             var contentPresenter = GetTemplateChild(ContentPresenterName);
             _contentPresenter = contentPresenter as ContentPresenter;
-            System.Diagnostics.Debug.WriteLine(GetType() + "\t contentPresenter.GetType: " + contentPresenter?.GetType());
+            //System.Diagnostics.Debug.WriteLine(GetType() + "\t contentPresenter.GetType: " + contentPresenter?.GetType());
 
             var path = GetTemplateChild(PathElementName);
             _path = path as Windows.UI.Xaml.Shapes.Path;
-            System.Diagnostics.Debug.WriteLine(GetType() + "\t path.GetType: " + path?.GetType());
+            //System.Diagnostics.Debug.WriteLine(GetType() + "\t path.GetType: " + path?.GetType());
 
             var dropShadow = GetTemplateChild(DropShadowPanelElementName);
             _dropShadow = dropShadow as DropShadowPanel;
-            System.Diagnostics.Debug.WriteLine(GetType() + "\t dropShadow.GetType: " + dropShadow?.GetType());
-            System.Diagnostics.Debug.WriteLine(GetType() + ".OnApplyTemplate ==============================================================");
+            //System.Diagnostics.Debug.WriteLine(GetType() + "\t dropShadow.GetType: " + dropShadow?.GetType());
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".OnApplyTemplate ==============================================================");
         }
         #endregion
 
@@ -425,7 +425,7 @@ namespace P42.Uno.Popups
         protected override Size MeasureOverride(Size availableSize)
         {
             UpdateContentPresenterMargin();
-            System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") ======= hzAlign: " + HorizontalAlignment + " ======= margin: " + Margin + " ====== WindowSize: " + AppWindow.Size());
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") ======= hzAlign: " + HorizontalAlignment + " ======= margin: " + Margin + " ====== WindowSize: " + AppWindow.Size());
 
             var windowWidth = AppWindow.Size().Width;
             var windowHeight = AppWindow.Size().Height;
@@ -470,7 +470,7 @@ namespace P42.Uno.Popups
             // the following fixes the DropShadowPanel clipping issue
             _dropShadow?.Measure(borderSize);
 #endif
-            System.Diagnostics.Debug.WriteLine("\t RESULT: " + result);
+            //System.Diagnostics.Debug.WriteLine("\t RESULT: " + result);
             return result;
         }
 

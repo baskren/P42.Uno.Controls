@@ -188,14 +188,14 @@ namespace P42.Uno.Popups
             */
         }
 
-#if __WASM__
+#if DEPRECATED // __WASM__ || NETSTANDARD
         bool _hasAppeared;
 #endif
         public async Task PushAsync()
         {
             _border.SizeChanged += OnBorderSizeChanged;
             _popup.IsOpen = true;
-#if __WASM__
+#if DEPRECATED // __WASM__ || NETSTANDARD
             if (!_hasAppeared)
             {
                 _hasAppeared = true;
@@ -284,11 +284,19 @@ namespace P42.Uno.Popups
             UpdateAlignment();
         }
 
+
+#if __WASM__ || NETSTANDARD
+        Size _firstRenderSize;
+#endif
         void UpdateAlignment()
         {
             System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment");
-            var windowWidth = AppWindow.Size().Width - Margin.Horizontal();
-            var windowHeight = AppWindow.Size().Height - Margin.Vertical();
+            var windowSize = AppWindow.Size();
+            if (windowSize.Width < 1 || windowSize.Height < 1)
+                return;
+
+            var windowWidth = windowSize.Width - Margin.Horizontal();
+            var windowHeight = windowSize.Height - Margin.Vertical();
 
             System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment: window("+windowWidth+","+windowHeight+")   content("+ _lastMeasuredSize + ")");
 
@@ -306,7 +314,27 @@ namespace P42.Uno.Popups
             else if (VerticalAlignment == VerticalAlignment.Bottom)
                 vOffset = (windowHeight - _lastMeasuredSize.Height);
 
-            // works on UWP and WASM - not Android
+#if __WASM__ || NETSTANDARD
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment WASM || NETSTANDARD");
+
+            if (_firstRenderSize.Width < 1 || _firstRenderSize.Height < 1)
+                _firstRenderSize = windowSize;
+
+            hOffset -= (_firstRenderSize.Width + Margin.Left) / 2.0 ; 
+            //vOffset -= windowHeight / 2.0;
+#elif __ANDROID__
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment ANDROID");
+#elif __iOS__
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment iOS");
+#elif __MACOS__
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment MACOS");
+#elif NETFX_CORE
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment UWP");
+#else
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment ????");
+#endif
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment Offset: " + hOffset + ", " + vOffset);
+
             _popup.HorizontalOffset = hOffset;
             _popup.VerticalOffset = vOffset;
             

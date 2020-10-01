@@ -224,14 +224,14 @@ namespace P42.Uno.Popups
             this.InitializeComponent();
         }
 
-#if __WASM__
+#if __WASM__ || NETSTANDARD
         bool _hasAppeared;
 #endif
         public async Task PushAsync()
         {
             _popup.IsOpen = true;
 
-#if __WASM__
+#if __WASM__ || NETSTANDARD
             if (!_hasAppeared)
             {
                 _hasAppeared = true;
