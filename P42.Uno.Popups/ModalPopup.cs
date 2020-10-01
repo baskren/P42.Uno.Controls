@@ -32,11 +32,11 @@ namespace P42.Uno.Popups
     [TemplatePart(Name = PopupElementName, Type = typeof(Windows.UI.Xaml.Controls.Primitives.Popup))]
     public partial class ModalPopup : ContentControl
     {
-#region Properties
+        #region Properties
 
-#region Overridden Properties
+        #region Overridden Properties
         
-#region HorizontalAlignment Property
+        #region HorizontalAlignment Property
         public static readonly new DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
             nameof(HorizontalAlignment),
             typeof(HorizontalAlignment),
@@ -55,16 +55,18 @@ namespace P42.Uno.Popups
                 else
                     _border.HorizontalAlignment = HorizontalAlignment;
             }
-            InvalidateMeasure();
+            if ((HorizontalAlignment)e.OldValue == HorizontalAlignment.Stretch || (HorizontalAlignment)e.NewValue == HorizontalAlignment.Stretch)
+                InvalidateMeasure();
+            UpdateAlignment();
         }
         public new HorizontalAlignment HorizontalAlignment
         {
             get => (HorizontalAlignment)GetValue(HorizontalAlignmentProperty);
             set => SetValue(HorizontalAlignmentProperty, value);
         }
-#endregion HorizontalAlignment Property
+        #endregion HorizontalAlignment Property
 
-#region VerticalAlignment Property
+        #region VerticalAlignment Property
         public static readonly new DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register(
             nameof(VerticalAlignment),
             typeof(VerticalAlignment),
@@ -81,19 +83,18 @@ namespace P42.Uno.Popups
                 else
                     _border.VerticalAlignment = VerticalAlignment;
             }
-            InvalidateMeasure();
-
-
+            if ((VerticalAlignment)e.OldValue == VerticalAlignment.Stretch || (VerticalAlignment)e.NewValue == VerticalAlignment.Stretch)
+                InvalidateMeasure();
+            UpdateAlignment();
         }
         public new VerticalAlignment VerticalAlignment
         {
             get => (VerticalAlignment)GetValue(VerticalAlignmentProperty);
             set => SetValue(VerticalAlignmentProperty, value);
         }
-#endregion VerticalAlignment Property
-
+        #endregion VerticalAlignment Property
         
-#region Margin Property
+        #region Margin Property
         public static readonly new DependencyProperty MarginProperty = DependencyProperty.Register(
             nameof(Margin),
             typeof(Thickness),
@@ -110,12 +111,11 @@ namespace P42.Uno.Popups
             get => (Thickness)GetValue(MarginProperty);
             set => SetValue(MarginProperty, value);
         }
-#endregion Margin Property
-        
+        #endregion Margin Property
 
-#endregion
+        #endregion
 
-#region HasShadow Property
+        #region HasShadow Property
         public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
             nameof(HasShadow),
             typeof(bool),
@@ -128,11 +128,12 @@ namespace P42.Uno.Popups
             set => SetValue(HasShadowProperty, value);
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
 
-#region Fields
+
+        #region Fields
         const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Center;
         const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Center;
         const string ContentPresenterName = "ModalPopup_Popup_Border_ContentPresenter";
@@ -141,7 +142,7 @@ namespace P42.Uno.Popups
         ContentPresenter _contentPresenter;
         BubbleBorder _border;
         Popup _popup;
-#endregion
+        #endregion
 
 
         public ModalPopup()
@@ -174,7 +175,17 @@ namespace P42.Uno.Popups
                 var borderParent = _border.Parent;
                 _popup = borderParent as Popup;
             }
+
+            /*
+            //BindingOperations.SetBinding(this, ModalPopup.BorderSizeProperty, new Binding { Source=_border, Path=, Mode=BindingMode.OneWay});
+            SetBinding(BorderSizeProperty, new Binding 
+            {
+                Mode=BindingMode.TwoWay,
+                Source = _border.Size
+            });
+
             UpdateAlignment();
+            */
         }
 
 #if __WASM__
@@ -182,6 +193,7 @@ namespace P42.Uno.Popups
 #endif
         public async Task PushAsync()
         {
+            _border.SizeChanged += OnBorderSizeChanged;
             _popup.IsOpen = true;
 #if __WASM__
             if (!_hasAppeared)
@@ -195,12 +207,22 @@ namespace P42.Uno.Popups
 #endif
         }
 
+        private void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
+        {
+            if (args.NewSize.Width < 1 || args.NewSize.Height < 1)
+                return;
+            _lastMeasuredSize = args.NewSize;
+            UpdateAlignment();
+        }
+
         public void PopAsync()
         {
+            _border.SizeChanged -= OnBorderSizeChanged;
             _popup.IsOpen = false;
         }
 
-        /* Neither of the following are called */
+
+        Size _lastMeasuredSize;
         protected override Size MeasureOverride(Size availableSize)
         {
 
@@ -242,6 +264,8 @@ namespace P42.Uno.Popups
 
             _border.Measure(availableSize);
             var result = _border.DesiredSize;
+            _lastMeasuredSize = result;
+            //UpdateAlignment();
 
             System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride result: "+ result);
             return result;
@@ -263,42 +287,29 @@ namespace P42.Uno.Popups
         void UpdateAlignment()
         {
             System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment");
-            var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
-            var windowHeight = Windows.UI.Xaml.Window.Current.Bounds.Height;
+            var windowWidth = AppWindow.Size().Width - Margin.Horizontal();
+            var windowHeight = AppWindow.Size().Height - Margin.Vertical();
 
-            var contentWidth = ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualWidth;
-            var contentHeight = ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualHeight;
-
-            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment: window("+windowWidth+","+windowHeight+")   content("+contentWidth+","+contentHeight+")");
-
-            /*
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment: window("+windowWidth+","+windowHeight+")   content("+ _lastMeasuredSize + ")");
 
             if (_border is null)
                 return;
             double hOffset = 0.0;
-            _border.Width = double.NaN;
             if (HorizontalAlignment == HorizontalAlignment.Center)
-                hOffset = (windowWidth - _border.DesiredSize.Width) / 2;
+                hOffset = (windowWidth - _lastMeasuredSize.Width) / 2;
             else if (HorizontalAlignment == HorizontalAlignment.Right)
-                hOffset = (windowWidth - _border.DesiredSize.Width) - Margin.Right;
-            //else if (HorizontalAlignment == HorizontalAlignment.Stretch)
-            //    Width = ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualWidth - Margin.Left - Margin.Right - 100;
-            hOffset = Math.Max(Margin.Left, hOffset);
+                hOffset = (windowWidth - _lastMeasuredSize.Width);
 
             double vOffset = 0.0;
-            _border.Height = double.NaN;
             if (VerticalAlignment == VerticalAlignment.Center)
-                vOffset = (windowHeight - _border.ActualHeight) / 2;
+                vOffset = (windowHeight - _lastMeasuredSize.Height) / 2;
             else if (VerticalAlignment == VerticalAlignment.Bottom)
-                vOffset = (windowHeight - _border.ActualHeight) - Margin.Bottom;
-            //else if (VerticalAlignment == VerticalAlignment.Stretch)
-            //    _border.Height = ((Frame)Windows.UI.Xaml.Window.Current.Content).ActualHeight - Margin.Top - Margin.Bottom;
-            vOffset = Math.Max(Margin.Top, vOffset);
+                vOffset = (windowHeight - _lastMeasuredSize.Height);
 
             // works on UWP and WASM - not Android
             _popup.HorizontalOffset = hOffset;
             _popup.VerticalOffset = vOffset;
-            */
+            
         }
 
 

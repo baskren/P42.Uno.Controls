@@ -276,6 +276,20 @@ namespace P42.Uno.Popups
 
         #endregion
 
+        #region Size Property
+        public static readonly DependencyProperty SizeProperty = DependencyProperty.Register(
+            nameof(Size),
+            typeof(Size),
+            typeof(BubbleBorder),
+            new PropertyMetadata(default(Size))
+        );
+        public Size Size
+        {
+            get => (Size)GetValue(SizeProperty);
+            set => SetValue(SizeProperty, value);
+        }
+        #endregion Size Property
+
 
         #endregion
 
@@ -303,9 +317,19 @@ namespace P42.Uno.Popups
 
         protected override void OnApplyTemplate()
         {
-            _contentPresenter = GetTemplateChild(ContentPresenterName) as ContentPresenter;
-            _path = GetTemplateChild(PathElementName) as Windows.UI.Xaml.Shapes.Path;
-            _dropShadow = GetTemplateChild(DropShadowPanelElementName) as DropShadowPanel;
+            System.Diagnostics.Debug.WriteLine(GetType() + ".OnApplyTemplate ==============================================================");
+            var contentPresenter = GetTemplateChild(ContentPresenterName);
+            _contentPresenter = contentPresenter as ContentPresenter;
+            System.Diagnostics.Debug.WriteLine(GetType() + "\t contentPresenter.GetType: " + contentPresenter?.GetType());
+
+            var path = GetTemplateChild(PathElementName);
+            _path = path as Windows.UI.Xaml.Shapes.Path;
+            System.Diagnostics.Debug.WriteLine(GetType() + "\t path.GetType: " + path?.GetType());
+
+            var dropShadow = GetTemplateChild(DropShadowPanelElementName);
+            _dropShadow = dropShadow as DropShadowPanel;
+            System.Diagnostics.Debug.WriteLine(GetType() + "\t dropShadow.GetType: " + dropShadow?.GetType());
+            System.Diagnostics.Debug.WriteLine(GetType() + ".OnApplyTemplate ==============================================================");
         }
         #endregion
 
@@ -393,6 +417,7 @@ namespace P42.Uno.Popups
         {
             //System.Diagnostics.Debug.WriteLine(GetType() + ".OnSizeChanged()");
             //RegeneratePath(DesiredSize);
+            Size = args.NewSize;
         }
         
 

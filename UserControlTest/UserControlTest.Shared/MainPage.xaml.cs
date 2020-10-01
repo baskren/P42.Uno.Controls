@@ -138,6 +138,7 @@ namespace UserControlTest
                 var content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
 
                 _modalPopup.Margin = new Thickness(5);
+                _modalPopup.Padding = new Thickness(10);
                 _modalPopup.BorderThickness = new Thickness(1);
                 _modalPopup.CornerRadius = new CornerRadius(4);
                 _modalPopup.Background = new SolidColorBrush(Colors.White);
