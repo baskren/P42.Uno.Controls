@@ -168,6 +168,7 @@ namespace P42.Uno.Popups
         #endregion
 
 
+        #region Construction / Initialization
         public BasePopup()
         {
             //this.InitializeComponent();
@@ -197,13 +198,21 @@ namespace P42.Uno.Popups
                 _popup = borderParent as Popup;
             }
         }
+        #endregion
 
+
+        #region Push / Pop
 #if DEPRECATED // __WASM__ || NETSTANDARD
         bool _hasAppeared;
 #endif
         public async Task PushAsync()
         {
+            if (Parent is Grid grid)
+                grid.Children.Remove(this);
+
             _border.SizeChanged += OnBorderSizeChanged;
+
+            await OnPushBeginAsync();
             _popup.IsOpen = true;
 #if DEPRECATED // __WASM__ || NETSTANDARD
             if (!_hasAppeared)
@@ -215,8 +224,60 @@ namespace P42.Uno.Popups
                 _popup.IsOpen = true;
             }
 #endif
+            await OnPushEndAsync();
         }
 
+        public async Task PopAsync()
+        {
+            _border.SizeChanged -= OnBorderSizeChanged;
+            await OnPopBeginAsync();
+            _popup.IsOpen = false;
+            await OnPopEndAsync();
+        }
+        #endregion
+
+
+        #region Protected Push / Pop Methods
+        /// <summary>
+        /// Invoked at start on appearing animation
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Task OnPushBeginAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Invoked at end of appearing animation
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Task OnPushEndAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Invoked at start of disappearing animation
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Task OnPopBeginAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Invoked at end of disappearing animation
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Task OnPopEndAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        #endregion
+
+
+        #region Event Handlers
         private void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
         {
             if (args.NewSize.Width < 1 || args.NewSize.Height < 1)
@@ -225,12 +286,10 @@ namespace P42.Uno.Popups
             UpdateAlignment();
         }
 
-        public void PopAsync()
-        {
-            _border.SizeChanged -= OnBorderSizeChanged;
-            _popup.IsOpen = false;
-        }
+        #endregion
 
+
+        #region Layout
 
         Size _lastMeasuredSize;
         protected override Size MeasureOverride(Size availableSize)
@@ -310,7 +369,7 @@ namespace P42.Uno.Popups
             
         }
 
-
+        #endregion
 
     }
 }
