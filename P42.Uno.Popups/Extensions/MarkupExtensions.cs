@@ -7,7 +7,7 @@ using Windows.UI.Xaml;
 
 namespace P42.Uno.Popups
 {
-    public static class MarkupExtensions
+    internal static class MarkupExtensions
     {
         public static bool Negate(bool value)
             => !value;

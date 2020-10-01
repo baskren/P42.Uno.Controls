@@ -5,7 +5,7 @@ using System.Text;
 
 namespace P42.Uno.Popups
 {
-    static class SKPathExtensions
+    internal static class SKPathExtensions
     {
         public static void ArcWithCenterTo(this SKPath path, float x, float y, float radius, float startDegrees, float sweepDegrees)
         {

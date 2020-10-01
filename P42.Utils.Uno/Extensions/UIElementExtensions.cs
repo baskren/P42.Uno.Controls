@@ -11,11 +11,11 @@ namespace P42.Utils.Uno
 {
     public static class UIElementExtensions
     {
-        public static Rect GetFrame(this FrameworkElement element)
+        public static Rect GetFrame(this UIElement element)
         {
             var ttv = element.TransformToVisual(Windows.UI.Xaml.Window.Current.Content);
             var location = ttv.TransformPoint(new Point(0, 0));
-            return new Rect(location, new Size(element.ActualWidth, element.ActualHeight));
+            return new Rect(location, new Size(element.DesiredSize.Width, element.DesiredSize.Height));
         }
     }
 }
