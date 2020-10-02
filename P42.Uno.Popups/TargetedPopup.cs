@@ -30,7 +30,7 @@ namespace P42.Uno.Popups
     [TemplatePart(Name = ContentPresenterName, Type = typeof(ContentPresenter))]
     [TemplatePart(Name = BorderElementName, Type = typeof(BubbleBorder))]
     [TemplatePart(Name = PopupElementName, Type = typeof(Windows.UI.Xaml.Controls.Primitives.Popup))]
-    public partial class BasePopup : ContentControl
+    public partial class TargetedPopup : ContentControl
     {
         #region Properties
 
@@ -40,8 +40,8 @@ namespace P42.Uno.Popups
         public static readonly new DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
             nameof(HorizontalAlignment),
             typeof(HorizontalAlignment),
-            typeof(BasePopup),
-            new PropertyMetadata(DefaultHorizontalAlignment, new PropertyChangedCallback((d, e) => ((BasePopup)d).OnHorizontalAlignmentChanged(e)))
+            typeof(TargetedPopup),
+            new PropertyMetadata(DefaultHorizontalAlignment, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnHorizontalAlignmentChanged(e)))
         );
         protected virtual void OnHorizontalAlignmentChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -62,8 +62,8 @@ namespace P42.Uno.Popups
         public static readonly new DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register(
             nameof(VerticalAlignment),
             typeof(VerticalAlignment),
-            typeof(BasePopup),
-            new PropertyMetadata(DefaultVerticalAlignment, new PropertyChangedCallback((d, e) => ((BasePopup)d).OnVerticalAlignmentChanged(e)))
+            typeof(TargetedPopup),
+            new PropertyMetadata(DefaultVerticalAlignment, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnVerticalAlignmentChanged(e)))
         );
         protected virtual void OnVerticalAlignmentChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -84,8 +84,8 @@ namespace P42.Uno.Popups
         public static readonly new DependencyProperty MarginProperty = DependencyProperty.Register(
             nameof(Margin),
             typeof(Thickness),
-            typeof(BasePopup),
-            new PropertyMetadata(default(Thickness), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnMarginChanged(e)))
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(Thickness), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnMarginChanged(e)))
         );
         protected virtual void OnMarginChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -104,7 +104,7 @@ namespace P42.Uno.Popups
         public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
             nameof(HasShadow),
             typeof(bool),
-            typeof(BasePopup),
+            typeof(TargetedPopup),
             new PropertyMetadata(default(bool))
         );
         public bool HasShadow
@@ -119,7 +119,7 @@ namespace P42.Uno.Popups
         public static readonly DependencyProperty PopAfterProperty = DependencyProperty.Register(
             nameof(PopAfter),
             typeof(TimeSpan),
-            typeof(BasePopup),
+            typeof(TargetedPopup),
             new PropertyMetadata(default(TimeSpan))
         );
         public TimeSpan PopAfter
@@ -135,8 +135,8 @@ namespace P42.Uno.Popups
         public static readonly DependencyProperty TargetProperty = DependencyProperty.Register(
             nameof(Target),
             typeof(UIElement),
-            typeof(BasePopup),
-            new PropertyMetadata(default(UIElement), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnTargetChanged(e)))
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(UIElement), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnTargetChanged(e)))
         );
         protected virtual void OnTargetChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -153,8 +153,8 @@ namespace P42.Uno.Popups
         public static readonly DependencyProperty TargetPointProperty = DependencyProperty.Register(
             nameof(TargetPoint),
             typeof(Point),
-            typeof(BasePopup),
-            new PropertyMetadata(default(Point), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnTargetPointChanged(e)))
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(Point), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnTargetPointChanged(e)))
         );
         protected virtual void OnTargetPointChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -175,8 +175,8 @@ namespace P42.Uno.Popups
         public static readonly DependencyProperty PointerBiasProperty = DependencyProperty.Register(
             nameof(PointerBias),
             typeof(double),
-            typeof(BasePopup),
-            new PropertyMetadata(0.5, new PropertyChangedCallback((d, e) => ((BasePopup)d).OnPointerBiasChanged(e)))
+            typeof(TargetedPopup),
+            new PropertyMetadata(0.5, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPointerBiasChanged(e)))
         );
         protected virtual void OnPointerBiasChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -197,7 +197,7 @@ namespace P42.Uno.Popups
         public static readonly DependencyProperty PointerCornerRadiusProperty = DependencyProperty.Register(
             nameof(PointerCornerRadius),
             typeof(double),
-            typeof(BasePopup),
+            typeof(TargetedPopup),
             new PropertyMetadata(default(double))
         );
         public double PointerCornerRadius
@@ -213,8 +213,8 @@ namespace P42.Uno.Popups
         public static readonly DependencyProperty ActualPointerDirectionProperty = DependencyProperty.Register(
             nameof(ActualPointerDirection),
             typeof(PointerDirection),
-            typeof(BasePopup),
-            new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnActualPointerDirectionChanged(e)))
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnActualPointerDirectionChanged(e)))
         );
         protected virtual void OnActualPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -231,8 +231,8 @@ namespace P42.Uno.Popups
         public static readonly DependencyProperty PreferredPointerDirectionProperty = DependencyProperty.Register(
             nameof(PreferredPointerDirection),
             typeof(PointerDirection),
-            typeof(BasePopup),
-            new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnPreferredPointerDirectionChanged(e)))
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPreferredPointerDirectionChanged(e)))
         );
         protected virtual void OnPreferredPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -249,8 +249,8 @@ namespace P42.Uno.Popups
         public static readonly DependencyProperty FallbackPointerDirectionProperty = DependencyProperty.Register(
             nameof(FallbackPointerDirection),
             typeof(PointerDirection),
-            typeof(BasePopup),
-            new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnFallbackPointerDirectionChanged(e)))
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnFallbackPointerDirectionChanged(e)))
         );
         protected virtual void OnFallbackPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -269,8 +269,8 @@ namespace P42.Uno.Popups
         public static readonly DependencyProperty PointerLengthProperty = DependencyProperty.Register(
             nameof(PointerLength),
             typeof(double),
-            typeof(BasePopup),
-            new PropertyMetadata(default(double), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnPointerLengthChanged(e)))
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(double), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPointerLengthChanged(e)))
         );
         protected virtual void OnPointerLengthChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -291,8 +291,8 @@ namespace P42.Uno.Popups
         public static readonly DependencyProperty PointerTipRadiusProperty = DependencyProperty.Register(
             nameof(PointerTipRadius),
             typeof(double),
-            typeof(BasePopup),
-            new PropertyMetadata(default(double), new PropertyChangedCallback((d, e) => ((BasePopup)d).OnPointerTipRadiusChanged(e)))
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(double), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPointerTipRadiusChanged(e)))
         );
         protected virtual void OnPointerTipRadiusChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -317,9 +317,9 @@ namespace P42.Uno.Popups
         #region Fields
         const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Center;
         const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Center;
-        const string ContentPresenterName = "BasePopup_Popup_Border_ContentPresenter";
-        const string BorderElementName = "BasePopup_Popup_Border";
-        const string PopupElementName = "BasePopup_Popup";
+        const string ContentPresenterName = "TargetedPopup_Popup_Border_ContentPresenter";
+        const string BorderElementName = "TargetedPopup_Popup_Border";
+        const string PopupElementName = "TargetedPopup_Popup";
         ContentPresenter _contentPresenter;
         BubbleBorder _border;
         Popup _popup;
@@ -327,13 +327,13 @@ namespace P42.Uno.Popups
 
 
         #region Construction / Initialization
-        public BasePopup()
+        public TargetedPopup()
         {
             //this.InitializeComponent();
-            this.DefaultStyleKey = typeof(BasePopup);
+            this.DefaultStyleKey = typeof(TargetedPopup);
             /*
             var startStyle = Style;
-            var defaultStyleObject = Application.Current.Resources["BaseBasePopupStyle"];
+            var defaultStyleObject = Application.Current.Resources["BaseTargetedPopupStyle"];
             if (defaultStyleObject is Style defaultStyle)
                 Style = defaultStyle;
             */
@@ -515,52 +515,6 @@ namespace P42.Uno.Popups
             
         }
 
-        protected Thickness FreeSpace(PointerDirection pointerDirection)
-        {
-            if (Target != null || (TargetPoint.X > 0 || TargetPoint.Y > 0) )
-            {
-                var windowBounds = AppWindow.Size();
-                var targetBounds = Target is null ? Rect.Empty : Target.GetBounds();
-                
-                double left = Target is null ? TargetPoint.X : targetBounds.Left;
-                double right = Target is null ? TargetPoint.X : targetBounds.Right;
-                double top = Target is null ? TargetPoint.Y : targetBounds.Top;
-                double bottom = Target is null ? TargetPoint.Y : targetBounds.Bottom;
-
-                if (right > 0 && left < windowBounds.Width && bottom > 0 && top < windowBounds.Height)
-                {
-                    var pointerLength = pointerDirection == PointerDirection.None ? 0 : PointerLength;
-                    var availL = left - Margin.Left -  pointerLength;
-                    var availR = windowBounds.Width - right - Margin.Right - pointerLength;
-                    var availT = top - Margin.Top - pointerLength;
-                    var availB = windowBounds.Height - bottom - Margin.Bottom - pointerLength;
-
-                    var maxWidth = MaxWidth;
-                    if (Width > 0 && Width < maxWidth)
-                        maxWidth = Width;
-                    if (maxWidth > 0 && HorizontalAlignment != HorizontalAlignment.Stretch)
-                    {
-                        availL = Math.Min(availL, maxWidth);
-                        availR = Math.Min(availR, maxWidth);
-                    }
-
-                    var maxHeight = MaxHeight;
-                    if (Height > 0 && Height < maxHeight)
-                        maxHeight = Height;
-                    if (maxHeight > 0 && VerticalAlignment != VerticalAlignment.Stretch)
-                    {
-                        availT = Math.Min(availT, maxHeight);
-                        availB = Math.Min(availB, maxHeight);
-                    }
-                    return new Thickness(availL - _lastMeasuredSize.Width, availT - _lastMeasuredSize.Height, 
-                        availR - _lastMeasuredSize.Width, availB - _lastMeasuredSize.Height);
-                }
-            }
-            return new Thickness(-1, -1, -1, -1);
-
-        }
-
-
         protected void UpdateBorderMargin()
         {
             if (_border is null)
@@ -574,12 +528,23 @@ namespace P42.Uno.Popups
             }
             else
             {
-                var available = FreeSpace(PreferredPointerDirection);
-                var bestDirection = PreferredPointerDirection.BestFitDirection(available);
+                var freeSpace = FreeSpace(PreferredPointerDirection);
+                var bestDirection = PreferredPointerDirection.BestFitDirection(freeSpace);
                 if (bestDirection == PointerDirection.None)
                 {
-                    available = FreeSpace(FallbackPointerDirection);
-                    bestDirection = FallbackPointerDirection.BestFitDirection(available);
+                    freeSpace.Left += PointerLength * CompareDirection(PointerDirection.Right, PreferredPointerDirection, FallbackPointerDirection);
+                    freeSpace.Right += PointerLength * CompareDirection(PointerDirection.Left, PreferredPointerDirection, FallbackPointerDirection);
+                    freeSpace.Top += PointerLength * CompareDirection(PointerDirection.Bottom, PreferredPointerDirection, FallbackPointerDirection);
+                    freeSpace.Bottom += PointerLength * CompareDirection(PointerDirection.Top, PreferredPointerDirection, FallbackPointerDirection);
+                    bestDirection = FallbackPointerDirection.BestFitDirection(freeSpace);
+                }
+                if (bestDirection == PointerDirection.None)
+                {
+                    freeSpace.Left += PointerLength * CompareDirection(PointerDirection.Right, FallbackPointerDirection, PointerDirection.None);
+                    freeSpace.Right += PointerLength * CompareDirection(PointerDirection.Left, FallbackPointerDirection, PointerDirection.None);
+                    freeSpace.Top += PointerLength * CompareDirection(PointerDirection.Bottom, FallbackPointerDirection, PointerDirection.None);
+                    freeSpace.Bottom += PointerLength * CompareDirection(PointerDirection.Top, FallbackPointerDirection, PointerDirection.None);
+                    bestDirection = FallbackPointerDirection.BestFitDirection(freeSpace);
                 }
                 if (bestDirection == PointerDirection.None)
                 {
@@ -609,6 +574,113 @@ namespace P42.Uno.Popups
             ActualPointerDirection = _border.PointerDirection  = pointerDirection;
         }
 
+        protected Thickness FreeSpace(PointerDirection pointerDirection)
+        {
+            if (Target != null || (TargetPoint.X > 0 || TargetPoint.Y > 0))
+            {
+                var windowBounds = AppWindow.Size();
+                var targetBounds = Target is null ? Rect.Empty : Target.GetBounds();
+
+                double left = Target is null ? TargetPoint.X : targetBounds.Left;
+                double right = Target is null ? TargetPoint.X : targetBounds.Right;
+                double top = Target is null ? TargetPoint.Y : targetBounds.Top;
+                double bottom = Target is null ? TargetPoint.Y : targetBounds.Bottom;
+
+                if (right > 0 && left < windowBounds.Width && bottom > 0 && top < windowBounds.Height)
+                {
+                    var availL = left - Margin.Left - PointerLength * (pointerDirection.RightAllowed() ? 1 : 0);
+                    var availR = windowBounds.Width - right - Margin.Right - PointerLength * (pointerDirection.LeftAllowed() ? 1 : 0);
+                    var availT = top - Margin.Top - PointerLength * (pointerDirection.DownAllowed() ? 1 : 0);
+                    var availB = windowBounds.Height - bottom - Margin.Bottom - PointerLength * (pointerDirection.UpAllowed() ? 1 : 0);
+
+                    var maxWidth = MaxWidth;
+                    if (Width > 0 && Width < maxWidth)
+                        maxWidth = Width;
+                    if (maxWidth > 0 && HorizontalAlignment != HorizontalAlignment.Stretch)
+                    {
+                        availL = Math.Min(availL, maxWidth);
+                        availR = Math.Min(availR, maxWidth);
+                    }
+
+                    var maxHeight = MaxHeight;
+                    if (Height > 0 && Height < maxHeight)
+                        maxHeight = Height;
+                    if (maxHeight > 0 && VerticalAlignment != VerticalAlignment.Stretch)
+                    {
+                        availT = Math.Min(availT, maxHeight);
+                        availB = Math.Min(availB, maxHeight);
+                    }
+
+                    if (availL < availR)
+                    {
+                        var delta = availR - availL;
+                        availL = FreeSpaceForWidth(availL);
+                        if (availL < 0)
+                            availR = FreeSpaceForWidth(availR);
+                        else
+                            availR = availL + delta;
+                    }
+                    else
+                    {
+                        var delta = availL - availR;
+                        availR = FreeSpaceForWidth(availR);
+                        if (availR < 0)
+                            availL = FreeSpaceForWidth(availL);
+                        else
+                            availL = availR + delta;
+                    }
+                    if (availT < availB)
+                    {
+                        var delta = availB - availT;
+                        availT = FreeSpaceForHeight(availT);
+                        if (availT < 0)
+                            availB = FreeSpaceForHeight(availB);
+                        else
+                            availB = availT + delta;
+                    }
+                    else
+                    {
+                        var delta = availT - availB;
+                        availB = FreeSpaceForWidth(availB);
+                        if (availB < 0)
+                            availT = FreeSpaceForWidth(availT);
+                        else
+                            availT = availB + delta;
+                    }
+                    return new Thickness(availL, availT, availR, availB);
+                }
+            }
+            return new Thickness(-1, -1, -1, -1);
+        }
+
+        double FreeSpaceForWidth(double width)
+        {
+            var size = new Size(width - Margin.Horizontal(), AppWindow.Size().Width - Margin.Vertical());
+            _contentPresenter.Measure(size);
+            if (_border.DesiredSize.Height > size.Height)
+                return -1;
+            return width - _border.DesiredSize.Width;
+        }
+
+        double FreeSpaceForHeight(double height)
+        {
+            var size = new Size(AppWindow.Size().Height - Margin.Horizontal(), height);
+            _border.Measure(size);
+            if (_border.DesiredSize.Width > size.Width)
+                return -1;
+            return size.Height - _border.DesiredSize.Height;
+        }
+
+        int CompareDirection(PointerDirection testDirection, PointerDirection a, PointerDirection b)
+        {
+            var aTest = (a & testDirection);
+            var bTest = (b & testDirection);
+            if (aTest > bTest)
+                return 1;
+            if (aTest < bTest)
+                return -1;
+            return 0;
+        }
 
         #endregion
 

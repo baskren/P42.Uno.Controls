@@ -4,7 +4,7 @@
     xmlns:local="using:P42.Uno.Popups">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///P42.Uno.Popups/BasePopup.xaml" />
+        <ResourceDictionary Source="ms-appx:///P42.Uno.Popups/TargetedPopup.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

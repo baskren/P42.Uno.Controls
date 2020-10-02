@@ -49,7 +49,7 @@ namespace UserControlTest
             _listView.ItemsSource = new List<int> { 1, 2, 3, 4 };
         }
         /*
-        BasePopup _BasePopup = new BasePopup
+        TargetedPopup _TargetedPopup = new TargetedPopup
         {
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(4),
@@ -87,8 +87,8 @@ namespace UserControlTest
             if (sender is FrameworkElement element)
             {
                 /*
-                if (!_grid.Children.Contains(_BasePopup))
-                    _grid.Children.Add(_BasePopup);
+                if (!_grid.Children.Contains(_TargetedPopup))
+                    _grid.Children.Add(_TargetedPopup);
                 if (!_grid.Children.Contains(_bubblePopup))
                     _grid.Children.Add(_bubblePopup);
 
@@ -97,50 +97,51 @@ namespace UserControlTest
                 System.Diagnostics.Debug.WriteLine(GetType() + $".BorderTapped  sender:[{sender.GetType()}] args:[{e}] frame:[{frame}]");
                 var content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
                 _bubblePopup.Content = content;
-                _BasePopup.Content = content;
+                _TargetedPopup.Content = content;
 
                 //Canvas.SetLeft(_popup, frame.X);
                 //Canvas.SetTop(_popup, frame.Y);
 
-                if (_BasePopup.Visibility == Visibility.Visible)
+                if (_TargetedPopup.Visibility == Visibility.Visible)
                 {
-                    await _BasePopup.PopAsync();
+                    await _TargetedPopup.PopAsync();
                     await _bubblePopup.PushAsync();
                 }
                 else
                 {
                     if (_bubblePopup.Visibility == Visibility.Visible)
                     await _bubblePopup.PopAsync();
-                    await _BasePopup.PushAsync();
+                    await _TargetedPopup.PushAsync();
                 }
                 */
                 var frame = element.GetBounds();
                 var content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
 
-                _BasePopup.Target = _altBorder;
-                _BasePopup.PreferredPointerDirection = PointerDirection.Any;
-                _BasePopup.Margin = new Thickness(5);
-                _BasePopup.Padding = new Thickness(10);
-                _BasePopup.BorderThickness = new Thickness(1);
-                _BasePopup.CornerRadius = new CornerRadius(4);
-                _BasePopup.Background = new SolidColorBrush(Colors.White);
-                _BasePopup.BorderBrush = new SolidColorBrush(Colors.Blue);
+                _TargetedPopup.Target = _altBorder;
+                _TargetedPopup.PreferredPointerDirection = PointerDirection.Down;
 
-                _BasePopup.Content = new TextBlock { Text = content };
+                _TargetedPopup.Margin = new Thickness(5);
+                _TargetedPopup.Padding = new Thickness(10);
+                _TargetedPopup.BorderThickness = new Thickness(1);
+                _TargetedPopup.CornerRadius = new CornerRadius(4);
+                _TargetedPopup.Background = new SolidColorBrush(Colors.White);
+                _TargetedPopup.BorderBrush = new SolidColorBrush(Colors.Blue);
 
-                //_BasePopup.Padding = new Thickness( _BasePopup.Padding.Left+1);
+                _TargetedPopup.Content = new TextBlock { Text = content };
 
-                if (_BasePopup.Parent is Grid grid)
-                    grid.Children.Remove(_BasePopup);
+                //_TargetedPopup.Padding = new Thickness( _TargetedPopup.Padding.Left+1);
+
+                if (_TargetedPopup.Parent is Grid grid)
+                    grid.Children.Remove(_TargetedPopup);
 
                 _lastHorizontalAlignment++;
                 if (_lastHorizontalAlignment > HorizontalAlignment.Stretch)
                     _lastHorizontalAlignment = HorizontalAlignment.Left;
 
-                _BasePopup.HorizontalAlignment = _lastHorizontalAlignment;
+                _TargetedPopup.HorizontalAlignment = _lastHorizontalAlignment;
                 _bubbleBorder.HorizontalAlignment = _lastHorizontalAlignment;
 
-               await _BasePopup.PushAsync();
+               await _TargetedPopup.PushAsync();
             }
         }
 
