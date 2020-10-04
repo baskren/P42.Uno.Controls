@@ -81,7 +81,7 @@ namespace UserControlTest
             _button_Click(sender, e);
         }
 
-        HorizontalAlignment _lastHorizontalAlignment = HorizontalAlignment.Stretch;
+        VerticalAlignment _lastAlignment = VerticalAlignment.Stretch;
         async void _button_Click(object sender, RoutedEventArgs e)
         {
             if (sender is FrameworkElement element)
@@ -118,7 +118,9 @@ namespace UserControlTest
                 var content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
 
                 _TargetedPopup.Target = _altBorder;
-                _TargetedPopup.PreferredPointerDirection = PointerDirection.Down;
+                _TargetedPopup.PreferredPointerDirection = PointerDirection.Right;
+
+                _TargetedPopup.VerticalAlignment = VerticalAlignment.Center;
 
                 _TargetedPopup.Margin = new Thickness(5);
                 _TargetedPopup.Padding = new Thickness(10);
@@ -134,12 +136,12 @@ namespace UserControlTest
                 if (_TargetedPopup.Parent is Grid grid)
                     grid.Children.Remove(_TargetedPopup);
 
-                _lastHorizontalAlignment++;
-                if (_lastHorizontalAlignment > HorizontalAlignment.Stretch)
-                    _lastHorizontalAlignment = HorizontalAlignment.Left;
+                _lastAlignment++;
+                if (_lastAlignment > VerticalAlignment.Stretch)
+                    _lastAlignment = VerticalAlignment.Top;
 
-                _TargetedPopup.HorizontalAlignment = _lastHorizontalAlignment;
-                _bubbleBorder.HorizontalAlignment = _lastHorizontalAlignment;
+                _TargetedPopup.VerticalAlignment = (VerticalAlignment) _lastAlignment;
+                _bubbleBorder.HorizontalAlignment = (HorizontalAlignment)_lastAlignment;
 
                await _TargetedPopup.PushAsync();
             }

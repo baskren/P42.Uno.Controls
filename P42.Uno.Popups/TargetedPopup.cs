@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Uno.Extensions;
+using Uno.Extensions.ValueType;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -45,11 +47,17 @@ namespace P42.Uno.Popups
         );
         protected virtual void OnHorizontalAlignmentChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (_border != null)
+            if (_border is null)
+                return;
+            /*
+            if (ActualPointerDirection == PointerDirection.None)
                 _border.HorizontalAlignment = HorizontalAlignment;
-            if ((HorizontalAlignment)e.OldValue == HorizontalAlignment.Stretch || (HorizontalAlignment)e.NewValue == HorizontalAlignment.Stretch)
-                InvalidateMeasure();
-            UpdateAlignment();
+            else
+                _border.HorizontalAlignment = HorizontalAlignment.Left;
+            */
+            UpdateMarginAndAlignment(true);
+            //if ((HorizontalAlignment)e.OldValue == HorizontalAlignment.Stretch || (HorizontalAlignment)e.NewValue == HorizontalAlignment.Stretch)
+            //    InvalidateMeasure();
         }
         public new HorizontalAlignment HorizontalAlignment
         {
@@ -67,11 +75,17 @@ namespace P42.Uno.Popups
         );
         protected virtual void OnVerticalAlignmentChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (_border != null)
-                    _border.VerticalAlignment = VerticalAlignment;
-            if ((VerticalAlignment)e.OldValue == VerticalAlignment.Stretch || (VerticalAlignment)e.NewValue == VerticalAlignment.Stretch)
-                InvalidateMeasure();
-            UpdateAlignment();
+            if (_border is null)
+                return;
+            /*
+            if (ActualPointerDirection == PointerDirection.None)
+                _border.VerticalAlignment = VerticalAlignment;
+            else
+                _border.VerticalAlignment = VerticalAlignment.Top;
+            */
+            UpdateMarginAndAlignment(true);
+            //if ((VerticalAlignment)e.OldValue == VerticalAlignment.Stretch || (VerticalAlignment)e.NewValue == VerticalAlignment.Stretch)
+            //    InvalidateMeasure();
         }
         public new VerticalAlignment VerticalAlignment
         {
@@ -89,7 +103,7 @@ namespace P42.Uno.Popups
         );
         protected virtual void OnMarginChanged(DependencyPropertyChangedEventArgs e)
         {
-            UpdateBorderMargin();
+            UpdateMarginAndAlignment();
         }
         public new Thickness Margin
         {
@@ -140,7 +154,7 @@ namespace P42.Uno.Popups
         );
         protected virtual void OnTargetChanged(DependencyPropertyChangedEventArgs e)
         {
-            UpdateBorderMargin();
+            UpdateMarginAndAlignment();
         }
         public UIElement Target
         {
@@ -158,7 +172,7 @@ namespace P42.Uno.Popups
         );
         protected virtual void OnTargetPointChanged(DependencyPropertyChangedEventArgs e)
         {
-            UpdateBorderMargin();
+            UpdateMarginAndAlignment();
         }
         public Point TargetPoint
         {
@@ -209,23 +223,7 @@ namespace P42.Uno.Popups
 
         #region Pointer Directions
 
-        #region ActualPointerDirection Property
-        public static readonly DependencyProperty ActualPointerDirectionProperty = DependencyProperty.Register(
-            nameof(ActualPointerDirection),
-            typeof(PointerDirection),
-            typeof(TargetedPopup),
-            new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnActualPointerDirectionChanged(e)))
-        );
-        protected virtual void OnActualPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
-        {
-            
-        }
-        public PointerDirection ActualPointerDirection
-        {
-            get => (PointerDirection)GetValue(ActualPointerDirectionProperty);
-            set => SetValue(ActualPointerDirectionProperty, value);
-        }
-        #endregion ActualPointerDirection Property
+        public PointerDirection ActualPointerDirection => _lastStats.PointerDirection;
 
         #region PreferredPointerDirection Property
         public static readonly DependencyProperty PreferredPointerDirectionProperty = DependencyProperty.Register(
@@ -236,7 +234,7 @@ namespace P42.Uno.Popups
         );
         protected virtual void OnPreferredPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
         {
-            UpdateBorderMargin();
+            UpdateMarginAndAlignment();
         }
         public PointerDirection PreferredPointerDirection
         {
@@ -254,7 +252,8 @@ namespace P42.Uno.Popups
         );
         protected virtual void OnFallbackPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
         {
-            UpdateBorderMargin();
+            if (ActualPointerDirection == PointerDirection.None && PreferredPointerDirection != PointerDirection.None)
+                UpdateMarginAndAlignment();
         }
         public PointerDirection FallbackPointerDirection
         {
@@ -270,11 +269,11 @@ namespace P42.Uno.Popups
             nameof(PointerLength),
             typeof(double),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(double), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPointerLengthChanged(e)))
+            new PropertyMetadata(10.0, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPointerLengthChanged(e)))
         );
         protected virtual void OnPointerLengthChanged(DependencyPropertyChangedEventArgs e)
         {
-            UpdateBorderMargin();
+            UpdateMarginAndAlignment();
         }
         /// <summary>
         /// Gets or sets the length of the bubble layout's pointer.
@@ -309,7 +308,25 @@ namespace P42.Uno.Popups
         }
         #endregion PointerTipRadius Property
 
-        #endregion 
+        #region PointToOffScreenElements Property
+        public static readonly DependencyProperty PointToOffScreenElementsProperty = DependencyProperty.Register(
+            nameof(PointToOffScreenElements),
+            typeof(bool),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(bool), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPointToOffScreenElementsChanged(e)))
+        );
+        protected virtual void OnPointToOffScreenElementsChanged(DependencyPropertyChangedEventArgs e)
+        {
+        }
+        public bool PointToOffScreenElements
+        {
+            get => (bool)GetValue(PointToOffScreenElementsProperty);
+            set => SetValue(PointToOffScreenElementsProperty, value);
+        }
+        #endregion PointToOffScreenElements Property
+
+
+        #endregion
 
         #endregion
 
@@ -323,6 +340,10 @@ namespace P42.Uno.Popups
         ContentPresenter _contentPresenter;
         BubbleBorder _border;
         Popup _popup;
+
+        HorizontalAlignment WorkingHorizontalAlignment = DefaultHorizontalAlignment;
+        VerticalAlignment WorkingVerticalAlignment = DefaultVerticalAlignment;
+        Thickness WorkingMargin = new Thickness();
         #endregion
 
 
@@ -346,7 +367,8 @@ namespace P42.Uno.Popups
             _border = GetTemplateChild(BorderElementName) as BubbleBorder;
             _border.HorizontalAlignment = HorizontalAlignment;
             _border.VerticalAlignment = VerticalAlignment;
-            UpdateBorderMargin();
+            _border.PointerLength = PointerLength;
+            UpdateMarginAndAlignment();
             var popupChild = GetTemplateChild(PopupElementName);
             
             _popup = popupChild as Popup;
@@ -429,7 +451,7 @@ namespace P42.Uno.Popups
             if (args.NewSize.Width < 1 || args.NewSize.Height < 1)
                 return;
             _lastMeasuredSize = args.NewSize;
-            UpdateAlignment();
+            UpdateMarginAndAlignment();
         }
 
         #endregion
@@ -463,6 +485,7 @@ namespace P42.Uno.Popups
 #if __WASM__ || NETSTANDARD
         Size _firstRenderSize;
 #endif
+        /*
         void UpdateAlignment()
         {
             //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment");
@@ -497,101 +520,272 @@ namespace P42.Uno.Popups
 
             hOffset -= (_firstRenderSize.Width + Margin.Left) / 2.0 ; 
             //vOffset -= windowHeight / 2.0;
-#elif __ANDROID__
-            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment ANDROID");
-#elif __iOS__
-            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment iOS");
-#elif __MACOS__
-            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment MACOS");
-#elif NETFX_CORE
-            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment UWP");
-#else
-            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment ????");
 #endif
             //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment Offset: " + hOffset + ", " + vOffset);
 
             _popup.HorizontalOffset = hOffset;
-            _popup.VerticalOffset = vOffset;
-            
+            _popup.VerticalOffset = vOffset;            
         }
+        */
 
-        protected void UpdateBorderMargin()
+        DirectionStats _lastStats = default;
+        void UpdateMarginAndAlignment(bool isAlignmentOnlyChange = false)
         {
             if (_border is null)
                 return;
+            _border.Margin = Margin;
 
-            var margin = Margin;
-            var pointerDirection = PointerDirection.None;
-            if (Target is null && TargetPoint.X == default)
+            var windowSize = AppWindow.Size();
+            if (windowSize.Width < 1 || windowSize.Height < 1)
+                return;
+            var windowWidth = windowSize.Width - Margin.Horizontal();
+            var windowHeight = windowSize.Height - Margin.Vertical();
+
+
+            if (PreferredPointerDirection == PointerDirection.None)
             {
-                _border.Margin = margin;
+                _lastStats = default; 
+                WorkingHorizontalAlignment = HorizontalAlignment;
+                WorkingVerticalAlignment = VerticalAlignment;
+                WorkingMargin = Margin;
+                ImplementWorkingMarginAndAlignment();
+                return;
             }
-            else
+
+            var targetBounds = TargetBounds();
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateBorderMarginAndAlignment targetBounds:["+targetBounds+"]");
+            var availableSpace = AvailableSpace(targetBounds);
+            var stats = _lastStats;
+            if (!isAlignmentOnlyChange || stats.BorderSize.IsEmpty)
+                stats = BestFit(availableSpace);
+            _lastStats = stats;
+
+            if (stats.PointerDirection == PointerDirection.None)
             {
-                var freeSpace = FreeSpace(PreferredPointerDirection);
-                var bestDirection = PreferredPointerDirection.BestFitDirection(freeSpace);
-                if (bestDirection == PointerDirection.None)
+                WorkingHorizontalAlignment = HorizontalAlignment;
+                WorkingVerticalAlignment = VerticalAlignment;
+                WorkingMargin = Margin;
+                ImplementWorkingMarginAndAlignment();
+                return;
+            }
+
+            _popup.HorizontalOffset = 0;
+            _popup.VerticalOffset = 0;
+
+            var baseMargin = Margin;
+            if (stats.PointerDirection.IsHorizontal())
+            {
+                if (stats.PointerDirection == PointerDirection.Left)
                 {
-                    freeSpace.Left += PointerLength * CompareDirection(PointerDirection.Right, PreferredPointerDirection, FallbackPointerDirection);
-                    freeSpace.Right += PointerLength * CompareDirection(PointerDirection.Left, PreferredPointerDirection, FallbackPointerDirection);
-                    freeSpace.Top += PointerLength * CompareDirection(PointerDirection.Bottom, PreferredPointerDirection, FallbackPointerDirection);
-                    freeSpace.Bottom += PointerLength * CompareDirection(PointerDirection.Top, PreferredPointerDirection, FallbackPointerDirection);
-                    bestDirection = FallbackPointerDirection.BestFitDirection(freeSpace);
+                    baseMargin.Left = targetBounds.Right;
+                    base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment == HorizontalAlignment.Stretch ? HorizontalAlignment.Stretch : HorizontalAlignment.Left;
+                }    
+                else
+                {
+                    baseMargin.Left = targetBounds.Left - stats.BorderSize.Width - PointerLength;
+                    base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment == HorizontalAlignment.Stretch ? HorizontalAlignment.Stretch : HorizontalAlignment.Right;
                 }
-                if (bestDirection == PointerDirection.None)
+
+                if (VerticalAlignment == VerticalAlignment.Top)
                 {
-                    freeSpace.Left += PointerLength * CompareDirection(PointerDirection.Right, FallbackPointerDirection, PointerDirection.None);
-                    freeSpace.Right += PointerLength * CompareDirection(PointerDirection.Left, FallbackPointerDirection, PointerDirection.None);
-                    freeSpace.Top += PointerLength * CompareDirection(PointerDirection.Bottom, FallbackPointerDirection, PointerDirection.None);
-                    freeSpace.Bottom += PointerLength * CompareDirection(PointerDirection.Top, FallbackPointerDirection, PointerDirection.None);
-                    bestDirection = FallbackPointerDirection.BestFitDirection(freeSpace);
+                    baseMargin.Top = Math.Max(Margin.Top, targetBounds.Top);
+                    base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Top;
                 }
-                if (bestDirection == PointerDirection.None)
+                else if (VerticalAlignment == VerticalAlignment.Center)
                 {
-                    _border.Margin = margin;
+                    baseMargin.Top = Math.Max(Margin.Top, (targetBounds.Top + targetBounds.Bottom) / 2.0 - stats.BorderSize.Height / 2.0);
+                    base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Top;
+                }
+                else if (VerticalAlignment == VerticalAlignment.Bottom)
+                {
+                    baseMargin.Top = Math.Max(Margin.Top, targetBounds.Bottom - stats.BorderSize.Height);
+                    base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Top;
                 }
                 else
                 {
-                    var targetBounds = Target is null ? Rect.Empty : Target.GetBounds();
-
-                    double right = (Target is null ? TargetPoint.X : targetBounds.Left) + Margin.Right;
-                    double left = (Target is null ? TargetPoint.X : targetBounds.Right) + Margin.Left;
-                    double bottom = (Target is null ? TargetPoint.Y : targetBounds.Top) + Margin.Bottom;
-                    double top = (Target is null ? TargetPoint.Y : targetBounds.Bottom) + Margin.Top;
-
-                    pointerDirection = bestDirection;
-                    if (bestDirection == PointerDirection.Left)
-                        margin.Left = left;
-                    else if (bestDirection == PointerDirection.Right)
-                        margin.Right = right;
-                    else if (bestDirection == PointerDirection.Up)
-                        margin.Top = top;
-                    else if (bestDirection == PointerDirection.Down)
-                        margin.Bottom = bottom;
+                    base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Stretch;
                 }
+                if (baseMargin.Top + stats.BorderSize.Height > windowSize.Height - Margin.Bottom)
+                    baseMargin.Top = windowSize.Height - Margin.Bottom - stats.BorderSize.Height;
             }
-            _border.Margin = margin;
-            ActualPointerDirection = _border.PointerDirection  = pointerDirection;
+            else
+            {
+                if (stats.PointerDirection == PointerDirection.Up)
+                {
+                    baseMargin.Top = targetBounds.Bottom;
+                    base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment == VerticalAlignment.Stretch ? VerticalAlignment.Stretch : VerticalAlignment.Top;
+                }
+                else
+                { 
+                    baseMargin.Top = targetBounds.Top - stats.BorderSize.Height - PointerLength;
+                    base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment == VerticalAlignment.Stretch ? VerticalAlignment.Stretch : VerticalAlignment.Bottom;
+                }
+
+                if (HorizontalAlignment == HorizontalAlignment.Left)
+                {
+                    baseMargin.Left = Math.Max(Margin.Left, targetBounds.Left);
+                    base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
+                }
+                else if (HorizontalAlignment == HorizontalAlignment.Center)
+                {
+                    baseMargin.Left = Math.Max(Margin.Left, (targetBounds.Left + targetBounds.Right) / 2.0 - stats.BorderSize.Width / 2.0);
+                    base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
+                }
+                else if (HorizontalAlignment == HorizontalAlignment.Right)
+                {
+                    baseMargin.Left = Math.Max(Margin.Left, targetBounds.Right - stats.BorderSize.Width);
+                    base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
+                }
+                else
+                {
+                    base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Stretch;
+                }
+                if (baseMargin.Left + stats.BorderSize.Width > windowSize.Width - Margin.Right)
+                    baseMargin.Left = windowSize.Width - Margin.Right - stats.BorderSize.Width;
+            }
+            _border.PointerDirection = stats.PointerDirection;
+            WorkingMargin = baseMargin;
+            base.Margin = _border.Margin = WorkingMargin;
         }
 
-        protected Thickness FreeSpace(PointerDirection pointerDirection)
+        void ImplementWorkingMarginAndAlignment()
+        {             //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment");
+
+            if (_border is null || _popup is null)
+                return;
+
+            base.Margin = _border.Margin = WorkingMargin;
+
+            var windowSize = AppWindow.Size();
+            if (windowSize.Width < 1 || windowSize.Height < 1)
+                return;
+
+            base.HorizontalAlignment = _border.HorizontalAlignment = WorkingHorizontalAlignment;
+            base.VerticalAlignment = _border.VerticalAlignment = WorkingVerticalAlignment;
+
+
+            var windowWidth = windowSize.Width - Margin.Horizontal();
+            var windowHeight = windowSize.Height - Margin.Vertical();
+
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment: window("+windowWidth+","+windowHeight+")   content("+ _lastMeasuredSize + ")");
+
+            double hOffset = 0.0;
+            if (WorkingHorizontalAlignment == HorizontalAlignment.Center)
+                hOffset = (windowWidth - _lastMeasuredSize.Width) / 2;
+            else if (WorkingHorizontalAlignment == HorizontalAlignment.Right)
+                hOffset = (windowWidth - _lastMeasuredSize.Width);
+
+            double vOffset = 0.0;
+            if (WorkingVerticalAlignment == VerticalAlignment.Center)
+                vOffset = (windowHeight - _lastMeasuredSize.Height) / 2;
+            else if (WorkingVerticalAlignment == VerticalAlignment.Bottom)
+                vOffset = (windowHeight - _lastMeasuredSize.Height);
+
+#if __WASM__ || NETSTANDARD
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment WASM || NETSTANDARD");
+
+            if (_firstRenderSize.Width < 1 || _firstRenderSize.Height < 1)
+                _firstRenderSize = windowSize;
+
+            hOffset -= (_firstRenderSize.Width + WorkingMargin.Left) / 2.0 ; 
+            //vOffset -= windowHeight / 2.0;
+#endif
+            System.Diagnostics.Debug.WriteLine(GetType() + ".ImplementWorkingMarginAndAlignmentOffset:[" + hOffset + ", " + vOffset + "]");
+            System.Diagnostics.Debug.WriteLine("\t WorkingMargin:[" + WorkingMargin + "] WorkingHzAlign:[" + WorkingHorizontalAlignment + "] WorkingVtAlign:[" + WorkingVerticalAlignment + "] ");
+            System.Diagnostics.Debug.WriteLine("\t windowWidth:[" + windowWidth + "]  _lastMeasuredSize:["+_lastMeasuredSize+"]");
+            _popup.HorizontalOffset = hOffset;
+            _popup.VerticalOffset = vOffset;
+        }
+
+        DirectionStats BestFit(Thickness availableSpace)
         {
+            //var stats = new List<DirectionStats>();
+            // given the amount of free space, determine if the border will fit 
+            var windowSpace = new Size(AppWindow.Size().Width - Margin.Horizontal(), AppWindow.Size().Height - Margin.Vertical());
+            var cleanBorder = RectangleBorderSize(windowSpace);
+            var cleanStat = new DirectionStats
+            {
+                PointerDirection = PointerDirection.None,
+                BorderSize = cleanBorder,
+                //MinFree = Math.Min(windowSpace.Width - cleanBorder.Width, windowSpace.Height - cleanBorder.Height),
+                FreeSpace = new Size(0,0)
+            };
+
+            #region Check if clean border fits in preferred pointer quadrants
+            // see if the existing measurement data works
+            var prefStats = GetRectangleBorderStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace);
+            // At this point in time, only valid fits are in the stats list
+            if (prefStats.Count > 0)
+            {
+                (DirectionStats stat, double minFree) = prefStats.MaxBy(s => s.MinFree);
+                //if (minFree >=0)  // At this point in time, only valid fits are in the stats list
+                    return stat;
+            }
+            #endregion
+
+            #region Check if border + content could fit in any of the preferred pointer quadrants
+            // at this point in time valid and invalid fits are in the stats list
+            prefStats = GetMeasuredStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace, windowSpace);
+
+            if (prefStats.Count > 0)
+            {
+                (DirectionStats stat, double minFree) = prefStats.MaxBy(s => s.MinFree);
+                if (minFree >= 0)
+                    return stat;
+            }
+            #endregion
+
+            // the stats list only contains invalid fallback fits ... but perhaps not all fallback fits have yet been tried
+            var uncheckedFallbackPointerDirection = (FallbackPointerDirection ^ PreferredPointerDirection) | FallbackPointerDirection;
+
+            #region Check if clean border fits in unchecked fallback pointer quadrants
+            var fallbackStats = GetRectangleBorderStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace);
+            if (fallbackStats.Count > 0)
+            {
+                (DirectionStats stat, double minFree) = fallbackStats.MaxBy(s => s.MinFree);
+                //if (minFree >=0)  // At this point in time, only valid fits are in the stats list
+                return stat;
+            }
+            #endregion
+
+            #region Check if border + content could fit in any of the unchecked fallback pointer quadrants
+            fallbackStats = GetMeasuredStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace, windowSpace);
+
+            if (fallbackStats.Count > 0)
+            {
+                (DirectionStats stat, double minFree) = fallbackStats.MaxBy(s => s.MinFree);
+                if (minFree >= 0)
+                    return stat;
+            }
+            #endregion
+
+            return cleanStat;
+        }
+
+        Rect TargetBounds()
+        {
+            var targetBounds = Target is null ? Rect.Empty : Target.GetBounds();
+
+            double targetLeft = Target is null ? TargetPoint.X : targetBounds.Left;
+            double targetRight = Target is null ? TargetPoint.X : targetBounds.Right;
+            double targetTop = Target is null ? TargetPoint.Y : targetBounds.Top;
+            double targetBottom = Target is null ? TargetPoint.Y : targetBounds.Bottom;
+
+            return new Rect(targetLeft, targetTop, targetRight - targetLeft, targetBottom - targetTop);
+        }
+
+        Thickness AvailableSpace(Rect target)
+        {
+            var windowBounds = AppWindow.Size();
             if (Target != null || (TargetPoint.X > 0 || TargetPoint.Y > 0))
             {
-                var windowBounds = AppWindow.Size();
-                var targetBounds = Target is null ? Rect.Empty : Target.GetBounds();
 
-                double left = Target is null ? TargetPoint.X : targetBounds.Left;
-                double right = Target is null ? TargetPoint.X : targetBounds.Right;
-                double top = Target is null ? TargetPoint.Y : targetBounds.Top;
-                double bottom = Target is null ? TargetPoint.Y : targetBounds.Bottom;
-
-                if (right > 0 && left < windowBounds.Width && bottom > 0 && top < windowBounds.Height)
+                if (target.Right > 0 && target.Left < windowBounds.Width && target.Bottom > 0 && target.Top < windowBounds.Height)
                 {
-                    var availL = left - Margin.Left - PointerLength * (pointerDirection.RightAllowed() ? 1 : 0);
-                    var availR = windowBounds.Width - right - Margin.Right - PointerLength * (pointerDirection.LeftAllowed() ? 1 : 0);
-                    var availT = top - Margin.Top - PointerLength * (pointerDirection.DownAllowed() ? 1 : 0);
-                    var availB = windowBounds.Height - bottom - Margin.Bottom - PointerLength * (pointerDirection.UpAllowed() ? 1 : 0);
+                    var availL = target.Left - Margin.Left;
+                    var availR = windowBounds.Width - Margin.Right - target.Right;
+                    var availT = target.Top - Margin.Top;
+                    var availB = windowBounds.Height - target.Bottom - Margin.Bottom;
 
                     var maxWidth = MaxWidth;
                     if (Width > 0 && Width < maxWidth)
@@ -611,77 +805,115 @@ namespace P42.Uno.Popups
                         availB = Math.Min(availB, maxHeight);
                     }
 
-                    if (availL < availR)
-                    {
-                        var delta = availR - availL;
-                        availL = FreeSpaceForWidth(availL);
-                        if (availL < 0)
-                            availR = FreeSpaceForWidth(availR);
-                        else
-                            availR = availL + delta;
-                    }
-                    else
-                    {
-                        var delta = availL - availR;
-                        availR = FreeSpaceForWidth(availR);
-                        if (availR < 0)
-                            availL = FreeSpaceForWidth(availL);
-                        else
-                            availL = availR + delta;
-                    }
-                    if (availT < availB)
-                    {
-                        var delta = availB - availT;
-                        availT = FreeSpaceForHeight(availT);
-                        if (availT < 0)
-                            availB = FreeSpaceForHeight(availB);
-                        else
-                            availB = availT + delta;
-                    }
-                    else
-                    {
-                        var delta = availT - availB;
-                        availB = FreeSpaceForWidth(availB);
-                        if (availB < 0)
-                            availT = FreeSpaceForWidth(availT);
-                        else
-                            availT = availB + delta;
-                    }
                     return new Thickness(availL, availT, availR, availB);
                 }
             }
+            if (PointToOffScreenElements)
+                return new Thickness(windowBounds.Width - Margin.Horizontal(), windowBounds.Height - Margin.Vertical(), windowBounds.Width - Margin.Horizontal(), windowBounds.Height - Margin.Vertical());
             return new Thickness(-1, -1, -1, -1);
+
         }
 
-        double FreeSpaceForWidth(double width)
+        List<DirectionStats> GetRectangleBorderStatsForDirection(PointerDirection pointerDirection, DirectionStats cleanStat, Thickness availableSpace)
         {
-            var size = new Size(width - Margin.Horizontal(), AppWindow.Size().Width - Margin.Vertical());
-            _contentPresenter.Measure(size);
-            if (_border.DesiredSize.Height > size.Height)
-                return -1;
-            return width - _border.DesiredSize.Width;
+            var stats = new List<DirectionStats>();
+            if (pointerDirection.LeftAllowed() && cleanStat.FreeSpace.Width >= PointerLength)
+            {
+                var stat = cleanStat;
+                stat.PointerDirection = PointerDirection.Left;
+                stat.BorderSize.Width += PointerLength;
+                stat.FreeSpace.Width = availableSpace.Right - stat.BorderSize.Width;
+                if (stat.MinFree >= 0)
+                    stats.Add(stat);
+            }
+            if (pointerDirection.RightAllowed() && cleanStat.FreeSpace.Width >= PointerLength)
+            {
+                var stat = cleanStat;
+                stat.PointerDirection = PointerDirection.Right;
+                stat.BorderSize.Width += PointerLength;
+                stat.FreeSpace.Width = availableSpace.Left - stat.BorderSize.Width;
+                if (stat.MinFree >= 0)
+                    stats.Add(stat);
+            }
+            if (pointerDirection.UpAllowed() && cleanStat.FreeSpace.Height >= PointerLength)
+            {
+                var stat = cleanStat;
+                stat.PointerDirection = PointerDirection.Up;
+                stat.BorderSize.Height += PointerLength;
+                stat.FreeSpace.Height = availableSpace.Bottom - stat.BorderSize.Height;
+                if (stat.MinFree >= 0)
+                    stats.Add(stat);
+            }
+            if (pointerDirection.DownAllowed() && cleanStat.FreeSpace.Height >= PointerLength)
+            {
+                var stat = cleanStat;
+                stat.PointerDirection = PointerDirection.Down;
+                stat.BorderSize.Height += PointerLength;
+                stat.FreeSpace.Height = availableSpace.Top - stat.BorderSize.Height;
+                if (stat.MinFree >= 0)
+                    stats.Add(stat);
+            }
+            return stats;
         }
 
-        double FreeSpaceForHeight(double height)
+        List<DirectionStats> GetMeasuredStatsForDirection(PointerDirection pointerDirection, DirectionStats cleanStat, Thickness availableSpace, Size windowSpace)
         {
-            var size = new Size(AppWindow.Size().Height - Margin.Horizontal(), height);
-            _border.Measure(size);
-            if (_border.DesiredSize.Width > size.Width)
-                return -1;
-            return size.Height - _border.DesiredSize.Height;
+            var stats = new List<DirectionStats>();
+            if (pointerDirection.LeftAllowed())
+            {
+                var size = new Size(availableSpace.Right, windowSpace.Height);
+                var border = RectangleBorderSize(size);
+                var stat = cleanStat;
+                stat.PointerDirection = PointerDirection.Left;
+                stat.BorderSize = border;
+                stat.FreeSpace.Width = availableSpace.Right - border.Width;
+                stats.Add(stat);
+            }
+            if (pointerDirection.RightAllowed())
+            {
+                var size = new Size(availableSpace.Left, windowSpace.Height);
+                var border = RectangleBorderSize(size);
+                var stat = cleanStat;
+                stat.PointerDirection = PointerDirection.Right;
+                stat.BorderSize = border;
+                stat.FreeSpace.Width = availableSpace.Left - border.Width;
+                stats.Add(stat);
+            }
+            if (pointerDirection.UpAllowed())
+            {
+                var size = new Size(windowSpace.Width, availableSpace.Bottom);
+                var border = RectangleBorderSize(size);
+                var stat = cleanStat;
+                stat.PointerDirection = PointerDirection.Up;
+                stat.BorderSize = border;
+                stat.FreeSpace.Height = availableSpace.Bottom - border.Height;
+                stats.Add(stat);
+            }
+            if (pointerDirection.DownAllowed())
+            {
+                var size = new Size(windowSpace.Width, availableSpace.Top);
+                var border = RectangleBorderSize(size);
+                var stat = cleanStat;
+                stat.PointerDirection = PointerDirection.Down;
+                stat.BorderSize = border;
+                stat.FreeSpace.Height = availableSpace.Top - border.Height;
+                stats.Add(stat);
+            }
+            return stats;
         }
 
-        int CompareDirection(PointerDirection testDirection, PointerDirection a, PointerDirection b)
+        Size RectangleBorderSize(Size available)
         {
-            var aTest = (a & testDirection);
-            var bTest = (b & testDirection);
-            if (aTest > bTest)
-                return 1;
-            if (aTest < bTest)
-                return -1;
-            return 0;
+            var hasBorder = (BorderThickness.Average() > 0) && BorderBrush is SolidColorBrush brush && brush.Color.A > 0;
+            var border = BorderThickness.Average() * (hasBorder ? 1 : 0) * 2;
+            available.Width -= Padding.Horizontal() - border;
+            available.Height -= Padding.Vertical() - border;
+            _contentPresenter.Measure(available);
+            var result = _contentPresenter.DesiredSize;
+            result.Width += Padding.Horizontal();
+            result.Height += Padding.Vertical();
+            return result;
         }
-
         #endregion
 
     }

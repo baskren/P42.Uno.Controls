@@ -22,7 +22,6 @@ namespace P42.Uno.Popups
 		/// BubblePopup pointer points down.
 		/// </summary>
 		Up = 2,
-		Top = 2,
 		/// <summary>
 		/// BubblePopup pointer points left.
 		/// </summary>
@@ -31,7 +30,6 @@ namespace P42.Uno.Popups
 		/// BubblePopup pointer points right.
 		/// </summary>
 		Down = 8,
-		Bottom = 8,
 		/// <summary>
 		/// BubblePopup pointer points in what ever direction allow for it to have the most space.
 		/// </summary>
