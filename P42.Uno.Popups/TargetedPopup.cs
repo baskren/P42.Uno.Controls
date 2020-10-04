@@ -341,9 +341,6 @@ namespace P42.Uno.Popups
         BubbleBorder _border;
         Popup _popup;
 
-        HorizontalAlignment WorkingHorizontalAlignment = DefaultHorizontalAlignment;
-        VerticalAlignment WorkingVerticalAlignment = DefaultVerticalAlignment;
-        Thickness WorkingMargin = new Thickness();
         #endregion
 
 
@@ -485,48 +482,6 @@ namespace P42.Uno.Popups
 #if __WASM__ || NETSTANDARD
         Size _firstRenderSize;
 #endif
-        /*
-        void UpdateAlignment()
-        {
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment");
-            var windowSize = AppWindow.Size();
-            if (windowSize.Width < 1 || windowSize.Height < 1)
-                return;
-
-            var windowWidth = windowSize.Width - Margin.Horizontal();
-            var windowHeight = windowSize.Height - Margin.Vertical();
-
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment: window("+windowWidth+","+windowHeight+")   content("+ _lastMeasuredSize + ")");
-
-            if (_border is null)
-                return;
-            double hOffset = 0.0;
-            if (HorizontalAlignment == HorizontalAlignment.Center)
-                hOffset = (windowWidth - _lastMeasuredSize.Width) / 2;
-            else if (HorizontalAlignment == HorizontalAlignment.Right)
-                hOffset = (windowWidth - _lastMeasuredSize.Width);
-
-            double vOffset = 0.0;
-            if (VerticalAlignment == VerticalAlignment.Center)
-                vOffset = (windowHeight - _lastMeasuredSize.Height) / 2;
-            else if (VerticalAlignment == VerticalAlignment.Bottom)
-                vOffset = (windowHeight - _lastMeasuredSize.Height);
-
-#if __WASM__ || NETSTANDARD
-            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment WASM || NETSTANDARD");
-
-            if (_firstRenderSize.Width < 1 || _firstRenderSize.Height < 1)
-                _firstRenderSize = windowSize;
-
-            hOffset -= (_firstRenderSize.Width + Margin.Left) / 2.0 ; 
-            //vOffset -= windowHeight / 2.0;
-#endif
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment Offset: " + hOffset + ", " + vOffset);
-
-            _popup.HorizontalOffset = hOffset;
-            _popup.VerticalOffset = vOffset;            
-        }
-        */
 
         DirectionStats _lastStats = default;
         void UpdateMarginAndAlignment(bool isAlignmentOnlyChange = false)
@@ -545,9 +500,6 @@ namespace P42.Uno.Popups
             if (PreferredPointerDirection == PointerDirection.None)
             {
                 _lastStats = default; 
-                WorkingHorizontalAlignment = HorizontalAlignment;
-                WorkingVerticalAlignment = VerticalAlignment;
-                WorkingMargin = Margin;
                 ImplementWorkingMarginAndAlignment();
                 return;
             }
@@ -562,9 +514,6 @@ namespace P42.Uno.Popups
 
             if (stats.PointerDirection == PointerDirection.None)
             {
-                WorkingHorizontalAlignment = HorizontalAlignment;
-                WorkingVerticalAlignment = VerticalAlignment;
-                WorkingMargin = Margin;
                 ImplementWorkingMarginAndAlignment();
                 return;
             }
@@ -644,8 +593,7 @@ namespace P42.Uno.Popups
                     baseMargin.Left = windowSize.Width - Margin.Right - stats.BorderSize.Width;
             }
             _border.PointerDirection = stats.PointerDirection;
-            WorkingMargin = baseMargin;
-            base.Margin = _border.Margin = WorkingMargin;
+            base.Margin = _border.Margin = baseMargin;
         }
 
         void ImplementWorkingMarginAndAlignment()
@@ -654,14 +602,14 @@ namespace P42.Uno.Popups
             if (_border is null || _popup is null)
                 return;
 
-            base.Margin = _border.Margin = WorkingMargin;
+            base.Margin = _border.Margin = Margin;
 
             var windowSize = AppWindow.Size();
             if (windowSize.Width < 1 || windowSize.Height < 1)
                 return;
 
-            base.HorizontalAlignment = _border.HorizontalAlignment = WorkingHorizontalAlignment;
-            base.VerticalAlignment = _border.VerticalAlignment = WorkingVerticalAlignment;
+            base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment;
+            base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment;
 
 
             var windowWidth = windowSize.Width - Margin.Horizontal();
@@ -670,15 +618,15 @@ namespace P42.Uno.Popups
             //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment: window("+windowWidth+","+windowHeight+")   content("+ _lastMeasuredSize + ")");
 
             double hOffset = 0.0;
-            if (WorkingHorizontalAlignment == HorizontalAlignment.Center)
+            if (HorizontalAlignment == HorizontalAlignment.Center)
                 hOffset = (windowWidth - _lastMeasuredSize.Width) / 2;
-            else if (WorkingHorizontalAlignment == HorizontalAlignment.Right)
+            else if (HorizontalAlignment == HorizontalAlignment.Right)
                 hOffset = (windowWidth - _lastMeasuredSize.Width);
 
             double vOffset = 0.0;
-            if (WorkingVerticalAlignment == VerticalAlignment.Center)
+            if (VerticalAlignment == VerticalAlignment.Center)
                 vOffset = (windowHeight - _lastMeasuredSize.Height) / 2;
-            else if (WorkingVerticalAlignment == VerticalAlignment.Bottom)
+            else if (VerticalAlignment == VerticalAlignment.Bottom)
                 vOffset = (windowHeight - _lastMeasuredSize.Height);
 
 #if __WASM__ || NETSTANDARD
@@ -687,11 +635,11 @@ namespace P42.Uno.Popups
             if (_firstRenderSize.Width < 1 || _firstRenderSize.Height < 1)
                 _firstRenderSize = windowSize;
 
-            hOffset -= (_firstRenderSize.Width + WorkingMargin.Left) / 2.0 ; 
+            hOffset -= (_firstRenderSize.Width + Margin.Left) / 2.0 ; 
             //vOffset -= windowHeight / 2.0;
 #endif
             System.Diagnostics.Debug.WriteLine(GetType() + ".ImplementWorkingMarginAndAlignmentOffset:[" + hOffset + ", " + vOffset + "]");
-            System.Diagnostics.Debug.WriteLine("\t WorkingMargin:[" + WorkingMargin + "] WorkingHzAlign:[" + WorkingHorizontalAlignment + "] WorkingVtAlign:[" + WorkingVerticalAlignment + "] ");
+            System.Diagnostics.Debug.WriteLine("\t WorkingMargin:[" + Margin + "] WorkingHzAlign:[" + HorizontalAlignment + "] WorkingVtAlign:[" + VerticalAlignment + "] ");
             System.Diagnostics.Debug.WriteLine("\t windowWidth:[" + windowWidth + "]  _lastMeasuredSize:["+_lastMeasuredSize+"]");
             _popup.HorizontalOffset = hOffset;
             _popup.VerticalOffset = vOffset;

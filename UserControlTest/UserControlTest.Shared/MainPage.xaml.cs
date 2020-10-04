@@ -86,39 +86,11 @@ namespace UserControlTest
         {
             if (sender is FrameworkElement element)
             {
-                /*
-                if (!_grid.Children.Contains(_TargetedPopup))
-                    _grid.Children.Add(_TargetedPopup);
-                if (!_grid.Children.Contains(_bubblePopup))
-                    _grid.Children.Add(_bubblePopup);
-
-                //var point = ScreenCoorder(element);
-                var frame = element.GetFrame();
-                System.Diagnostics.Debug.WriteLine(GetType() + $".BorderTapped  sender:[{sender.GetType()}] args:[{e}] frame:[{frame}]");
-                var content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
-                _bubblePopup.Content = content;
-                _TargetedPopup.Content = content;
-
-                //Canvas.SetLeft(_popup, frame.X);
-                //Canvas.SetTop(_popup, frame.Y);
-
-                if (_TargetedPopup.Visibility == Visibility.Visible)
-                {
-                    await _TargetedPopup.PopAsync();
-                    await _bubblePopup.PushAsync();
-                }
-                else
-                {
-                    if (_bubblePopup.Visibility == Visibility.Visible)
-                    await _bubblePopup.PopAsync();
-                    await _TargetedPopup.PushAsync();
-                }
-                */
                 var frame = element.GetBounds();
                 var content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
 
                 _TargetedPopup.Target = _altBorder;
-                _TargetedPopup.PreferredPointerDirection = PointerDirection.Right;
+                _TargetedPopup.PreferredPointerDirection = PointerDirection.None;
 
                 _TargetedPopup.VerticalAlignment = VerticalAlignment.Center;
 
@@ -131,8 +103,6 @@ namespace UserControlTest
 
                 _TargetedPopup.Content = new TextBlock { Text = content };
 
-                //_TargetedPopup.Padding = new Thickness( _TargetedPopup.Padding.Left+1);
-
                 if (_TargetedPopup.Parent is Grid grid)
                     grid.Children.Remove(_TargetedPopup);
 
@@ -140,7 +110,7 @@ namespace UserControlTest
                 if (_lastAlignment > VerticalAlignment.Stretch)
                     _lastAlignment = VerticalAlignment.Top;
 
-                _TargetedPopup.VerticalAlignment = (VerticalAlignment) _lastAlignment;
+                _TargetedPopup.HorizontalAlignment = (HorizontalAlignment) _lastAlignment;
                 _bubbleBorder.HorizontalAlignment = (HorizontalAlignment)_lastAlignment;
 
                await _TargetedPopup.PushAsync();
