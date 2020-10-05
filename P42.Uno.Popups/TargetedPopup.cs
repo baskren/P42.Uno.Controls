@@ -33,7 +33,7 @@ namespace P42.Uno.Popups
     [TemplatePart(Name = ContentPresenterName, Type = typeof(ContentPresenter))]
     [TemplatePart(Name = BorderElementName, Type = typeof(BubbleBorder))]
     [TemplatePart(Name = PopupElementName, Type = typeof(Windows.UI.Xaml.Controls.Primitives.Popup))]
-    public partial class TargetedPopup : ContentControl
+    public partial class TargetedPopup : ContentControl, ITargetedPopup
     {
         #region Properties
 
@@ -382,12 +382,12 @@ namespace P42.Uno.Popups
 
             if (Parent is Grid grid)
             {
-                Grid.SetRow(this, 0);
-                Grid.SetColumn(this, 0);
-                Grid.SetColumnSpan(this, grid.ColumnDefinitions.Count);
-                Grid.SetRowSpan(this, grid.RowDefinitions.Count);
+                //Grid.SetRow(this, 0);
+                //Grid.SetColumn(this, 0);
+                //Grid.SetColumnSpan(this, grid.ColumnDefinitions.Count);
+                //Grid.SetRowSpan(this, grid.RowDefinitions.Count);
+                grid.Children.Remove(this);
             }
-//                grid.Children.Remove(this);
 
             _border.SizeChanged += OnBorderSizeChanged;
             _popup.Closed += OnPopupClosed;
@@ -397,9 +397,19 @@ namespace P42.Uno.Popups
             await OnPushBeginAsync();
             _popup.IsOpen = true;
             await OnPushEndAsync();
+
+            if (PopAfter > default(TimeSpan))
+            {
+                Device.StartTimer(PopAfter, () =>
+                {
+                    if (_popup.IsOpen)
+                        PopAsync(PopupPoppedCause.Timeout, "Timeout");
+                    return false;
+                });
+            }
         }
 
-        private void OnPopupClosed(object sender, object e)
+        void OnPopupClosed(object sender, object e)
         {
             _border.SizeChanged -= OnBorderSizeChanged;
             _popup.Closed -= OnPopupClosed;
@@ -408,11 +418,14 @@ namespace P42.Uno.Popups
 
         public async Task PopAsync(PopupPoppedCause cause, [CallerMemberName] object trigger = null)
         {
-            PoppedCause = cause;
-            PoppedTrigger = trigger; 
-            await OnPopBeginAsync();
-            _popup.IsOpen = false;
-            await OnPopEndAsync();
+            if (_popup.IsOpen)
+            {
+                PoppedCause = cause;
+                PoppedTrigger = trigger;
+                await OnPopBeginAsync();
+                _popup.IsOpen = false;
+                await OnPopEndAsync();
+            }
         }
         #endregion
 
@@ -855,58 +868,70 @@ namespace P42.Uno.Popups
             var stats = new List<DirectionStats>();
             if (pointerDirection.LeftAllowed())
             {
-                var size = new Size(availableSpace.Right, windowSpace.Height);
-                var border = RectangleBorderSize(size, cleanStat.BorderSize);
-                var stat = cleanStat;
-                stat.PointerDirection = PointerDirection.Left;
-                stat.BorderSize = border;
-                var free = availableSpace.Right - border.Width;
-                if (free >= 0)
+                if (availableSpace.Right > 0)
                 {
-                    stat.FreeSpace.Width = free;
-                    stats.Add(stat);
+                    var size = new Size(availableSpace.Right, windowSpace.Height);
+                    var border = RectangleBorderSize(size, cleanStat.BorderSize);
+                    var stat = cleanStat;
+                    stat.PointerDirection = PointerDirection.Left;
+                    stat.BorderSize = border;
+                    var free = availableSpace.Right - border.Width;
+                    if (free >= 0)
+                    {
+                        stat.FreeSpace.Width = free;
+                        stats.Add(stat);
+                    }
                 }
             }
             if (pointerDirection.RightAllowed())
             {
-                var size = new Size(availableSpace.Left, windowSpace.Height);
-                var border = RectangleBorderSize(size, cleanStat.BorderSize);
-                var stat = cleanStat;
-                stat.PointerDirection = PointerDirection.Right;
-                stat.BorderSize = border;
-                var free = availableSpace.Left - border.Width;
-                if (free >= 0)
+                if (availableSpace.Left > 0)
                 {
-                    stat.FreeSpace.Width = free;
-                    stats.Add(stat);
+                    var size = new Size(availableSpace.Left, windowSpace.Height);
+                    var border = RectangleBorderSize(size, cleanStat.BorderSize);
+                    var stat = cleanStat;
+                    stat.PointerDirection = PointerDirection.Right;
+                    stat.BorderSize = border;
+                    var free = availableSpace.Left - border.Width;
+                    if (free >= 0)
+                    {
+                        stat.FreeSpace.Width = free;
+                        stats.Add(stat);
+                    }
                 }
             }
             if (pointerDirection.UpAllowed())
             {
-                var size = new Size(windowSpace.Width, availableSpace.Bottom);
-                var border = RectangleBorderSize(size, cleanStat.BorderSize);
-                var stat = cleanStat;
-                stat.PointerDirection = PointerDirection.Up;
-                stat.BorderSize = border;
-                var free = availableSpace.Bottom - border.Height;
-                if (free >= 0)
+                if (availableSpace.Bottom > 0)
                 {
-                    stat.FreeSpace.Width = free;
-                    stats.Add(stat);
+                    var size = new Size(windowSpace.Width, availableSpace.Bottom);
+                    var border = RectangleBorderSize(size, cleanStat.BorderSize);
+                    var stat = cleanStat;
+                    stat.PointerDirection = PointerDirection.Up;
+                    stat.BorderSize = border;
+                    var free = availableSpace.Bottom - border.Height;
+                    if (free >= 0)
+                    {
+                        stat.FreeSpace.Width = free;
+                        stats.Add(stat);
+                    }
                 }
             }
             if (pointerDirection.DownAllowed())
             {
-                var size = new Size(windowSpace.Width, availableSpace.Top);
-                var border = RectangleBorderSize(size, cleanStat.BorderSize);
-                var stat = cleanStat;
-                stat.PointerDirection = PointerDirection.Down;
-                stat.BorderSize = border;
-                var free = availableSpace.Top - border.Height;
-                if (free >= 0)
+                if (availableSpace.Top > 0)
                 {
-                    stat.FreeSpace.Width = free;
-                    stats.Add(stat);
+                    var size = new Size(windowSpace.Width, availableSpace.Top);
+                    var border = RectangleBorderSize(size, cleanStat.BorderSize);
+                    var stat = cleanStat;
+                    stat.PointerDirection = PointerDirection.Down;
+                    stat.BorderSize = border;
+                    var free = availableSpace.Top - border.Height;
+                    if (free >= 0)
+                    {
+                        stat.FreeSpace.Width = free;
+                        stats.Add(stat);
+                    }
                 }
             }
             return stats;
@@ -952,6 +977,8 @@ namespace P42.Uno.Popups
                                 width = colDef.ActualWidth;
                             System.Diagnostics.Debug.WriteLine(GetType() + ".PushAsync w:" + width + "   h:" + height);
                         }
+                        else
+                            throw new Exception("Page content needs to be a Grid in order for Popup to work in WASM");
                     }
                 }
                 _firstRenderSize = new Size(width, height);
