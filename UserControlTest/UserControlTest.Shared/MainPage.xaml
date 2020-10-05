@@ -105,7 +105,7 @@
 
 
                 <popups:TargetedPopup x:Name="_TargetedPopup" />
-                <popups:Toast x:Name="_toast" />
+                <popups:ToastStyle x:Name="_toast" Margin="5" />
             </Grid.Children>
         </Grid>
     </Page.Content>
