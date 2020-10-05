@@ -17,5 +17,6 @@ namespace P42.Utils.Uno
             var location = ttv.TransformPoint(new Point(0, 0));
             return new Rect(location, new Size(element.DesiredSize.Width, element.DesiredSize.Height));
         }
+
     }
 }

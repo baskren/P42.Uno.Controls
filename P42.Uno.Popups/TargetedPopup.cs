@@ -379,7 +379,7 @@ namespace P42.Uno.Popups
         #region Push / Pop
         public async Task PushAsync()
         {
-
+            System.Diagnostics.Debug.WriteLine(GetType() + ".PushAsync PreferredPointerDirection: " + PreferredPointerDirection);
             if (Parent is Grid grid)
             {
                 //Grid.SetRow(this, 0);
@@ -397,6 +397,8 @@ namespace P42.Uno.Popups
             await OnPushBeginAsync();
             _popup.IsOpen = true;
             await OnPushEndAsync();
+
+            UpdateMarginAndAlignment();
 
             if (PopAfter > default(TimeSpan))
             {

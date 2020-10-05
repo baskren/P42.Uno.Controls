@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 
 namespace UserControlTest.Wasm
@@ -13,5 +14,6 @@ namespace UserControlTest.Wasm
 
             return 0;
         }
+
     }
 }
