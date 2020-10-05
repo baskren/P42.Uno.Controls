@@ -500,12 +500,12 @@ namespace P42.Uno.Popups
             if (PreferredPointerDirection == PointerDirection.None)
             {
                 _lastStats = default; 
-                ImplementWorkingMarginAndAlignment();
+                CleanMarginAndAlignment(HorizontalAlignment,VerticalAlignment);
                 return;
             }
 
             var targetBounds = TargetBounds();
-            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateBorderMarginAndAlignment targetBounds:["+targetBounds+"]");
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateBorderMarginAndAlignment targetBounds:["+targetBounds+"]");
             var availableSpace = AvailableSpace(targetBounds);
             var stats = _lastStats;
             if (!isAlignmentOnlyChange || stats.BorderSize.IsEmpty)
@@ -514,7 +514,8 @@ namespace P42.Uno.Popups
 
             if (stats.PointerDirection == PointerDirection.None)
             {
-                ImplementWorkingMarginAndAlignment();
+                System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateMarginAndAlignment BestFit = None");
+                CleanMarginAndAlignment(HorizontalAlignment.Center, VerticalAlignment.Center);
                 return;
             }
 
@@ -531,8 +532,15 @@ namespace P42.Uno.Popups
                 }    
                 else
                 {
-                    baseMargin.Left = targetBounds.Left - stats.BorderSize.Width - PointerLength;
-                    base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment == HorizontalAlignment.Stretch ? HorizontalAlignment.Stretch : HorizontalAlignment.Right;
+                    if (HorizontalAlignment == HorizontalAlignment.Stretch)
+                    {
+                        base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment;
+                    }
+                    else
+                    {
+                        baseMargin.Left = targetBounds.Left - stats.BorderSize.Width - PointerLength;
+                        base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
+                    }
                 }
 
                 if (VerticalAlignment == VerticalAlignment.Top)
@@ -568,9 +576,16 @@ namespace P42.Uno.Popups
                     base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment == VerticalAlignment.Stretch ? VerticalAlignment.Stretch : VerticalAlignment.Top;
                 }
                 else
-                { 
-                    baseMargin.Top = targetBounds.Top - stats.BorderSize.Height - PointerLength;
-                    base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment == VerticalAlignment.Stretch ? VerticalAlignment.Stretch : VerticalAlignment.Bottom;
+                {
+                    if (VerticalAlignment == VerticalAlignment.Stretch)
+                    {
+                        base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment;
+                    }
+                    else
+                    {
+                        baseMargin.Top = targetBounds.Top - stats.BorderSize.Height - PointerLength;
+                        base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Top;
+                    }
                 }
 
                 if (HorizontalAlignment == HorizontalAlignment.Left)
@@ -613,7 +628,7 @@ namespace P42.Uno.Popups
             base.Margin = _border.Margin = baseMargin;
         }
 
-        void ImplementWorkingMarginAndAlignment()
+        void CleanMarginAndAlignment(HorizontalAlignment hzAlign, VerticalAlignment vtAlign)
         {             //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment");
 
             if (_border is null || _popup is null)
@@ -625,9 +640,9 @@ namespace P42.Uno.Popups
             if (windowSize.Width < 1 || windowSize.Height < 1)
                 return;
 
-            base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment;
-            base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment;
-
+            base.HorizontalAlignment = _border.HorizontalAlignment = hzAlign;
+            base.VerticalAlignment = _border.VerticalAlignment = vtAlign;
+            _border.PointerDirection = PointerDirection.None;
 
             var windowWidth = windowSize.Width - Margin.Horizontal();
             var windowHeight = windowSize.Height - Margin.Vertical();
@@ -635,15 +650,15 @@ namespace P42.Uno.Popups
             //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment: window("+windowWidth+","+windowHeight+")   content("+ _lastMeasuredSize + ")");
 
             double hOffset = 0.0;
-            if (HorizontalAlignment == HorizontalAlignment.Center)
+            if (hzAlign == HorizontalAlignment.Center)
                 hOffset = (windowWidth - _lastMeasuredSize.Width) / 2;
-            else if (HorizontalAlignment == HorizontalAlignment.Right)
+            else if (hzAlign == HorizontalAlignment.Right)
                 hOffset = (windowWidth - _lastMeasuredSize.Width);
 
             double vOffset = 0.0;
-            if (VerticalAlignment == VerticalAlignment.Center)
+            if (vtAlign == VerticalAlignment.Center)
                 vOffset = (windowHeight - _lastMeasuredSize.Height) / 2;
-            else if (VerticalAlignment == VerticalAlignment.Bottom)
+            else if (vtAlign == VerticalAlignment.Bottom)
                 vOffset = (windowHeight - _lastMeasuredSize.Height);
 
 #if __WASM__ || NETSTANDARD
@@ -656,9 +671,9 @@ namespace P42.Uno.Popups
             vOffset = 70;
             //vOffset -= windowHeight / 2.0;
 #endif
-            System.Diagnostics.Debug.WriteLine(GetType() + ".ImplementWorkingMarginAndAlignmentOffset:[" + hOffset + ", " + vOffset + "]");
-            System.Diagnostics.Debug.WriteLine("\t WorkingMargin:[" + Margin + "] WorkingHzAlign:[" + HorizontalAlignment + "] WorkingVtAlign:[" + VerticalAlignment + "] ");
-            System.Diagnostics.Debug.WriteLine("\t windowWidth:[" + windowWidth + "]  _lastMeasuredSize:["+_lastMeasuredSize+"]");
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".ImplementWorkingMarginAndAlignmentOffset:[" + hOffset + ", " + vOffset + "]");
+            //System.Diagnostics.Debug.WriteLine("\t WorkingMargin:[" + Margin + "] WorkingHzAlign:[" + HorizontalAlignment + "] WorkingVtAlign:[" + VerticalAlignment + "] ");
+            //System.Diagnostics.Debug.WriteLine("\t windowWidth:[" + windowWidth + "]  _lastMeasuredSize:["+_lastMeasuredSize+"]");
             _popup.HorizontalOffset = hOffset;
             _popup.VerticalOffset = vOffset;
         }
@@ -788,36 +803,48 @@ namespace P42.Uno.Popups
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Left;
                 stat.BorderSize.Width += PointerLength;
-                stat.FreeSpace.Width = availableSpace.Right - stat.BorderSize.Width;
-                if (stat.MinFree >= 0)
+                var free = availableSpace.Right - stat.BorderSize.Width;
+                if (free >= 0)
+                {
+                    stat.FreeSpace.Width = free;
                     stats.Add(stat);
+                }
             }
             if (pointerDirection.RightAllowed() && cleanStat.FreeSpace.Width >= PointerLength)
             {
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Right;
                 stat.BorderSize.Width += PointerLength;
-                stat.FreeSpace.Width = availableSpace.Left - stat.BorderSize.Width;
-                if (stat.MinFree >= 0)
+                var free = availableSpace.Left - stat.BorderSize.Width;
+                if (free >= 0)
+                {
+                    stat.FreeSpace.Width = free;
                     stats.Add(stat);
+                }
             }
             if (pointerDirection.UpAllowed() && cleanStat.FreeSpace.Height >= PointerLength)
             {
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Up;
                 stat.BorderSize.Height += PointerLength;
-                stat.FreeSpace.Height = availableSpace.Bottom - stat.BorderSize.Height;
-                if (stat.MinFree >= 0)
+                var free = availableSpace.Bottom - stat.BorderSize.Height;
+                if (free >= 0)
+                {
+                    stat.FreeSpace.Width = free;
                     stats.Add(stat);
+                }
             }
             if (pointerDirection.DownAllowed() && cleanStat.FreeSpace.Height >= PointerLength)
             {
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Down;
                 stat.BorderSize.Height += PointerLength;
-                stat.FreeSpace.Height = availableSpace.Top - stat.BorderSize.Height;
-                if (stat.MinFree >= 0)
+                var free = availableSpace.Top - stat.BorderSize.Height;
+                if (free >= 0)
+                {
+                    stat.FreeSpace.Width = free;
                     stats.Add(stat);
+                }
             }
             return stats;
         }
@@ -828,57 +855,79 @@ namespace P42.Uno.Popups
             if (pointerDirection.LeftAllowed())
             {
                 var size = new Size(availableSpace.Right, windowSpace.Height);
-                var border = RectangleBorderSize(size);
+                var border = RectangleBorderSize(size, cleanStat.BorderSize);
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Left;
                 stat.BorderSize = border;
-                stat.FreeSpace.Width = availableSpace.Right - border.Width;
-                stats.Add(stat);
+                var free = availableSpace.Right - border.Width;
+                if (free >= 0)
+                {
+                    stat.FreeSpace.Width = free;
+                    stats.Add(stat);
+                }
             }
             if (pointerDirection.RightAllowed())
             {
                 var size = new Size(availableSpace.Left, windowSpace.Height);
-                var border = RectangleBorderSize(size);
+                var border = RectangleBorderSize(size, cleanStat.BorderSize);
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Right;
                 stat.BorderSize = border;
-                stat.FreeSpace.Width = availableSpace.Left - border.Width;
-                stats.Add(stat);
+                var free = availableSpace.Left - border.Width;
+                if (free >= 0)
+                {
+                    stat.FreeSpace.Width = free;
+                    stats.Add(stat);
+                }
             }
             if (pointerDirection.UpAllowed())
             {
                 var size = new Size(windowSpace.Width, availableSpace.Bottom);
-                var border = RectangleBorderSize(size);
+                var border = RectangleBorderSize(size, cleanStat.BorderSize);
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Up;
                 stat.BorderSize = border;
-                stat.FreeSpace.Height = availableSpace.Bottom - border.Height;
-                stats.Add(stat);
+                var free = availableSpace.Bottom - border.Height;
+                if (free >= 0)
+                {
+                    stat.FreeSpace.Width = free;
+                    stats.Add(stat);
+                }
             }
             if (pointerDirection.DownAllowed())
             {
                 var size = new Size(windowSpace.Width, availableSpace.Top);
-                var border = RectangleBorderSize(size);
+                var border = RectangleBorderSize(size, cleanStat.BorderSize);
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Down;
                 stat.BorderSize = border;
-                stat.FreeSpace.Height = availableSpace.Top - border.Height;
-                stats.Add(stat);
+                var free = availableSpace.Top - border.Height;
+                if (free >= 0)
+                {
+                    stat.FreeSpace.Width = free;
+                    stats.Add(stat);
+                }
             }
             return stats;
         }
 
-        Size RectangleBorderSize(Size available)
+        Size RectangleBorderSize(Size available, Size failSize = default)
         {
+            var availableWidth = available.Width;
+            var availableHeight = available.Height;
             var hasBorder = (BorderThickness.Average() > 0) && BorderBrush is SolidColorBrush brush && brush.Color.A > 0;
             var border = BorderThickness.Average() * (hasBorder ? 1 : 0) * 2;
-            available.Width -= Padding.Horizontal() - border;
-            available.Height -= Padding.Vertical() - border;
-            _contentPresenter.Measure(available);
-            var result = _contentPresenter.DesiredSize;
-            result.Width += Padding.Horizontal();
-            result.Height += Padding.Vertical();
-            return result;
+            availableWidth -= Padding.Horizontal() - border;
+            availableHeight -= Padding.Vertical() - border;
+            if (availableWidth > 0 && availableHeight > 0)
+            {
+                _contentPresenter.Measure(new Size(availableWidth, availableHeight));
+                var result = _contentPresenter.DesiredSize;
+                result.Width += Padding.Horizontal();
+                result.Height += Padding.Vertical();
+                return result;
+            }
+            return failSize;
         }
         #endregion
 

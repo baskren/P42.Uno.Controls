@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:android="http:/uno.ui/android"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:local="using:UserControlTest"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:popups="using:P42.Uno.Popups"
@@ -40,11 +41,6 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.Children>
-                <Button
-                    x:Name="_button"
-                    Grid.Row="1"
-                    Click="_button_Click"
-                    Content="Show ToolTip" />
                 <Border
                     x:Name="_altBorder"
                     Grid.Row="1"
@@ -53,6 +49,20 @@
                     HorizontalAlignment="Center"
                     Background="Pink"
                     Tapped="OnAltBorderTapped" />
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <TextBlock Text="Pointer:" />
+                    <ComboBox x:Name="_pointerDirectionCombo" Text="PointerDir" />
+                    <TextBlock Text="HzAlign:" />
+                    <ComboBox x:Name="_hzAlignCombo" Text="HzAlign" />
+                    <TextBlock Text="VtAlign:" />
+                    <ComboBox x:Name="_vtAlignCombo" Text="VtAlign" />
+                    <TextBlock Text="Index Othrogonal:" />
+                    <ToggleSwitch x:Name="_indexOthogonal" />
+                    <Button
+                        x:Name="_button"
+                        Click="_button_Click"
+                        Content="Show Popup" />
+                </StackPanel>
                 <ListView x:Name="_listView" Grid.Row="2">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -93,7 +103,10 @@
                     </Border>
                 </popups:BubbleBorder>
 
-                <popups:TargetedPopup x:Name="_TargetedPopup" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+                <popups:TargetedPopup
+                    x:Name="_TargetedPopup"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Stretch" />
 
             </Grid.Children>
         </Grid>

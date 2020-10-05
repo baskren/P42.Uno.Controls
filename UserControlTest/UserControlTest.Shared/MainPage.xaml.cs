@@ -43,10 +43,19 @@ namespace UserControlTest
     [TemplateVisualState(GroupName = "State", Name = "Visible")]
     public sealed partial class MainPage : Page
     {
+        string[] _hzSource;
+        string[] _vtSource;
+
         public MainPage()
         {
             this.InitializeComponent();
             _listView.ItemsSource = new List<int> { 1, 2, 3, 4 };
+            _pointerDirectionCombo.ItemsSource = Enum.GetNames(typeof(P42.Uno.Popups.PointerDirection));
+            _pointerDirectionCombo.SelectedIndex = 0;
+            _hzAlignCombo.ItemsSource = _hzSource = Enum.GetNames(typeof(HorizontalAlignment));
+            _hzAlignCombo.SelectedIndex = 0;
+            _vtAlignCombo.ItemsSource = _vtSource = Enum.GetNames(typeof(VerticalAlignment));
+            _vtAlignCombo.SelectedIndex = 0;
         }
         /*
         TargetedPopup _TargetedPopup = new TargetedPopup
@@ -91,9 +100,8 @@ namespace UserControlTest
 
                 _TargetedPopup.Target = element;
 
-                _TargetedPopup.PreferredPointerDirection = PointerDirection.Down;
-
-                _TargetedPopup.VerticalAlignment = VerticalAlignment.Center;
+                //_TargetedPopup.PreferredPointerDirection = PointerDirection.Down;
+                _TargetedPopup.PreferredPointerDirection = Enum.Parse<PointerDirection>(_pointerDirectionCombo.SelectedItem as string, true);
 
                 _TargetedPopup.Margin = new Thickness(5);
                 _TargetedPopup.Padding = new Thickness(10);
@@ -107,14 +115,32 @@ namespace UserControlTest
                 if (_TargetedPopup.Parent is Grid grid)
                     grid.Children.Remove(_TargetedPopup);
 
-                _lastAlignment++;
-                if (_lastAlignment > VerticalAlignment.Stretch)
-                    _lastAlignment = VerticalAlignment.Top;
+                var hzAlign = Enum.Parse<HorizontalAlignment>(_hzAlignCombo.SelectedItem as string, true);
+                var vtAlign = Enum.Parse<VerticalAlignment>(_vtAlignCombo.SelectedItem as string, true);
 
-                _TargetedPopup.HorizontalAlignment = (HorizontalAlignment) _lastAlignment;
-                _bubbleBorder.HorizontalAlignment = (HorizontalAlignment)_lastAlignment;
+                _bubbleBorder.HorizontalAlignment = hzAlign;
+                _TargetedPopup.VerticalAlignment = vtAlign;
+                _TargetedPopup.HorizontalAlignment = hzAlign;
 
-               await _TargetedPopup.PushAsync();
+                if (_indexOthogonal.IsOn)
+                {
+                    if (_TargetedPopup.PreferredPointerDirection.IsHorizontal())
+                    {
+                        var newIndex = _vtAlignCombo.SelectedIndex+1;
+                        if (newIndex >= _vtSource.Length)
+                            newIndex = 0;
+                        _vtAlignCombo.SelectedIndex = newIndex;
+                    }
+                    else
+                    {
+                        var newIndex = _hzAlignCombo.SelectedIndex+1;
+                        if (newIndex >= _hzSource.Length)
+                            newIndex = 0;
+                        _hzAlignCombo.SelectedIndex = newIndex;
+                    }
+                }
+
+                await _TargetedPopup.PushAsync();
             }
         }
 

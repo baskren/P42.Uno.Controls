@@ -9,7 +9,7 @@ namespace P42.Uno.Popups
 	/// <summary>
 	/// Pointer direction extensions.
 	/// </summary>
-	internal static class PointerDirectionExtensions
+	public static class PointerDirectionExtensions
 	{
 		/// <summary>
 		/// Determines if pointer direction is vertical.
