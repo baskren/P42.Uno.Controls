@@ -6,7 +6,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///P42.Uno.Popups/TargetedPopup.xaml" />
         <ResourceDictionary Source="ms-appx:///P42.Uno.Popups/Toast.xaml" />
-        <ResourceDictionary Source="ms-appx:///P42.Uno.Popups/ToastStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

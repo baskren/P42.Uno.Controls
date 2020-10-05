@@ -4,63 +4,59 @@
     xmlns:local="using:P42.Uno.Popups">
 
 
-    <Style TargetType="local:Toast">
-        <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}" />
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundBaseLowBrush}" />
-        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
-        <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="4" />
-        <Setter Property="Padding" Value="5" />
-        <Setter Property="Margin" Value="10" />
-        <Setter Property="FontSize" Value="16" />
-        <Setter Property="HorizontalContentAlignment" Value="Left" />
-        <Setter Property="Template" Value="{StaticResource BaseToastTemplate}" />
-    </Style>
-
-    <ControlTemplate x:Key="BaseToastTemplate" TargetType="local:Toast">
-        <local:TargetedPopup
+    <ControlTemplate x:Key="TargetedToastPopupTemplate" TargetType="local:TargetedPopup">
+        <Popup
             x:Name="TargetedPopup_Popup"
-            Margin="{TemplateBinding Margin}"
-            Padding="{TemplateBinding Padding}"
-            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-            VerticalAlignment="{TemplateBinding VerticalAlignment}"
-            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-            HasShadow="{TemplateBinding HasShadow}"
-            PopAfter="{TemplateBinding PopAfter}"
-            Target="{TemplateBinding Target}"
-            TargetPoint="{TemplateBinding TargetPoint}"
-            PointerBias="{TemplateBinding PointerBias}"
-            PointerCornerRadius="{TemplateBinding PointerCornerRadius}"
-            PreferredPointerDirection="{TemplateBinding PreferredPointerDirection}"
-            FallbackPointerDirection="{TemplateBinding FallbackPointerDirection}"
-            PointerLength="{TemplateBinding PointerLength}"
-            PointerTipRadius="{TemplateBinding PointerTipRadius}"
-            PointToOffScreenElements="{TemplateBinding PointToOffScreenElements}"
-            >
-
-
-            <Grid Margin="0" Padding="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock FontWeight="Bold" Text="PIZZA" />
-                <ContentPresenter
-                    x:Name="TargetedPopup_Popup_Border_ContentPresenter"
-                    Grid.Row="1"
-                    Margin="0"
-                    Padding="0"
-                    Content="{TemplateBinding Content}"
-                    FontFamily="{TemplateBinding FontFamily}"
-                    FontSize="{TemplateBinding FontSize}"
-                    FontStretch="{TemplateBinding FontStretch}"
-                    FontStyle="{TemplateBinding FontStyle}"
-                    FontWeight="{TemplateBinding FontWeight}"
-                    TextWrapping="WrapWholeWords" />
-            </Grid>
-        </local:TargetedPopup>
+            IsLightDismissEnabled="True"
+            IsOpen="False"
+            LightDismissOverlayMode="On">
+            <local:BubbleBorder
+                x:Name="TargetedPopup_Popup_Border"
+                Margin="0"
+                Padding="{TemplateBinding Padding}"
+                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                HasShadow="{TemplateBinding HasShadow}"
+                PointerBias="{TemplateBinding PointerBias}"
+                PointerCornerRadius="{TemplateBinding PointerCornerRadius}"
+                PointerDirection="None"
+                PointerLength="{TemplateBinding PointerLength}"
+                PointerTipRadius="{TemplateBinding PointerTipRadius}"
+                SizeChanged="OnSizeChanged">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.Children>
+                        <TextBlock
+                            x:Name="_titleBlock"
+                            FontFamily="{TemplateBinding FontFamily}"
+                            FontSize="{TemplateBinding FontSize}"
+                            FontStretch="{TemplateBinding FontStretch}"
+                            FontStyle="{TemplateBinding FontStyle}"
+                            FontWeight="Bold"
+                            Text="{TemplateBinding Title}"
+                            TextWrapping="WrapWholeWords" />
+                        <ContentPresenter
+                            x:Name="TargetedPopup_Popup_Border_ContentPresenter"
+                            Margin="0"
+                            Padding="0"
+                            Content="{TemplateBinding Content}"
+                            FontFamily="{TemplateBinding FontFamily}"
+                            FontSize="{TemplateBinding FontSize}"
+                            FontStretch="{TemplateBinding FontStretch}"
+                            FontStyle="{TemplateBinding FontStyle}"
+                            FontWeight="{TemplateBinding FontWeight}"
+                            TextWrapping="WrapWholeWords" />
+                    </Grid.Children>
+                </Grid>
+            </local:BubbleBorder>
+        </Popup>
     </ControlTemplate>
 
 

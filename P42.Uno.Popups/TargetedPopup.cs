@@ -139,7 +139,7 @@ namespace P42.Uno.Popups
         );
         protected virtual void OnTargetChanged(DependencyPropertyChangedEventArgs e)
         {
-            //UpdateMarginAndAlignment();
+            UpdateMarginAndAlignment();
         }
         public UIElement Target
         {
@@ -520,6 +520,7 @@ namespace P42.Uno.Popups
 
             if (PreferredPointerDirection == PointerDirection.None)
             {
+                System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateMarginAndAlignment PreferredPointerDirection == PointerDirection.None");
                 CleanMarginAndAlignment(HorizontalAlignment,VerticalAlignment, cleanSize);
                 return;
             }
@@ -547,7 +548,11 @@ namespace P42.Uno.Popups
                 {
                     baseMargin.Left = targetBounds.Right;
                     base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment == HorizontalAlignment.Stretch ? HorizontalAlignment.Stretch : HorizontalAlignment.Left;
-                }    
+                    System.Diagnostics.Debug.WriteLine("\t stats.PointerDirection == PointerDirection.Left");
+                    System.Diagnostics.Debug.WriteLine("\t targetBounds:[" + targetBounds + "]");
+                    System.Diagnostics.Debug.WriteLine("\t stats.BorderSize:[" + stats.BorderSize + "]");
+                    System.Diagnostics.Debug.WriteLine("\t baseMargin:[" + baseMargin + "]");
+                }
                 else
                 {
                     if (HorizontalAlignment == HorizontalAlignment.Stretch)
@@ -811,6 +816,7 @@ namespace P42.Uno.Popups
 
         List<DirectionStats> GetRectangleBorderStatsForDirection(PointerDirection pointerDirection, DirectionStats cleanStat, Thickness availableSpace)
         {
+            System.Diagnostics.Debug.WriteLine(GetType() + ".GetRectangleBorderStatsForDirection cleanStat:["+cleanStat+"]");
             var stats = new List<DirectionStats>();
             if (pointerDirection.LeftAllowed() && cleanStat.FreeSpace.Width >= PointerLength)
             {
@@ -945,10 +951,12 @@ namespace P42.Uno.Popups
             var border = BorderThickness.Average() * (hasBorder ? 1 : 0) * 2;
             availableWidth -= Padding.Horizontal() - border;
             availableHeight -= Padding.Vertical() - border;
+            System.Diagnostics.Debug.WriteLine(GetType() + ".RectangleBorderSize availableWidth:["+availableWidth+"] availableHeight:["+availableHeight+"]");
             if (availableWidth > 0 && availableHeight > 0)
             {
                 _contentPresenter.Measure(new Size(availableWidth, availableHeight));
                 var result = _contentPresenter.DesiredSize;
+                System.Diagnostics.Debug.WriteLine("\t  _contentPresenter.DesiredSize:[" + _contentPresenter.DesiredSize + "]");
                 result.Width += Padding.Horizontal();
                 result.Height += Padding.Vertical();
                 return result;
