@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Uno.Extensions;
@@ -49,15 +50,7 @@ namespace P42.Uno.Popups
         {
             if (_border is null)
                 return;
-            /*
-            if (ActualPointerDirection == PointerDirection.None)
-                _border.HorizontalAlignment = HorizontalAlignment;
-            else
-                _border.HorizontalAlignment = HorizontalAlignment.Left;
-            */
             UpdateMarginAndAlignment(true);
-            //if ((HorizontalAlignment)e.OldValue == HorizontalAlignment.Stretch || (HorizontalAlignment)e.NewValue == HorizontalAlignment.Stretch)
-            //    InvalidateMeasure();
         }
         public new HorizontalAlignment HorizontalAlignment
         {
@@ -77,15 +70,7 @@ namespace P42.Uno.Popups
         {
             if (_border is null)
                 return;
-            /*
-            if (ActualPointerDirection == PointerDirection.None)
-                _border.VerticalAlignment = VerticalAlignment;
-            else
-                _border.VerticalAlignment = VerticalAlignment.Top;
-            */
             UpdateMarginAndAlignment(true);
-            //if ((VerticalAlignment)e.OldValue == VerticalAlignment.Stretch || (VerticalAlignment)e.NewValue == VerticalAlignment.Stretch)
-            //    InvalidateMeasure();
         }
         public new VerticalAlignment VerticalAlignment
         {
@@ -154,7 +139,7 @@ namespace P42.Uno.Popups
         );
         protected virtual void OnTargetChanged(DependencyPropertyChangedEventArgs e)
         {
-            UpdateMarginAndAlignment();
+            //UpdateMarginAndAlignment();
         }
         public UIElement Target
         {
@@ -223,7 +208,7 @@ namespace P42.Uno.Popups
 
         #region Pointer Directions
 
-        public PointerDirection ActualPointerDirection => _lastStats.PointerDirection;
+        public PointerDirection ActualPointerDirection { get; private set; }
 
         #region PreferredPointerDirection Property
         public static readonly DependencyProperty PreferredPointerDirectionProperty = DependencyProperty.Register(
@@ -328,6 +313,9 @@ namespace P42.Uno.Popups
 
         #endregion
 
+        public PopupPoppedCause PoppedCause { get; private set; }
+
+        public object PoppedTrigger { get; private set; }
         #endregion
 
 
@@ -340,6 +328,14 @@ namespace P42.Uno.Popups
         ContentPresenter _contentPresenter;
         BubbleBorder _border;
         Popup _popup;
+        #endregion
+
+
+        #region Events
+        /// <summary>
+        /// Occurs when popup has been cancelled.
+        /// </summary>
+        public event EventHandler<PopupPoppedEventArgs> Popped;
 
         #endregion
 
@@ -348,6 +344,7 @@ namespace P42.Uno.Popups
         public TargetedPopup()
         {
             //this.InitializeComponent();
+            ActualPointerDirection = PointerDirection.None;
             this.DefaultStyleKey = typeof(TargetedPopup);
             /*
             var startStyle = Style;
@@ -386,15 +383,26 @@ namespace P42.Uno.Popups
                 grid.Children.Remove(this);
 
             _border.SizeChanged += OnBorderSizeChanged;
+            _popup.Closed += OnPopupClosed;
+            PoppedCause = PopupPoppedCause.BackgroundTouch;
+            PoppedTrigger = null;
 
             await OnPushBeginAsync();
             _popup.IsOpen = true;
             await OnPushEndAsync();
         }
 
-        public async Task PopAsync()
+        private void OnPopupClosed(object sender, object e)
         {
             _border.SizeChanged -= OnBorderSizeChanged;
+            _popup.Closed -= OnPopupClosed;
+            Popped?.Invoke(this, new PopupPoppedEventArgs(PoppedCause, PoppedTrigger));
+        }
+
+        public async Task PopAsync(PopupPoppedCause cause, [CallerMemberName] object trigger = null)
+        {
+            PoppedCause = cause;
+            PoppedTrigger = trigger; 
             await OnPopBeginAsync();
             _popup.IsOpen = false;
             await OnPopEndAsync();
@@ -447,7 +455,6 @@ namespace P42.Uno.Popups
         {
             if (args.NewSize.Width < 1 || args.NewSize.Height < 1)
                 return;
-            _lastMeasuredSize = args.NewSize;
             UpdateMarginAndAlignment();
         }
 
@@ -456,7 +463,6 @@ namespace P42.Uno.Popups
 
         #region Layout
 
-        Size _lastMeasuredSize;
         protected override Size MeasureOverride(Size availableSize)
         {
             //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") ================================================  margin: "+ Margin);
@@ -466,7 +472,6 @@ namespace P42.Uno.Popups
 
             _border.Measure(availableSize);
             var result = _border.DesiredSize;
-            _lastMeasuredSize = result;
 
             //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride result: "+ result);
             return result;
@@ -483,7 +488,6 @@ namespace P42.Uno.Popups
         Size _firstRenderSize;
 #endif
 
-        DirectionStats _lastStats = default;
         void UpdateMarginAndAlignment(bool isAlignmentOnlyChange = false)
         {
             if (_border is null)
@@ -495,34 +499,31 @@ namespace P42.Uno.Popups
                 return;
             var windowWidth = windowSize.Width - Margin.Horizontal();
             var windowHeight = windowSize.Height - Margin.Vertical();
-
+            var cleanSize = RectangleBorderSize(new Size(windowWidth, windowHeight));
 
             if (PreferredPointerDirection == PointerDirection.None)
             {
-                _lastStats = default; 
-                CleanMarginAndAlignment(HorizontalAlignment,VerticalAlignment);
+                CleanMarginAndAlignment(HorizontalAlignment,VerticalAlignment, cleanSize);
                 return;
             }
 
             var targetBounds = TargetBounds();
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateBorderMarginAndAlignment targetBounds:["+targetBounds+"]");
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateBorderMarginAndAlignment targetBounds:["+targetBounds+"]");
             var availableSpace = AvailableSpace(targetBounds);
-            var stats = _lastStats;
-            if (!isAlignmentOnlyChange || stats.BorderSize.IsEmpty)
-                stats = BestFit(availableSpace);
-            _lastStats = stats;
+            var stats = BestFit(availableSpace, cleanSize);
 
             if (stats.PointerDirection == PointerDirection.None)
             {
                 System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateMarginAndAlignment BestFit = None");
-                CleanMarginAndAlignment(HorizontalAlignment.Center, VerticalAlignment.Center);
+                CleanMarginAndAlignment(HorizontalAlignment.Center, VerticalAlignment.Center, cleanSize);
                 return;
             }
 
             _popup.HorizontalOffset = 0;
             _popup.VerticalOffset = 0;
-
+            ActualPointerDirection = stats.PointerDirection;
             var baseMargin = Margin;
+
             if (stats.PointerDirection.IsHorizontal())
             {
                 if (stats.PointerDirection == PointerDirection.Left)
@@ -540,6 +541,10 @@ namespace P42.Uno.Popups
                     {
                         baseMargin.Left = targetBounds.Left - stats.BorderSize.Width - PointerLength;
                         base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
+                        System.Diagnostics.Debug.WriteLine("\t targetBounds.Left:[" + targetBounds.Left + "]");
+                        System.Diagnostics.Debug.WriteLine("\t stats.BorderSize.Width:[" + stats.BorderSize.Width + "]");
+                        System.Diagnostics.Debug.WriteLine("\t PointerLength:[" + PointerLength + "]");
+                        System.Diagnostics.Debug.WriteLine("\t baseMargin:[" + baseMargin + "]");
                     }
                 }
 
@@ -628,8 +633,10 @@ namespace P42.Uno.Popups
             base.Margin = _border.Margin = baseMargin;
         }
 
-        void CleanMarginAndAlignment(HorizontalAlignment hzAlign, VerticalAlignment vtAlign)
+        void CleanMarginAndAlignment(HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size cleanSize)
         {             //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment");
+
+            ActualPointerDirection = PointerDirection.None;
 
             if (_border is null || _popup is null)
                 return;
@@ -651,15 +658,15 @@ namespace P42.Uno.Popups
 
             double hOffset = 0.0;
             if (hzAlign == HorizontalAlignment.Center)
-                hOffset = (windowWidth - _lastMeasuredSize.Width) / 2;
+                hOffset = (windowWidth - cleanSize.Width) / 2;
             else if (hzAlign == HorizontalAlignment.Right)
-                hOffset = (windowWidth - _lastMeasuredSize.Width);
+                hOffset = (windowWidth - cleanSize.Width);
 
             double vOffset = 0.0;
             if (vtAlign == VerticalAlignment.Center)
-                vOffset = (windowHeight - _lastMeasuredSize.Height) / 2;
+                vOffset = (windowHeight - cleanSize.Height) / 2;
             else if (vtAlign == VerticalAlignment.Bottom)
-                vOffset = (windowHeight - _lastMeasuredSize.Height);
+                vOffset = (windowHeight - cleanSize.Height);
 
 #if __WASM__ || NETSTANDARD
             System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment WASM || NETSTANDARD");
@@ -678,17 +685,15 @@ namespace P42.Uno.Popups
             _popup.VerticalOffset = vOffset;
         }
 
-        DirectionStats BestFit(Thickness availableSpace)
+        DirectionStats BestFit(Thickness availableSpace, Size cleanSize)
         {
             //var stats = new List<DirectionStats>();
             // given the amount of free space, determine if the border will fit 
             var windowSpace = new Size(AppWindow.Size().Width - Margin.Horizontal(), AppWindow.Size().Height - Margin.Vertical());
-            var cleanBorder = RectangleBorderSize(windowSpace);
             var cleanStat = new DirectionStats
             {
                 PointerDirection = PointerDirection.None,
-                BorderSize = cleanBorder,
-                //MinFree = Math.Min(windowSpace.Width - cleanBorder.Width, windowSpace.Height - cleanBorder.Height),
+                BorderSize = cleanSize,
                 FreeSpace = new Size(0,0)
             };
 

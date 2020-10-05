@@ -90,7 +90,6 @@ namespace UserControlTest
             _button_Click(sender, e);
         }
 
-        VerticalAlignment _lastAlignment = VerticalAlignment.Stretch;
         async void _button_Click(object sender, RoutedEventArgs e)
         {
             if (sender is FrameworkElement element)
