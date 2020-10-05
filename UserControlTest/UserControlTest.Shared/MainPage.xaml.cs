@@ -100,8 +100,7 @@ namespace UserControlTest
                 var hzAlign = Enum.Parse(typeof(HorizontalAlignment),_hzAlignCombo.SelectedItem as string, true);
                 var vtAlign = Enum.Parse(typeof(VerticalAlignment),_vtAlignCombo.SelectedItem as string, true);
 #else
-            var prefDir = sender as UIElement;
-            _toast.PreferredPointerDirection = Enum.Parse<PointerDirection>(_pointerDirectionCombo.SelectedItem as string, true);
+            var prefDir = Enum.Parse<PointerDirection>(_pointerDirectionCombo.SelectedItem as string, true);
             var hzAlign = Enum.Parse<HorizontalAlignment>(_hzAlignCombo.SelectedItem as string, true);
             var vtAlign = Enum.Parse<VerticalAlignment>(_vtAlignCombo.SelectedItem as string, true);
 #endif
@@ -110,6 +109,7 @@ namespace UserControlTest
             _toast.PreferredPointerDirection = prefDir;
             _toast.VerticalAlignment = (VerticalAlignment)vtAlign;
             _toast.HorizontalAlignment = (HorizontalAlignment)hzAlign;
+            _toast.Target = sender as UIElement;
 
             await _toast.PushAsync();
             
