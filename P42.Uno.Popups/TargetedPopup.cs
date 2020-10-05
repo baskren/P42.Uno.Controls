@@ -379,8 +379,15 @@ namespace P42.Uno.Popups
         #region Push / Pop
         public async Task PushAsync()
         {
+
             if (Parent is Grid grid)
-                grid.Children.Remove(this);
+            {
+                Grid.SetRow(this, 0);
+                Grid.SetColumn(this, 0);
+                Grid.SetColumnSpan(this, grid.ColumnDefinitions.Count);
+                Grid.SetRowSpan(this, grid.RowDefinitions.Count);
+            }
+//                grid.Children.Remove(this);
 
             _border.SizeChanged += OnBorderSizeChanged;
             _popup.Closed += OnPopupClosed;
@@ -484,9 +491,6 @@ namespace P42.Uno.Popups
         }
         
 
-#if __WASM__ || NETSTANDARD
-        Size _firstRenderSize;
-#endif
 
         void UpdateMarginAndAlignment(bool isAlignmentOnlyChange = false)
         {
@@ -570,8 +574,8 @@ namespace P42.Uno.Popups
                 if (baseMargin.Top + stats.BorderSize.Height > windowSize.Height - Margin.Bottom)
                     baseMargin.Top = windowSize.Height - Margin.Bottom - stats.BorderSize.Height;
 
-                _border.PointerAxialPosition = (targetBounds.Top - baseMargin.Top) + targetBounds.Bottom - (targetBounds.Top + targetBounds.Bottom) / 2.0;
 
+                _border.PointerAxialPosition = (targetBounds.Top - baseMargin.Top) + targetBounds.Bottom - (targetBounds.Top + targetBounds.Bottom) / 2.0;
             }
             else
             {
@@ -619,14 +623,11 @@ namespace P42.Uno.Popups
                 _border.PointerAxialPosition = (targetBounds.Left - baseMargin.Left) + targetBounds.Right - (targetBounds.Left + targetBounds.Right) / 2.0;
             }
 #if __WASM__ || NETSTANDARD
-            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment WASM || NETSTANDARD");
-
-            if (_firstRenderSize.Width < 1 || _firstRenderSize.Height < 1)
-                _firstRenderSize = windowSize;
-
-            _popup.HorizontalOffset = -(_firstRenderSize.Width + Margin.Left) / 2.0; ;
-            _popup.VerticalOffset = 70;
-            //vOffset -= windowHeight / 2.0;
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateMarginAndAlignment WASM || NETSTANDARD");
+            GetFirstRenderSize();
+            _popup.HorizontalOffset = -(_firstRenderSize.Width + Margin.Left) / 2.0;
+            _popup.VerticalOffset = -(_firstRenderSize.Height + Margin.Top) / 2.0;
+            System.Diagnostics.Debug.WriteLine(GetType() + ".CleanMarginAndAlignment hOffset:" + _popup.HorizontalOffset + " vOffset:" + _popup.VerticalOffset);
 #endif
 
             _border.PointerDirection = stats.PointerDirection;
@@ -668,19 +669,14 @@ namespace P42.Uno.Popups
             else if (vtAlign == VerticalAlignment.Bottom)
                 vOffset = (windowHeight - cleanSize.Height);
 
+
 #if __WASM__ || NETSTANDARD
-            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment WASM || NETSTANDARD");
-
-            if (_firstRenderSize.Width < 1 || _firstRenderSize.Height < 1)
-                _firstRenderSize = windowSize;
-
-            hOffset -= (_firstRenderSize.Width + Margin.Left) / 2.0 ;
-            vOffset = 70;
-            //vOffset -= windowHeight / 2.0;
+            System.Diagnostics.Debug.WriteLine(GetType() + ".CleanMarginAndAlignment WASM || NETSTANDARD");
+            GetFirstRenderSize();
+            hOffset -= (_firstRenderSize.Width + Margin.Left) / 2.0;
+            vOffset -= (_firstRenderSize.Height + Margin.Top) / 2.0;
+            System.Diagnostics.Debug.WriteLine(GetType() + ".CleanMarginAndAlignment hOffset:" + hOffset + " vOffset:"+vOffset);
 #endif
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".ImplementWorkingMarginAndAlignmentOffset:[" + hOffset + ", " + vOffset + "]");
-            //System.Diagnostics.Debug.WriteLine("\t WorkingMargin:[" + Margin + "] WorkingHzAlign:[" + HorizontalAlignment + "] WorkingVtAlign:[" + VerticalAlignment + "] ");
-            //System.Diagnostics.Debug.WriteLine("\t windowWidth:[" + windowWidth + "]  _lastMeasuredSize:["+_lastMeasuredSize+"]");
             _popup.HorizontalOffset = hOffset;
             _popup.VerticalOffset = vOffset;
         }
@@ -934,6 +930,36 @@ namespace P42.Uno.Popups
             }
             return failSize;
         }
+
+#if __WASM__ || NETSTANDARD
+        Size _firstRenderSize;
+        void GetFirstRenderSize()
+        {
+            if (_firstRenderSize.Width < 1 || _firstRenderSize.Height < 1)
+            {
+                double height = AppWindow.Size().Height;
+                double width = AppWindow.Size().Width;
+                if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
+                {
+                    if (frame.Content is Page currentPage)
+                    {
+                        if (currentPage.Content is Grid contentGrid)
+                        {
+                            if (contentGrid.RowDefinitions.Count > 0 && contentGrid.RowDefinitions[0] is RowDefinition rowDefinition)
+                                height = rowDefinition.ActualHeight;
+
+                            if (contentGrid.ColumnDefinitions.Count > 0 && contentGrid.ColumnDefinitions[0] is ColumnDefinition colDef)
+                                width = colDef.ActualWidth;
+                            System.Diagnostics.Debug.WriteLine(GetType() + ".PushAsync w:" + width + "   h:" + height);
+                        }
+                    }
+                }
+                _firstRenderSize = new Size(width, height);
+            }
+
+        }
+#endif
+
         #endregion
 
     }

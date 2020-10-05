@@ -103,11 +103,8 @@
                     </Border>
                 </popups:BubbleBorder>
 
-                <popups:TargetedPopup
-                    x:Name="_TargetedPopup"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Stretch" />
 
+                <popups:TargetedPopup x:Name="_TargetedPopup" />
             </Grid.Children>
         </Grid>
     </Page.Content>

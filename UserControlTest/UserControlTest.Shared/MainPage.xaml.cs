@@ -100,7 +100,6 @@ namespace UserControlTest
                 _TargetedPopup.Target = element;
 
                 //_TargetedPopup.PreferredPointerDirection = PointerDirection.Down;
-                _TargetedPopup.PreferredPointerDirection = Enum.Parse<PointerDirection>(_pointerDirectionCombo.SelectedItem as string, true);
 
                 _TargetedPopup.Margin = new Thickness(5);
                 _TargetedPopup.Padding = new Thickness(10);
@@ -114,12 +113,19 @@ namespace UserControlTest
                 if (_TargetedPopup.Parent is Grid grid)
                     grid.Children.Remove(_TargetedPopup);
 
+#if __WASM__
+                _TargetedPopup.PreferredPointerDirection = (PointerDirection) Enum.Parse(typeof(PointerDirection), _pointerDirectionCombo.SelectedItem as string);
+                var hzAlign = Enum.Parse(typeof(HorizontalAlignment),_hzAlignCombo.SelectedItem as string, true);
+                var vtAlign = Enum.Parse(typeof(VerticalAlignment),_vtAlignCombo.SelectedItem as string, true);
+#else
+                _TargetedPopup.PreferredPointerDirection = Enum.Parse<PointerDirection>(_pointerDirectionCombo.SelectedItem as string, true);
                 var hzAlign = Enum.Parse<HorizontalAlignment>(_hzAlignCombo.SelectedItem as string, true);
                 var vtAlign = Enum.Parse<VerticalAlignment>(_vtAlignCombo.SelectedItem as string, true);
+#endif
 
-                _bubbleBorder.HorizontalAlignment = hzAlign;
-                _TargetedPopup.VerticalAlignment = vtAlign;
-                _TargetedPopup.HorizontalAlignment = hzAlign;
+                _bubbleBorder.HorizontalAlignment = (HorizontalAlignment) hzAlign;
+                _TargetedPopup.VerticalAlignment = (VerticalAlignment) vtAlign;
+                _TargetedPopup.HorizontalAlignment = (HorizontalAlignment) hzAlign;
 
                 if (_indexOthogonal.IsOn)
                 {
