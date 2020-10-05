@@ -556,6 +556,9 @@ namespace P42.Uno.Popups
                 }
                 if (baseMargin.Top + stats.BorderSize.Height > windowSize.Height - Margin.Bottom)
                     baseMargin.Top = windowSize.Height - Margin.Bottom - stats.BorderSize.Height;
+
+                _border.PointerAxialPosition = (targetBounds.Top - baseMargin.Top) + targetBounds.Bottom - (targetBounds.Top + targetBounds.Bottom) / 2.0;
+
             }
             else
             {
@@ -574,6 +577,7 @@ namespace P42.Uno.Popups
                 {
                     baseMargin.Left = Math.Max(Margin.Left, targetBounds.Left);
                     base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
+
                 }
                 else if (HorizontalAlignment == HorizontalAlignment.Center)
                 {
@@ -591,7 +595,20 @@ namespace P42.Uno.Popups
                 }
                 if (baseMargin.Left + stats.BorderSize.Width > windowSize.Width - Margin.Right)
                     baseMargin.Left = windowSize.Width - Margin.Right - stats.BorderSize.Width;
+
+                _border.PointerAxialPosition = (targetBounds.Left - baseMargin.Left) + targetBounds.Right - (targetBounds.Left + targetBounds.Right) / 2.0;
             }
+#if __WASM__ || NETSTANDARD
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAligment WASM || NETSTANDARD");
+
+            if (_firstRenderSize.Width < 1 || _firstRenderSize.Height < 1)
+                _firstRenderSize = windowSize;
+
+            _popup.HorizontalOffset = -(_firstRenderSize.Width + Margin.Left) / 2.0; ;
+            _popup.VerticalOffset = 70;
+            //vOffset -= windowHeight / 2.0;
+#endif
+
             _border.PointerDirection = stats.PointerDirection;
             base.Margin = _border.Margin = baseMargin;
         }
@@ -635,7 +652,8 @@ namespace P42.Uno.Popups
             if (_firstRenderSize.Width < 1 || _firstRenderSize.Height < 1)
                 _firstRenderSize = windowSize;
 
-            hOffset -= (_firstRenderSize.Width + Margin.Left) / 2.0 ; 
+            hOffset -= (_firstRenderSize.Width + Margin.Left) / 2.0 ;
+            vOffset = 70;
             //vOffset -= windowHeight / 2.0;
 #endif
             System.Diagnostics.Debug.WriteLine(GetType() + ".ImplementWorkingMarginAndAlignmentOffset:[" + hOffset + ", " + vOffset + "]");

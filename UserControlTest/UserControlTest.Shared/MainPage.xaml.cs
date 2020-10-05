@@ -89,8 +89,9 @@ namespace UserControlTest
                 var frame = element.GetBounds();
                 var content = $"frame:[{frame.X.ToString("0.##")}, {frame.Y.ToString("0.##")}, {frame.Width.ToString("0.##")}, {frame.Height.ToString("0.##")}]";
 
-                _TargetedPopup.Target = _altBorder;
-                _TargetedPopup.PreferredPointerDirection = PointerDirection.None;
+                _TargetedPopup.Target = element;
+
+                _TargetedPopup.PreferredPointerDirection = PointerDirection.Down;
 
                 _TargetedPopup.VerticalAlignment = VerticalAlignment.Center;
 
