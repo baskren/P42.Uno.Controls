@@ -92,9 +92,8 @@ namespace UserControlTest
 
         async void _button_Click(object sender, RoutedEventArgs e)
         {
-            
-            _toast.Content = "I like pizza";
 
+            var popup = _alert;
 #if __WASM__
                 var prefDir = (PointerDirection) Enum.Parse(typeof(PointerDirection), _pointerDirectionCombo.SelectedItem as string);
                 var hzAlign = Enum.Parse(typeof(HorizontalAlignment),_hzAlignCombo.SelectedItem as string, true);
@@ -104,14 +103,19 @@ namespace UserControlTest
             var hzAlign = Enum.Parse<HorizontalAlignment>(_hzAlignCombo.SelectedItem as string, true);
             var vtAlign = Enum.Parse<VerticalAlignment>(_vtAlignCombo.SelectedItem as string, true);
 #endif
-
             _bubbleBorder.HorizontalAlignment = (HorizontalAlignment)hzAlign;
-            _toast.PreferredPointerDirection = prefDir;
-            _toast.VerticalAlignment = (VerticalAlignment)vtAlign;
-            _toast.HorizontalAlignment = (HorizontalAlignment)hzAlign;
-            _toast.Target = sender as UIElement;
 
-            await _toast.PushAsync();
+            popup.VerticalAlignment = (VerticalAlignment)vtAlign;
+            popup.HorizontalAlignment = (HorizontalAlignment)hzAlign;
+            popup.PreferredPointerDirection = prefDir;
+            popup.Target = sender as UIElement;
+
+
+            await popup.PushAsync();
+            /*
+            _toast.Content = "I like pizza";
+
+
             
             /*
             if (sender is FrameworkElement element)

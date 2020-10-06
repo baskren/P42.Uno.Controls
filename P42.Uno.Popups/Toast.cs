@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace P42.Uno.Popups
 {
@@ -26,8 +27,10 @@ namespace P42.Uno.Popups
 
         public Toast()
         {
-            var style = Application.Current.Resources["TargetedToastPopupTemplate"] as Style;
-            Style = style;
+            this.DefaultStyleKey = typeof(Toast);
+
+            //var template = Application.Current.Resources["TargetedToastPopupTemplate"] as ControlTemplate;
+            //Template = template;
         }
     }
 }

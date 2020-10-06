@@ -645,8 +645,8 @@ namespace P42.Uno.Popups
 #if __WASM__ || NETSTANDARD
             System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateMarginAndAlignment WASM || NETSTANDARD");
             GetFirstRenderSize();
-            _popup.HorizontalOffset = -(_firstRenderSize.Width + Margin.Left) / 2.0;
-            _popup.VerticalOffset = -(_firstRenderSize.Height + Margin.Top) / 2.0;
+            _popup.HorizontalOffset = -(_firstRenderSize.Width) / 2.0;
+            _popup.VerticalOffset = -(_firstRenderSize.Height) / 2.0;
             System.Diagnostics.Debug.WriteLine(GetType() + ".CleanMarginAndAlignment hOffset:" + _popup.HorizontalOffset + " vOffset:" + _popup.VerticalOffset);
 #endif
 
@@ -693,8 +693,8 @@ namespace P42.Uno.Popups
 #if __WASM__ || NETSTANDARD
             System.Diagnostics.Debug.WriteLine(GetType() + ".CleanMarginAndAlignment WASM || NETSTANDARD");
             GetFirstRenderSize();
-            hOffset -= (_firstRenderSize.Width + Margin.Left) / 2.0;
-            vOffset -= (_firstRenderSize.Height + Margin.Top) / 2.0;
+            hOffset -= (_firstRenderSize.Width) / 2.0;
+            vOffset -= (_firstRenderSize.Height) / 2.0;
             System.Diagnostics.Debug.WriteLine(GetType() + ".CleanMarginAndAlignment hOffset:" + hOffset + " vOffset:"+vOffset);
 #endif
             _popup.HorizontalOffset = hOffset;
