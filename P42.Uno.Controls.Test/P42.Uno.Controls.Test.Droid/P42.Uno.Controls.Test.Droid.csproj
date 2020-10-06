@@ -97,9 +97,13 @@
       <Project>{cd121e71-57be-4a32-807c-62e00df1e640}</Project>
       <Name>P42.Uno.Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\P42.Utils.Uno\P42.Utils.Uno.csproj">
-      <Project>{aa39dc26-7164-48ba-ba57-156e634e390d}</Project>
+    <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj">
+      <Project>{2188f334-5533-4e03-94df-7e896eb251ae}</Project>
       <Name>P42.Utils.Uno</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\P42.Utils\P42.Utils\P42.Utils.csproj">
+      <Project>{609de145-9639-4456-b25f-b323d0f7a338}</Project>
+      <Name>P42.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\P42.Uno.Controls.Test.Shared\P42.Uno.Controls.Test.Shared.projitems" Label="Shared" Condition="Exists('..\P42.Uno.Controls.Test.Shared\P42.Uno.Controls.Test.Shared.projitems')" />
