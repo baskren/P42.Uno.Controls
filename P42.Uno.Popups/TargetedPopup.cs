@@ -10,6 +10,7 @@ using Uno.Extensions;
 using Uno.Extensions.ValueType;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -377,7 +378,7 @@ namespace P42.Uno.Popups
 
 
         #region Push / Pop
-        public async Task PushAsync()
+        public virtual async Task PushAsync()
         {
             System.Diagnostics.Debug.WriteLine(GetType() + ".PushAsync PreferredPointerDirection: " + PreferredPointerDirection);
             if (Parent is Grid grid)
@@ -411,14 +412,17 @@ namespace P42.Uno.Popups
             }
         }
 
-        void OnPopupClosed(object sender, object e)
+        protected virtual void OnPopupClosed(object sender, object e)
         {
             _border.SizeChanged -= OnBorderSizeChanged;
             _popup.Closed -= OnPopupClosed;
-            Popped?.Invoke(this, new PopupPoppedEventArgs(PoppedCause, PoppedTrigger));
+            var result = new PopupPoppedEventArgs(PoppedCause, PoppedTrigger);
+            _popCompletionSource?.SetResult(result);
+            Popped?.Invoke(this, result);
+            _popCompletionSource = null;
         }
 
-        public async Task PopAsync(PopupPoppedCause cause, [CallerMemberName] object trigger = null)
+        public virtual async Task PopAsync(PopupPoppedCause cause, [CallerMemberName] object trigger = null)
         {
             if (_popup.IsOpen)
             {
@@ -428,6 +432,13 @@ namespace P42.Uno.Popups
                 _popup.IsOpen = false;
                 await OnPopEndAsync();
             }
+        }
+
+        TaskCompletionSource<PopupPoppedEventArgs> _popCompletionSource;
+        public async Task<PopupPoppedEventArgs> WaitForPop()
+        {
+            _popCompletionSource = _popCompletionSource ?? new TaskCompletionSource<PopupPoppedEventArgs>();
+            return await _popCompletionSource.Task;
         }
         #endregion
 

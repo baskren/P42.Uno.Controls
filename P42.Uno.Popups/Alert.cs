@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Media;
 
 namespace P42.Uno.Popups
 {
+    [TemplatePart(Name = OkButtonName, Type = typeof(Button))]
     public partial class Alert : Toast
     {
         #region Properties
@@ -58,10 +59,15 @@ namespace P42.Uno.Popups
 
         #endregion
 
+
+        #region Fields
+        const string OkButtonName = "_okButton";
+        Button _okButton;
+        #endregion
+
         public Alert() : base()
         {
             this.DefaultStyleKey = typeof(Alert);
-
             /*
             var style = Style;
             var template = Application.Current.Resources["AlertPopupTemplate"] as ControlTemplate;
@@ -69,5 +75,31 @@ namespace P42.Uno.Popups
             Template = template;
             */
         }
+
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            _okButton = GetTemplateChild(OkButtonName) as Button;
+        }
+
+
+        public override async Task PushAsync()
+        {
+            _okButton.Click += OnOkButtonClicked;
+            await base.PushAsync();
+        }
+
+        protected override void OnPopupClosed(object sender, object e)
+        {
+            _okButton.Click -= OnOkButtonClicked;
+            base.OnPopupClosed(sender, e);
+        }
+
+        async void OnOkButtonClicked(object sender, RoutedEventArgs e)
+        {
+            await PopAsync(PopupPoppedCause.ButtonTapped, sender);
+        }
+
+
     }
 }
