@@ -103,12 +103,17 @@
                     </Border>
                 </popups:BubbleBorder>
 
+                <popups:PermissionPopup
+                    x:Name="_permissionPopup"
+                    Title="Question"
+                    Margin="10"
+                    Content="Erase documents?" />
+                <!--
                 <popups:Alert
                     x:Name="_alert"
                     Title="Aroogha"
                     Margin="10"
                     Content="Take shelter now!" />
-                <!--
                 <popups:Toast
                     x:Name="_toast"
                     Title="Sample Toast!"
