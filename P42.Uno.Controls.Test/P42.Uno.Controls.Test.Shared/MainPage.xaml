@@ -1,0 +1,127 @@
+﻿<Page
+    x:Class="P42.Uno.Controls.Test.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:android="http:/uno.ui/android"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:local="using:P42.Uno.Controls.Test"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:popups="using:P42.Uno.Controls"
+    Padding="10"
+    mc:Ignorable="d">
+
+    <!--
+    <Page.Resources>
+        <Style TargetType="{x:Type ContentControl}" x:Key="PopupControl">
+            <Style.Setters>
+                <Setter Property="ContentTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <Canvas
+                                x:Name="PopupControlCanvas"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                >
+
+                            </Canvas>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+        </Style>
+    </Page.Resources>
+    -->
+
+    <Page.Content>
+        <Grid x:Name="_grid" Background="Yellow">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="150" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.Children>
+                <Border
+                    x:Name="_altBorder"
+                    Grid.Row="1"
+                    Width="50"
+                    Height="50"
+                    HorizontalAlignment="Center"
+                    Background="Pink"
+                    Tapped="OnAltBorderTapped" />
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <TextBlock Text="Pointer:" />
+                    <ComboBox x:Name="_pointerDirectionCombo" Text="PointerDir" />
+                    <TextBlock Text="HzAlign:" />
+                    <ComboBox x:Name="_hzAlignCombo" Text="HzAlign" />
+                    <TextBlock Text="VtAlign:" />
+                    <ComboBox x:Name="_vtAlignCombo" Text="VtAlign" />
+                    <TextBlock Text="Index Othrogonal:" />
+                    <ToggleSwitch x:Name="_indexOthogonal" />
+                    <Button
+                        x:Name="_button"
+                        Click="_button_Click"
+                        Content="Show Popup" />
+                </StackPanel>
+                <ListView x:Name="_listView" Grid.Row="2">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Button
+                                Padding="20,2,20,2"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Right"
+                                Background="Beige"
+                                BorderBrush="Green"
+                                BorderThickness="1"
+                                CornerRadius="5"
+                                Tapped="BorderTapped">
+                                <TextBlock Text="ZAP" />
+                            </Button>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Rectangle
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Fill="Beige" />
+                <popups:BubbleBorder
+                    x:Name="_bubbleBorder"
+                    Margin="5"
+                    Padding="5"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="Orange"
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    CornerRadius="5"
+                    HasShadow="true"
+                    PointerDirection="Down">
+                    <Border Background="#40FF">
+                        <TextBlock Text="TEST TEST TEST" />
+                    </Border>
+                </popups:BubbleBorder>
+
+                <popups:TargetedPopup x:Name="_targetedPopup" Content="I am a targeted popup!" />
+                <!--
+                <popups:PermissionPopup
+                    x:Name="_permissionPopup"
+                    Title="Question"
+                    Margin="10"
+                    Content="Erase documents?" />
+                <popups:Alert
+                    x:Name="_alert"
+                    Title="Aroogha"
+                    Margin="10"
+                    Content="Take shelter now!" />
+                <popups:Toast
+                    x:Name="_toast"
+                    Title="Sample Toast!"
+                    Margin="5"
+                    Content="I like PIZZA!" />
+                -->
+            </Grid.Children>
+        </Grid>
+    </Page.Content>
+</Page>
