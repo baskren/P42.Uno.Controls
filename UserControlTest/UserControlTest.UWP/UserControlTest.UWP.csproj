@@ -153,9 +153,9 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\P42.Uno.Popups\P42.Uno.Popups.csproj">
+    <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.csproj">
       <Project>{cd121e71-57be-4a32-807c-62e00df1e640}</Project>
-      <Name>P42.Uno.Popups</Name>
+      <Name>P42.Uno.Controls</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\P42.Utils.Uno\P42.Utils.Uno.csproj">
       <Project>{aa39dc26-7164-48ba-ba57-156e634e390d}</Project>

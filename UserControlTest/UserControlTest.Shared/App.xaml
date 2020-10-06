@@ -8,8 +8,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <!--
-                <ResourceDictionary Source="ms-appx:///P42.Uno.Popups/Themes/generic.xaml" />
-                <ResourceDictionary Source="ms-appx:///P42.Uno.Popups/Styles.xaml" />
+                <ResourceDictionary Source="ms-appx:///P42.Uno.Controls/Themes/generic.xaml" />
+                <ResourceDictionary Source="ms-appx:///P42.Uno.Controls/Styles.xaml" />
                 <ResourceDictionary Source="Popups/BubblePopup.xaml" />
                 -->
             </ResourceDictionary.MergedDictionaries>

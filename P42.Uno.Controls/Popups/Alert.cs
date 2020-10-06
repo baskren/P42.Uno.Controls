@@ -7,7 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
-namespace P42.Uno.Popups
+namespace P42.Uno.Controls
 {
     [TemplatePart(Name = OkButtonName, Type = typeof(Button))]
     public partial class Alert : Toast

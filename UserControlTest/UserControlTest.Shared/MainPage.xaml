@@ -7,7 +7,7 @@
     xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:local="using:UserControlTest"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:popups="using:P42.Uno.Popups"
+    xmlns:popups="using:P42.Uno.Controls"
     Padding="10"
     mc:Ignorable="d">
 
@@ -103,12 +103,13 @@
                     </Border>
                 </popups:BubbleBorder>
 
+                <popups:TargetedPopup x:Name="_targetedPopup" Content="I am a targeted popup!" />
+                <!--
                 <popups:PermissionPopup
                     x:Name="_permissionPopup"
                     Title="Question"
                     Margin="10"
                     Content="Erase documents?" />
-                <!--
                 <popups:Alert
                     x:Name="_alert"
                     Title="Aroogha"
@@ -119,7 +120,6 @@
                     Title="Sample Toast!"
                     Margin="5"
                     Content="I like PIZZA!" />
-                <popups:TargetedPopup x:Name="_targetedPopup" Content="I am a targeted popup!" />
                 -->
             </Grid.Children>
         </Grid>

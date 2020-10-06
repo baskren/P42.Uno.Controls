@@ -21,7 +21,7 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace P42.Uno.Popups
+namespace P42.Uno.Controls
 {
     [TemplatePart(Name = ContentPresenterName, Type=typeof(ContentPresenter))]
     [TemplatePart(Name = PathElementName, Type = typeof(Path))]

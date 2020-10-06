@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 
-namespace P42.Uno.Popups
+namespace P42.Uno.Controls
 {
     internal static class MarkupExtensions
     {

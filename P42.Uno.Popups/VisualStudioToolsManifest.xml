@@ -1,7 +1,0 @@
-﻿<FileList>
-  <File Reference="P42.Uno.Popups.dll">
-    <ToolboxItems VSCategory="P42 Uno Popups" BlendCategory="P42 Uno Popups">
-      <Item Type="P42.Uno.Popups.TargetedPopup" />
-    </ToolboxItems>
-  </File>
-</FileList>

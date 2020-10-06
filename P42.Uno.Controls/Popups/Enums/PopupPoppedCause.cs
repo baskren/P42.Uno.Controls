@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace P42.Uno.Popups
+namespace P42.Uno.Controls
 {
     /// <summary>
     /// Causes for Forms9Patch popup being popped

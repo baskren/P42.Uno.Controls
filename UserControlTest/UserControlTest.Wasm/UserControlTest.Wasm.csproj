@@ -48,7 +48,7 @@
     <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.4.0-dev.52" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\P42.Uno.Popups\P42.Uno.Popups.csproj" />
+    <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.csproj" />
     <ProjectReference Include="..\..\P42.Utils.Uno\P42.Utils.Uno.csproj" />
   </ItemGroup>
   <Import Project="..\UserControlTest.Shared\UserControlTest.Shared.projitems" Label="Shared" Condition="Exists('..\UserControlTest.Shared\UserControlTest.Shared.projitems')" />

@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using P42.Uno.Popups;
+using P42.Uno.Controls;
 using Windows.UI;
 using System.Threading.Tasks;
 using P42.Utils.Uno;
@@ -50,7 +50,7 @@ namespace UserControlTest
         {
             this.InitializeComponent();
             _listView.ItemsSource = new List<int> { 1, 2, 3, 4 };
-            _pointerDirectionCombo.ItemsSource = Enum.GetNames(typeof(P42.Uno.Popups.PointerDirection));
+            _pointerDirectionCombo.ItemsSource = Enum.GetNames(typeof(P42.Uno.Controls.PointerDirection));
             _pointerDirectionCombo.SelectedIndex = 0;
             _hzAlignCombo.ItemsSource = _hzSource = Enum.GetNames(typeof(HorizontalAlignment));
             _hzAlignCombo.SelectedIndex = 0;
@@ -93,7 +93,7 @@ namespace UserControlTest
         async void _button_Click(object sender, RoutedEventArgs e)
         {
 
-            var popup = _permissionPopup;
+            var popup = _targetedPopup;
 #if __WASM__
                 var prefDir = (PointerDirection) Enum.Parse(typeof(PointerDirection), _pointerDirectionCombo.SelectedItem as string);
                 var hzAlign = Enum.Parse(typeof(HorizontalAlignment),_hzAlignCombo.SelectedItem as string, true);

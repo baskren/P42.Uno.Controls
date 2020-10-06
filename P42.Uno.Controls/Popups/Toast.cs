@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace P42.Uno.Popups
+namespace P42.Uno.Controls
 {
     public partial class Toast : TargetedPopup
     {

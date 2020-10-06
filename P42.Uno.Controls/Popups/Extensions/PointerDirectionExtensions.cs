@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Windows.UI.Xaml;
 
-namespace P42.Uno.Popups
+namespace P42.Uno.Controls
 {
 	/// <summary>
 	/// Pointer direction extensions.

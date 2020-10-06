@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace P42.Uno.Popups
+namespace P42.Uno.Controls
 {
     /// <summary>
     /// Event arguments passed by Popped event and DelayUntilPoppedAsyc() method in Forms9Patch popups.

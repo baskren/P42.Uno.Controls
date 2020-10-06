@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace P42.Uno.Popups
+namespace P42.Uno.Controls
 {
 	/// <summary>
 	/// BubblePopup Pointer direction.

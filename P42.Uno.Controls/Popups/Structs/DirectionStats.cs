@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 
-namespace P42.Uno.Popups
+namespace P42.Uno.Controls
 {
     struct DirectionStats
 

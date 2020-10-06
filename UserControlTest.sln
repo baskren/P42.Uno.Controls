@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserControlTest.macOS", "Us
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PlatformProjects", "PlatformProjects", "{9569CF62-1AD0-4EC1-8837-DCC41AB2FB23}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P42.Uno.Popups", "P42.Uno.Popups\P42.Uno.Popups.csproj", "{CD121E71-57BE-4A32-807C-62E00DF1E640}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P42.Uno.Controls", "P42.Uno.Controls\P42.Uno.Controls.csproj", "{CD121E71-57BE-4A32-807C-62E00DF1E640}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P42.Utils.Uno", "P42.Utils.Uno\P42.Utils.Uno.csproj", "{AA39DC26-7164-48BA-BA57-156E634E390D}"
 EndProject
