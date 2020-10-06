@@ -103,8 +103,13 @@
                     </Border>
                 </popups:BubbleBorder>
 
-                <popups:TargetedPopup x:Name="_targetedPopup" Content="I am a targeted popup!" />
+                <popups:Toast
+                    x:Name="_toast"
+                    Title="Sample Toast!"
+                    Margin="5"
+                    Content="I like PIZZA!" />
                 <!--
+                <popups:TargetedPopup x:Name="_targetedPopup" Content="I am a targeted popup!" />
                 <popups:PermissionPopup
                     x:Name="_permissionPopup"
                     Title="Question"
@@ -115,11 +120,6 @@
                     Title="Aroogha"
                     Margin="10"
                     Content="Take shelter now!" />
-                <popups:Toast
-                    x:Name="_toast"
-                    Title="Sample Toast!"
-                    Margin="5"
-                    Content="I like PIZZA!" />
                 -->
             </Grid.Children>
         </Grid>
