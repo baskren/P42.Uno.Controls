@@ -420,6 +420,7 @@ namespace P42.Uno.Controls
             //this.InitializeComponent();
             ActualPointerDirection = PointerDirection.None;
             this.DefaultStyleKey = typeof(TargetedPopup);
+
         }
 
         protected override void OnApplyTemplate()
@@ -445,6 +446,7 @@ namespace P42.Uno.Controls
                 _popup = borderParent as Popup;
             }
         }
+
         #endregion
 
 
@@ -478,6 +480,7 @@ namespace P42.Uno.Controls
             _popup.Opacity = 0.0;
             _popup.IsOpen = true;
 
+#if NETFX_CORE
             var storyboard = new Storyboard();
             var opacityAnimation = new DoubleAnimation
             {
@@ -489,7 +492,8 @@ namespace P42.Uno.Controls
             Storyboard.SetTarget(opacityAnimation, _popup);
             storyboard.Children.Add(opacityAnimation);
             await storyboard.BeginAsync();
-
+#endif
+            _popup.Opacity = 1.0;
             UpdateMarginAndAlignment();
 
             if (PopAfter > default(TimeSpan))
@@ -539,18 +543,20 @@ namespace P42.Uno.Controls
             PoppedTrigger = trigger;
             await OnPopBeginAsync();
 
+#if NETFX_CORE
             var storyboard = new Storyboard();
             var animation = new DoubleAnimation
             {
                 Duration = TimeSpan.FromMilliseconds(400),
                 EnableDependentAnimation = true,
-                To = 0
+                From = 1.0,
+                To = 0.0
             };
             Storyboard.SetTargetProperty(animation, nameof(UIElement.Opacity));
             Storyboard.SetTarget(animation, _popup);
             storyboard.Children.Add(animation);
             await storyboard.BeginAsync();
-
+#endif
             _popup.IsOpen = false;
             await OnPopEndAsync();
         

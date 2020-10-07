@@ -18,6 +18,7 @@ namespace P42.Uno.Controls
     [TemplatePart(Name = TargetedPopupName, Type = typeof(TargetedPopup))]
     [TemplatePart(Name = DetailPaneBorderName, Type = typeof(Border))]
     [TemplatePart(Name = LightDismissOverlayName, Type = typeof(Rectangle))]
+    [TemplatePart(Name = GridName, Type = typeof(Grid))]
     public partial class SummaryDetailView : ContentControl
     {
         #region Properties
@@ -304,6 +305,7 @@ namespace P42.Uno.Controls
         const string TargetedPopupName = "_targetedPopup";
         const string DetailPaneBorderName = "_detailPaneBorder";
         const string LightDismissOverlayName = "_lightDismissOverlay";
+        const string GridName = "_grid";
 
         ContentPresenter _detailPaneContentPresenter;
         ContentPresenter _detailPopupContentPresenter;
@@ -312,6 +314,7 @@ namespace P42.Uno.Controls
         TargetedPopup _targetedPopup;
         Border _detailPaneBorder;
         Rectangle _lightDismissOverlay;
+        Grid _grid;
 
         public PushPopState DetailPushPopState = PushPopState.Popped;
 
@@ -327,6 +330,7 @@ namespace P42.Uno.Controls
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            
             _detailPaneContentPresenter = (ContentPresenter)GetTemplateChild(DetailPaneContentPresenterName);
             _detailPopupContentPresenter = (ContentPresenter)GetTemplateChild(DetailPopupContentPresenterName);
             _row1 = (RowDefinition)GetTemplateChild(Row1Name);
@@ -334,10 +338,13 @@ namespace P42.Uno.Controls
             _targetedPopup = (TargetedPopup)GetTemplateChild(TargetedPopupName);
             _detailPaneBorder = (Border)GetTemplateChild(DetailPaneBorderName);
             _lightDismissOverlay = (Rectangle)GetTemplateChild(LightDismissOverlayName);
+
+            _grid = (Grid)GetTemplateChild(GridName);
+            _grid.Children.Remove(_targetedPopup);
         }
         #endregion
 
-
+        
         #region Layout
 
         public async Task PushDetail()
@@ -358,7 +365,8 @@ namespace P42.Uno.Controls
 
 
             // where is the detail going?
-            if (IsInPaneMode)
+            //if (IsInPaneMode)
+            if (false)
             {
                 _detailPopupContentPresenter.Content = null;
 
@@ -367,21 +375,9 @@ namespace P42.Uno.Controls
                     _lightDismissOverlay.Visibility = Visibility.Visible;
                 _lightDismissOverlay.PointerPressed += OnDismissPointerPressed;
 
-                var storyboard = new Storyboard();
-                var flyoutAnimation = new DoubleAnimation
-                {
-                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
-                    Duration = new Duration(TimeSpan.FromMilliseconds(500)),
-                    EnableDependentAnimation = true,
-                    From = 0,
-                };
-                var opacityAnimation = new DoubleAnimation
-                {
-                    Duration = new Duration(TimeSpan.FromMilliseconds(500)),
-                    From = 0.0,
-                    To = 1.0
-                };
 
+                double to = 0.0;
+                string targetProperty = null;
                 if (Aspect > 1)
                 {
                     var height = ActualHeight;
@@ -391,13 +387,8 @@ namespace P42.Uno.Controls
                     Grid.SetColumn(_detailPaneBorder, 1);
                     Grid.SetRow(_detailPaneBorder, 0);
 
-                    if (IsAnimated)
-                    {
-                        flyoutAnimation.To = width;
-                        Storyboard.SetTargetProperty(flyoutAnimation, nameof(Column1Width));
-                    }
-                    else
-                        Column1Width = width;
+                    to = width;
+                    targetProperty = nameof(Column1Width);
                 }
                 else
                 {
@@ -408,25 +399,45 @@ namespace P42.Uno.Controls
                     Grid.SetColumn(_detailPaneBorder, 0);
                     Grid.SetRow(_detailPaneBorder, 1);
 
-                    if (IsAnimated)
-                    {
-                        flyoutAnimation.To = height;
-                        Storyboard.SetTargetProperty(flyoutAnimation, nameof(Row1Height));
-                    }
-                    else
-                        Row1Height = height;
+                    to = height;
+                    targetProperty = nameof(Row1Height);
                 }
                 _detailPaneContentPresenter.Content = Detail;
                 _detailPaneBorder.Visibility = Visibility.Visible;
 
+#if NETFX_CORE
                 if (IsAnimated)
                 {
+                    var storyboard = new Storyboard();
+                    var flyoutAnimation = new DoubleAnimation
+                    {
+                        EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
+                        Duration = TimeSpan.FromMilliseconds(500),
+                        EnableDependentAnimation = true,
+                        From = 0,
+                        To = to
+                    };
+                    var opacityAnimation = new DoubleAnimation
+                    {
+                        Duration = TimeSpan.FromMilliseconds(500),
+                        From = 0.0,
+                        To = 1.0
+                    };
                     Storyboard.SetTarget(flyoutAnimation, this);
+                    Storyboard.SetTargetProperty(flyoutAnimation, targetProperty);
                     Storyboard.SetTarget(opacityAnimation, _lightDismissOverlay);
                     Storyboard.SetTargetProperty(opacityAnimation, nameof(UIElement.Opacity));
                     storyboard.Children.Add(opacityAnimation);
                     storyboard.Children.Add(flyoutAnimation);
                     await storyboard.BeginAsync();
+                }
+                else
+#endif
+                {
+                    if (targetProperty == nameof(Row1Height))
+                        Row1Height = to;
+                    else
+                        Column1Width = to;
                 }
                 _lightDismissOverlay.Opacity = 1.0;
             }
@@ -484,35 +495,40 @@ namespace P42.Uno.Controls
                 await _targetedPopup.PopAsync();
             else
             {
-                var storyboard = new Storyboard();
-                var flyoutAnimation = new DoubleAnimation
-                {
-                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
-                    Duration = new Duration(TimeSpan.FromMilliseconds(500)),
-                    To = 0,
-                    EnableDependentAnimation = true,
-                };
-                var opacityAnimation = new DoubleAnimation
-                {
-                    Duration = new Duration(TimeSpan.FromMilliseconds(500)),
-                    From = 1.0,
-                    To = 0.0
-                };
 
+                double from = 0.0;
+                string targetProperty = null;
                 if (Row1Height > 0)
                 {
-                    flyoutAnimation.From = Row1Height;
-                    Storyboard.SetTargetProperty(flyoutAnimation, nameof(Row1Height));
+                    from = Row1Height;
+                    targetProperty = nameof(Row1Height);
                 }
                 else
                 {
-                    flyoutAnimation.From = Column1Width;
-                    Storyboard.SetTargetProperty(flyoutAnimation, nameof(Column1Width));
+                    from = Column1Width;
+                    targetProperty = nameof(Column1Width);
                 }
 
+#if NETFX_CORE
                 if (IsAnimated)
                 {
+                    var storyboard = new Storyboard();
+                    var flyoutAnimation = new DoubleAnimation
+                    {
+                        EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
+                        Duration = TimeSpan.FromMilliseconds(500),
+                        From = from,
+                        To = 0,
+                        EnableDependentAnimation = true,
+                    };
+                    var opacityAnimation = new DoubleAnimation
+                    {
+                        Duration = TimeSpan.FromMilliseconds(500),
+                        From = 1.0,
+                        To = 0.0
+                    };
                     Storyboard.SetTarget(flyoutAnimation, this);
+                    Storyboard.SetTargetProperty(flyoutAnimation, targetProperty);
                     Storyboard.SetTarget(opacityAnimation, _lightDismissOverlay);
                     Storyboard.SetTargetProperty(opacityAnimation, nameof(UIElement.Opacity));
                     storyboard.Children.Add(flyoutAnimation);
@@ -520,6 +536,7 @@ namespace P42.Uno.Controls
                     await storyboard.BeginAsync();
                 }
                 else
+#endif
                 {
                     Row1Height = 0;
                     Column1Width = 0;
@@ -551,6 +568,7 @@ namespace P42.Uno.Controls
             return await _pushCompletionSource.Task;
         }
 
-        #endregion
+#endregion
+        
     }
 }
