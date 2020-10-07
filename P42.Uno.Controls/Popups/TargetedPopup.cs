@@ -1,8 +1,10 @@
-﻿using P42.Utils.Uno;
+﻿using Microsoft.Toolkit.Uwp.UI.Animations;
+using P42.Utils.Uno;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
@@ -17,6 +19,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 #if NETFX_CORE
@@ -216,7 +219,7 @@ namespace P42.Uno.Controls
             nameof(PreferredPointerDirection),
             typeof(PointerDirection),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPreferredPointerDirectionChanged(e)))
+            new PropertyMetadata(PointerDirection.Any, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPreferredPointerDirectionChanged(e)))
         );
         protected virtual void OnPreferredPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -311,12 +314,81 @@ namespace P42.Uno.Controls
         }
         #endregion PointToOffScreenElements Property
 
+        #region PointerMargin Property
+        public static readonly DependencyProperty PointerMarginProperty = DependencyProperty.Register(
+            nameof(PointerMargin),
+            typeof(double),
+            typeof(TargetedPopup),
+            new PropertyMetadata(5.0)
+        );
+        public double PointerMargin
+        {
+            get => (double)GetValue(PointerMarginProperty);
+            set => SetValue(PointerMarginProperty, value);
+        }
+        #endregion PointerMargin Property
+
+        #endregion
+
+        #region LightDismiss Properties
+
+        #region IsLightDismissEnabled Property
+        public static readonly DependencyProperty IsLightDismissEnabledProperty = DependencyProperty.Register(
+            nameof(IsLightDismissEnabled),
+            typeof(bool),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(bool), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnIsLightDismissEnabledChanged(e)))
+        );
+        protected virtual void OnIsLightDismissEnabledChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if (_popup != null)
+                _popup.IsLightDismissEnabled = IsLightDismissEnabled;
+        }
+        public bool IsLightDismissEnabled
+        {
+            get => (bool)GetValue(IsLightDismissEnabledProperty);
+            set => SetValue(IsLightDismissEnabledProperty, value);
+        }
+        #endregion IsLightDismissEnabled Property
+
+        #region LightDismissOverlayMode Property
+        public static readonly DependencyProperty LightDismissOverlayModeProperty = DependencyProperty.Register(
+            nameof(LightDismissOverlayMode),
+            typeof(LightDismissOverlayMode),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(LightDismissOverlayMode), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnLightDismissOverlayModeChanged(e)))
+        );
+        protected virtual void OnLightDismissOverlayModeChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if (_popup != null)
+                _popup.LightDismissOverlayMode = LightDismissOverlayMode;
+        }
+        public LightDismissOverlayMode LightDismissOverlayMode
+        {
+            get => (LightDismissOverlayMode)GetValue(LightDismissOverlayModeProperty);
+            set => SetValue(LightDismissOverlayModeProperty, value);
+        }
+        #endregion LightDismissOverlayMode Property
+
 
         #endregion
 
         public PopupPoppedCause PoppedCause { get; private set; }
 
         public object PoppedTrigger { get; private set; }
+
+        public PushPopState PushPopState { get; private set; }
+
+        public bool IsEmpty
+        {
+            get
+            {
+                var contentPresenter = _contentPresenter;
+                while (contentPresenter?.Content is ContentPresenter cp)
+                    contentPresenter = cp;
+                return contentPresenter.Content is null;
+            }
+        }
         #endregion
 
 
@@ -333,6 +405,7 @@ namespace P42.Uno.Controls
 
 
         #region Events
+        public event EventHandler Pushed;
         /// <summary>
         /// Occurs when popup has been cancelled.
         /// </summary>
@@ -347,12 +420,6 @@ namespace P42.Uno.Controls
             //this.InitializeComponent();
             ActualPointerDirection = PointerDirection.None;
             this.DefaultStyleKey = typeof(TargetedPopup);
-            /*
-            var startStyle = Style;
-            var defaultStyleObject = Application.Current.Resources["BaseTargetedPopupStyle"];
-            if (defaultStyleObject is Style defaultStyle)
-                Style = defaultStyle;
-            */
         }
 
         protected override void OnApplyTemplate()
@@ -363,6 +430,10 @@ namespace P42.Uno.Controls
             _border.HorizontalAlignment = HorizontalAlignment;
             _border.VerticalAlignment = VerticalAlignment;
             _border.PointerLength = PointerLength;
+
+            OnIsLightDismissEnabledChanged(null);
+            OnLightDismissOverlayModeChanged(null);
+
             UpdateMarginAndAlignment();
             var popupChild = GetTemplateChild(PopupElementName);
             
@@ -380,15 +451,22 @@ namespace P42.Uno.Controls
         #region Push / Pop
         public virtual async Task PushAsync()
         {
-            System.Diagnostics.Debug.WriteLine(GetType() + ".PushAsync PreferredPointerDirection: " + PreferredPointerDirection);
-            if (Parent is Grid grid)
+            if (PushPopState == PushPopState.Pushed || PushPopState == PushPopState.Pushing)
+                return;
+
+            if (PushPopState == PushPopState.Popping)
             {
-                //Grid.SetRow(this, 0);
-                //Grid.SetColumn(this, 0);
-                //Grid.SetColumnSpan(this, grid.ColumnDefinitions.Count);
-                //Grid.SetRowSpan(this, grid.RowDefinitions.Count);
-                grid.Children.Remove(this);
+                if (_popCompletionSource is null)
+                    await WaitForPop();
+                else
+                    return;
             }
+
+            PushPopState = PushPopState.Pushing;
+            _popCompletionSource = null;
+
+            if (Parent is Grid grid)
+                grid.Children.Remove(this);
 
             _border.SizeChanged += OnBorderSizeChanged;
             _popup.Closed += OnPopupClosed;
@@ -396,8 +474,21 @@ namespace P42.Uno.Controls
             PoppedTrigger = null;
 
             await OnPushBeginAsync();
+
+            _popup.Opacity = 0.0;
             _popup.IsOpen = true;
-            await OnPushEndAsync();
+
+            var storyboard = new Storyboard();
+            var opacityAnimation = new DoubleAnimation
+            {
+                Duration = TimeSpan.FromMilliseconds(400),
+                EnableDependentAnimation = true,
+                To = 1
+            };
+            Storyboard.SetTargetProperty(opacityAnimation, nameof(UIElement.Opacity));
+            Storyboard.SetTarget(opacityAnimation, _popup);
+            storyboard.Children.Add(opacityAnimation);
+            await storyboard.BeginAsync();
 
             UpdateMarginAndAlignment();
 
@@ -405,33 +496,64 @@ namespace P42.Uno.Controls
             {
                 Device.StartTimer(PopAfter, () =>
                 {
-                    if (_popup.IsOpen)
-                        PopAsync(PopupPoppedCause.Timeout, "Timeout");
+                    PopAsync(PopupPoppedCause.Timeout, "Timeout");
                     return false;
                 });
             }
+
+            await OnPushEndAsync();
+            PushPopState = PushPopState.Pushed;
+            Pushed?.Invoke(this, EventArgs.Empty);
+            _pushCompletionSource?.SetResult(true);
         }
 
         protected virtual void OnPopupClosed(object sender, object e)
         {
+            PushPopState = PushPopState.Popping;
             _border.SizeChanged -= OnBorderSizeChanged;
             _popup.Closed -= OnPopupClosed;
             var result = new PopupPoppedEventArgs(PoppedCause, PoppedTrigger);
+            PushPopState = PushPopState.Popped;
             _popCompletionSource?.SetResult(result);
             Popped?.Invoke(this, result);
             _popCompletionSource = null;
         }
 
-        public virtual async Task PopAsync(PopupPoppedCause cause, [CallerMemberName] object trigger = null)
+        public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, [CallerMemberName] object trigger = null)
         {
-            if (_popup.IsOpen)
+            if (PushPopState == PushPopState.Popping || PushPopState == PushPopState.Popped)
+                return;
+            
+            if (PushPopState == PushPopState.Pushing)
             {
-                PoppedCause = cause;
-                PoppedTrigger = trigger;
-                await OnPopBeginAsync();
-                _popup.IsOpen = false;
-                await OnPopEndAsync();
+                if (_pushCompletionSource is null)
+                    await WaitForPush();
+                else
+                    return;
             }
+
+            PushPopState = PushPopState.Popping;
+            _pushCompletionSource = null;
+
+            PoppedCause = cause;
+            PoppedTrigger = trigger;
+            await OnPopBeginAsync();
+
+            var storyboard = new Storyboard();
+            var animation = new DoubleAnimation
+            {
+                Duration = TimeSpan.FromMilliseconds(400),
+                EnableDependentAnimation = true,
+                To = 0
+            };
+            Storyboard.SetTargetProperty(animation, nameof(UIElement.Opacity));
+            Storyboard.SetTarget(animation, _popup);
+            storyboard.Children.Add(animation);
+            await storyboard.BeginAsync();
+
+            _popup.IsOpen = false;
+            await OnPopEndAsync();
+        
         }
 
         TaskCompletionSource<PopupPoppedEventArgs> _popCompletionSource;
@@ -439,6 +561,13 @@ namespace P42.Uno.Controls
         {
             _popCompletionSource = _popCompletionSource ?? new TaskCompletionSource<PopupPoppedEventArgs>();
             return await _popCompletionSource.Task;
+        }
+
+        TaskCompletionSource<bool> _pushCompletionSource;
+        async Task<bool> WaitForPush()
+        {
+            _pushCompletionSource = _pushCompletionSource ?? new TaskCompletionSource<bool>();
+            return await _pushCompletionSource.Task;
         }
         #endregion
 
@@ -479,7 +608,6 @@ namespace P42.Uno.Controls
         {
             return Task.CompletedTask;
         }
-
         #endregion
 
 
@@ -499,6 +627,8 @@ namespace P42.Uno.Controls
         protected override Size MeasureOverride(Size availableSize)
         {
             //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") ================================================  margin: "+ Margin);
+            if (IsEmpty)
+                return new Size(50 + Padding.Horizontal(), 50 + Padding.Vertical());
 
             availableSize.Width -= Margin.Horizontal();
             availableSize.Height -= Margin.Vertical();
@@ -539,6 +669,8 @@ namespace P42.Uno.Controls
             }
 
             var targetBounds = TargetBounds();
+
+
             System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateBorderMarginAndAlignment targetBounds:["+targetBounds+"]");
             var availableSpace = AvailableSpace(targetBounds);
             var stats = BestFit(availableSpace, cleanSize);
@@ -779,10 +911,11 @@ namespace P42.Uno.Controls
         {
             var targetBounds = Target is null ? Rect.Empty : Target.GetBounds();
 
-            double targetLeft = Target is null ? TargetPoint.X : targetBounds.Left;
-            double targetRight = Target is null ? TargetPoint.X : targetBounds.Right;
-            double targetTop = Target is null ? TargetPoint.Y : targetBounds.Top;
-            double targetBottom = Target is null ? TargetPoint.Y : targetBounds.Bottom;
+            double targetLeft = (Target is null ? TargetPoint.X : targetBounds.Left) - PointerMargin;
+            double targetRight = (Target is null ? TargetPoint.X : targetBounds.Right) + PointerMargin;
+            double targetTop = (Target is null ? TargetPoint.Y : targetBounds.Top) - PointerMargin;
+            double targetBottom = (Target is null ? TargetPoint.Y : targetBounds.Bottom) + PointerMargin;
+
 
             return new Rect(targetLeft, targetTop, targetRight - targetLeft, targetBottom - targetTop);
         }
@@ -956,8 +1089,11 @@ namespace P42.Uno.Controls
             return stats;
         }
 
+
         Size RectangleBorderSize(Size available, Size failSize = default)
         {
+            if (IsEmpty)
+                return new Size(50 + Padding.Horizontal(), 50 + Padding.Vertical());
             var availableWidth = available.Width;
             var availableHeight = available.Height;
             var hasBorder = (BorderThickness.Average() > 0) && BorderBrush is SolidColorBrush brush && brush.Color.A > 0;

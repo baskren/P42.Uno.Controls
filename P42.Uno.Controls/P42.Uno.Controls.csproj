@@ -77,4 +77,10 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SummaryDetailView\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.0-pre2" />
+  </ItemGroup>
 </Project>

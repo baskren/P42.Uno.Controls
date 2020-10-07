@@ -1,0 +1,33 @@
+﻿<Page
+    x:Class="P42.Uno.Controls.Test.SummaryDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:P42.Uno.Controls.Test"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pCtrl="using:P42.Uno.Controls"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <Grid>
+        <pCtrl:SummaryDetailView x:Name="_summaryDetailView">
+            <ListView x:Name="_listView">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Button
+                            Padding="20,2,20,2"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Right"
+                            Background="Beige"
+                            BorderBrush="Green"
+                            BorderThickness="1"
+                            Content="{Binding}"
+                            CornerRadius="5"
+                            Tapped="BorderTapped">
+                        </Button>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </pCtrl:SummaryDetailView>
+    </Grid>
+</Page>

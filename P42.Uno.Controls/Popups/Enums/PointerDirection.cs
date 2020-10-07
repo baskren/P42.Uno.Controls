@@ -9,6 +9,7 @@ namespace P42.Uno.Controls
 	/// </summary>
 	[Flags]
 	public enum PointerDirection
+
     {
 		/// <summary>
 		/// No pointer

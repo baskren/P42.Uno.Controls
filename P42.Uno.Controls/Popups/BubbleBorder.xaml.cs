@@ -290,8 +290,19 @@ namespace P42.Uno.Controls
         }
         #endregion Size Property
 
+        public bool IsEmpty
+        {
+            get
+            {
+                var contentPresenter = _contentPresenter;
+                while (contentPresenter?.Content is ContentPresenter cp)
+                    contentPresenter = cp;
+                return contentPresenter.Content is null;
+            }
+        }
 
         #endregion
+
 
         #region Fields
         const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Left;
@@ -420,10 +431,11 @@ namespace P42.Uno.Controls
             Size = args.NewSize;
         }
         
-
-
         protected override Size MeasureOverride(Size availableSize)
         {
+            if (IsEmpty)
+                return new Size(50 + Padding.Horizontal(), 50 + Padding.Vertical());
+
             UpdateContentPresenterMargin();
             //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") ======= hzAlign: " + HorizontalAlignment + " ======= margin: " + Margin + " ====== WindowSize: " + AppWindow.Size());
 
