@@ -466,6 +466,7 @@ namespace P42.Uno.Controls
         #region Construction / Initialization
         public TargetedPopup()
         {
+            Visibility = Visibility.Collapsed;
             base.HorizontalAlignment = HorizontalAlignment.Stretch;
             base.VerticalAlignment = VerticalAlignment.Stretch;
             ActualPointerDirection = PointerDirection.None;
@@ -564,12 +565,13 @@ namespace P42.Uno.Controls
             await OnPushBeginAsync();
 
             Opacity = 0.0;
+            Visibility = Visibility.Visible;
             _overlay.Visibility = LightDismissOverlayMode == LightDismissOverlayMode.On
                     ? Visibility.Visible
                     : Visibility.Collapsed;
             _overlay.PointerPressed += OnDismissPointerPressed;
 
-//#if NETFX_CORE
+#if NETFX_CORE
             var storyboard = new Storyboard();
             var opacityAnimation = new DoubleAnimation
             {
@@ -581,7 +583,7 @@ namespace P42.Uno.Controls
             Storyboard.SetTarget(opacityAnimation, this);
             storyboard.Children.Add(opacityAnimation);
             await storyboard.BeginAsync();
-//#endif
+#endif
             Opacity = 1.0;
             UpdateMarginAndAlignment();
 
@@ -633,7 +635,7 @@ namespace P42.Uno.Controls
             PoppedTrigger = trigger;
             await OnPopBeginAsync();
 
-//#if NETFX_CORE
+#if NETFX_CORE
             var storyboard = new Storyboard();
             var opacityAnimation = new DoubleAnimation
             {
@@ -646,7 +648,8 @@ namespace P42.Uno.Controls
             Storyboard.SetTarget(opacityAnimation, this);
             storyboard.Children.Add(opacityAnimation);
             await storyboard.BeginAsync();
-            //#endif
+#endif
+            Visibility = Visibility.Collapsed;
             if (this.Parent is Grid grid)
                 grid.Children.Remove(this);
 
@@ -736,9 +739,9 @@ namespace P42.Uno.Controls
             availableSize.Width -= Margin.Horizontal();
             availableSize.Height -= Margin.Vertical();
 
-            _border.Measure(availableSize);
-            //return AppWindow.Size();
-            return availableSize;
+            _border.Measure(AppWindow.Size());
+            return AppWindow.Size();
+            //return availableSize;
         }
 
         void UpdateMarginAndAlignment(bool isAlignmentOnlyChange = false)
