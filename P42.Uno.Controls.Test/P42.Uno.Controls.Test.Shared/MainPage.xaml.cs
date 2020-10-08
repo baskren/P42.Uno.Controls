@@ -93,7 +93,7 @@ namespace P42.Uno.Controls.Test
         async void _button_Click(object sender, RoutedEventArgs e)
         {
 
-            var popup = _toast;
+            var popup = _targetedPopup;
 #if __WASM__
                 var prefDir = (PointerDirection) Enum.Parse(typeof(PointerDirection), _pointerDirectionCombo.SelectedItem as string);
                 var hzAlign = Enum.Parse(typeof(HorizontalAlignment),_hzAlignCombo.SelectedItem as string, true);

@@ -8,7 +8,7 @@
     xmlns:local="using:P42.Uno.Controls.Test"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:popups="using:P42.Uno.Controls"
-    Padding="10"
+    Padding="0"
     mc:Ignorable="d">
 
     <!--
@@ -34,7 +34,10 @@
     -->
 
     <Page.Content>
-        <Grid x:Name="_grid" Background="Yellow">
+        <Grid
+            x:Name="_grid"
+            Margin="20"
+            Background="Yellow">
             <Grid.RowDefinitions>
                 <RowDefinition Height="150" />
                 <RowDefinition Height="50" />
@@ -103,13 +106,16 @@
                     </Border>
                 </popups:BubbleBorder>
 
+                <popups:TargetedPopup
+                    x:Name="_targetedPopup"
+                    Margin="10"
+                    Content="I am a targeted popup!" />
+                <!--
                 <popups:Toast
                     x:Name="_toast"
                     Title="Sample Toast!"
                     Margin="5"
                     Content="I like PIZZA!" />
-                <!--
-                <popups:TargetedPopup x:Name="_targetedPopup" Content="I am a targeted popup!" />
                 <popups:PermissionPopup
                     x:Name="_permissionPopup"
                     Title="Question"

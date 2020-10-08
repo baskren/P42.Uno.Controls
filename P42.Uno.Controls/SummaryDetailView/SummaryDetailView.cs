@@ -194,6 +194,7 @@ namespace P42.Uno.Controls
 
         #endregion
 
+
         #region IsAnimated Property
         public static readonly DependencyProperty IsAnimatedProperty = DependencyProperty.Register(
             nameof(IsAnimated),
@@ -256,13 +257,11 @@ namespace P42.Uno.Controls
             typeof(SummaryDetailView),
             new PropertyMetadata(default(SolidColorBrush), new PropertyChangedCallback((d, e) => ((SummaryDetailView)d).OnLightDismissOverlayBrushChanged(e)))
         );
-
         protected virtual void OnLightDismissOverlayBrushChanged(DependencyPropertyChangedEventArgs e)
         {
             if (LightDismissOverlayBrush is SolidColorBrush brush && brush.Color != LightDismissOverlayColor)
                 LightDismissOverlayColor = brush.Color;
         }
-
         public Brush LightDismissOverlayBrush
         {
             get => (Brush)GetValue(LightDismissOverlayBrushProperty);
@@ -289,10 +288,7 @@ namespace P42.Uno.Controls
         }
         #endregion LightDismissOverlayColor Property
 
-
-
         #endregion
-
 
         #endregion
 
@@ -313,7 +309,7 @@ namespace P42.Uno.Controls
         ColumnDefinition _col1;
         TargetedPopup _targetedPopup;
         Border _detailPaneBorder;
-        Rectangle _lightDismissOverlay;
+        Rectangle _overlay;
         Grid _grid;
 
         public PushPopState DetailPushPopState = PushPopState.Popped;
@@ -337,7 +333,7 @@ namespace P42.Uno.Controls
             _col1 = (ColumnDefinition)GetTemplateChild(Col1Name);
             _targetedPopup = (TargetedPopup)GetTemplateChild(TargetedPopupName);
             _detailPaneBorder = (Border)GetTemplateChild(DetailPaneBorderName);
-            _lightDismissOverlay = (Rectangle)GetTemplateChild(LightDismissOverlayName);
+            _overlay = (Rectangle)GetTemplateChild(LightDismissOverlayName);
 
             _grid = (Grid)GetTemplateChild(GridName);
             _grid.Children.Remove(_targetedPopup);
@@ -345,7 +341,7 @@ namespace P42.Uno.Controls
         #endregion
 
         
-        #region Layout
+        #region Push / Pop
 
         public async Task PushDetail()
         {
@@ -365,15 +361,15 @@ namespace P42.Uno.Controls
 
 
             // where is the detail going?
-            //if (IsInPaneMode)
-            if (false)
+            if (IsInPaneMode)
             {
                 _detailPopupContentPresenter.Content = null;
 
-                _lightDismissOverlay.Opacity = 0.0;
-                if (LightDismissOverlayMode == LightDismissOverlayMode.On)
-                    _lightDismissOverlay.Visibility = Visibility.Visible;
-                _lightDismissOverlay.PointerPressed += OnDismissPointerPressed;
+                _overlay.Opacity = 0.0;
+                _overlay.Visibility = LightDismissOverlayMode == LightDismissOverlayMode.On
+                        ? Visibility.Visible
+                        : Visibility.Collapsed;
+                _overlay.PointerPressed += OnDismissPointerPressed;
 
 
                 double to = 0.0;
@@ -405,7 +401,7 @@ namespace P42.Uno.Controls
                 _detailPaneContentPresenter.Content = Detail;
                 _detailPaneBorder.Visibility = Visibility.Visible;
 
-#if NETFX_CORE
+//#if NETFX_CORE
                 if (IsAnimated)
                 {
                     var storyboard = new Storyboard();
@@ -425,21 +421,21 @@ namespace P42.Uno.Controls
                     };
                     Storyboard.SetTarget(flyoutAnimation, this);
                     Storyboard.SetTargetProperty(flyoutAnimation, targetProperty);
-                    Storyboard.SetTarget(opacityAnimation, _lightDismissOverlay);
+                    Storyboard.SetTarget(opacityAnimation, _overlay);
                     Storyboard.SetTargetProperty(opacityAnimation, nameof(UIElement.Opacity));
                     storyboard.Children.Add(opacityAnimation);
                     storyboard.Children.Add(flyoutAnimation);
                     await storyboard.BeginAsync();
                 }
                 else
-#endif
+//#endif
                 {
                     if (targetProperty == nameof(Row1Height))
                         Row1Height = to;
                     else
                         Column1Width = to;
                 }
-                _lightDismissOverlay.Opacity = 1.0;
+                _overlay.Opacity = 1.0;
             }
             else
             {
@@ -489,7 +485,7 @@ namespace P42.Uno.Controls
             DetailPushPopState = PushPopState.Popping;
             _pushCompletionSource = null;
 
-            _lightDismissOverlay.PointerPressed -= OnDismissPointerPressed;
+            _overlay.PointerPressed -= OnDismissPointerPressed;
 
             if (_detailPopupContentPresenter.Content != null)
                 await _targetedPopup.PopAsync();
@@ -509,7 +505,7 @@ namespace P42.Uno.Controls
                     targetProperty = nameof(Column1Width);
                 }
 
-#if NETFX_CORE
+//#if NETFX_CORE
                 if (IsAnimated)
                 {
                     var storyboard = new Storyboard();
@@ -529,14 +525,14 @@ namespace P42.Uno.Controls
                     };
                     Storyboard.SetTarget(flyoutAnimation, this);
                     Storyboard.SetTargetProperty(flyoutAnimation, targetProperty);
-                    Storyboard.SetTarget(opacityAnimation, _lightDismissOverlay);
+                    Storyboard.SetTarget(opacityAnimation, _overlay);
                     Storyboard.SetTargetProperty(opacityAnimation, nameof(UIElement.Opacity));
                     storyboard.Children.Add(flyoutAnimation);
                     storyboard.Children.Add(opacityAnimation);
                     await storyboard.BeginAsync();
                 }
                 else
-#endif
+//#endif
                 {
                     Row1Height = 0;
                     Column1Width = 0;
@@ -544,8 +540,8 @@ namespace P42.Uno.Controls
             }
 
             if (LightDismissOverlayMode == LightDismissOverlayMode.On)
-                _lightDismissOverlay.Visibility = Visibility.Collapsed;
-            _lightDismissOverlay.Opacity = 1.0;
+                _overlay.Visibility = Visibility.Collapsed;
+            _overlay.Opacity = 1.0;
 
             DetailPushPopState = PushPopState.Popped;
             _popCompletionSource?.SetResult(true);

@@ -56,7 +56,7 @@ namespace P42.Uno.Controls.Test
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
-
+                rootFrame.Background = new SolidColorBrush(Windows.UI.Colors.Green);
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
