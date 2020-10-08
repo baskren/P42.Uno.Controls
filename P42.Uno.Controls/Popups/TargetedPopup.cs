@@ -55,9 +55,8 @@ namespace P42.Uno.Controls
         );
         protected virtual void OnHorizontalAlignmentChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (_border is null)
-                return;
-            UpdateMarginAndAlignment(true);
+            if (_border != null)
+                UpdateMarginAndAlignment();
         }
         public new HorizontalAlignment HorizontalAlignment
         {
@@ -75,9 +74,8 @@ namespace P42.Uno.Controls
         );
         protected virtual void OnVerticalAlignmentChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (_border is null)
-                return;
-            UpdateMarginAndAlignment(true);
+            if (_border != null)
+                UpdateMarginAndAlignment();
         }
         public new VerticalAlignment VerticalAlignment
         {
@@ -95,7 +93,8 @@ namespace P42.Uno.Controls
         );
         protected virtual void OnMarginChanged(DependencyPropertyChangedEventArgs e)
         {
-            UpdateMarginAndAlignment();
+            if (_border != null)
+                UpdateMarginAndAlignment();
         }
         public new Thickness Margin
         {
@@ -146,7 +145,8 @@ namespace P42.Uno.Controls
         );
         protected virtual void OnTargetChanged(DependencyPropertyChangedEventArgs e)
         {
-            UpdateMarginAndAlignment();
+            if (_border != null)
+                UpdateMarginAndAlignment();
         }
         public UIElement Target
         {
@@ -164,7 +164,8 @@ namespace P42.Uno.Controls
         );
         protected virtual void OnTargetPointChanged(DependencyPropertyChangedEventArgs e)
         {
-            UpdateMarginAndAlignment();
+            if (_border != null)
+                UpdateMarginAndAlignment();
         }
         public Point TargetPoint
         {
@@ -226,7 +227,8 @@ namespace P42.Uno.Controls
         );
         protected virtual void OnPreferredPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
         {
-            UpdateMarginAndAlignment();
+            if (_border != null)
+                UpdateMarginAndAlignment();
         }
         public PointerDirection PreferredPointerDirection
         {
@@ -244,7 +246,7 @@ namespace P42.Uno.Controls
         );
         protected virtual void OnFallbackPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (ActualPointerDirection == PointerDirection.None && PreferredPointerDirection != PointerDirection.None)
+            if (_border != null && ActualPointerDirection == PointerDirection.None && PreferredPointerDirection != PointerDirection.None)
                 UpdateMarginAndAlignment();
         }
         public PointerDirection FallbackPointerDirection
@@ -265,6 +267,7 @@ namespace P42.Uno.Controls
         );
         protected virtual void OnPointerLengthChanged(DependencyPropertyChangedEventArgs e)
         {
+            if (_border != null)
             UpdateMarginAndAlignment();
         }
         /// <summary>
@@ -490,7 +493,7 @@ namespace P42.Uno.Controls
             _grid = (Grid)GetTemplateChild(GridName);
             _overlay = (Rectangle)GetTemplateChild(OverlayName);
 
-            UpdateMarginAndAlignment();
+            //UpdateMarginAndAlignment();
             _templateAppliedCompletionSource?.SetResult(true);
         }
 
@@ -500,46 +503,6 @@ namespace P42.Uno.Controls
         #region Push / Pop
         public virtual async Task PushAsync()
         {
-            if (Parent is Grid parent)
-                parent.Children.Remove(this);
-
-            // put into VisualTree
-            if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
-            {
-                if (frame.Content is Page page)
-                {
-                    if (page.Content is Grid pageGrid)
-                    {
-                        var margin = pageGrid.Margin.Add(pageGrid.Padding).Negate();
-                        base.Margin = margin;
-                        var rows = Math.Max(pageGrid.RowDefinitions?.Count ?? 1, 1);
-                        var cols = Math.Max(pageGrid.ColumnDefinitions?.Count ?? 1, 1);
-                        Grid.SetRowSpan(this, rows);
-                        Grid.SetColumnSpan(this, cols);
-                        Canvas.SetZIndex(this, 10000);
-                        pageGrid.Children.Add(this);
-                    }
-                    else
-                        throw new Exception(GetType() + " only works on pages with a Grid as the root content");
-                }
-                else
-                    throw new Exception("Expecting Frame.Content to be a page.");
-            }
-            else
-                throw new Exception("no frame as of yet?");
-
-            // wait for Template application
-            if (_grid is null)
-            {
-                if (_templateAppliedCompletionSource is null)
-                {
-                    _templateAppliedCompletionSource = new TaskCompletionSource<bool>();
-                    await _templateAppliedCompletionSource.Task;
-                }
-                else
-                    return;
-            }
-
             if (PushPopState == PushPopState.Pushed || PushPopState == PushPopState.Pushing)
                 return;
 
@@ -557,7 +520,7 @@ namespace P42.Uno.Controls
             PushPopState = PushPopState.Pushing;
             _popCompletionSource = null;
 
-            _border.SizeChanged += OnBorderSizeChanged;
+            //_border.SizeChanged += OnBorderSizeChanged;
             //_popup.Closed += OnPopupClosed;
             PoppedCause = PopupPoppedCause.BackgroundTouch;
             PoppedTrigger = null;
@@ -566,6 +529,8 @@ namespace P42.Uno.Controls
 
             Opacity = 0.0;
             Visibility = Visibility.Visible;
+            await UpdateMarginAndAlignment();
+
             _overlay.Visibility = LightDismissOverlayMode == LightDismissOverlayMode.On
                     ? Visibility.Visible
                     : Visibility.Collapsed;
@@ -585,7 +550,6 @@ namespace P42.Uno.Controls
             await storyboard.BeginAsync();
 #endif
             Opacity = 1.0;
-            UpdateMarginAndAlignment();
 
             if (PopAfter > default(TimeSpan))
             {
@@ -744,10 +708,50 @@ namespace P42.Uno.Controls
             //return availableSize;
         }
 
-        void UpdateMarginAndAlignment(bool isAlignmentOnlyChange = false)
+        async Task UpdateMarginAndAlignment()
         {
-            if (_border is null)
-                return;
+            if (Parent is Grid parent)
+                parent.Children.Remove(this);
+
+            // put into VisualTree
+            if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
+            {
+                if (frame.Content is Page page)
+                {
+                    if (page.Content is Grid pageGrid)
+                    {
+                        var margin = pageGrid.Margin.Add(pageGrid.Padding).Negate();
+                        base.Margin = margin;
+                        var rows = Math.Max(pageGrid.RowDefinitions?.Count ?? 1, 1);
+                        var cols = Math.Max(pageGrid.ColumnDefinitions?.Count ?? 1, 1);
+                        Grid.SetRowSpan(this, rows);
+                        Grid.SetColumnSpan(this, cols);
+                        Canvas.SetZIndex(this, 10000);
+                        pageGrid.Children.Add(this);
+                    }
+                    else
+                        throw new Exception(GetType() + " only works on pages with a Grid as the root content");
+                }
+                else
+                    throw new Exception("Expecting Frame.Content to be a page.");
+            }
+            else
+                throw new Exception("no frame as of yet?");
+
+            // wait for Template application
+            if (_grid is null)
+            {
+                if (_templateAppliedCompletionSource is null)
+                {
+                    _templateAppliedCompletionSource = new TaskCompletionSource<bool>();
+                    await _templateAppliedCompletionSource.Task;
+                }
+                else
+                    return;
+            }
+
+
+
             _border.Margin = Margin;
 
             var windowSize = AppWindow.Size();
@@ -908,7 +912,7 @@ namespace P42.Uno.Controls
 
             _border.HorizontalAlignment = hzAlign;
             _border.VerticalAlignment = vtAlign;
-            _border.PointerDirection = PointerDirection.None;
+            _border.PointerDirection = ActualPointerDirection;
             /*
             var windowWidth = windowSize.Width;// - Margin.Horizontal();
             var windowHeight = windowSize.Height;// - Margin.Vertical();
