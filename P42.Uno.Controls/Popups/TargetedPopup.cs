@@ -913,6 +913,11 @@ namespace P42.Uno.Controls
             _border.HorizontalAlignment = hzAlign;
             _border.VerticalAlignment = vtAlign;
             _border.PointerDirection = ActualPointerDirection;
+
+#if __ANDROID__
+            _grid.Measure(windowSize);
+            _grid.Arrange(new Rect(0, 0, windowSize.Width, windowSize.Height));
+#endif
             /*
             var windowWidth = windowSize.Width;// - Margin.Horizontal();
             var windowHeight = windowSize.Height;// - Margin.Vertical();
@@ -962,7 +967,7 @@ namespace P42.Uno.Controls
                 FreeSpace = new Size(0,0)
             };
 
-            #region Check if clean border fits in preferred pointer quadrants
+#region Check if clean border fits in preferred pointer quadrants
             // see if the existing measurement data works
             var prefStats = GetRectangleBorderStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace);
             // At this point in time, only valid fits are in the stats list
@@ -972,9 +977,9 @@ namespace P42.Uno.Controls
                 //if (minFree >=0)  // At this point in time, only valid fits are in the stats list
                     return stat;
             }
-            #endregion
+#endregion
 
-            #region Check if border + content could fit in any of the preferred pointer quadrants
+#region Check if border + content could fit in any of the preferred pointer quadrants
             // at this point in time valid and invalid fits are in the stats list
             prefStats = GetMeasuredStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace, windowSpace);
 
@@ -984,12 +989,12 @@ namespace P42.Uno.Controls
                 if (minFree >= 0)
                     return stat;
             }
-            #endregion
+#endregion
 
             // the stats list only contains invalid fallback fits ... but perhaps not all fallback fits have yet been tried
             var uncheckedFallbackPointerDirection = (FallbackPointerDirection ^ PreferredPointerDirection) | FallbackPointerDirection;
 
-            #region Check if clean border fits in unchecked fallback pointer quadrants
+#region Check if clean border fits in unchecked fallback pointer quadrants
             var fallbackStats = GetRectangleBorderStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace);
             if (fallbackStats.Count > 0)
             {
@@ -997,9 +1002,9 @@ namespace P42.Uno.Controls
                 //if (minFree >=0)  // At this point in time, only valid fits are in the stats list
                 return stat;
             }
-            #endregion
+#endregion
 
-            #region Check if border + content could fit in any of the unchecked fallback pointer quadrants
+#region Check if border + content could fit in any of the unchecked fallback pointer quadrants
             fallbackStats = GetMeasuredStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace, windowSpace);
 
             if (fallbackStats.Count > 0)
@@ -1008,7 +1013,7 @@ namespace P42.Uno.Controls
                 if (minFree >= 0)
                     return stat;
             }
-            #endregion
+#endregion
 
             return cleanStat;
         }
@@ -1250,7 +1255,7 @@ namespace P42.Uno.Controls
         }
 #endif
 
-        #endregion
+#endregion
 
     }
 }
