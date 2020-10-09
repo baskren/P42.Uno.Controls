@@ -44,8 +44,8 @@
     <PackageReference Include="Uno.SkiaSharp.Wasm" Version="2.80.0-uno.483" />
     <PackageReference Include="Uno.UI.WebAssembly" Version="3.1.0-dev.728" />
     <PackageReference Include="Uno.UI.RemoteControl" Version="3.1.0-dev.728" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Uno.Wasm.Bootstrap" Version="1.5.0-dev.57" />
-    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.5.0-dev.57" />
+    <PackageReference Include="Uno.Wasm.Bootstrap" Version="1.4.0-dev.52" />
+    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.4.0-dev.52" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.csproj" />
