@@ -592,11 +592,13 @@ namespace P42.Uno.Controls
             await OnPushBeginAsync();
 
             Opacity = 0.0;
+            // Visibility needs to be BEFORE UpdateMarginAndAlignment in order to trigger OnApplyTemplate()
             Visibility = Visibility.Visible;
             await UpdateMarginAndAlignment();
 
             if (_firstPush)
             {
+                // requiired to render popup the first time.
                 Visibility = Visibility.Collapsed;
                 await Task.Delay(50);
                 Visibility = Visibility.Visible;
