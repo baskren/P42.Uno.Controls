@@ -589,16 +589,23 @@ namespace P42.Uno.Controls
             PoppedCause = PopupPoppedCause.BackgroundTouch;
             PoppedTrigger = null;
 
-            if (!_firstPush)
-                await OnPushBeginAsync();
+            await OnPushBeginAsync();
 
             Opacity = 0.0;
             Visibility = Visibility.Visible;
             await UpdateMarginAndAlignment();
 
+            if (_firstPush)
+            {
+                Visibility = Visibility.Collapsed;
+                await Task.Delay(50);
+                Visibility = Visibility.Visible;
+                _firstPush = false;
+            }
+
             //_border.SizeChanged += OnBorderSizeChanged;
             _border.Opacity = 1.0;
-            _overlay.Visibility = !_firstPush && LightDismissOverlayMode == LightDismissOverlayMode.On
+            _overlay.Visibility = LightDismissOverlayMode == LightDismissOverlayMode.On
                     ? Visibility.Visible
                     : Visibility.Collapsed;
             _overlay.PointerPressed += OnDismissPointerPressed;
@@ -620,32 +627,22 @@ namespace P42.Uno.Controls
             }
 #endif
 
-            if (_firstPush)
+            Opacity = 1.0;
+            if (PopAfter > default(TimeSpan))
             {
-                _firstPush = false;
-                PushPopState = PushPopState.Popped;
-                Visibility = Visibility.Collapsed;
-                await Task.Delay(50);
-                await PushAsync();
-            }
-            else
-            {
-                Opacity = 1.0;
-                if (PopAfter > default(TimeSpan))
+                Device.StartTimer(PopAfter, () =>
                 {
-                    Device.StartTimer(PopAfter, () =>
-                    {
-                        PopAsync(PopupPoppedCause.Timeout, "Timeout");
-                        return false;
-                    });
-                }
-
-                await OnPushEndAsync();
-
-                PushPopState = PushPopState.Pushed;
-                Pushed?.Invoke(this, EventArgs.Empty);
-                _pushCompletionSource?.SetResult(true);
+                    PopAsync(PopupPoppedCause.Timeout, "Timeout");
+                    return false;
+                });
             }
+
+            await OnPushEndAsync();
+
+            PushPopState = PushPopState.Pushed;
+            Pushed?.Invoke(this, EventArgs.Empty);
+            _pushCompletionSource?.SetResult(true);
+            
         }
 
         public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, [CallerMemberName] object trigger = null)
