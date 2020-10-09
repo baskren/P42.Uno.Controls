@@ -8,7 +8,8 @@
         <ResourceDictionary Source="ms-appx:///P42.Uno.Controls/Popups/Toast.xaml" />
         <ResourceDictionary Source="ms-appx:///P42.Uno.Controls/Popups/Alert.xaml" />
         <ResourceDictionary Source="ms-appx:///P42.Uno.Controls/Popups/PermissionPopup.xaml" />
-        <ResourceDictionary Source="ms-appx:///P42.Uno.Controls/ContentAndDetailPresenter/ContentAndDetailPresenter.xaml" />
+        <ResourceDictionary Source="ms-appx:///P42.Uno.Controls/ContentAndDetailPresenters/ContentAndDetailPresenter.xaml" />
+        <ResourceDictionary Source="ms-appx:///P42.Uno.Controls/ContentAndDetailPresenters/ListAndDetailPresenter.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

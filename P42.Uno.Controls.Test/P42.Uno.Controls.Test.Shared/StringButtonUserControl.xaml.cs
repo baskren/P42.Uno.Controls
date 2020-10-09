@@ -18,8 +18,10 @@ using Windows.UI.Xaml.Navigation;
 
 namespace P42.Uno.Controls.Test
 {
-    public partial class StringButtonUserControl : UserControl
+    public partial class StringButtonUserControl : UserControl, IListAndDetailDataTemplate
     {
+        #region Properties
+
         #region BindingContext Property
         public static readonly DependencyProperty BindingContextProperty = DependencyProperty.Register(
             nameof(BindingContext),
@@ -38,6 +40,15 @@ namespace P42.Uno.Controls.Test
             set => SetValue(BindingContextProperty, value);
         }
         #endregion BindingContext Property
+
+        WeakReference _weakContentAndDetailPresenter;
+        public ListAndDetailPresenter ListAndDetailPresenter
+        {
+            get => (ListAndDetailPresenter)_weakContentAndDetailPresenter.Target;
+            set => _weakContentAndDetailPresenter = new WeakReference(value);
+        }
+
+        #endregion
 
         public StringButtonUserControl()
         {
@@ -62,12 +73,14 @@ namespace P42.Uno.Controls.Test
 
         private void OnDataContextChanged(DependencyObject sender, DependencyProperty dp)
         {
+            // works in Uno but not UWP?!?!
             System.Diagnostics.Debug.WriteLine(GetType() + ".OnDataContextChanged sender:" + sender + " dp:" + dp);
         }
 
         async void BorderTapped(object sender, TappedRoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(GetType() + ".BorderTapped: sender:" + sender + " e.PointerDeviceType:" + e.PointerDeviceType);
+
         }
 
     }

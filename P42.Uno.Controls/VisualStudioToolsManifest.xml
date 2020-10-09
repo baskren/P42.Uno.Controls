@@ -1,7 +1,0 @@
-﻿<FileList>
-  <File Reference="P42.Uno.Controls.dll">
-    <ToolboxItems VSCategory="P42 Uno Controls" BlendCategory="P42 Uno Controls">
-      <Item Type="P42.Uno.Controls.TargetedPopup" />
-    </ToolboxItems>
-  </File>
-</FileList>

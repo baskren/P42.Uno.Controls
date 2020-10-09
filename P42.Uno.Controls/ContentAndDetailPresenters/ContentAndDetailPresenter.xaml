@@ -1,0 +1,53 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:local="using:P42.Uno.Controls">
+
+
+    <Style TargetType="local:ContentAndDetailPresenter">
+        <Setter Property="DetailPaneBackground" Value="{StaticResource SystemControlBackgroundBaseLowBrush}" />
+        <Setter Property="LightDismissOverlayColor" Value="{StaticResource SystemAltMediumColor}" />
+        <Setter Property="Template" Value="{StaticResource BaseContentAndDetailPresenterTemplate}" />
+    </Style>
+
+    <ControlTemplate x:Key="BaseContentAndDetailPresenterTemplate" TargetType="local:ContentAndDetailPresenter">
+        <Grid x:Name="_grid">
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="_row0" Height="*" />
+                <RowDefinition x:Name="_row1" Height="0" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="_col0" Width="*" />
+                <ColumnDefinition x:Name="_col1" Width="0" />
+            </Grid.ColumnDefinitions>
+            <ContentPresenter Content="{TemplateBinding Content}" />
+            <Rectangle
+                x:Name="_lightDismissOverlay"
+                Fill="{TemplateBinding LightDismissOverlayBrush}"
+                Visibility="Collapsed" />
+            <Border
+                x:Name="_detailPaneBorder"
+                Grid.Row="1"
+                Grid.Column="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="{TemplateBinding DetailPaneBackground}"
+                Visibility="Collapsed">
+                <ContentPresenter
+                    x:Name="_detailPaneContentPresenter"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch" />
+            </Border>
+            <local:TargetedPopup
+                x:Name="_targetedPopup"
+                Opacity="0"
+                PreferredPointerDirection="Any"
+                Target="{TemplateBinding Target}">
+                <ContentPresenter x:Name="_detailPopupContentPresenter" />
+            </local:TargetedPopup>
+        </Grid>
+    </ControlTemplate>
+
+
+</ResourceDictionary>

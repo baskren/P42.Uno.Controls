@@ -43,10 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-    <Compile Remove="SummaryDetailView\SummaryDetailView.cs" />
-    <None Remove="Popups\Alert.xaml" />
-    <None Remove="Popups\PermissionPopup.xaml" />
-    <None Remove="Popups\Toast.xaml" />
     <Compile Update="**\*.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
@@ -60,6 +56,10 @@
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Themes\generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Popups\BubbleBorder.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -68,27 +68,24 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Themes\generic.xaml">
+    <EmbeddedResource Include="Popups\Alert.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Popups\Toast.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Popups\PermissionPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContentAndDetailPresenters\ContentAndDetailPresenter.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ContentAndDetailPresenter\" />
-    <Folder Include="SummaryDetailView\" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Xamarin.Essentials" Version="1.3.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Popups\Alert.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Popups\PermissionPopup.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Popups\Toast.xaml">
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
 </Project>

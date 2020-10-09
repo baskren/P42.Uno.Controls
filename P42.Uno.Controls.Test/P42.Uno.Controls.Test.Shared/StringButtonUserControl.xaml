@@ -8,15 +8,26 @@
     x:Name="_userControl"
     mc:Ignorable="d">
 
-    <Button
-        x:Name="_textBlock"
-        Padding="20,2,20,2"
+    <Grid
+        x:Name="_grid"
         HorizontalAlignment="Stretch"
-        HorizontalContentAlignment="Right"
-        Background="Beige"
-        BorderBrush="Green"
-        BorderThickness="1"
-        Content="{Binding}"
-        CornerRadius="5"
-        Tapped="BorderTapped" />
+        VerticalAlignment="Stretch">
+        <Rectangle
+            x:Name="_rectangle"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Fill="Gray" />
+        <Button
+            x:Name="_button"
+            Padding="20,2,20,2"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Right"
+            Background="Beige"
+            BorderBrush="Green"
+            BorderThickness="1"
+            Content="{Binding}"
+            CornerRadius="5"
+            Opacity="0"
+            Tapped="BorderTapped" />
+    </Grid>
 </UserControl>
