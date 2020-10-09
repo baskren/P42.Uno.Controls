@@ -2,40 +2,23 @@
 using P42.Utils.Uno;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Uno.Extensions;
 using Uno.Extensions.ValueType;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 
-#if NETFX_CORE
-using Popup = Windows.UI.Xaml.Controls.Primitives.Popup;
-#else
-using Popup = Windows.UI.Xaml.Controls.Popup;
-#endif
-
-
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace P42.Uno.Controls
 {
-    
+
     [TemplatePart(Name = ContentPresenterName, Type = typeof(ContentPresenter))]
     [TemplatePart(Name = BorderElementName, Type = typeof(BubbleBorder))]
     [TemplatePart(Name = GridName, Type = typeof(Grid))]
@@ -762,7 +745,6 @@ namespace P42.Uno.Controls
                 return;
             await UpdateMarginAndAlignment();
         }
-
         #endregion
 
 
@@ -770,17 +752,11 @@ namespace P42.Uno.Controls
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") ================================================  margin: "+ Margin);
             if (IsEmpty)
-                //return new Size(50 + Padding.Horizontal(), 50 + Padding.Vertical());
                 return AppWindow.Size();
-
-            availableSize.Width -= Margin.Horizontal();
-            availableSize.Height -= Margin.Vertical();
 
             _border.Measure(AppWindow.Size());
             return AppWindow.Size();
-            //return availableSize;
         }
 
         async Task UpdateMarginAndAlignment()
@@ -805,7 +781,6 @@ namespace P42.Uno.Controls
 
             var targetBounds = TargetBounds();
 
-
             System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateBorderMarginAndAlignment targetBounds:["+targetBounds+"]");
             var availableSpace = AvailableSpace(targetBounds);
             var stats = BestFit(availableSpace, cleanSize);
@@ -826,10 +801,6 @@ namespace P42.Uno.Controls
                 {
                     borderMargin.Left = targetBounds.Right;
                     base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment == HorizontalAlignment.Stretch ? HorizontalAlignment.Stretch : HorizontalAlignment.Left;
-                    System.Diagnostics.Debug.WriteLine("\t stats.PointerDirection == PointerDirection.Left");
-                    System.Diagnostics.Debug.WriteLine("\t targetBounds:[" + targetBounds + "]");
-                    System.Diagnostics.Debug.WriteLine("\t stats.BorderSize:[" + stats.BorderSize + "]");
-                    System.Diagnostics.Debug.WriteLine("\t baseMargin:[" + borderMargin + "]");
                 }
                 else
                 {
@@ -841,10 +812,6 @@ namespace P42.Uno.Controls
                     {
                         borderMargin.Left = targetBounds.Left - stats.BorderSize.Width - PointerLength;
                         base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
-                        System.Diagnostics.Debug.WriteLine("\t targetBounds.Left:[" + targetBounds.Left + "]");
-                        System.Diagnostics.Debug.WriteLine("\t stats.BorderSize.Width:[" + stats.BorderSize.Width + "]");
-                        System.Diagnostics.Debug.WriteLine("\t PointerLength:[" + PointerLength + "]");
-                        System.Diagnostics.Debug.WriteLine("\t baseMargin:[" + borderMargin + "]");
                     }
                 }
 
@@ -930,8 +897,7 @@ namespace P42.Uno.Controls
         }
 
         void CleanMarginAndAlignment(HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size cleanSize)
-        {             //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment");
-
+        {
             ActualPointerDirection = PointerDirection.None;
 
             if (_border is null)
@@ -955,7 +921,6 @@ namespace P42.Uno.Controls
 
         DirectionStats BestFit(Thickness availableSpace, Size cleanSize)
         {
-            //var stats = new List<DirectionStats>();
             // given the amount of free space, determine if the border will fit 
             var windowSpace = new Size(AppWindow.Size().Width - Margin.Horizontal(), AppWindow.Size().Height - Margin.Vertical());
             var cleanStat = new DirectionStats
@@ -965,7 +930,7 @@ namespace P42.Uno.Controls
                 FreeSpace = new Size(0,0)
             };
 
-#region Check if clean border fits in preferred pointer quadrants
+            #region Check if clean border fits in preferred pointer quadrants
             // see if the existing measurement data works
             var prefStats = GetRectangleBorderStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace);
             // At this point in time, only valid fits are in the stats list
@@ -975,9 +940,9 @@ namespace P42.Uno.Controls
                 //if (minFree >=0)  // At this point in time, only valid fits are in the stats list
                     return stat;
             }
-#endregion
+            #endregion
 
-#region Check if border + content could fit in any of the preferred pointer quadrants
+            #region Check if border + content could fit in any of the preferred pointer quadrants
             // at this point in time valid and invalid fits are in the stats list
             prefStats = GetMeasuredStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace, windowSpace);
 
@@ -987,12 +952,12 @@ namespace P42.Uno.Controls
                 if (minFree >= 0)
                     return stat;
             }
-#endregion
+            #endregion
 
             // the stats list only contains invalid fallback fits ... but perhaps not all fallback fits have yet been tried
             var uncheckedFallbackPointerDirection = (FallbackPointerDirection ^ PreferredPointerDirection) | FallbackPointerDirection;
 
-#region Check if clean border fits in unchecked fallback pointer quadrants
+            #region Check if clean border fits in unchecked fallback pointer quadrants
             var fallbackStats = GetRectangleBorderStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace);
             if (fallbackStats.Count > 0)
             {
@@ -1000,9 +965,9 @@ namespace P42.Uno.Controls
                 //if (minFree >=0)  // At this point in time, only valid fits are in the stats list
                 return stat;
             }
-#endregion
+            #endregion
 
-#region Check if border + content could fit in any of the unchecked fallback pointer quadrants
+            #region Check if border + content could fit in any of the unchecked fallback pointer quadrants
             fallbackStats = GetMeasuredStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace, windowSpace);
 
             if (fallbackStats.Count > 0)
@@ -1011,7 +976,7 @@ namespace P42.Uno.Controls
                 if (minFree >= 0)
                     return stat;
             }
-#endregion
+            #endregion
 
             return cleanStat;
         }
@@ -1025,7 +990,6 @@ namespace P42.Uno.Controls
             double targetTop = (Target is null ? TargetPoint.Y : targetBounds.Top) - PointerMargin;
             double targetBottom = (Target is null ? TargetPoint.Y : targetBounds.Bottom) + PointerMargin;
 
-
             return new Rect(targetLeft, targetTop, targetRight - targetLeft, targetBottom - targetTop);
         }
 
@@ -1034,7 +998,6 @@ namespace P42.Uno.Controls
             var windowBounds = AppWindow.Size();
             if (Target != null || (TargetPoint.X > 0 || TargetPoint.Y > 0))
             {
-
                 if (target.Right > 0 && target.Left < windowBounds.Width && target.Bottom > 0 && target.Top < windowBounds.Height)
                 {
                     var availL = target.Left - Margin.Left;
@@ -1063,10 +1026,11 @@ namespace P42.Uno.Controls
                     return new Thickness(availL, availT, availR, availB);
                 }
             }
+
             if (PointToOffScreenElements)
                 return new Thickness(windowBounds.Width - Margin.Horizontal(), windowBounds.Height - Margin.Vertical(), windowBounds.Width - Margin.Horizontal(), windowBounds.Height - Margin.Vertical());
-            return new Thickness(-1, -1, -1, -1);
 
+            return new Thickness(-1, -1, -1, -1);
         }
 
         List<DirectionStats> GetRectangleBorderStatsForDirection(PointerDirection pointerDirection, DirectionStats cleanStat, Thickness availableSpace)
@@ -1085,6 +1049,7 @@ namespace P42.Uno.Controls
                     stats.Add(stat);
                 }
             }
+
             if (pointerDirection.RightAllowed() && cleanStat.FreeSpace.Width >= PointerLength)
             {
                 var stat = cleanStat;
@@ -1097,6 +1062,7 @@ namespace P42.Uno.Controls
                     stats.Add(stat);
                 }
             }
+
             if (pointerDirection.UpAllowed() && cleanStat.FreeSpace.Height >= PointerLength)
             {
                 var stat = cleanStat;
@@ -1109,6 +1075,7 @@ namespace P42.Uno.Controls
                     stats.Add(stat);
                 }
             }
+
             if (pointerDirection.DownAllowed() && cleanStat.FreeSpace.Height >= PointerLength)
             {
                 var stat = cleanStat;
@@ -1121,6 +1088,7 @@ namespace P42.Uno.Controls
                     stats.Add(stat);
                 }
             }
+
             return stats;
         }
 
@@ -1144,6 +1112,7 @@ namespace P42.Uno.Controls
                     }
                 }
             }
+
             if (pointerDirection.RightAllowed())
             {
                 if (availableSpace.Left > 0)
@@ -1161,6 +1130,7 @@ namespace P42.Uno.Controls
                     }
                 }
             }
+
             if (pointerDirection.UpAllowed())
             {
                 if (availableSpace.Bottom > 0)
@@ -1178,6 +1148,7 @@ namespace P42.Uno.Controls
                     }
                 }
             }
+
             if (pointerDirection.DownAllowed())
             {
                 if (availableSpace.Top > 0)
@@ -1195,6 +1166,7 @@ namespace P42.Uno.Controls
                     }
                 }
             }
+
             return stats;
         }
 
@@ -1218,11 +1190,11 @@ namespace P42.Uno.Controls
                 result.Height += Padding.Vertical();
                 return result;
             }
+
             return failSize;
         }
 
-
-#endregion
+        #endregion
 
     }
 }
