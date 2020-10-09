@@ -5,13 +5,13 @@
     xmlns:local="using:P42.Uno.Controls">
 
 
-    <Style TargetType="local:SummaryDetailView">
+    <Style TargetType="local:ContentAndDetailPresenter">
         <Setter Property="DetailPaneBackground" Value="{StaticResource SystemControlBackgroundBaseLowBrush}" />
         <Setter Property="LightDismissOverlayColor" Value="{StaticResource SystemAltMediumColor}" />
-        <Setter Property="Template" Value="{StaticResource BaseSummaryDetailViewTemplate}" />
+        <Setter Property="Template" Value="{StaticResource BaseContentAndDetailPresenterTemplate}" />
     </Style>
 
-    <ControlTemplate x:Key="BaseSummaryDetailViewTemplate" TargetType="local:SummaryDetailView">
+    <ControlTemplate x:Key="BaseContentAndDetailPresenterTemplate" TargetType="local:ContentAndDetailPresenter">
         <Grid x:Name="_grid">
             <Grid.RowDefinitions>
                 <RowDefinition x:Name="_row0" Height="*" />

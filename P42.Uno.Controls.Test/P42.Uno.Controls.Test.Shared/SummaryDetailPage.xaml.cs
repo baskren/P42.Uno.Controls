@@ -27,14 +27,24 @@ namespace P42.Uno.Controls.Test
         {
             this.InitializeComponent();
             _listView.ItemsSource = new List<string> { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty" };
+            _listView.ItemClick += OnItemClick;
+            //_listView.SelectionMode = ListViewSelectionMode.Single;
+            _listView.IsItemClickEnabled = true;
+        }
+
+        private void OnItemClick(object sender, ItemClickEventArgs e)
+        {
+            
+            System.Diagnostics.Debug.WriteLine(GetType() + ".OnItemClick: sender:" + sender + "  e.ClickedItem:" + e.ClickedItem + " e.OriginalSource:" + e.OriginalSource);
         }
 
         async void BorderTapped(object sender, TappedRoutedEventArgs e)
         {
-            _summaryDetailView.Target = (UIElement)sender;
-            _summaryDetailView.Detail = new TextBlock { Text = ((Button)sender).Content as string };
-            await _summaryDetailView.PushDetail();
+            _ContentAndDetailPresenter.Target = (UIElement)sender;
+            _ContentAndDetailPresenter.Detail = new TextBlock { Text = ((Button)sender).Content as string };
+            await _ContentAndDetailPresenter.PushDetail();
         }
+
 
 
     }

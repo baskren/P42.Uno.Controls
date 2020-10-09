@@ -10,7 +10,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <pCtrl:SummaryDetailView x:Name="_summaryDetailView">
+        <pCtrl:ContentAndDetailPresenter x:Name="_ContentAndDetailPresenter">
             <ListView x:Name="_listView">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -23,11 +23,13 @@
                             BorderThickness="1"
                             Content="{Binding}"
                             CornerRadius="5"
-                            Tapped="BorderTapped">
-                        </Button>
+                            Tapped="BorderTapped" />
+                        <!--
+                        <local:StringButtonUserControl BindingContext="{Binding}" />
+                        -->
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        </pCtrl:SummaryDetailView>
+        </pCtrl:ContentAndDetailPresenter>
     </Grid>
 </Page>
