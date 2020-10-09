@@ -494,22 +494,61 @@ namespace P42.Uno.Controls
         TaskCompletionSource<bool> _templateAppliedCompletionSource;
         protected override void OnApplyTemplate()
         {
-            var template = Template;
-            var targetType = template.TargetType;
-
             base.OnApplyTemplate();
-            var cp = GetTemplateChild(ContentPresenterName);
-            _contentPresenter = (ContentPresenter)cp;
-            var b  = GetTemplateChild(BorderElementName);
-            _border = (BubbleBorder)b;
+            _contentPresenter = (ContentPresenter)GetTemplateChild(ContentPresenterName); ;
+            _border = (BubbleBorder)GetTemplateChild(BorderElementName); ;
             _border.HorizontalAlignment = HorizontalAlignment;
             _border.VerticalAlignment = VerticalAlignment;
             _border.PointerLength = PointerLength;
+            //_border.Measure(AppWindow.Size());
             _grid = (Grid)GetTemplateChild(GridName);
             _overlay = (Rectangle)GetTemplateChild(OverlayName);
 
             //UpdateMarginAndAlignment();
             _templateAppliedCompletionSource?.SetResult(true);
+        }
+
+        async Task AssureGraft()
+        {
+            Grid parentGrid = null;
+            if (Parent is Grid parent)
+                parentGrid = parent;
+
+            // put into VisualTree
+            if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
+            {
+                if (frame.Content is Page page)
+                {
+                    if (page.Content is Grid pageGrid)
+                    {
+                        var margin = pageGrid.Margin.Add(pageGrid.Padding).Negate();
+                        base.Margin = margin;
+                        var rows = Math.Max(pageGrid.RowDefinitions?.Count ?? 1, 1);
+                        var cols = Math.Max(pageGrid.ColumnDefinitions?.Count ?? 1, 1);
+                        Grid.SetRowSpan(this, rows);
+                        Grid.SetColumnSpan(this, cols);
+                        Canvas.SetZIndex(this, 10000);
+                        if (pageGrid != parentGrid)
+                        {
+                            parentGrid?.Children.Remove(this);
+                            pageGrid.Children.Add(this);
+                        }
+                    }
+                    else
+                        throw new Exception(GetType() + " only works on pages with a Grid as the root content");
+                }
+                else
+                    throw new Exception("Expecting Frame.Content to be a page.");
+            }
+            else
+                throw new Exception("no frame as of yet?");
+
+            // wait for Template application
+            if (_grid is null)
+            {
+                _templateAppliedCompletionSource = _templateAppliedCompletionSource ?? new TaskCompletionSource<bool>();
+                await _templateAppliedCompletionSource.Task;
+            }
         }
 
         #endregion
@@ -527,6 +566,7 @@ namespace P42.Uno.Controls
 
 
         #region Push / Pop
+        bool _firstPush = true;
         public virtual async Task PushAsync()
         {
             if (PushPopState == PushPopState.Pushed || PushPopState == PushPopState.Pushing)
@@ -546,24 +586,25 @@ namespace P42.Uno.Controls
             PushPopState = PushPopState.Pushing;
             _popCompletionSource = null;
 
-            //_border.SizeChanged += OnBorderSizeChanged;
-            //_popup.Closed += OnPopupClosed;
             PoppedCause = PopupPoppedCause.BackgroundTouch;
             PoppedTrigger = null;
 
-            await OnPushBeginAsync();
+            if (!_firstPush)
+                await OnPushBeginAsync();
 
             Opacity = 0.0;
             Visibility = Visibility.Visible;
             await UpdateMarginAndAlignment();
 
-            _overlay.Visibility = LightDismissOverlayMode == LightDismissOverlayMode.On
+            //_border.SizeChanged += OnBorderSizeChanged;
+            _border.Opacity = 1.0;
+            _overlay.Visibility = !_firstPush && LightDismissOverlayMode == LightDismissOverlayMode.On
                     ? Visibility.Visible
                     : Visibility.Collapsed;
             _overlay.PointerPressed += OnDismissPointerPressed;
 
 #if NETFX_CORE
-            if (IsAnimated)
+            if (IsAnimated && !_firstPush)
             {
                 var storyboard = new Storyboard();
                 var opacityAnimation = new DoubleAnimation
@@ -578,22 +619,33 @@ namespace P42.Uno.Controls
                 await storyboard.BeginAsync();
             }
 #endif
-            Opacity = 1.0;
 
-            if (PopAfter > default(TimeSpan))
+            if (_firstPush)
             {
-                Device.StartTimer(PopAfter, () =>
-                {
-                    PopAsync(PopupPoppedCause.Timeout, "Timeout");
-                    return false;
-                });
+                _firstPush = false;
+                PushPopState = PushPopState.Popped;
+                Visibility = Visibility.Collapsed;
+                await Task.Delay(50);
+                await PushAsync();
             }
+            else
+            {
+                Opacity = 1.0;
+                if (PopAfter > default(TimeSpan))
+                {
+                    Device.StartTimer(PopAfter, () =>
+                    {
+                        PopAsync(PopupPoppedCause.Timeout, "Timeout");
+                        return false;
+                    });
+                }
 
-            await OnPushEndAsync();
+                await OnPushEndAsync();
 
-            PushPopState = PushPopState.Pushed;
-            Pushed?.Invoke(this, EventArgs.Empty);
-            _pushCompletionSource?.SetResult(true);
+                PushPopState = PushPopState.Pushed;
+                Pushed?.Invoke(this, EventArgs.Empty);
+                _pushCompletionSource?.SetResult(true);
+            }
         }
 
         public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, [CallerMemberName] object trigger = null)
@@ -705,11 +757,11 @@ namespace P42.Uno.Controls
 
 
         #region Event Handlers
-        private void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
+        async void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
         {
             if (args.NewSize.Width < 1 || args.NewSize.Height < 1)
                 return;
-            UpdateMarginAndAlignment();
+            await UpdateMarginAndAlignment();
         }
 
         #endregion
@@ -734,54 +786,7 @@ namespace P42.Uno.Controls
 
         async Task UpdateMarginAndAlignment()
         {
-            Grid parentGrid = null;
-            if (Parent is Grid parent)
-                parentGrid = parent;
-
-            // put into VisualTree
-            if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
-            {
-                if (frame.Content is Page page)
-                {
-                    if (page.Content is Grid pageGrid)
-                    {
-                        var margin = pageGrid.Margin.Add(pageGrid.Padding).Negate();
-                        base.Margin = margin;
-                        var rows = Math.Max(pageGrid.RowDefinitions?.Count ?? 1, 1);
-                        var cols = Math.Max(pageGrid.ColumnDefinitions?.Count ?? 1, 1);
-                        Grid.SetRowSpan(this, rows);
-                        Grid.SetColumnSpan(this, cols);
-                        Canvas.SetZIndex(this, 10000);
-                        if (pageGrid != parentGrid)
-                        {
-                            parentGrid?.Children.Remove(this);
-                            pageGrid.Children.Add(this);
-                            //await Task.Delay(100);
-                            return;
-                        }
-                    }
-                    else
-                        throw new Exception(GetType() + " only works on pages with a Grid as the root content");
-                }
-                else
-                    throw new Exception("Expecting Frame.Content to be a page.");
-            }
-            else
-                throw new Exception("no frame as of yet?");
-
-            // wait for Template application
-            if (_grid is null)
-            {
-                if (_templateAppliedCompletionSource is null)
-                {
-                    _templateAppliedCompletionSource = new TaskCompletionSource<bool>();
-                    await _templateAppliedCompletionSource.Task;
-                }
-                else
-                    return;
-            }
-
-
+            await AssureGraft();
 
             _border.Margin = Margin;
 
