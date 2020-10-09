@@ -297,7 +297,7 @@ namespace P42.Uno.Controls
                 var contentPresenter = _contentPresenter;
                 while (contentPresenter?.Content is ContentPresenter cp)
                     contentPresenter = cp;
-                return contentPresenter.Content is null;
+                return contentPresenter?.Content is null;
             }
         }
 

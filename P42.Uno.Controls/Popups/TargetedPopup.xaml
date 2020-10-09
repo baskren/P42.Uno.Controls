@@ -62,6 +62,7 @@
                     TextWrapping="WrapWholeWords" />
             </local:BubbleBorder>
         </Grid>
+
     </ControlTemplate>
 
 

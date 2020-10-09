@@ -27,10 +27,7 @@ namespace P42.Uno.Controls
 
         public Toast()
         {
-            this.DefaultStyleKey = typeof(Toast);
-
-            //var template = Application.Current.Resources["TargetedToastPopupTemplate"] as ControlTemplate;
-            //Template = template;
+            DefaultStyleKey = typeof(Toast);
         }
     }
 }

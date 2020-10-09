@@ -20,14 +20,23 @@
     </Style>
 
     <ControlTemplate x:Key="PermissionPopupTemplate" TargetType="local:PermissionPopup">
-        <Popup
-            x:Name="TargetedPopup_Popup"
-            IsLightDismissEnabled="True"
-            IsOpen="False"
-            LightDismissOverlayMode="On">
-            <local:BubbleBorder
-                x:Name="TargetedPopup_Popup_Border"
+
+        <Grid
+            x:Name="_grid"
+            Margin="0"
+            Padding="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+            <Rectangle
+                x:Name="_overlay"
                 Margin="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Fill="{TemplateBinding LightDismissOverlayBrush}"
+                Opacity="1.0"
+                Visibility="Collapsed" />
+            <local:BubbleBorder
+                x:Name="_border"
                 Padding="{TemplateBinding Padding}"
                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -88,7 +97,8 @@
                     </StackPanel.Children>
                 </StackPanel>
             </local:BubbleBorder>
-        </Popup>
+        </Grid>
+
     </ControlTemplate>
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -65,15 +66,11 @@ namespace P42.Uno.Controls
         Button _okButton;
         #endregion
 
+
+        #region Construction / Initialization
         public Alert() : base()
         {
-            this.DefaultStyleKey = typeof(Alert);
-            /*
-            var style = Style;
-            var template = Application.Current.Resources["AlertPopupTemplate"] as ControlTemplate;
-            System.Diagnostics.Debug.WriteLine(GetType() + ".Alert ctr template:" + template + "  style:"+style);
-            Template = template;
-            */
+            DefaultStyleKey = typeof(Alert);
         }
 
         protected override void OnApplyTemplate()
@@ -81,25 +78,30 @@ namespace P42.Uno.Controls
             base.OnApplyTemplate();
             _okButton = GetTemplateChild(OkButtonName) as Button;
         }
+        #endregion
 
 
-        public override async Task PushAsync()
-        {
-            _okButton.Click += OnOkButtonClicked;
-            await base.PushAsync();
-        }
-
-        protected override void OnPopupClosed(object sender, object e)
-        {
-            _okButton.Click -= OnOkButtonClicked;
-            base.OnPopupClosed(sender, e);
-        }
-
+        #region Event Handlers
         async void OnOkButtonClicked(object sender, RoutedEventArgs e)
         {
             await PopAsync(PopupPoppedCause.ButtonTapped, sender);
         }
+        #endregion
 
+
+        #region Push / Pop
+        public override async Task PushAsync()
+        {
+            await base.PushAsync();
+            _okButton.Click += OnOkButtonClicked;
+        }
+
+        public override async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, [CallerMemberName] object trigger = null)
+        {
+            _okButton.Click -= OnOkButtonClicked;
+            await base.PopAsync(cause, trigger);
+        }
+        #endregion
 
     }
 }

@@ -439,6 +439,21 @@ namespace P42.Uno.Controls
                 return contentPresenter.Content is null;
             }
         }
+
+        #region IsAnimated Property
+        public static readonly DependencyProperty IsAnimatedProperty = DependencyProperty.Register(
+            nameof(IsAnimated),
+            typeof(bool),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(bool))
+        );
+        public bool IsAnimated
+        {
+            get => (bool)GetValue(IsAnimatedProperty);
+            set => SetValue(IsAnimatedProperty, value);
+        }
+        #endregion IsAnimated Property
+
         #endregion
 
 
@@ -500,6 +515,17 @@ namespace P42.Uno.Controls
         #endregion
 
 
+        #region Event Handlers
+        async void OnDismissPointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (IsLightDismissEnabled)
+            {
+                await PopAsync();
+            }
+        }
+        #endregion
+
+
         #region Push / Pop
         public virtual async Task PushAsync()
         {
@@ -537,17 +563,20 @@ namespace P42.Uno.Controls
             _overlay.PointerPressed += OnDismissPointerPressed;
 
 #if NETFX_CORE
-            var storyboard = new Storyboard();
-            var opacityAnimation = new DoubleAnimation
+            if (IsAnimated)
             {
-                Duration = TimeSpan.FromMilliseconds(400),
-                EnableDependentAnimation = true,
-                To = 1
-            };
-            Storyboard.SetTargetProperty(opacityAnimation, nameof(UIElement.Opacity));
-            Storyboard.SetTarget(opacityAnimation, this);
-            storyboard.Children.Add(opacityAnimation);
-            await storyboard.BeginAsync();
+                var storyboard = new Storyboard();
+                var opacityAnimation = new DoubleAnimation
+                {
+                    Duration = TimeSpan.FromMilliseconds(400),
+                    EnableDependentAnimation = true,
+                    To = 1
+                };
+                Storyboard.SetTargetProperty(opacityAnimation, nameof(UIElement.Opacity));
+                Storyboard.SetTarget(opacityAnimation, this);
+                storyboard.Children.Add(opacityAnimation);
+                await storyboard.BeginAsync();
+            }
 #endif
             Opacity = 1.0;
 
@@ -565,14 +594,6 @@ namespace P42.Uno.Controls
             PushPopState = PushPopState.Pushed;
             Pushed?.Invoke(this, EventArgs.Empty);
             _pushCompletionSource?.SetResult(true);
-        }
-
-        async void OnDismissPointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            if (IsLightDismissEnabled)
-            {
-                await PopAsync();
-            }
         }
 
         public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, [CallerMemberName] object trigger = null)
@@ -600,18 +621,21 @@ namespace P42.Uno.Controls
             await OnPopBeginAsync();
 
 #if NETFX_CORE
-            var storyboard = new Storyboard();
-            var opacityAnimation = new DoubleAnimation
+            if (IsAnimated)
             {
-                Duration = TimeSpan.FromMilliseconds(400),
-                EnableDependentAnimation = true,
-                From = 1.0,
-                To = 0.0
-            };
-            Storyboard.SetTargetProperty(opacityAnimation, nameof(UIElement.Opacity));
-            Storyboard.SetTarget(opacityAnimation, this);
-            storyboard.Children.Add(opacityAnimation);
-            await storyboard.BeginAsync();
+                var storyboard = new Storyboard();
+                var opacityAnimation = new DoubleAnimation
+                {
+                    Duration = TimeSpan.FromMilliseconds(400),
+                    EnableDependentAnimation = true,
+                    From = 1.0,
+                    To = 0.0
+                };
+                Storyboard.SetTargetProperty(opacityAnimation, nameof(UIElement.Opacity));
+                Storyboard.SetTarget(opacityAnimation, this);
+                storyboard.Children.Add(opacityAnimation);
+                await storyboard.BeginAsync();
+            }
 #endif
             Visibility = Visibility.Collapsed;
             if (this.Parent is Grid grid)
@@ -710,8 +734,9 @@ namespace P42.Uno.Controls
 
         async Task UpdateMarginAndAlignment()
         {
+            Grid parentGrid = null;
             if (Parent is Grid parent)
-                parent.Children.Remove(this);
+                parentGrid = parent;
 
             // put into VisualTree
             if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
@@ -727,7 +752,13 @@ namespace P42.Uno.Controls
                         Grid.SetRowSpan(this, rows);
                         Grid.SetColumnSpan(this, cols);
                         Canvas.SetZIndex(this, 10000);
-                        pageGrid.Children.Add(this);
+                        if (pageGrid != parentGrid)
+                        {
+                            parentGrid?.Children.Remove(this);
+                            pageGrid.Children.Add(this);
+                            //await Task.Delay(100);
+                            return;
+                        }
                     }
                     else
                         throw new Exception(GetType() + " only works on pages with a Grid as the root content");
@@ -883,17 +914,15 @@ namespace P42.Uno.Controls
 
                 _border.PointerAxialPosition = (targetBounds.Left - borderMargin.Left) + targetBounds.Right - (targetBounds.Left + targetBounds.Right) / 2.0;
             }
-            /*
-#if __WASM__ || NETSTANDARD
-            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateMarginAndAlignment WASM || NETSTANDARD");
-            GetFirstRenderSize();
-            //_popup.HorizontalOffset = -(_firstRenderSize.Width) / 2.0;
-            //_popup.VerticalOffset = -(_firstRenderSize.Height) / 2.0;
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".CleanMarginAndAlignment hOffset:" + _popup.HorizontalOffset + " vOffset:" + _popup.VerticalOffset);
-#endif
-            */
+
             _border.PointerDirection = stats.PointerDirection;
             _border.Margin = borderMargin;
+
+#if __ANDROID__
+            _grid.Measure(windowSize);
+            _grid.Arrange(new Rect(0, 0, windowSize.Width, windowSize.Height));
+#endif
+
         }
 
         void CleanMarginAndAlignment(HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size cleanSize)
@@ -918,41 +947,6 @@ namespace P42.Uno.Controls
             _grid.Measure(windowSize);
             _grid.Arrange(new Rect(0, 0, windowSize.Width, windowSize.Height));
 #endif
-            /*
-            var windowWidth = windowSize.Width;// - Margin.Horizontal();
-            var windowHeight = windowSize.Height;// - Margin.Vertical();
-
-            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateAlignment: window("+windowWidth+","+windowHeight+")   content("+ cleanSize + ")");
-
-            double hOffset = 0.0;
-            if (hzAlign == HorizontalAlignment.Center)
-                hOffset = (windowWidth - cleanSize.Width) / 2;
-            else if (hzAlign == HorizontalAlignment.Right)
-                hOffset = (windowWidth - cleanSize.Width);
-
-            double vOffset = 0.0;
-            if (vtAlign == VerticalAlignment.Center)
-                vOffset = (windowHeight - cleanSize.Height) / 2;
-            else if (vtAlign == VerticalAlignment.Bottom)
-                vOffset = (windowHeight - cleanSize.Height);
-
-            /*
-#if __WASM__ || NETSTANDARD
-            System.Diagnostics.Debug.WriteLine(GetType() + ".CleanMarginAndAlignment WASM || NETSTANDARD");
-            GetFirstRenderSize();
-            hOffset -= (_firstRenderSize.Width) / 2.0;
-            vOffset -= (_firstRenderSize.Height) / 2.0;
-#endif
-            //_popup.HorizontalOffset = hOffset;
-            //_popup.VerticalOffset = vOffset;
-            */
-            /*
-            System.Diagnostics.Debug.WriteLine(GetType() + ".CleanMarginAndAlignment Margin:["+Margin+"] base.Margin=["+base.Margin+"] hOffset:" + hOffset + " vOffset:" + vOffset);
-            borderMargin.Left += hOffset;
-            borderMargin.Top += vOffset;
-
-            _border.Margin = borderMargin;
-            */
         }
 
         DirectionStats BestFit(Thickness availableSpace, Size cleanSize)
@@ -1200,7 +1194,6 @@ namespace P42.Uno.Controls
             return stats;
         }
 
-
         Size RectangleBorderSize(Size available, Size failSize = default)
         {
             if (IsEmpty)
@@ -1224,36 +1217,6 @@ namespace P42.Uno.Controls
             return failSize;
         }
 
-#if __WASM__ || NETSTANDARD
-        Size _firstRenderSize;
-        void GetFirstRenderSize()
-        {
-            if (_firstRenderSize.Width < 1 || _firstRenderSize.Height < 1)
-            {
-                double height = AppWindow.Size().Height;
-                double width = AppWindow.Size().Width;
-                if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
-                {
-                    if (frame.Content is Page currentPage)
-                    {
-                        if (currentPage.Content is Grid contentGrid)
-                        {
-                            if (contentGrid.RowDefinitions.Count > 0 && contentGrid.RowDefinitions[0] is RowDefinition rowDefinition)
-                                height = rowDefinition.ActualHeight;
-
-                            if (contentGrid.ColumnDefinitions.Count > 0 && contentGrid.ColumnDefinitions[0] is ColumnDefinition colDef)
-                                width = colDef.ActualWidth;
-                            System.Diagnostics.Debug.WriteLine(GetType() + ".PushAsync w:" + width + "   h:" + height);
-                        }
-                        else
-                            throw new Exception("Page content needs to be a Grid in order for Popup to work in WASM");
-                    }
-                }
-                _firstRenderSize = new Size(width, height);
-            }
-
-        }
-#endif
 
 #endregion
 
