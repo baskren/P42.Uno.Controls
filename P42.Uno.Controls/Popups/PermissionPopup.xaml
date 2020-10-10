@@ -15,8 +15,8 @@
         <Setter Property="Template" Value="{StaticResource PermissionPopupTemplate}" />
         <Setter Property="OkButtonBackground" Value="{StaticResource SystemAccentColor}" />
         <Setter Property="OkButtonForeground" Value="{StaticResource SystemAltHighColor}" />
-        <Setter Property="OkButtonText" Value="OK" />
-        <Setter Property="CancelButtonText" Value="Cancel" />
+        <Setter Property="OkButtonContent" Value="OK" />
+        <Setter Property="CancelButtonContent" Value="Cancel" />
     </Style>
 
     <ControlTemplate x:Key="PermissionPopupTemplate" TargetType="local:PermissionPopup">

@@ -43,15 +43,13 @@ namespace P42.Uno.Controls.Test
 
             if (args.ItemContainer?.ContentTemplateRoot is StringButtonUserControl templateRoot)
             {
-                if (templateRoot is IListAndDetailDataTemplate iTemplate)
-                    System.Diagnostics.Debug.WriteLine("SummaryDetailPage. iTemplate");
 
                 Grid grid = (Grid)templateRoot.FindName("_grid");
                 Rectangle rect = (Rectangle)templateRoot.FindName("_rectangle");
                 Button button = (Button)templateRoot.FindName("_button");
 
-                button.Opacity = 0;
-                rect.Opacity = 1;
+                button.Opacity = 1;
+                rect.Opacity = 0;
                 //args.RegisterUpdateCallback(SetCellTitle);
             }
             System.Diagnostics.Debug.WriteLine("SummaryDetailPage._listView_ContainerContentChanging itemContainer:" + itemContainer + " index:" + index);
@@ -81,16 +79,19 @@ namespace P42.Uno.Controls.Test
 
         private void OnItemClick(object sender, ItemClickEventArgs e)
         {
-            
             System.Diagnostics.Debug.WriteLine(GetType() + ".OnItemClick: sender:" + sender + "  e.ClickedItem:" + e.ClickedItem + " e.OriginalSource:" + e.OriginalSource);
+
+            var listViewItem = _listView.ContainerFromItem(e.ClickedItem);
+            if (listViewItem is ListViewItem item)
+            {
+                var cellView = item.ContentTemplateRoot;
+                if (cellView is StringButtonUserControl view)
+                {
+                    view.CellTapped();
+                }
+            }
         }
 
-        async void BorderTapped(object sender, TappedRoutedEventArgs e)
-        {
-            _ContentAndDetailPresenter.Target = (UIElement)sender;
-            _ContentAndDetailPresenter.Detail = new TextBlock { Text = ((Button)sender).Content as string };
-            await _ContentAndDetailPresenter.PushDetail();
-        }
 
 
 

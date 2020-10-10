@@ -15,7 +15,7 @@
         <Setter Property="Template" Value="{StaticResource AlertPopupTemplate}" />
         <Setter Property="OkButtonBackground" Value="{StaticResource SystemAccentColor}" />
         <Setter Property="OkButtonForeground" Value="{StaticResource SystemAltHighColor}" />
-        <Setter Property="OkButtonText" Value="OK" />
+        <Setter Property="OkButtonContent" Value="OK" />
     </Style>
 
     <ControlTemplate x:Key="AlertPopupTemplate" TargetType="local:Alert">

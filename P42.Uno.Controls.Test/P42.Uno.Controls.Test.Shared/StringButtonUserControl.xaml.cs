@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace P42.Uno.Controls.Test
 {
-    public partial class StringButtonUserControl : UserControl, IListAndDetailDataTemplate
+    public partial class StringButtonUserControl : UserControl
     {
         #region Properties
 
@@ -41,12 +41,6 @@ namespace P42.Uno.Controls.Test
         }
         #endregion BindingContext Property
 
-        WeakReference _weakContentAndDetailPresenter;
-        public ListAndDetailPresenter ListAndDetailPresenter
-        {
-            get => (ListAndDetailPresenter)_weakContentAndDetailPresenter.Target;
-            set => _weakContentAndDetailPresenter = new WeakReference(value);
-        }
 
         #endregion
 
@@ -83,5 +77,10 @@ namespace P42.Uno.Controls.Test
 
         }
 
+
+        public void CellTapped()
+        {
+            System.Diagnostics.Debug.WriteLine("StringButtonUserControl.");
+        }
     }
 }
