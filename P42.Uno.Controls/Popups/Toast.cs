@@ -25,9 +25,30 @@ namespace P42.Uno.Controls
         #endregion Title Property
 
 
+        #region Factory
+        /// <summary>
+        /// Create and present the specified title and text.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="content"></param>
+        /// <param name="popAfter">Will dissappear after popAfter TimeSpan</param>
+        /// <returns></returns>
+        public static async Task<Toast> Create(string title, object content, TimeSpan popAfter = default)
+        {
+            var result = new Toast { Title = title, Content = content, PopAfter = popAfter, };
+            await result.PushAsync();
+            return result;
+        }
+        #endregion
+
+
+        #region Construction
         public Toast()
         {
             DefaultStyleKey = typeof(Toast);
         }
+        #endregion
+
+
     }
 }

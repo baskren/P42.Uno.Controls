@@ -559,7 +559,7 @@ namespace P42.Uno.Controls
             {
                 if (_popCompletionSource is null)
                 {
-                    await WaitForPop();
+                    await WaitForPoppedAsync();
                     _popCompletionSource = null;
                 }
                 else
@@ -684,7 +684,7 @@ namespace P42.Uno.Controls
         }
 
         TaskCompletionSource<PopupPoppedEventArgs> _popCompletionSource;
-        public async Task<PopupPoppedEventArgs> WaitForPop()
+        public async Task<PopupPoppedEventArgs> WaitForPoppedAsync()
         {
             _popCompletionSource = _popCompletionSource ?? new TaskCompletionSource<PopupPoppedEventArgs>();
             return await _popCompletionSource.Task;

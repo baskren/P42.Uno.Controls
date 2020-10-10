@@ -59,7 +59,7 @@
                             Text="{TemplateBinding Title}"
                             TextWrapping="WrapWholeWords" />
                         <ContentPresenter
-                            x:Name="TargetedPopup_Popup_Border_ContentPresenter"
+                            x:Name="_contentPresenter"
                             Margin="0"
                             Padding="0"
                             Content="{TemplateBinding Content}"

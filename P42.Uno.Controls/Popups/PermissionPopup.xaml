@@ -63,7 +63,7 @@
                             Text="{TemplateBinding Title}"
                             TextWrapping="WrapWholeWords" />
                         <ContentPresenter
-                            x:Name="TargetedPopup_Popup_Border_ContentPresenter"
+                            x:Name="_contentPresenter"
                             Margin="0"
                             Padding="0"
                             Content="{TemplateBinding Content}"
@@ -82,16 +82,38 @@
                                 <Button
                                     x:Name="_okButton"
                                     HorizontalAlignment="Stretch"
-                                    Background="{StaticResource SystemAccentColor}"
-                                    Content="{TemplateBinding OkButtonText}"
+                                    Background="{TemplateBinding OkButtonBackground}"
                                     CornerRadius="2"
-                                    Foreground="{StaticResource SystemAltHighColor}" />
+                                    Foreground="{TemplateBinding OkButtonForeground}">
+                                    <ContentPresenter
+                                        x:Name="_okButtonContentPresenter"
+                                        Content="{TemplateBinding OkButtonContent}"
+                                        FontFamily="{TemplateBinding FontFamily}"
+                                        FontSize="{TemplateBinding FontSize}"
+                                        FontStretch="{TemplateBinding FontStretch}"
+                                        FontStyle="{TemplateBinding FontStyle}"
+                                        FontWeight="{TemplateBinding FontWeight}"
+                                        Foreground="{TemplateBinding OkButtonForeground}"
+                                        TextWrapping="WrapWholeWords" />
+                                </Button>
                                 <Button
                                     x:Name="_cancelButton"
                                     Grid.Column="1"
                                     HorizontalAlignment="Stretch"
-                                    Content="{TemplateBinding CancelButtonText}"
-                                    CornerRadius="2" />
+                                    Background="{TemplateBinding CancelButtonBackground}"
+                                    CornerRadius="2"
+                                    Foreground="{TemplateBinding CancelButtonForeground}">
+                                    <ContentPresenter
+                                        x:Name="_cancelButtonContentPresenter"
+                                        Content="{TemplateBinding CancelButtonContent}"
+                                        FontFamily="{TemplateBinding FontFamily}"
+                                        FontSize="{TemplateBinding FontSize}"
+                                        FontStretch="{TemplateBinding FontStretch}"
+                                        FontStyle="{TemplateBinding FontStyle}"
+                                        FontWeight="{TemplateBinding FontWeight}"
+                                        Foreground="{TemplateBinding CancelButtonForeground}"
+                                        TextWrapping="WrapWholeWords" />
+                                </Button>
                             </Grid.Children>
                         </Grid>
                     </StackPanel.Children>

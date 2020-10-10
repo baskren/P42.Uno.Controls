@@ -1,9 +1,11 @@
-﻿using System;
+﻿using P42.Utils.Uno;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -14,19 +16,21 @@ namespace P42.Uno.Controls
     public partial class Alert : Toast
     {
         #region Properties
-        #region OkText Property
-        public static readonly DependencyProperty OkButtonTextProperty = DependencyProperty.Register(
-            nameof(OkButtonText),
-            typeof(string),
+
+        #region OkButtonContent Property
+        public static readonly DependencyProperty OkButtonContentProperty = DependencyProperty.Register(
+            nameof(OkButtonContent),
+            typeof(object),
             typeof(Alert),
             new PropertyMetadata(default(string))
         );
-        public string OkButtonText
+        public object OkButtonContent
         {
-            get => (string)GetValue(OkButtonTextProperty);
-            set => SetValue(OkButtonTextProperty, value);
+            get => (object)GetValue(OkButtonContentProperty);
+            set => SetValue(OkButtonContentProperty, value);
         }
         #endregion OkText Property
+
 
         #region OkButtonForeground Property
         public static readonly DependencyProperty OkButtonForegroundProperty = DependencyProperty.Register(
@@ -63,11 +67,52 @@ namespace P42.Uno.Controls
 
         #region Fields
         const string OkButtonName = "_okButton";
-        Button _okButton;
+        protected Button _okButton;
         #endregion
 
 
         #region Construction / Initialization
+        /// <summary>
+        /// Create and present the specified title, text, okText, cancelText, okButtonColor, cancelButtonColor, okTextColor and cancelTextColor.
+        /// </summary>
+        /// <param name="title">Title.</param>
+        /// <param name="content">Text.</param>
+        /// <param name="okContent">Ok text.</param>
+        /// <param name="okButtonColor">Ok button color.</param>
+        /// <param name="okTextColor">Ok text color.</param>
+        public static async Task<Alert> Create(string title, object content, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
+        {
+            var popup = new Alert { Title = title, Content = content, OkButtonContent = okContent ?? "OK" };
+            if (okTextColor != default)
+                popup.OkButtonForeground = okTextColor.ToBrush();
+            if (okButtonColor != default)
+                popup.OkButtonBackground = okButtonColor.ToBrush();
+            await popup.PushAsync();
+            return popup;
+        }
+
+        /// <summary>
+        /// Create and present the specified target, title, text, okText, cancelText, okButtonColor, cancelButtonColor, okTextColor and cancelTextColor.
+        /// </summary>
+        /// <returns>The create.</returns>
+        /// <param name="target">Target.</param>
+        /// <param name="title">Title.</param>
+        /// <param name="text">Text.</param>
+        /// <param name="okText">Ok text.</param>
+        /// <param name="okButtonColor">Ok button color.</param>
+        /// <param name="okTextColor">Ok text color.</param>
+        public static async Task<Alert> Create(UIElement target, string title, object content, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
+        {
+            var popup = new Alert() {Target = target, Title = title, Content = content, OkButtonContent = okContent ?? "OK" };
+            if (okTextColor != default)
+                popup.OkButtonForeground = okTextColor.ToBrush();
+            if (okButtonColor != default)
+                popup.OkButtonBackground = okButtonColor.ToBrush();
+            await popup.PushAsync();
+            return popup;
+        }
+
+
         public Alert() : base()
         {
             DefaultStyleKey = typeof(Alert);

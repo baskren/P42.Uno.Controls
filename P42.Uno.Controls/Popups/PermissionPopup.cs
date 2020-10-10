@@ -1,9 +1,11 @@
-﻿using System;
+﻿using P42.Utils.Uno;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -15,19 +17,20 @@ namespace P42.Uno.Controls
     {
         #region Properties
 
-        #region CancelText Property
-        public static readonly DependencyProperty CancelButtonTextProperty = DependencyProperty.Register(
-            nameof(CancelButtonText),
-            typeof(string),
+        #region CancelButtonContent Property
+        public static readonly DependencyProperty CancelButtonContentProperty = DependencyProperty.Register(
+            nameof(CancelButtonContent),
+            typeof(object),
             typeof(PermissionPopup),
             new PropertyMetadata(default(string))
         );
-        public string CancelButtonText
+        public object CancelButtonContent
         {
-            get => (string)GetValue(CancelButtonTextProperty);
-            set => SetValue(CancelButtonTextProperty, value);
+            get => (object)GetValue(CancelButtonContentProperty);
+            set => SetValue(CancelButtonContentProperty, value);
         }
         #endregion CancelText Property
+
 
         #region CancelButtonForeground Property
         public static readonly DependencyProperty CancelButtonForegroundProperty = DependencyProperty.Register(
@@ -59,6 +62,21 @@ namespace P42.Uno.Controls
         #endregion CancelButtonBackgroundBrush Property
 
 
+        #region PermissionState Property
+        public static readonly DependencyProperty PermissionStateProperty = DependencyProperty.Register(
+            nameof(PermissionState),
+            typeof(PermissionState),
+            typeof(PermissionPopup),
+            new PropertyMetadata(default(PermissionState))
+        );
+        public PermissionState PermissionState
+        {
+            get => (PermissionState)GetValue(PermissionStateProperty);
+            private set => SetValue(PermissionStateProperty, value);
+        }
+        #endregion PermissionState Property
+
+
         #endregion
 
 
@@ -82,6 +100,63 @@ namespace P42.Uno.Controls
         #endregion
 
 
+        #region Factories
+        /// <summary>
+        /// Create the specified title, text, okText, cancelText, okButtonColor, cancelButtonColor, OkButtonContent and cancelTextColor.
+        /// </summary>
+        /// <param name="title">Title.</param>
+        /// <param name="content">Text.</param>
+        /// <param name="okButtonContent">Ok text.</param>
+        /// <param name="cancelButtonContent">Cancel text.</param>
+        /// <param name="okButtonColor">Ok button color.</param>
+        /// <param name="cancelButtonColor">Cancel button color.</param>
+        /// <param name="okButtonTextColor">Ok text color.</param>
+        /// <param name="cancelTextColor">Cancel text color.</param>
+        public static async Task<PermissionPopup> Create(string title, object content, string okButtonContent = null, object cancelButtonContent = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default)
+        {
+            var popup = new PermissionPopup { Title = title, Content = content, OkButtonContent = okButtonContent ?? "OK", CancelButtonContent = cancelButtonContent ?? "Cancel" };
+            if (okButtonTextColor != default)
+                popup.OkButtonForeground = okButtonTextColor.ToBrush();
+            if (okButtonColor != default)
+                popup.OkButtonForeground = okButtonColor.ToBrush();
+            if (cancelTextColor != default)
+                popup.CancelButtonForeground = cancelTextColor.ToBrush();
+            if (cancelButtonColor != default)
+                popup.CancelButtonBackground = cancelButtonColor.ToBrush();
+            await popup.PushAsync();
+            return popup;
+        }
+
+        /// <summary>
+        /// Create the specified target, title, text, okText, cancelText, okButtonColor, cancelButtonColor, OkButtonContent and cancelTextColor.
+        /// </summary>
+        /// <returns>The create.</returns>
+        /// <param name="target">Target.</param>
+        /// <param name="title">Title.</param>
+        /// <param name="content">Text.</param>
+        /// <param name="okButtonContent">Ok text.</param>
+        /// <param name="cancelButtonContent">Cancel text.</param>
+        /// <param name="okButtonColor">Ok button color.</param>
+        /// <param name="cancelButtonColor">Cancel button color.</param>
+        /// <param name="okButtonTextColor">Ok text color.</param>
+        /// <param name="cancelTextColor">Cancel text color.</param>
+        public static async Task<PermissionPopup> Create(UIElement target, string title, object content, string okButtonContent = null, object cancelButtonContent = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default)
+        {
+            var popup = new PermissionPopup() { Target = target, Title = title, Content = content, OkButtonContent = okButtonContent ?? "OK", CancelButtonContent = cancelButtonContent ?? "Cancel" };
+            if (okButtonTextColor != default)
+                popup.OkButtonForeground = okButtonTextColor.ToBrush();
+            if (okButtonColor != default)
+                popup.OkButtonForeground = okButtonColor.ToBrush();
+            if (cancelTextColor != default)
+                popup.CancelButtonForeground = cancelTextColor.ToBrush();
+            if (cancelButtonColor != default)
+                popup.CancelButtonBackground = cancelButtonColor.ToBrush();
+            await popup.PushAsync();
+            return popup;
+        }
+        #endregion
+
+
         #region Event Handlers
         async void OnCancelButtonClicked(object sender, RoutedEventArgs e)
         {
@@ -93,6 +168,7 @@ namespace P42.Uno.Controls
         #region Push / Pop
         public override async Task PushAsync()
         {
+            PermissionState = PermissionState.Pending;
             await base.PushAsync();
             _cancelButton.Click += OnCancelButtonClicked;
         }
@@ -101,6 +177,17 @@ namespace P42.Uno.Controls
         public override async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, [CallerMemberName] object trigger = null)
         {
             _cancelButton.Click -= OnCancelButtonClicked;
+
+            if (cause == PopupPoppedCause.ButtonTapped)
+            {
+                if (trigger == _cancelButton)
+                    PermissionState = PermissionState.Rejected;
+                else if (trigger == _okButton)
+                    PermissionState = PermissionState.Ok;
+            }
+            if (PermissionState == PermissionState.Pending)
+                PermissionState = PermissionState.Cancelled;
+
             await base.PopAsync(cause, trigger);
         }
         #endregion
