@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace P42.Uno.Controls
 {
     /// <summary>
-    /// Event arguments passed by Popped event and DelayUntilPoppedAsyc() method in Forms9Patch popups.
+    /// Event arguments passed by Popped event and WaitUntilPoppedAsyc() method in P42.Uno.Controls popups.
     /// </summary>
     public class PopupPoppedEventArgs : EventArgs
     {

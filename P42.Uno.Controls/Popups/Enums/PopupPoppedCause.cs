@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace P42.Uno.Controls
 {
     /// <summary>
-    /// Causes for Forms9Patch popup being popped
+    /// Causes for P42.Uno.Controls popup being popped
     /// </summary>
     public enum PopupPoppedCause
     {
