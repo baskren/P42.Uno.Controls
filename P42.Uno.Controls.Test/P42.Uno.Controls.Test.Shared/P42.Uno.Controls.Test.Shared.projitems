@@ -14,6 +14,9 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
   </ItemGroup>
+
+  <!-- Original (working) -->
+  <!--
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)StringButtonUserControl.xaml">
       <SubType>Designer</SubType>
@@ -42,6 +45,22 @@
       <DependentUpon>SummaryDetailPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
+  -->
+
+  <!-- Me trying to be clever -->
+  <!-- Blanket XAML -->
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)\**\*.xaml" Exclude="$(MSBuildThisFileDirectory)App.xaml;$(MSBuildThisFileDirectory)\bin\**\*.xaml;$(MSBuildThisFileDirectory)\obj\**\*.xaml;" >
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)\**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
   </ItemGroup>
