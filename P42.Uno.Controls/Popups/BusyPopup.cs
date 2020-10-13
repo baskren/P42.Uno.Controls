@@ -85,6 +85,7 @@ namespace P42.Uno.Controls
         ProgressRing _progressRing;
         #endregion
 
+
         #region Construction / Initialization
         public BusyPopup()
         {
