@@ -325,8 +325,6 @@ namespace P42.Uno.Controls
 
         protected override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();
-
             _detailPaneContentPresenter = (ContentPresenter)GetTemplateChild(DetailPaneContentPresenterName);
             _detailPopupContentPresenter = (ContentPresenter)GetTemplateChild(DetailPopupContentPresenterName);
             _row1 = (RowDefinition)GetTemplateChild(Row1Name);
@@ -337,6 +335,8 @@ namespace P42.Uno.Controls
 
             _grid = (Grid)GetTemplateChild(GridName);
             _grid.Children.Remove(_targetedPopup);
+            // must call base.OnApplyTemplate last so completion handler won't be called until template loading is truly complete
+            base.OnApplyTemplate();
         }
         #endregion
 

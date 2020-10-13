@@ -80,9 +80,9 @@ namespace P42.Uno.Controls
         /// <param name="okContent">Ok text.</param>
         /// <param name="okButtonColor">Ok button color.</param>
         /// <param name="okTextColor">Ok text color.</param>
-        public static async Task<Alert> Create(string title, object content, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
+        public static async Task<Alert> CreateAsync(string title, object content, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
         {
-            var popup = new Alert { Title = title, Content = content, OkButtonContent = okContent ?? "OK" };
+            var popup = new Alert { TitleContent = title, Content = content, OkButtonContent = okContent ?? "OK" };
             if (okTextColor != default)
                 popup.OkButtonForeground = okTextColor.ToBrush();
             if (okButtonColor != default)
@@ -101,9 +101,9 @@ namespace P42.Uno.Controls
         /// <param name="okText">Ok text.</param>
         /// <param name="okButtonColor">Ok button color.</param>
         /// <param name="okTextColor">Ok text color.</param>
-        public static async Task<Alert> Create(UIElement target, string title, object content, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
+        public static async Task<Alert> CreateAsync(UIElement target, string title, object content, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
         {
-            var popup = new Alert() {Target = target, Title = title, Content = content, OkButtonContent = okContent ?? "OK" };
+            var popup = new Alert() {Target = target, TitleContent = title, Content = content, OkButtonContent = okContent ?? "OK" };
             if (okTextColor != default)
                 popup.OkButtonForeground = okTextColor.ToBrush();
             if (okButtonColor != default)
@@ -120,8 +120,9 @@ namespace P42.Uno.Controls
 
         protected override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();
             _okButton = GetTemplateChild(OkButtonName) as Button;
+            // must call base.OnApplyTemplate last so completion handler won't be called until template loading is truly complete
+            base.OnApplyTemplate();
         }
         #endregion
 

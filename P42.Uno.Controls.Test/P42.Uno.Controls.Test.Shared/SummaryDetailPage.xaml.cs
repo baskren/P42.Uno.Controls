@@ -77,9 +77,12 @@ namespace P42.Uno.Controls.Test
             System.Diagnostics.Debug.WriteLine("SummaryDetailPage._listView_ChoosingItemContainer itemContainer:" + itemContainer + " index:" + index);
         }
 
-        private void OnItemClick(object sender, ItemClickEventArgs e)
+        async void OnItemClick(object sender, ItemClickEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(GetType() + ".OnItemClick: sender:" + sender + "  e.ClickedItem:" + e.ClickedItem + " e.OriginalSource:" + e.OriginalSource);
+
+            var ring = await P42.Uno.Controls.BusyPopup.CreateAsync(null, "I'm very busy", TimeSpan.FromSeconds(2));
+            await ring.WaitForPoppedAsync();
 
             var listViewItem = _listView.ContainerFromItem(e.ClickedItem);
             if (listViewItem is ListViewItem item)

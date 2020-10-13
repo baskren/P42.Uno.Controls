@@ -8,12 +8,6 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>P42.Uno.Controls.Test</Import_RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </ApplicationDefinition>
-  </ItemGroup>
 
   <!-- Original (working) -->
   <!--
@@ -49,6 +43,12 @@
 
   <!-- Me trying to be clever -->
   <!-- Blanket XAML -->
+  <ItemGroup>
+    <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)\**\*.xaml" Exclude="$(MSBuildThisFileDirectory)App.xaml;$(MSBuildThisFileDirectory)\bin\**\*.xaml;$(MSBuildThisFileDirectory)\obj\**\*.xaml;" >
       <SubType>Designer</SubType>

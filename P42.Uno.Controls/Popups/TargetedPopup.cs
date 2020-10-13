@@ -251,7 +251,7 @@ namespace P42.Uno.Controls
         protected virtual void OnPointerLengthChanged(DependencyPropertyChangedEventArgs e)
         {
             if (_border != null)
-            UpdateMarginAndAlignment();
+                UpdateMarginAndAlignment();
         }
         /// <summary>
         /// Gets or sets the length of the bubble layout's pointer.
@@ -410,7 +410,27 @@ namespace P42.Uno.Controls
 
         public object PoppedTrigger { get; private set; }
 
-        public PushPopState PushPopState { get; private set; }
+        //public PushPopState PushPopState { get; private set; }
+        #region PushPopState Property
+        public static readonly DependencyProperty PushPopStateProperty = DependencyProperty.Register(
+            nameof(PushPopState),
+            typeof(PushPopState),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(PushPopState), new PropertyChangedCallback((d,e)=>((TargetedPopup)d).OnPushPopStateChanged(e)))
+        );
+
+        protected virtual void OnPushPopStateChanged(DependencyPropertyChangedEventArgs e)
+        {
+            
+        }
+
+        public PushPopState PushPopState
+        {
+            get => (PushPopState)GetValue(PushPopStateProperty);
+            internal set => SetValue(PushPopStateProperty, value);
+        }
+        #endregion PushPopState Property
+
 
         public bool IsEmpty
         {
@@ -465,6 +485,17 @@ namespace P42.Uno.Controls
 
 
         #region Construction / Initialization
+        public static async Task<TargetedPopup> CreateAsync(UIElement target, object content)
+        {
+            var result = new TargetedPopup
+            {
+                Target = target,
+                Content = content
+            };
+            await result.PushAsync();
+            return result;
+        }
+
         public TargetedPopup()
         {
             Visibility = Visibility.Collapsed;
@@ -477,7 +508,6 @@ namespace P42.Uno.Controls
         TaskCompletionSource<bool> _templateAppliedCompletionSource;
         protected override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();
             _contentPresenter = (ContentPresenter)GetTemplateChild(ContentPresenterName); ;
             _border = (BubbleBorder)GetTemplateChild(BorderElementName); ;
             _border.HorizontalAlignment = HorizontalAlignment;
@@ -487,7 +517,7 @@ namespace P42.Uno.Controls
             _grid = (Grid)GetTemplateChild(GridName);
             _overlay = (Rectangle)GetTemplateChild(OverlayName);
 
-            //UpdateMarginAndAlignment();
+            base.OnApplyTemplate();
             _templateAppliedCompletionSource?.SetResult(true);
         }
 
@@ -513,6 +543,8 @@ namespace P42.Uno.Controls
                         Canvas.SetZIndex(this, 10000);
                         if (pageGrid != parentGrid)
                         {
+                            this.Opacity = 0.0;
+                            this.Visibility = Visibility.Visible;
                             parentGrid?.Children.Remove(this);
                             pageGrid.Children.Add(this);
                         }
@@ -531,6 +563,7 @@ namespace P42.Uno.Controls
             {
                 _templateAppliedCompletionSource = _templateAppliedCompletionSource ?? new TaskCompletionSource<bool>();
                 await _templateAppliedCompletionSource.Task;
+
             }
         }
 
@@ -566,6 +599,8 @@ namespace P42.Uno.Controls
                     return;
             }
 
+            await AssureGraft();
+
             PushPopState = PushPopState.Pushing;
             _popCompletionSource = null;
 
@@ -577,7 +612,7 @@ namespace P42.Uno.Controls
             Opacity = 0.0;
             // Visibility needs to be BEFORE UpdateMarginAndAlignment in order to trigger OnApplyTemplate()
             Visibility = Visibility.Visible;
-            await UpdateMarginAndAlignment();
+            UpdateMarginAndAlignment();
 
             if (_firstPush)
             {
@@ -615,9 +650,9 @@ namespace P42.Uno.Controls
             Opacity = 1.0;
             if (PopAfter > default(TimeSpan))
             {
-                Device.StartTimer(PopAfter, () =>
+                Device.StartTimer(PopAfter, async () =>
                 {
-                    PopAsync(PopupPoppedCause.Timeout, "Timeout");
+                    await PopAsync(PopupPoppedCause.Timeout, "Timeout");
                     return false;
                 });
             }
@@ -739,11 +774,11 @@ namespace P42.Uno.Controls
 
 
         #region Event Handlers
-        async void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
+        void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
         {
             if (args.NewSize.Width < 1 || args.NewSize.Height < 1)
                 return;
-            await UpdateMarginAndAlignment();
+            UpdateMarginAndAlignment();
         }
         #endregion
 
@@ -759,9 +794,11 @@ namespace P42.Uno.Controls
             return AppWindow.Size();
         }
 
-        async Task UpdateMarginAndAlignment()
+        void UpdateMarginAndAlignment()
         {
-            await AssureGraft();
+            if (_border is null)
+                return;
+            //await AssureGraft();
 
             _border.Margin = Margin;
 

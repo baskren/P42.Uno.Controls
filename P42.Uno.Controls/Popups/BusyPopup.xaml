@@ -1,27 +1,29 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:local="using:P42.Uno.Controls">
+
 
     <converters:EmptyCollectionToObjectConverter
         x:Key="NullVisibilityConverter"
         EmptyValue="Collapsed"
         NotEmptyValue="Visible" />
 
-    <Style TargetType="local:Toast">
+    <Style TargetType="local:BusyPopup">
         <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}" />
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundBaseLowBrush}" />
         <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+        <Setter Property="LightDismissOverlayColor" Value="{StaticResource SystemAltMediumColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="4" />
         <Setter Property="Padding" Value="10" />
         <Setter Property="Margin" Value="10" />
         <Setter Property="FontSize" Value="16" />
-        <Setter Property="Template" Value="{StaticResource TargetedToastPopupTemplate}" />
+        <Setter Property="Template" Value="{StaticResource BaseBusyPopupTemplate}" />
     </Style>
 
-    <ControlTemplate x:Key="TargetedToastPopupTemplate" TargetType="local:Toast">
+    <ControlTemplate x:Key="BaseBusyPopupTemplate" TargetType="local:BusyPopup">
 
         <Grid
             x:Name="_grid"
@@ -53,10 +55,25 @@
                 PointerLength="{TemplateBinding PointerLength}"
                 PointerTipRadius="{TemplateBinding PointerTipRadius}"
                 SizeChanged="OnSizeChanged">
-                <StackPanel>
-                    <StackPanel.Children>
+                <Grid ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.Children>
+                        <ProgressRing
+                            Name="_progressRing"
+                            Grid.RowSpan="2"
+                            Width="50"
+                            Height="50" />
                         <ContentPresenter
                             x:Name="_titleBlock"
+                            Grid.Column="1"
                             Content="{TemplateBinding TitleContent}"
                             FontFamily="{TemplateBinding FontFamily}"
                             FontSize="{TemplateBinding FontSize}"
@@ -64,10 +81,12 @@
                             FontStyle="{TemplateBinding FontStyle}"
                             FontWeight="Bold"
                             TextWrapping="WrapWholeWords"
-                            Visibility="{Binding TitleContent, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullVisibilityConverter}}" 
+                            Visibility="{Binding TitleContent, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullVisibilityConverter}}"
                             />
                         <ContentPresenter
                             x:Name="_contentPresenter"
+                            Grid.Row="1"
+                            Grid.Column="1"
                             Margin="0"
                             Padding="0"
                             VerticalAlignment="Center"
@@ -77,10 +96,11 @@
                             FontStretch="{TemplateBinding FontStretch}"
                             FontStyle="{TemplateBinding FontStyle}"
                             FontWeight="{TemplateBinding FontWeight}"
-                            TextWrapping="WrapWholeWords"
-                            Visibility="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullVisibilityConverter}}" />
-                    </StackPanel.Children>
-                </StackPanel>
+                            Visibility="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullVisibilityConverter}}"
+                            TextWrapping="WrapWholeWords" />
+
+                    </Grid.Children>
+                </Grid>
             </local:BubbleBorder>
         </Grid>
 
