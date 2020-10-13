@@ -42,8 +42,8 @@
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.191.gc988bdd4ff" />
     <PackageReference Include="Uno.SkiaSharp.Views" Version="2.80.0-uno.483" />
     <PackageReference Include="Uno.SkiaSharp.Wasm" Version="2.80.0-uno.483" />
-    <PackageReference Include="Uno.UI.WebAssembly" Version="3.1.0-dev.739" />
-    <PackageReference Include="Uno.UI.RemoteControl" Version="3.1.0-dev.739" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.UI.WebAssembly" Version="3.1.0-dev.747" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.1.0-dev.747" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Uno.Wasm.Bootstrap" Version="1.4.0-dev.52" />
     <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.4.0-dev.52" />
   </ItemGroup>
