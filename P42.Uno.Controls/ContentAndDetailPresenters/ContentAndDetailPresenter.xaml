@@ -41,8 +41,10 @@
             </Border>
             <local:TargetedPopup
                 x:Name="_targetedPopup"
+                Margin="50"
+                LightDismissOverlayColor="#01FFFFFF"
                 Opacity="0"
-                PreferredPointerDirection="Any"
+                PreferredPointerDirection="Vertical"
                 Target="{TemplateBinding Target}">
                 <ContentPresenter x:Name="_detailPopupContentPresenter" />
             </local:TargetedPopup>
