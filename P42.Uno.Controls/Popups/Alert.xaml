@@ -56,10 +56,24 @@
                 PointerLength="{TemplateBinding PointerLength}"
                 PointerTipRadius="{TemplateBinding PointerTipRadius}"
                 SizeChanged="OnSizeChanged">
-                <StackPanel>
-                    <StackPanel.Children>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.Children>
+                        <ContentPresenter
+                            x:Name="_icon"
+                            Content="{TemplateBinding Icon}"
+                            Visibility="{Binding Icon, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullVisibilityConverter}}" />
                         <ContentPresenter
                             x:Name="_titleBlock"
+                            Grid.Column="1"
                             Content="{TemplateBinding TitleContent}"
                             FontFamily="{TemplateBinding FontFamily}"
                             FontSize="{TemplateBinding FontSize}"
@@ -70,6 +84,8 @@
                             Visibility="{Binding TitleContent, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullVisibilityConverter}}" />
                         <ContentPresenter
                             x:Name="_contentPresenter"
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2"
                             Margin="0"
                             Padding="0"
                             Content="{TemplateBinding Content}"
@@ -82,6 +98,8 @@
                             Visibility="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullVisibilityConverter}}" />
                         <Button
                             x:Name="_okButton"
+                            Grid.Row="2"
+                            Grid.ColumnSpan="2"
                             HorizontalAlignment="Stretch"
                             Background="{TemplateBinding OkButtonBackground}"
                             CornerRadius="2"
@@ -97,8 +115,8 @@
                                 Foreground="{TemplateBinding OkButtonForeground}"
                                 TextWrapping="WrapWholeWords" />
                         </Button>
-                    </StackPanel.Children>
-                </StackPanel>
+                    </Grid.Children>
+                </Grid>
             </local:BubbleBorder>
         </Grid>
 

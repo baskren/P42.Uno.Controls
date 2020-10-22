@@ -20,17 +20,6 @@ namespace P42.Uno.Controls
         );
         private static void OnTitleContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            /*
-            if (d is BusyPopup popup)
-            {
-                if (e.NewValue is null)
-                    popup._titleBlock.Visibility = Visibility.Collapsed;
-                else if (e.NewValue is string str)
-                    popup._titleBlock.Visibility = string.IsNullOrEmpty(str) ? Visibility.Collapsed : Visibility.Visible;
-                else
-                    popup._titleBlock.Visibility = Visibility.Visible;
-            }
-            */
         }
         public object TitleContent
         {
@@ -38,6 +27,29 @@ namespace P42.Uno.Controls
             set => SetValue(TitleProperty, value);
         }
         #endregion Title Property
+
+
+        #region Icon Property
+        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
+            nameof(Icon),
+            typeof(object),
+            typeof(Toast),
+            new PropertyMetadata(default(IconElement), new PropertyChangedCallback(OnIconChanged))
+        );
+        protected static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Toast Toast)
+            {
+                
+            }
+        }
+        public object Icon
+        {
+            get => (object)GetValue(IconProperty);
+            set => SetValue(IconProperty, value);
+        }
+        #endregion Icon Property
+
 
 
         #region Fields

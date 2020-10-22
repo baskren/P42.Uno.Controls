@@ -89,7 +89,7 @@ namespace P42.Uno.Controls
             nameof(PopupContentHeight),
             typeof(double),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(200.0, new PropertyChangedCallback((d, e) => ((ContentAndDetailPresenter)d).OnPopupHeightChanged(e)))
+            new PropertyMetadata(300.0, new PropertyChangedCallback((d, e) => ((ContentAndDetailPresenter)d).OnPopupHeightChanged(e)))
         );
         protected virtual void OnPopupHeightChanged(DependencyPropertyChangedEventArgs e)
         {
