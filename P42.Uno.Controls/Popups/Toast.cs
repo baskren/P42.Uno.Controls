@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace P42.Uno.Controls
 {
-    [TemplatePart(Name = TitleBlockName, Type = typeof(TextBlock))]
+    [TemplatePart(Name = TitleBlockName, Type = typeof(ContentPresenter))]
     public partial class Toast : TargetedPopup
     {
         #region Title Property
@@ -20,6 +20,8 @@ namespace P42.Uno.Controls
         );
         private static void OnTitleContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            if (d is Toast toast)
+                toast._titleBlock.Content = e.NewValue;
         }
         public object TitleContent
         {
@@ -27,29 +29,6 @@ namespace P42.Uno.Controls
             set => SetValue(TitleProperty, value);
         }
         #endregion Title Property
-
-
-        #region Icon Property
-        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-            nameof(Icon),
-            typeof(object),
-            typeof(Toast),
-            new PropertyMetadata(default(IconElement), new PropertyChangedCallback(OnIconChanged))
-        );
-        protected static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is Toast Toast)
-            {
-                
-            }
-        }
-        public object Icon
-        {
-            get => (object)GetValue(IconProperty);
-            set => SetValue(IconProperty, value);
-        }
-        #endregion Icon Property
-
 
 
         #region Fields

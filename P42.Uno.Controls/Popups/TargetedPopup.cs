@@ -774,7 +774,7 @@ namespace P42.Uno.Controls
 
 
         #region Event Handlers
-        void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
+        protected virtual void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
         {
             if (args.NewSize.Width < 1 || args.NewSize.Height < 1)
                 return;

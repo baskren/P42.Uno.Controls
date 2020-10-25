@@ -48,7 +48,7 @@
                 PointerDirection="None"
                 PointerLength="{TemplateBinding PointerLength}"
                 PointerTipRadius="{TemplateBinding PointerTipRadius}"
-                SizeChanged="OnSizeChanged">
+                SizeChanged="OnBorderSizeChanged">
                 <ContentPresenter
                     x:Name="_contentPresenter"
                     Margin="0"

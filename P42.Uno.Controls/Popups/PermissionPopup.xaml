@@ -16,7 +16,7 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="4" />
         <Setter Property="Padding" Value="10" />
-        <Setter Property="Margin" Value="10" />
+        <Setter Property="Margin" Value="50" />
         <Setter Property="FontSize" Value="16" />
         <Setter Property="Template" Value="{StaticResource PermissionPopupTemplate}" />
         <Setter Property="OkButtonBackground" Value="{StaticResource SystemAccentColor}" />
@@ -43,6 +43,7 @@
                 Visibility="Collapsed" />
             <local:BubbleBorder
                 x:Name="_border"
+                Margin="{TemplateBinding Margin}"
                 Padding="{TemplateBinding Padding}"
                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -56,25 +57,16 @@
                 PointerDirection="None"
                 PointerLength="{TemplateBinding PointerLength}"
                 PointerTipRadius="{TemplateBinding PointerTipRadius}"
-                SizeChanged="OnSizeChanged">
+                SizeChanged="OnBorderSizeChanged">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
                     <Grid.Children>
                         <ContentPresenter
-                            x:Name="_icon"
-                            Content="{TemplateBinding Icon}"
-                            Visibility="{Binding Icon, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullVisibilityConverter}}" />
-                        <ContentPresenter
                             x:Name="_titleBlock"
-                            Grid.Column="1"
                             Content="{TemplateBinding TitleContent}"
                             FontFamily="{TemplateBinding FontFamily}"
                             FontSize="{TemplateBinding FontSize}"
@@ -86,7 +78,6 @@
                         <ContentPresenter
                             x:Name="_contentPresenter"
                             Grid.Row="1"
-                            Grid.ColumnSpan="2"
                             Margin="0"
                             Padding="0"
                             Content="{TemplateBinding Content}"
@@ -97,10 +88,7 @@
                             FontWeight="{TemplateBinding FontWeight}"
                             TextWrapping="WrapWholeWords"
                             Visibility="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullVisibilityConverter}}" />
-                        <Grid
-                            Grid.Row="2"
-                            Grid.ColumnSpan="2"
-                            ColumnSpacing="5">
+                        <Grid Grid.Row="2" ColumnSpacing="5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />

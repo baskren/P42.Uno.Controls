@@ -16,7 +16,7 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="4" />
         <Setter Property="Padding" Value="10" />
-        <Setter Property="Margin" Value="10" />
+        <Setter Property="Margin" Value="50" />
         <Setter Property="FontSize" Value="16" />
         <Setter Property="Template" Value="{StaticResource TargetedToastPopupTemplate}" />
     </Style>
@@ -39,6 +39,7 @@
                 Visibility="Collapsed" />
             <local:BubbleBorder
                 x:Name="_border"
+                Margin="{TemplateBinding Margin}"
                 Padding="{TemplateBinding Padding}"
                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -52,25 +53,16 @@
                 PointerDirection="None"
                 PointerLength="{TemplateBinding PointerLength}"
                 PointerTipRadius="{TemplateBinding PointerTipRadius}"
-                SizeChanged="OnSizeChanged">
+                SizeChanged="OnBorderSizeChanged">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
                     <Grid.Children>
-                        <ContentPresenter
-                            x:Name="_icon"
-                            Content="{TemplateBinding Icon}"
-                            Visibility="{Binding Icon, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullVisibilityConverter}}" />
                         <ContentPresenter
                             x:Name="_titleBlock"
                             Grid.Row="0"
-                            Grid.Column="1"
                             Content="{TemplateBinding TitleContent}"
                             FontFamily="{TemplateBinding FontFamily}"
                             FontSize="{TemplateBinding FontSize}"
@@ -82,7 +74,6 @@
                         <ContentPresenter
                             x:Name="_contentPresenter"
                             Grid.Row="2"
-                            Grid.ColumnSpan="2"
                             Margin="0"
                             Padding="0"
                             VerticalAlignment="Center"
