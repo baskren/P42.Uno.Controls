@@ -12,7 +12,6 @@ using Windows.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
-    [TemplatePart(Name = CancelButtonName, Type = typeof(Button))]
     public partial class PermissionPopup : Alert
     {
         #region Properties
@@ -80,23 +79,10 @@ namespace P42.Uno.Controls
         #endregion
 
 
-        #region Fields
-        const string CancelButtonName = "_cancelButton";
-        Button _cancelButton;
-        #endregion
-
-
         #region Construction / Initialization
         public PermissionPopup() : base()
         {
-            DefaultStyleKey = typeof(PermissionPopup);
-        }
-
-        protected override void OnApplyTemplate()
-        {
-            _cancelButton = GetTemplateChild(CancelButtonName) as Button;
-            // must call base.OnApplyTemplate last so completion handler won't be called until template loading is truly complete
-            base.OnApplyTemplate();
+            Build();
         }
         #endregion
 
@@ -106,16 +92,16 @@ namespace P42.Uno.Controls
         /// Create the specified title, text, okText, cancelText, okButtonColor, cancelButtonColor, OkButtonContent and cancelTextColor.
         /// </summary>
         /// <param name="title">Title.</param>
-        /// <param name="content">Text.</param>
+        /// <param name="message">Text.</param>
         /// <param name="okButtonContent">Ok text.</param>
         /// <param name="cancelButtonContent">Cancel text.</param>
         /// <param name="okButtonColor">Ok button color.</param>
         /// <param name="cancelButtonColor">Cancel button color.</param>
         /// <param name="okButtonTextColor">Ok text color.</param>
         /// <param name="cancelTextColor">Cancel text color.</param>
-        public static async Task<PermissionPopup> CreateAsync(string title, object content, string okButtonContent = null, object cancelButtonContent = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default)
+        public static async Task<PermissionPopup> CreateAsync(object title, object message, string okButtonContent = null, object cancelButtonContent = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default)
         {
-            var popup = new PermissionPopup { TitleContent = title, Content = content, OkButtonContent = okButtonContent ?? "OK", CancelButtonContent = cancelButtonContent ?? "Cancel" };
+            var popup = new PermissionPopup { TitleContent = title, Message = message, OkButtonContent = okButtonContent ?? "OK", CancelButtonContent = cancelButtonContent ?? "Cancel" };
             if (okButtonTextColor != default)
                 popup.OkButtonForeground = okButtonTextColor.ToBrush();
             if (okButtonColor != default)
@@ -134,16 +120,16 @@ namespace P42.Uno.Controls
         /// <returns>The create.</returns>
         /// <param name="target">Target.</param>
         /// <param name="title">Title.</param>
-        /// <param name="content">Text.</param>
+        /// <param name="message">Text.</param>
         /// <param name="okButtonContent">Ok text.</param>
         /// <param name="cancelButtonContent">Cancel text.</param>
         /// <param name="okButtonColor">Ok button color.</param>
         /// <param name="cancelButtonColor">Cancel button color.</param>
         /// <param name="okButtonTextColor">Ok text color.</param>
         /// <param name="cancelTextColor">Cancel text color.</param>
-        public static async Task<PermissionPopup> CreateAsync(UIElement target, string title, object content, string okButtonContent = null, object cancelButtonContent = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default)
+        public static async Task<PermissionPopup> CreateAsync(UIElement target, object title, object message, string okButtonContent = null, object cancelButtonContent = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default)
         {
-            var popup = new PermissionPopup() { Target = target, TitleContent = title, Content = content, OkButtonContent = okButtonContent ?? "OK", CancelButtonContent = cancelButtonContent ?? "Cancel" };
+            var popup = new PermissionPopup() { Target = target, TitleContent = title, Message = message, OkButtonContent = okButtonContent ?? "OK", CancelButtonContent = cancelButtonContent ?? "Cancel" };
             if (okButtonTextColor != default)
                 popup.OkButtonForeground = okButtonTextColor.ToBrush();
             if (okButtonColor != default)

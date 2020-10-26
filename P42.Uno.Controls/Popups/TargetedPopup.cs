@@ -19,16 +19,27 @@ using Windows.UI.Xaml.Shapes;
 namespace P42.Uno.Controls
 {
 
-    [TemplatePart(Name = ContentPresenterName, Type = typeof(ContentPresenter))]
-    [TemplatePart(Name = BorderElementName, Type = typeof(BubbleBorder))]
-    [TemplatePart(Name = GridName, Type = typeof(Grid))]
-    [TemplatePart(Name = OverlayName, Type = typeof(Rectangle))]
-    public partial class TargetedPopup : ContentControl, ITargetedPopup
+    public partial class TargetedPopup : UserControl, ITargetedPopup
     {
         #region Properties
 
         #region Overridden Properties
-        
+
+        #region BubbleContent Property
+        public static readonly DependencyProperty BubbleContentProperty = DependencyProperty.Register(
+            nameof(BubbleContent),
+            typeof(UIElement),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(UIElement))
+        );
+        public UIElement BubbleContent
+        {
+            get => (UIElement)GetValue(BubbleContentProperty);
+            set => SetValue(BubbleContentProperty, value);
+        }
+        #endregion BubbleContent Property
+
+
         #region HorizontalAlignment Property
         public static readonly new DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
             nameof(HorizontalAlignment),
@@ -463,14 +474,6 @@ namespace P42.Uno.Controls
         #region Fields
         const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Center;
         const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Center;
-        const string ContentPresenterName = "_contentPresenter";
-        const string BorderElementName = "_border";
-        const string GridName = "_grid";
-        const string OverlayName = "_overlay";
-        ContentPresenter _contentPresenter;
-        BubbleBorder _border;
-        Grid _grid;
-        Rectangle _overlay;
         #endregion
 
 
@@ -485,12 +488,12 @@ namespace P42.Uno.Controls
 
 
         #region Construction / Initialization
-        public static async Task<TargetedPopup> CreateAsync(UIElement target, object content)
+        public static async Task<TargetedPopup> CreateAsync(UIElement target, UIElement bubbleContent)
         {
             var result = new TargetedPopup
             {
                 Target = target,
-                Content = content
+                BubbleContent = bubbleContent
             };
             await result.PushAsync();
             return result;
@@ -502,26 +505,11 @@ namespace P42.Uno.Controls
             base.HorizontalAlignment = HorizontalAlignment.Stretch;
             base.VerticalAlignment = VerticalAlignment.Stretch;
             ActualPointerDirection = PointerDirection.None;
-            this.DefaultStyleKey = typeof(TargetedPopup);
+
+            Build();
         }
 
-        TaskCompletionSource<bool> _templateAppliedCompletionSource;
-        protected override void OnApplyTemplate()
-        {
-            _contentPresenter = (ContentPresenter)GetTemplateChild(ContentPresenterName); ;
-            _border = (BubbleBorder)GetTemplateChild(BorderElementName); ;
-            _border.HorizontalAlignment = HorizontalAlignment;
-            _border.VerticalAlignment = VerticalAlignment;
-            _border.PointerLength = PointerLength;
-            //_border.Measure(AppWindow.Size());
-            _grid = (Grid)GetTemplateChild(GridName);
-            _overlay = (Rectangle)GetTemplateChild(OverlayName);
-
-            base.OnApplyTemplate();
-            _templateAppliedCompletionSource?.SetResult(true);
-        }
-
-        async Task AssureGraft()
+        void AssureGraft()
         {
             Grid parentGrid = null;
             if (Parent is Grid parent)
@@ -558,6 +546,7 @@ namespace P42.Uno.Controls
             else
                 throw new Exception("no frame as of yet?");
 
+            /*
             // wait for Template application
             if (_grid is null)
             {
@@ -565,6 +554,7 @@ namespace P42.Uno.Controls
                 await _templateAppliedCompletionSource.Task;
 
             }
+            */
         }
 
         #endregion
@@ -599,7 +589,7 @@ namespace P42.Uno.Controls
                     return;
             }
 
-            await AssureGraft();
+            AssureGraft();
 
             PushPopState = PushPopState.Pushing;
             _popCompletionSource = null;
@@ -809,7 +799,7 @@ namespace P42.Uno.Controls
             var windowHeight = windowSize.Height - Margin.Vertical();
             var cleanSize = RectangleBorderSize(new Size(windowWidth, windowHeight));
 
-            if (PreferredPointerDirection == PointerDirection.None)
+            if (PreferredPointerDirection == PointerDirection.None || Target is null)
             {
                 System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateMarginAndAlignment PreferredPointerDirection == PointerDirection.None");
                 CleanMarginAndAlignment(HorizontalAlignment,VerticalAlignment, cleanSize);

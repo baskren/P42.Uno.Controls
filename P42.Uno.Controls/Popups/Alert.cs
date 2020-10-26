@@ -12,7 +12,6 @@ using Windows.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
-    [TemplatePart(Name = OkButtonName, Type = typeof(Button))]
     public partial class Alert : Toast
     {
         #region Properties
@@ -65,24 +64,18 @@ namespace P42.Uno.Controls
         #endregion
 
 
-        #region Fields
-        const string OkButtonName = "_okButton";
-        protected Button _okButton;
-        #endregion
-
-
         #region Construction / Initialization
         /// <summary>
         /// Create and present the specified title, text, okText, cancelText, okButtonColor, cancelButtonColor, okTextColor and cancelTextColor.
         /// </summary>
         /// <param name="title">Title.</param>
-        /// <param name="content">Text.</param>
+        /// <param name="message">Text.</param>
         /// <param name="okContent">Ok text.</param>
         /// <param name="okButtonColor">Ok button color.</param>
         /// <param name="okTextColor">Ok text color.</param>
-        public static async Task<Alert> CreateAsync(string title, object content, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
+        public static async Task<Alert> CreateAsync(object title, object message, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
         {
-            var popup = new Alert { TitleContent = title, Content = content, OkButtonContent = okContent ?? "OK" };
+            var popup = new Alert { TitleContent = title, Message = message, OkButtonContent = okContent ?? "OK" };
             if (okTextColor != default)
                 popup.OkButtonForeground = okTextColor.ToBrush();
             if (okButtonColor != default)
@@ -101,9 +94,9 @@ namespace P42.Uno.Controls
         /// <param name="okText">Ok text.</param>
         /// <param name="okButtonColor">Ok button color.</param>
         /// <param name="okTextColor">Ok text color.</param>
-        public static async Task<Alert> CreateAsync(UIElement target, string title, object content, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
+        public static async Task<Alert> CreateAsync(UIElement target, object title, object message, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
         {
-            var popup = new Alert() {Target = target, TitleContent = title, Content = content, OkButtonContent = okContent ?? "OK" };
+            var popup = new Alert() {Target = target, TitleContent = title, Message = message, OkButtonContent = okContent ?? "OK" };
             if (okTextColor != default)
                 popup.OkButtonForeground = okTextColor.ToBrush();
             if (okButtonColor != default)
@@ -115,15 +108,9 @@ namespace P42.Uno.Controls
 
         public Alert() : base()
         {
-            DefaultStyleKey = typeof(Alert);
+            Build();
         }
 
-        protected override void OnApplyTemplate()
-        {
-            _okButton = GetTemplateChild(OkButtonName) as Button;
-            // must call base.OnApplyTemplate last so completion handler won't be called until template loading is truly complete
-            base.OnApplyTemplate();
-        }
         #endregion
 
 

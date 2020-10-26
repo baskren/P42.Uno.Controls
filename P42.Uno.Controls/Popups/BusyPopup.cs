@@ -10,7 +10,6 @@ using Windows.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
-    [TemplatePart(Name = ProgressRingName, Type = typeof(ProgressRing))]
     public partial class BusyPopup : Toast
     {
         #region Properties
@@ -43,9 +42,9 @@ namespace P42.Uno.Controls
 
 
         #region Factory
-        public static new async Task<BusyPopup> CreateAsync(object content, TimeSpan popAfter = default)
+        public static new async Task<BusyPopup> CreateAsync(object message, TimeSpan popAfter = default)
         {
-            var result = new BusyPopup {Content = content, PopAfter = popAfter, };
+            var result = new BusyPopup {Message = message, PopAfter = popAfter, };
             await result.PushAsync();
             return result;
         }
@@ -54,49 +53,29 @@ namespace P42.Uno.Controls
         /// Create and present the specified title and text.
         /// </summary>
         /// <param name="titleContent"></param>
-        /// <param name="content"></param>
+        /// <param name="message"></param>
         /// <param name="popAfter">Will dissappear after popAfter TimeSpan</param>
         /// <returns></returns>
-        public static new async Task<BusyPopup> CreateAsync(object titleContent, object content, TimeSpan popAfter = default)
+        public static new async Task<BusyPopup> CreateAsync(object titleContent, object message, TimeSpan popAfter = default)
         {
-            var result = new BusyPopup { TitleContent = titleContent, Content = content, PopAfter = popAfter, };
+            var result = new BusyPopup { TitleContent = titleContent, Message = message, PopAfter = popAfter, };
             await result.PushAsync();
             return result;
         }
 
-        public static new async Task<BusyPopup> CreateAsync(UIElement target, object content, TimeSpan popAfter = default)
+        public static new async Task<BusyPopup> CreateAsync(UIElement target, object title,  object message, TimeSpan popAfter = default)
         {
-            var result = new BusyPopup { Target = target, Content = content, PopAfter = popAfter, };
+            var result = new BusyPopup { Target = target, TitleContent = title, Message = message, PopAfter = popAfter, };
             await result.PushAsync();
             return result;
         }
-
-        public static new async Task<BusyPopup> CreateAsync(UIElement target, object titleContent, object content, TimeSpan popAfter = default)
-        {
-            var result = new BusyPopup { Target = target, TitleContent = titleContent, Content = content, PopAfter = popAfter, };
-            await result.PushAsync();
-            return result;
-        }
-        #endregion
-
-
-        #region Fields
-        const string ProgressRingName = "_progressRing";
-        ProgressRing _progressRing;
         #endregion
 
 
         #region Construction / Initialization
         public BusyPopup()
         {
-            DefaultStyleKey = typeof(BusyPopup);
-        }
-
-        protected override void OnApplyTemplate()
-        {
-            _progressRing = (ProgressRing)GetTemplateChild(ProgressRingName);
-            // must call base.OnApplyTemplate last so completion handler won't be called until template loading is truly complete
-            base.OnApplyTemplate();
+            Build();
         }
         #endregion
 
