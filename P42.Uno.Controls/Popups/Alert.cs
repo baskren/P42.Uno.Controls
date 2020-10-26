@@ -36,7 +36,7 @@ namespace P42.Uno.Controls
             nameof(OkButtonForeground),
             typeof(Brush),
             typeof(Alert),
-            new PropertyMetadata(default(Brush))
+            new PropertyMetadata(((Color)Application.Current.Resources["SystemColorHighlightTextColor"]).ToBrush())
         );
         public Brush OkButtonForeground
         {
@@ -51,7 +51,7 @@ namespace P42.Uno.Controls
             nameof(OkButtonBackground),
             typeof(Brush),
             typeof(Alert),
-            new PropertyMetadata(default(Brush))
+            new PropertyMetadata(((Color)Application.Current.Resources["SystemColorHighlightColor"]).ToBrush())
         );
         public Brush OkButtonBackground
         {

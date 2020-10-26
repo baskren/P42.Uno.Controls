@@ -15,13 +15,8 @@ namespace P42.Uno.Controls
             nameof(TitleContent),
             typeof(object),
             typeof(Toast),
-            new PropertyMetadata(null, new PropertyChangedCallback(OnTitleContentChanged))
+            new PropertyMetadata(null)
         );
-        private static void OnTitleContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is Toast toast)
-                toast._titleBlock.Content = e.NewValue;
-        }
         public object TitleContent
         {
             get => GetValue(TitleProperty);
@@ -43,6 +38,21 @@ namespace P42.Uno.Controls
             set => SetValue(MessageProperty, value);
         }
         #endregion Message Property
+
+
+        #region IconElement Property
+        public static readonly DependencyProperty IconElementProperty = DependencyProperty.Register(
+            nameof(IconElement),
+            typeof(IconElement),
+            typeof(Toast),
+            new PropertyMetadata(default(IconElement))
+        );
+        public IconElement IconElement
+        {
+            get => (IconElement)GetValue(IconElementProperty);
+            set => SetValue(IconElementProperty, value);
+        }
+        #endregion IconElement Property
 
 
         #region Factory

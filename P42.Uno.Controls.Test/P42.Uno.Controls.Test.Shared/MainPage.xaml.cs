@@ -18,6 +18,7 @@ using Windows.UI;
 using System.Threading.Tasks;
 using P42.Utils.Uno;
 using P42.Uno.Markup;
+using System.Reflection.Emit;
 
 #if NETFX_CORE
 #else
@@ -47,12 +48,38 @@ namespace P42.Uno.Controls.Test
         string[] _hzSource;
         string[] _vtSource;
 
-        //BubbleBorder _bubbleBorder;
+        /*
         TargetedPopup _targetedPopup = new TargetedPopup
         {
             PopupContent = "TEXT BUBBLE COTNENT"
             //BubbleContent = new TextBlock { Text = "I am a targeted popup!" }
         };
+        Toast _toast = new Toast
+        {
+            TitleContent =  "TOAST TITLE 2" ,
+            Message = new TextBlock {  Text = "Toast message content"},
+            IconElement = new SymbolIcon { Symbol=Symbol.AddFriend }
+        };
+
+        Alert _alert = new Alert
+        {
+            TitleContent = "ALERT TITLE",
+            Message = new TextBlock { Text = "alert text" },
+            IconElement = new SymbolIcon { Symbol = Symbol.Important },
+            OkButtonContent = "GO FOR IT!"
+        };
+        */
+        PermissionPopup _permission = new PermissionPopup
+        {
+            TitleContent =  new TextBlock { Text = "PERMISSION TITLE" },
+            
+            Message =  new TextBlock  { Text = "PERMISSION TEXT"  },
+            IconElement = new SymbolIcon { Symbol = Symbol.Audio },
+            OkButtonContent = "YUP",
+            CancelButtonContent = "NOPE!",
+            CancelButtonBackground = new SolidColorBrush(Colors.Red)
+        };
+
 
         public MainPage()
         {
@@ -123,7 +150,7 @@ namespace P42.Uno.Controls.Test
         async void _button_Click(object sender, RoutedEventArgs e)
         {
 
-            var popup = _targetedPopup;
+            var popup = _permission;
 #if __WASM__
                 var prefDir = (PointerDirection) Enum.Parse(typeof(PointerDirection), _pointerDirectionCombo.SelectedItem as string);
                 var hzAlign = Enum.Parse(typeof(HorizontalAlignment),_hzAlignCombo.SelectedItem as string, true);
@@ -141,7 +168,7 @@ namespace P42.Uno.Controls.Test
             popup.Target = sender as UIElement;
 
             //popup.PopupContent = new TextBlock { Text =  "We are going to the supermarket" };
-            popup.Content(new TextBlock { Text = "Green Car" });
+            //popup.Content(new TextBlock { Text = "Green Car" });
             popup.Background(Colors.Yellow);
             popup.BorderBrush(Colors.Red);
             popup.Margin(50);

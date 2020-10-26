@@ -490,7 +490,11 @@ namespace P42.Uno.Controls
         protected override Size ArrangeOverride(Size finalSize)
         {
             //System.Diagnostics.Debug.WriteLine(GetType() + ".ArrangeOverride(" + finalSize + ")");
-            return base.ArrangeOverride(finalSize);
+
+            if (_contentPresenter.Content != null)
+                return base.ArrangeOverride(finalSize);
+            else
+                return finalSize;
         }
 
         SKPath GeneratePath(Size measuredSize = default)

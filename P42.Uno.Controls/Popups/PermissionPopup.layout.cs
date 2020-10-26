@@ -21,29 +21,22 @@ namespace P42.Uno.Controls
 
         void Build()
         {
-            _cancelButtonContentPresenter = new ContentPresenter()
-                .TextWrapping(TextWrapping.WrapWholeWords)
-                .Bind(ContentPresenter.FontFamilyProperty, this, nameof(FontFamily))
-                .Bind(ContentPresenter.FontSizeProperty, this, nameof(FontSize))
-                .Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
-                .Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
-                .Bind(ContentPresenter.FontWeightProperty, this, nameof(FontWeight))
-                .Bind(ContentPresenter.ForegroundProperty, this, nameof(CancelButtonForeground))
-                .Bind(ContentPresenter.ContentProperty, this, nameof(CancelButtonContent));
+            _bubbleContentGrid.Children.Remove(_okButton);
+            _okButton.Row(0).Column(0);
 
-            _cancelButton = new Button()
+            new Button()
+                .Assign(out _cancelButton)
                 .Column(1)
                 .StretchHorizontal()
                 .CornerRadius(2)
-                .Bind(ContentPresenter.ForegroundProperty, this, nameof(CancelButtonForeground))
-                .Bind(ContentPresenter.BackgroundProperty, this, nameof(CancelButtonBackground));
+                .Bind(Button.ForegroundProperty, this, nameof(CancelButtonForeground))
+                .Bind(Button.BackgroundProperty, this, nameof(CancelButtonBackground))
+                .Bind(Button.ContentProperty, this, nameof(CancelButtonContent));
 
-            _bubbleContentGrid.Children.Remove(_okButton);
-
-            _okButton.Row(0);
-
-            _buttonBar = new Grid()
+            new Grid()
+                .Assign(out _buttonBar)
                 .Row(2)
+                .Column(1)
                 .ColumnSpacing(5)
                 .Columns(
                     GridRowsColumns.Star, GridRowsColumns.Star

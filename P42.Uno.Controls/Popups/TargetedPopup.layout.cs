@@ -56,7 +56,7 @@ namespace P42.Uno.Controls
                 Children =
                 {
                      new Rectangle()
-                        .AssignTo(ref _overlay)
+                        .Assign(out _overlay)
                         .Margin(0)
                         .Stretch()
                         .Collapsed()
@@ -66,7 +66,7 @@ namespace P42.Uno.Controls
                     {
                         
                         Content =  new ContentPresenter()
-                            .AssignTo(ref _contentPresenter)
+                            .Assign(out _contentPresenter)
                             .Margin(0)
                             .Padding(0)
                             .TextWrapping(TextWrapping.WrapWholeWords)
@@ -75,14 +75,16 @@ namespace P42.Uno.Controls
                             .Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
                             .Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
                             .Bind(ContentPresenter.FontWeightProperty, this, nameof(FontWeight))
-                        
+                            .Bind(ContentPresenter.ContentProperty, this, nameof(PopupContent))
+                            .NullOrEmptyCollapse()
                     }
-                        .AssignTo(ref _border)
+                        .Assign(out _border)
                         .Bind(BubbleBorder.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
                         .Bind(BubbleBorder.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
                         .Bind(BubbleBorder.PaddingProperty, this, nameof(PopupPadding))
                         .Bind(BubbleBorder.BackgroundProperty, this, nameof(Background))
                         .Bind(BubbleBorder.BorderBrushProperty, this, nameof(BorderBrush))
+                        .Bind(BubbleBorder.BorderThicknessProperty, this, nameof(BorderThickness))
                         .Bind(BubbleBorder.CornerRadiusProperty, this, nameof(CornerRadius))
                         .Bind(BubbleBorder.HasShadowProperty, this, nameof(HasShadow))
                         .Bind(BubbleBorder.PointerBiasProperty, this, nameof(PointerBias))
@@ -91,7 +93,7 @@ namespace P42.Uno.Controls
                         .Bind(BubbleBorder.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
                 }
             }
-                .AssignTo(ref _grid)
+                .Assign(out _grid)
                 .DataContext(this)
                 .Margin(0)
                 .Padding(0)

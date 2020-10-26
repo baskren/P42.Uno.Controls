@@ -21,7 +21,7 @@ namespace P42.Uno.Controls
             nameof(CancelButtonContent),
             typeof(object),
             typeof(PermissionPopup),
-            new PropertyMetadata(default(string))
+            new PropertyMetadata("Cancel")
         );
         public object CancelButtonContent
         {
@@ -36,7 +36,7 @@ namespace P42.Uno.Controls
             nameof(CancelButtonForeground),
             typeof(Brush),
             typeof(PermissionPopup),
-            new PropertyMetadata(default(Brush))
+            new PropertyMetadata(((Color)Application.Current.Resources["SystemColorButtonTextColor"]).ToBrush())
         );
         public Brush CancelButtonForeground
         {
@@ -51,7 +51,7 @@ namespace P42.Uno.Controls
             nameof(CancelButtonBackground),
             typeof(Brush),
             typeof(PermissionPopup),
-            new PropertyMetadata(default(Brush))
+            new PropertyMetadata(((Color)Application.Current.Resources["SystemColorButtonFaceColor"]).ToBrush())
         );
         public Brush CancelButtonBackground
         {
@@ -80,7 +80,7 @@ namespace P42.Uno.Controls
 
 
         #region Construction / Initialization
-        public PermissionPopup() : base()
+        public PermissionPopup()
         {
             Build();
         }
