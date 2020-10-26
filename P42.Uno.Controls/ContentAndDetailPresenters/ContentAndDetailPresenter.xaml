@@ -41,8 +41,8 @@
             </Border>
             <local:TargetedPopup
                 x:Name="_targetedPopup"
-                Margin="50"
                 Padding="4"
+                BorderMargin="50"
                 LightDismissOverlayColor="#01FFFFFF"
                 Opacity="0"
                 PreferredPointerDirection="Vertical"

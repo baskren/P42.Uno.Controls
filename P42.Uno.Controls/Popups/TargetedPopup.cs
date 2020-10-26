@@ -23,26 +23,23 @@ namespace P42.Uno.Controls
     {
         #region Properties
 
-        #region Overridden Properties
-
-        #region BubbleContent Property
-        public static readonly DependencyProperty BubbleContentProperty = DependencyProperty.Register(
-            nameof(BubbleContent),
-            typeof(UIElement),
+        #region BorderContent Property
+        public static readonly DependencyProperty BorderContentProperty = DependencyProperty.Register(
+            nameof(BorderContent),
+            typeof(object),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(UIElement))
+            new PropertyMetadata(null)
         );
-        public UIElement BubbleContent
+        public object BorderContent
         {
-            get => (UIElement)GetValue(BubbleContentProperty);
-            set => SetValue(BubbleContentProperty, value);
+            get => (object)GetValue(BorderContentProperty);
+            set => SetValue(BorderContentProperty, value);
         }
-        #endregion BubbleContent Property
+        #endregion 
 
-
-        #region HorizontalAlignment Property
-        public static readonly new DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
-            nameof(HorizontalAlignment),
+        #region BorderHorizontalAlignment Property
+        public static readonly DependencyProperty BorderHorizontalAlignmentProperty = DependencyProperty.Register(
+            nameof(BorderHorizontalAlignment),
             typeof(HorizontalAlignment),
             typeof(TargetedPopup),
             new PropertyMetadata(DefaultHorizontalAlignment, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnHorizontalAlignmentChanged(e)))
@@ -52,16 +49,16 @@ namespace P42.Uno.Controls
             if (_border != null)
                 UpdateMarginAndAlignment();
         }
-        public new HorizontalAlignment HorizontalAlignment
+        public HorizontalAlignment BorderHorizontalAlignment
         {
-            get => (HorizontalAlignment)GetValue(HorizontalAlignmentProperty);
-            set => SetValue(HorizontalAlignmentProperty, value);
+            get => (HorizontalAlignment)GetValue(BorderHorizontalAlignmentProperty);
+            set => SetValue(BorderHorizontalAlignmentProperty, value);
         }
         #endregion HorizontalAlignment Property
 
-        #region VerticalAlignment Property
-        public static readonly new DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register(
-            nameof(VerticalAlignment),
+        #region BorderVerticalAlignment Property
+        public static readonly DependencyProperty BorderVerticalAlignmentProperty = DependencyProperty.Register(
+            nameof(BorderVerticalAlignment),
             typeof(VerticalAlignment),
             typeof(TargetedPopup),
             new PropertyMetadata(DefaultVerticalAlignment, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnVerticalAlignmentChanged(e)))
@@ -71,33 +68,31 @@ namespace P42.Uno.Controls
             if (_border != null)
                 UpdateMarginAndAlignment();
         }
-        public new VerticalAlignment VerticalAlignment
+        public VerticalAlignment BorderVerticalAlignment
         {
-            get => (VerticalAlignment)GetValue(VerticalAlignmentProperty);
-            set => SetValue(VerticalAlignmentProperty, value);
+            get => (VerticalAlignment)GetValue(BorderVerticalAlignmentProperty);
+            set => SetValue(BorderVerticalAlignmentProperty, value);
         }
         #endregion VerticalAlignment Property
         
-        #region Margin Property
-        public static readonly new DependencyProperty MarginProperty = DependencyProperty.Register(
-            nameof(Margin),
+        #region BorderMargin Property
+        public static readonly DependencyProperty BorderMarginProperty = DependencyProperty.Register(
+            nameof(BorderMargin),
             typeof(Thickness),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(Thickness), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnMarginChanged(e)))
+            new PropertyMetadata(default(Thickness), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnBorderMarginChanged(e)))
         );
-        protected virtual void OnMarginChanged(DependencyPropertyChangedEventArgs e)
+        protected virtual void OnBorderMarginChanged(DependencyPropertyChangedEventArgs e)
         {
             if (_border != null)
                 UpdateMarginAndAlignment();
         }
-        public new Thickness Margin
+        public Thickness BorderMargin
         {
-            get => (Thickness)GetValue(MarginProperty);
-            set => SetValue(MarginProperty, value);
+            get => (Thickness)GetValue(BorderMarginProperty);
+            set => SetValue(BorderMarginProperty, value);
         }
         #endregion Margin Property
-
-        #endregion
 
         #region HasShadow Property
         public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
@@ -319,7 +314,7 @@ namespace P42.Uno.Controls
             nameof(PointerMargin),
             typeof(double),
             typeof(TargetedPopup),
-            new PropertyMetadata(5.0)
+            new PropertyMetadata(3.0)
         );
         public double PointerMargin
         {
@@ -450,6 +445,7 @@ namespace P42.Uno.Controls
                 var contentPresenter = _contentPresenter;
                 while (contentPresenter?.Content is ContentPresenter cp)
                     contentPresenter = cp;
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.IsEmpty: " + (contentPresenter.Content is null ? "TRUE" : "FALSE") );
                 return contentPresenter.Content is null;
             }
         }
@@ -474,6 +470,8 @@ namespace P42.Uno.Controls
         #region Fields
         const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Center;
         const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Center;
+
+
         #endregion
 
 
@@ -493,7 +491,7 @@ namespace P42.Uno.Controls
             var result = new TargetedPopup
             {
                 Target = target,
-                BubbleContent = bubbleContent
+                BorderContent = bubbleContent
             };
             await result.PushAsync();
             return result;
@@ -501,12 +499,10 @@ namespace P42.Uno.Controls
 
         public TargetedPopup()
         {
-            Visibility = Visibility.Collapsed;
-            base.HorizontalAlignment = HorizontalAlignment.Stretch;
-            base.VerticalAlignment = VerticalAlignment.Stretch;
-            ActualPointerDirection = PointerDirection.None;
-
             Build();
+
+
+
         }
 
         void AssureGraft()
@@ -514,6 +510,9 @@ namespace P42.Uno.Controls
             Grid parentGrid = null;
             if (Parent is Grid parent)
                 parentGrid = parent;
+
+            Content = _grid;
+            Margin = new Thickness(0);
 
             // put into VisualTree
             if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
@@ -523,7 +522,7 @@ namespace P42.Uno.Controls
                     if (page.Content is Grid pageGrid)
                     {
                         var margin = pageGrid.Margin.Add(pageGrid.Padding).Negate();
-                        base.Margin = margin;
+                        Margin = margin;
                         var rows = Math.Max(pageGrid.RowDefinitions?.Count ?? 1, 1);
                         var cols = Math.Max(pageGrid.ColumnDefinitions?.Count ?? 1, 1);
                         Grid.SetRowSpan(this, rows);
@@ -790,19 +789,19 @@ namespace P42.Uno.Controls
                 return;
             //await AssureGraft();
 
-            _border.Margin = Margin;
+            _border.Margin = BorderMargin;
 
             var windowSize = AppWindow.Size();
             if (windowSize.Width < 1 || windowSize.Height < 1)
                 return;
-            var windowWidth = windowSize.Width - Margin.Horizontal();
-            var windowHeight = windowSize.Height - Margin.Vertical();
+            var windowWidth = windowSize.Width - BorderMargin.Horizontal();
+            var windowHeight = windowSize.Height - BorderMargin.Vertical();
             var cleanSize = RectangleBorderSize(new Size(windowWidth, windowHeight));
 
             if (PreferredPointerDirection == PointerDirection.None || Target is null)
             {
                 System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateMarginAndAlignment PreferredPointerDirection == PointerDirection.None");
-                CleanMarginAndAlignment(HorizontalAlignment,VerticalAlignment, cleanSize);
+                CleanMarginAndAlignment(BorderHorizontalAlignment,BorderVerticalAlignment, cleanSize);
                 return;
             }
 
@@ -820,49 +819,52 @@ namespace P42.Uno.Controls
             }
 
             ActualPointerDirection = stats.PointerDirection;
-            var borderMargin = Margin;
+            var borderMargin = BorderMargin;
+            var targetMargin = new Thickness();
+            if (Target is FrameworkElement element)
+                targetMargin = element.Margin;
 
             if (stats.PointerDirection.IsHorizontal())
             {
                 if (stats.PointerDirection == PointerDirection.Left)
                 {
-                    borderMargin.Left = targetBounds.Right;
-                    base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment == HorizontalAlignment.Stretch ? HorizontalAlignment.Stretch : HorizontalAlignment.Left;
+                    borderMargin.Left = targetBounds.Right - targetMargin.Right;
+                    base.HorizontalAlignment = _border.HorizontalAlignment = BorderHorizontalAlignment == HorizontalAlignment.Stretch ? HorizontalAlignment.Stretch : HorizontalAlignment.Left;
                 }
                 else
                 {
-                    if (HorizontalAlignment == HorizontalAlignment.Stretch)
+                    if (BorderHorizontalAlignment == HorizontalAlignment.Stretch)
                     {
-                        base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment;
+                        base.HorizontalAlignment = _border.HorizontalAlignment = BorderHorizontalAlignment;
                     }
                     else
                     {
-                        borderMargin.Left = targetBounds.Left - stats.BorderSize.Width - PointerLength;
+                        borderMargin.Left = targetBounds.Left - stats.BorderSize.Width;
                         base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
                     }
                 }
 
-                if (VerticalAlignment == VerticalAlignment.Top)
+                if (BorderVerticalAlignment == VerticalAlignment.Top)
                 {
-                    borderMargin.Top = Math.Max(Margin.Top, targetBounds.Top);
+                    borderMargin.Top = Math.Max(BorderMargin.Top, targetBounds.Top);
                     base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Top;
                 }
-                else if (VerticalAlignment == VerticalAlignment.Center)
+                else if (BorderVerticalAlignment == VerticalAlignment.Center)
                 {
-                    borderMargin.Top = Math.Max(Margin.Top, (targetBounds.Top + targetBounds.Bottom) / 2.0 - stats.BorderSize.Height / 2.0);
+                    borderMargin.Top = Math.Max(BorderMargin.Top, (targetBounds.Top + targetBounds.Bottom) / 2.0 - stats.BorderSize.Height / 2.0);
                     base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Top;
                 }
-                else if (VerticalAlignment == VerticalAlignment.Bottom)
+                else if (BorderVerticalAlignment == VerticalAlignment.Bottom)
                 {
-                    borderMargin.Top = Math.Max(Margin.Top, targetBounds.Bottom - stats.BorderSize.Height);
+                    borderMargin.Top = Math.Max(BorderMargin.Top, targetBounds.Bottom - stats.BorderSize.Height);
                     base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Top;
                 }
                 else
                 {
                     base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Stretch;
                 }
-                if (borderMargin.Top + stats.BorderSize.Height > windowSize.Height - Margin.Bottom)
-                    borderMargin.Top = windowSize.Height - Margin.Bottom - stats.BorderSize.Height;
+                if (borderMargin.Top + stats.BorderSize.Height > windowSize.Height - BorderMargin.Bottom)
+                    borderMargin.Top = windowSize.Height - BorderMargin.Bottom - stats.BorderSize.Height;
 
 
                 _border.PointerAxialPosition = (targetBounds.Top - borderMargin.Top) + targetBounds.Bottom - (targetBounds.Top + targetBounds.Bottom) / 2.0;
@@ -872,43 +874,43 @@ namespace P42.Uno.Controls
                 if (stats.PointerDirection == PointerDirection.Up)
                 {
                     borderMargin.Top = targetBounds.Bottom;
-                    base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment == VerticalAlignment.Stretch ? VerticalAlignment.Stretch : VerticalAlignment.Top;
+                    base.VerticalAlignment = _border.VerticalAlignment = BorderVerticalAlignment == VerticalAlignment.Stretch ? VerticalAlignment.Stretch : VerticalAlignment.Top;
                 }
                 else
                 {
-                    if (VerticalAlignment == VerticalAlignment.Stretch)
+                    if (BorderVerticalAlignment == VerticalAlignment.Stretch)
                     {
-                        base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment;
+                        base.VerticalAlignment = _border.VerticalAlignment = BorderVerticalAlignment;
                     }
                     else
                     {
-                        borderMargin.Top = targetBounds.Top - stats.BorderSize.Height - PointerLength;
+                        borderMargin.Top = targetBounds.Top - stats.BorderSize.Height;
                         base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Top;
                     }
                 }
 
-                if (HorizontalAlignment == HorizontalAlignment.Left)
+                if (BorderHorizontalAlignment == HorizontalAlignment.Left)
                 {
-                    borderMargin.Left = Math.Max(Margin.Left, targetBounds.Left);
+                    borderMargin.Left = Math.Max(BorderMargin.Left, targetBounds.Left);
                     base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
 
                 }
-                else if (HorizontalAlignment == HorizontalAlignment.Center)
+                else if (BorderHorizontalAlignment == HorizontalAlignment.Center)
                 {
-                    borderMargin.Left = Math.Max(Margin.Left, (targetBounds.Left + targetBounds.Right) / 2.0 - stats.BorderSize.Width / 2.0);
+                    borderMargin.Left = Math.Max(BorderMargin.Left, (targetBounds.Left + targetBounds.Right) / 2.0 - stats.BorderSize.Width / 2.0);
                     base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
                 }
-                else if (HorizontalAlignment == HorizontalAlignment.Right)
+                else if (BorderHorizontalAlignment == HorizontalAlignment.Right)
                 {
-                    borderMargin.Left = Math.Max(Margin.Left, targetBounds.Right - stats.BorderSize.Width);
+                    borderMargin.Left = Math.Max(BorderMargin.Left, targetBounds.Right - stats.BorderSize.Width);
                     base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
                 }
                 else
                 {
                     base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Stretch;
                 }
-                if (borderMargin.Left + stats.BorderSize.Width > windowSize.Width - Margin.Right)
-                    borderMargin.Left = windowSize.Width - Margin.Right - stats.BorderSize.Width;
+                if (borderMargin.Left + stats.BorderSize.Width > windowSize.Width - BorderMargin.Right)
+                    borderMargin.Left = windowSize.Width - BorderMargin.Right - stats.BorderSize.Width;
 
                 _border.PointerAxialPosition = (targetBounds.Left - borderMargin.Left) + targetBounds.Right - (targetBounds.Left + targetBounds.Right) / 2.0;
             }
@@ -930,7 +932,7 @@ namespace P42.Uno.Controls
             if (_border is null)
                 return;
 
-            var borderMargin = Margin;
+            var borderMargin = BorderMargin;
 
             var windowSize = AppWindow.Size();
             if (windowSize.Width < 1 || windowSize.Height < 1)
@@ -949,12 +951,12 @@ namespace P42.Uno.Controls
         DirectionStats BestFit(Thickness availableSpace, Size cleanSize)
         {
             // given the amount of free space, determine if the border will fit 
-            var windowSpace = new Size(AppWindow.Size().Width - Margin.Horizontal(), AppWindow.Size().Height - Margin.Vertical());
+            var windowSpace = new Size(AppWindow.Size().Width - BorderMargin.Horizontal(), AppWindow.Size().Height - BorderMargin.Vertical());
             var cleanStat = new DirectionStats
             {
                 PointerDirection = PointerDirection.None,
                 BorderSize = cleanSize,
-                FreeSpace = new Size(0,0)
+                FreeSpace = new Size(windowSpace.Width - cleanSize.Width, windowSpace.Height - cleanSize.Height)
             };
 
             #region Check if clean border fits in preferred pointer quadrants
@@ -1027,15 +1029,15 @@ namespace P42.Uno.Controls
             {
                 if (target.Right > 0 && target.Left < windowBounds.Width && target.Bottom > 0 && target.Top < windowBounds.Height)
                 {
-                    var availL = target.Left - Margin.Left;
-                    var availR = windowBounds.Width - Margin.Right - target.Right;
-                    var availT = target.Top - Margin.Top;
-                    var availB = windowBounds.Height - target.Bottom - Margin.Bottom;
+                    var availL = target.Left - BorderMargin.Left;
+                    var availR = windowBounds.Width - BorderMargin.Right - target.Right;
+                    var availT = target.Top - BorderMargin.Top;
+                    var availB = windowBounds.Height - target.Bottom - BorderMargin.Bottom;
 
                     var maxWidth = MaxWidth;
                     if (Width > 0 && Width < maxWidth)
                         maxWidth = Width;
-                    if (maxWidth > 0 && HorizontalAlignment != HorizontalAlignment.Stretch)
+                    if (maxWidth > 0 && BorderHorizontalAlignment != HorizontalAlignment.Stretch)
                     {
                         availL = Math.Min(availL, maxWidth);
                         availR = Math.Min(availR, maxWidth);
@@ -1044,7 +1046,7 @@ namespace P42.Uno.Controls
                     var maxHeight = MaxHeight;
                     if (Height > 0 && Height < maxHeight)
                         maxHeight = Height;
-                    if (maxHeight > 0 && VerticalAlignment != VerticalAlignment.Stretch)
+                    if (maxHeight > 0 && BorderVerticalAlignment != VerticalAlignment.Stretch)
                     {
                         availT = Math.Min(availT, maxHeight);
                         availB = Math.Min(availB, maxHeight);
@@ -1055,7 +1057,7 @@ namespace P42.Uno.Controls
             }
 
             if (PointToOffScreenElements)
-                return new Thickness(windowBounds.Width - Margin.Horizontal(), windowBounds.Height - Margin.Vertical(), windowBounds.Width - Margin.Horizontal(), windowBounds.Height - Margin.Vertical());
+                return new Thickness(windowBounds.Width - BorderMargin.Horizontal(), windowBounds.Height - BorderMargin.Vertical(), windowBounds.Width - BorderMargin.Horizontal(), windowBounds.Height - BorderMargin.Vertical());
 
             return new Thickness(-1, -1, -1, -1);
         }
@@ -1064,7 +1066,7 @@ namespace P42.Uno.Controls
         {
             System.Diagnostics.Debug.WriteLine(GetType() + ".GetRectangleBorderStatsForDirection cleanStat:["+cleanStat+"]");
             var stats = new List<DirectionStats>();
-            if (pointerDirection.LeftAllowed() && cleanStat.FreeSpace.Width >= PointerLength)
+            if (pointerDirection.LeftAllowed() && (availableSpace.Right - cleanStat.BorderSize.Width) >= PointerLength)
             {
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Left;
@@ -1077,7 +1079,7 @@ namespace P42.Uno.Controls
                 }
             }
 
-            if (pointerDirection.RightAllowed() && cleanStat.FreeSpace.Width >= PointerLength)
+            if (pointerDirection.RightAllowed() && (availableSpace.Left - cleanStat.BorderSize.Width) >= PointerLength)
             {
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Right;
@@ -1090,7 +1092,7 @@ namespace P42.Uno.Controls
                 }
             }
 
-            if (pointerDirection.UpAllowed() && cleanStat.FreeSpace.Height >= PointerLength)
+            if (pointerDirection.UpAllowed() && (availableSpace.Bottom - cleanStat.BorderSize.Height) >= PointerLength)
             {
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Up;
@@ -1103,7 +1105,7 @@ namespace P42.Uno.Controls
                 }
             }
 
-            if (pointerDirection.DownAllowed() && cleanStat.FreeSpace.Height >= PointerLength)
+            if (pointerDirection.DownAllowed() && (availableSpace.Top - cleanStat.BorderSize.Height) >= PointerLength)
             {
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Down;

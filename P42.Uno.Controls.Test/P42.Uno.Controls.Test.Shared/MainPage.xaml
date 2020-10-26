@@ -87,6 +87,7 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Fill="Beige" />
+                <!--
                 <popups:BubbleBorder
                     x:Name="_bubbleBorder"
                     Margin="5"
@@ -110,7 +111,6 @@
                     x:Name="_targetedPopup"
                     Margin="10"
                     Content="I am a targeted popup!" />
-                <!--
                 <popups:Toast
                     x:Name="_toast"
                     Title="Sample Toast!"

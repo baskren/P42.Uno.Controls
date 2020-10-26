@@ -23,20 +23,20 @@ namespace P42.Uno.Controls
         {
             _cancelButtonContentPresenter = new ContentPresenter()
                 .TextWrapping(TextWrapping.WrapWholeWords)
-                .Bind(ContentPresenter.FontFamilyProperty, FontFamily)
-                .Bind(ContentPresenter.FontSizeProperty, FontSize)
-                .Bind(ContentPresenter.FontStretchProperty, FontStretch)
-                .Bind(ContentPresenter.FontStyleProperty, FontStyle)
-                .Bind(ContentPresenter.FontWeightProperty, FontWeight)
-                .Bind(ContentPresenter.ForegroundProperty, CancelButtonForeground)
-                .Bind(ContentPresenter.ContentProperty, CancelButtonContent);
+                .Bind(ContentPresenter.FontFamilyProperty, this, nameof(FontFamily))
+                .Bind(ContentPresenter.FontSizeProperty, this, nameof(FontSize))
+                .Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
+                .Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
+                .Bind(ContentPresenter.FontWeightProperty, this, nameof(FontWeight))
+                .Bind(ContentPresenter.ForegroundProperty, this, nameof(CancelButtonForeground))
+                .Bind(ContentPresenter.ContentProperty, this, nameof(CancelButtonContent));
 
             _cancelButton = new Button()
                 .Column(1)
                 .StretchHorizontal()
                 .CornerRadius(2)
-                .Bind(ContentPresenter.ForegroundProperty, CancelButtonForeground)
-                .Bind(ContentPresenter.BackgroundProperty, CancelButtonBackground);
+                .Bind(ContentPresenter.ForegroundProperty, this, nameof(CancelButtonForeground))
+                .Bind(ContentPresenter.BackgroundProperty, this, nameof(CancelButtonBackground));
 
             _bubbleContentGrid.Children.Remove(_okButton);
 

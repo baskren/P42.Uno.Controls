@@ -17,6 +17,7 @@ using P42.Uno.Controls;
 using Windows.UI;
 using System.Threading.Tasks;
 using P42.Utils.Uno;
+using P42.Uno.Markup;
 
 #if NETFX_CORE
 #else
@@ -46,6 +47,13 @@ namespace P42.Uno.Controls.Test
         string[] _hzSource;
         string[] _vtSource;
 
+        BubbleBorder _bubbleBorder;
+        TargetedPopup _targetedPopup = new TargetedPopup
+        {
+            BorderContent = "TEXT BUBBLE COTNENT"
+            //BubbleContent = new TextBlock { Text = "I am a targeted popup!" }
+        };
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -56,6 +64,27 @@ namespace P42.Uno.Controls.Test
             _hzAlignCombo.SelectedIndex = 0;
             _vtAlignCombo.ItemsSource = _vtSource = Enum.GetNames(typeof(VerticalAlignment));
             _vtAlignCombo.SelectedIndex = 0;
+
+            _bubbleBorder = new BubbleBorder()
+                .Margin(5)
+                .Padding(5)
+                .Left()
+                .Bottom()
+                .ContentCenter()
+                .Background(Colors.Orange)
+                .BorderBrush(Colors.Black)
+                .BorderThickness(1)
+                .CornerRadius(5)
+                .HasShadow()
+                .PointerDirection(PointerDirection.Down)
+                .Content(
+                    new Border()
+                        .Background("#40FF")
+                        .Child(new TextBlock { Text = "TEST TEST TEST" })
+                );
+            _grid.Children.Add(_bubbleBorder);
+
+            
         }
         /*
         TargetedPopup _TargetedPopup = new TargetedPopup
@@ -105,12 +134,16 @@ namespace P42.Uno.Controls.Test
 #endif
             _bubbleBorder.HorizontalAlignment = (HorizontalAlignment)hzAlign;
 
-            popup.VerticalAlignment = (VerticalAlignment)vtAlign;
-            popup.HorizontalAlignment = (HorizontalAlignment)hzAlign;
+            popup.BorderVerticalAlignment = (VerticalAlignment)vtAlign;
+            popup.BorderHorizontalAlignment = (HorizontalAlignment)hzAlign;
             popup.PreferredPointerDirection = prefDir;
             popup.Target = sender as UIElement;
 
-
+            popup.BorderContent = new TextBlock { Text =  "We are going to the supermarket" };
+            popup.Background(Colors.Yellow);
+            popup.BorderBrush(Colors.Red);
+            popup.Margin(50);
+                
             await popup.PushAsync();
             /*
             _toast.Content = "I like pizza";

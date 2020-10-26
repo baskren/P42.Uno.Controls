@@ -29,7 +29,7 @@ namespace P42.Uno.Controls
 
             _contentPresenter.Row(1).CenterVertical().Bind(ContentPresenter.ContentProperty, Message);
 
-            BubbleContent = _bubbleContentGrid = new Grid()
+            BorderContent = _bubbleContentGrid = new Grid()
                 .Rows(
                     GridRowsColumns.Auto,
                     GridRowsColumns.Star

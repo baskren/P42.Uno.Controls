@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.csproj" />
+    <ProjectReference Include="..\..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
     <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
     <ProjectReference Include="..\..\P42.Utils\P42.Utils\P42.Utils.csproj" />
   </ItemGroup>
