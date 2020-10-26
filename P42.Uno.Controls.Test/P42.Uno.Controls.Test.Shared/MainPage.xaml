@@ -36,7 +36,7 @@
     <Page.Content>
         <Grid
             x:Name="_grid"
-            Margin="20"
+            Margin="0"
             Background="Yellow">
             <Grid.RowDefinitions>
                 <RowDefinition Height="150" />
@@ -87,7 +87,6 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Fill="Beige" />
-                <!--
                 <popups:BubbleBorder
                     x:Name="_bubbleBorder"
                     Margin="5"
@@ -107,6 +106,7 @@
                     </Border>
                 </popups:BubbleBorder>
 
+                <!--
                 <popups:TargetedPopup
                     x:Name="_targetedPopup"
                     Margin="10"

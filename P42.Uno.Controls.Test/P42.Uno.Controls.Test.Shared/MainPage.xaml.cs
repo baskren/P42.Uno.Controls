@@ -47,10 +47,10 @@ namespace P42.Uno.Controls.Test
         string[] _hzSource;
         string[] _vtSource;
 
-        BubbleBorder _bubbleBorder;
+        //BubbleBorder _bubbleBorder;
         TargetedPopup _targetedPopup = new TargetedPopup
         {
-            BorderContent = "TEXT BUBBLE COTNENT"
+            PopupContent = "TEXT BUBBLE COTNENT"
             //BubbleContent = new TextBlock { Text = "I am a targeted popup!" }
         };
 
@@ -65,6 +65,7 @@ namespace P42.Uno.Controls.Test
             _vtAlignCombo.ItemsSource = _vtSource = Enum.GetNames(typeof(VerticalAlignment));
             _vtAlignCombo.SelectedIndex = 0;
 
+            /*
             _bubbleBorder = new BubbleBorder()
                 .Margin(5)
                 .Padding(5)
@@ -83,7 +84,7 @@ namespace P42.Uno.Controls.Test
                         .Child(new TextBlock { Text = "TEST TEST TEST" })
                 );
             _grid.Children.Add(_bubbleBorder);
-
+            */
             
         }
         /*
@@ -134,12 +135,13 @@ namespace P42.Uno.Controls.Test
 #endif
             _bubbleBorder.HorizontalAlignment = (HorizontalAlignment)hzAlign;
 
-            popup.BorderVerticalAlignment = (VerticalAlignment)vtAlign;
-            popup.BorderHorizontalAlignment = (HorizontalAlignment)hzAlign;
+            popup.PopupVerticalAlignment = (VerticalAlignment)vtAlign;
+            popup.PopupHorizontalAlignment = (HorizontalAlignment)hzAlign;
             popup.PreferredPointerDirection = prefDir;
             popup.Target = sender as UIElement;
 
-            popup.BorderContent = new TextBlock { Text =  "We are going to the supermarket" };
+            //popup.PopupContent = new TextBlock { Text =  "We are going to the supermarket" };
+            popup.Content(new TextBlock { Text = "Green Car" });
             popup.Background(Colors.Yellow);
             popup.BorderBrush(Colors.Red);
             popup.Margin(50);

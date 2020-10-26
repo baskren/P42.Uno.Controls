@@ -20,10 +20,21 @@ namespace P42.Uno.Controls
 {
     public partial class TargetedPopup : UserControl
     {
+        #region Defaults
+        const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Center;
+        const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Center;
+        const double DefaultPopupMargin = 50;
+        const double DefaultPopupPadding = 10;
+        const double DefaultBorderThickness = 1;
+        const double DefaultCornerRadius = 4;
+        #endregion
+
+        #region Visual Elements
         protected Rectangle _overlay;
         protected BubbleBorder _border;
         protected ContentPresenter _contentPresenter;
         protected Grid _grid;
+        #endregion
 
         void Build()
         {
@@ -36,10 +47,8 @@ namespace P42.Uno.Controls
             BorderBrush = (Brush)Application.Current.Resources["SystemControlForegroundBaseLowBrush"];
             Foreground = (Brush)Application.Current.Resources["SystemControlForegroundBaseHighBrush"];
             LightDismissOverlayBrush = new SolidColorBrush((Color)Application.Current.Resources["SystemAltMediumColor"]);
-            BorderThickness = new Thickness(1);
-            CornerRadius = new CornerRadius(4);
-            Padding = new Thickness(10);
-            BorderMargin = new Thickness(50);
+            BorderThickness = new Thickness(DefaultBorderThickness);
+            CornerRadius = new CornerRadius(DefaultCornerRadius);
             FontSize = 16;
 
             Content = new Grid
@@ -66,14 +75,12 @@ namespace P42.Uno.Controls
                             .Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
                             .Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
                             .Bind(ContentPresenter.FontWeightProperty, this, nameof(FontWeight))
-                            .Bind(ContentPresenter.ContentProperty, this, nameof(BorderContent))
-                            .Bind(ContentPresenter.VisibilityProperty, this, nameof(BorderContent), convert: (object content)=> (content != null).ToVisibility())
                         
                     }
                         .AssignTo(ref _border)
-                        .Bind(BubbleBorder.PaddingProperty, this, nameof(Padding))
                         .Bind(BubbleBorder.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
                         .Bind(BubbleBorder.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
+                        .Bind(BubbleBorder.PaddingProperty, this, nameof(PopupPadding))
                         .Bind(BubbleBorder.BackgroundProperty, this, nameof(Background))
                         .Bind(BubbleBorder.BorderBrushProperty, this, nameof(BorderBrush))
                         .Bind(BubbleBorder.CornerRadiusProperty, this, nameof(CornerRadius))

@@ -23,23 +23,31 @@ namespace P42.Uno.Controls
     {
         #region Properties
 
-        #region BorderContent Property
-        public static readonly DependencyProperty BorderContentProperty = DependencyProperty.Register(
-            nameof(BorderContent),
+        #region PopupContent Property
+        public static readonly DependencyProperty PopupContentProperty = DependencyProperty.Register(
+            nameof(PopupContent),
             typeof(object),
             typeof(TargetedPopup),
-            new PropertyMetadata(null)
+            new PropertyMetadata(null, new PropertyChangedCallback(OnBorderContentChanged))
         );
-        public object BorderContent
+        private static void OnBorderContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            get => (object)GetValue(BorderContentProperty);
-            set => SetValue(BorderContentProperty, value);
+            if (d is TargetedPopup popup)
+            {
+                popup._contentPresenter.Content = e.NewValue;
+                popup._contentPresenter.Visibility = (e.NewValue is null) ? Visibility.Collapsed : Visibility.Visible;
+            }
+        }
+        public object PopupContent
+        {
+            get => GetValue(PopupContentProperty);
+            set => SetValue(PopupContentProperty, value);
         }
         #endregion 
 
-        #region BorderHorizontalAlignment Property
-        public static readonly DependencyProperty BorderHorizontalAlignmentProperty = DependencyProperty.Register(
-            nameof(BorderHorizontalAlignment),
+        #region PopupHorizontalAlignment Property
+        public static readonly DependencyProperty PopupHorizontalAlignmentProperty = DependencyProperty.Register(
+            nameof(PopupHorizontalAlignment),
             typeof(HorizontalAlignment),
             typeof(TargetedPopup),
             new PropertyMetadata(DefaultHorizontalAlignment, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnHorizontalAlignmentChanged(e)))
@@ -49,16 +57,16 @@ namespace P42.Uno.Controls
             if (_border != null)
                 UpdateMarginAndAlignment();
         }
-        public HorizontalAlignment BorderHorizontalAlignment
+        public HorizontalAlignment PopupHorizontalAlignment
         {
-            get => (HorizontalAlignment)GetValue(BorderHorizontalAlignmentProperty);
-            set => SetValue(BorderHorizontalAlignmentProperty, value);
+            get => (HorizontalAlignment)GetValue(PopupHorizontalAlignmentProperty);
+            set => SetValue(PopupHorizontalAlignmentProperty, value);
         }
-        #endregion HorizontalAlignment Property
+        #endregion 
 
-        #region BorderVerticalAlignment Property
-        public static readonly DependencyProperty BorderVerticalAlignmentProperty = DependencyProperty.Register(
-            nameof(BorderVerticalAlignment),
+        #region PopupVerticalAlignment Property
+        public static readonly DependencyProperty PopupVerticalAlignmentProperty = DependencyProperty.Register(
+            nameof(PopupVerticalAlignment),
             typeof(VerticalAlignment),
             typeof(TargetedPopup),
             new PropertyMetadata(DefaultVerticalAlignment, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnVerticalAlignmentChanged(e)))
@@ -68,31 +76,45 @@ namespace P42.Uno.Controls
             if (_border != null)
                 UpdateMarginAndAlignment();
         }
-        public VerticalAlignment BorderVerticalAlignment
+        public VerticalAlignment PopupVerticalAlignment
         {
-            get => (VerticalAlignment)GetValue(BorderVerticalAlignmentProperty);
-            set => SetValue(BorderVerticalAlignmentProperty, value);
+            get => (VerticalAlignment)GetValue(PopupVerticalAlignmentProperty);
+            set => SetValue(PopupVerticalAlignmentProperty, value);
         }
-        #endregion VerticalAlignment Property
+        #endregion 
         
-        #region BorderMargin Property
-        public static readonly DependencyProperty BorderMarginProperty = DependencyProperty.Register(
-            nameof(BorderMargin),
+        #region PopupMargin Property
+        public static readonly DependencyProperty PopupMarginProperty = DependencyProperty.Register(
+            nameof(PopupMargin),
             typeof(Thickness),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(Thickness), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnBorderMarginChanged(e)))
+            new PropertyMetadata(new Thickness(DefaultPopupMargin), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnBorderMarginChanged(e)))
         );
         protected virtual void OnBorderMarginChanged(DependencyPropertyChangedEventArgs e)
         {
             if (_border != null)
                 UpdateMarginAndAlignment();
         }
-        public Thickness BorderMargin
+        public Thickness PopupMargin
         {
-            get => (Thickness)GetValue(BorderMarginProperty);
-            set => SetValue(BorderMarginProperty, value);
+            get => (Thickness)GetValue(PopupMarginProperty);
+            set => SetValue(PopupMarginProperty, value);
         }
-        #endregion Margin Property
+        #endregion 
+
+        #region PopupPadding Property
+        public static readonly DependencyProperty PopupPaddingProperty = DependencyProperty.Register(
+            nameof(PopupPadding),
+            typeof(Thickness),
+            typeof(TargetedPopup),
+            new PropertyMetadata(new Thickness(DefaultPopupPadding))
+        );
+        public Thickness PopupPadding
+        {
+            get => (Thickness)GetValue(PopupPaddingProperty);
+            set => SetValue(PopupPaddingProperty, value);
+        }
+        #endregion 
 
         #region HasShadow Property
         public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
@@ -467,14 +489,6 @@ namespace P42.Uno.Controls
         #endregion
 
 
-        #region Fields
-        const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Center;
-        const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Center;
-
-
-        #endregion
-
-
         #region Events
         public event EventHandler Pushed;
         /// <summary>
@@ -491,7 +505,7 @@ namespace P42.Uno.Controls
             var result = new TargetedPopup
             {
                 Target = target,
-                BorderContent = bubbleContent
+                PopupContent = bubbleContent
             };
             await result.PushAsync();
             return result;
@@ -500,9 +514,6 @@ namespace P42.Uno.Controls
         public TargetedPopup()
         {
             Build();
-
-
-
         }
 
         void AssureGraft()
@@ -513,6 +524,8 @@ namespace P42.Uno.Controls
 
             Content = _grid;
             Margin = new Thickness(0);
+            HorizontalAlignment = HorizontalAlignment.Stretch;
+            VerticalAlignment = VerticalAlignment.Stretch;
 
             // put into VisualTree
             if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
@@ -522,6 +535,8 @@ namespace P42.Uno.Controls
                     if (page.Content is Grid pageGrid)
                     {
                         var margin = pageGrid.Margin.Add(pageGrid.Padding).Negate();
+                        if (parentGrid != null)
+                            margin = pageGrid.Margin.Add(pageGrid.Padding).Add(parentGrid.Margin).Add(parentGrid.Padding).Negate();
                         Margin = margin;
                         var rows = Math.Max(pageGrid.RowDefinitions?.Count ?? 1, 1);
                         var cols = Math.Max(pageGrid.ColumnDefinitions?.Count ?? 1, 1);
@@ -789,19 +804,19 @@ namespace P42.Uno.Controls
                 return;
             //await AssureGraft();
 
-            _border.Margin = BorderMargin;
+            _border.Margin = PopupMargin;
 
             var windowSize = AppWindow.Size();
             if (windowSize.Width < 1 || windowSize.Height < 1)
                 return;
-            var windowWidth = windowSize.Width - BorderMargin.Horizontal();
-            var windowHeight = windowSize.Height - BorderMargin.Vertical();
+            var windowWidth = windowSize.Width - PopupMargin.Horizontal();
+            var windowHeight = windowSize.Height - PopupMargin.Vertical();
             var cleanSize = RectangleBorderSize(new Size(windowWidth, windowHeight));
 
             if (PreferredPointerDirection == PointerDirection.None || Target is null)
             {
                 System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateMarginAndAlignment PreferredPointerDirection == PointerDirection.None");
-                CleanMarginAndAlignment(BorderHorizontalAlignment,BorderVerticalAlignment, cleanSize);
+                CleanMarginAndAlignment(PopupHorizontalAlignment,PopupVerticalAlignment, cleanSize);
                 return;
             }
 
@@ -819,23 +834,20 @@ namespace P42.Uno.Controls
             }
 
             ActualPointerDirection = stats.PointerDirection;
-            var borderMargin = BorderMargin;
-            var targetMargin = new Thickness();
-            if (Target is FrameworkElement element)
-                targetMargin = element.Margin;
+            var borderMargin = PopupMargin;
 
             if (stats.PointerDirection.IsHorizontal())
             {
                 if (stats.PointerDirection == PointerDirection.Left)
                 {
-                    borderMargin.Left = targetBounds.Right - targetMargin.Right;
-                    base.HorizontalAlignment = _border.HorizontalAlignment = BorderHorizontalAlignment == HorizontalAlignment.Stretch ? HorizontalAlignment.Stretch : HorizontalAlignment.Left;
+                    borderMargin.Left = targetBounds.Right;
+                    base.HorizontalAlignment = _border.HorizontalAlignment = PopupHorizontalAlignment == HorizontalAlignment.Stretch ? HorizontalAlignment.Stretch : HorizontalAlignment.Left;
                 }
                 else
                 {
-                    if (BorderHorizontalAlignment == HorizontalAlignment.Stretch)
+                    if (PopupHorizontalAlignment == HorizontalAlignment.Stretch)
                     {
-                        base.HorizontalAlignment = _border.HorizontalAlignment = BorderHorizontalAlignment;
+                        base.HorizontalAlignment = _border.HorizontalAlignment = PopupHorizontalAlignment;
                     }
                     else
                     {
@@ -844,27 +856,27 @@ namespace P42.Uno.Controls
                     }
                 }
 
-                if (BorderVerticalAlignment == VerticalAlignment.Top)
+                if (PopupVerticalAlignment == VerticalAlignment.Top)
                 {
-                    borderMargin.Top = Math.Max(BorderMargin.Top, targetBounds.Top);
-                    base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Top;
+                    borderMargin.Top = Math.Max(PopupMargin.Top, targetBounds.Top);
+                    _border.VerticalAlignment = VerticalAlignment.Top;
                 }
-                else if (BorderVerticalAlignment == VerticalAlignment.Center)
+                else if (PopupVerticalAlignment == VerticalAlignment.Center)
                 {
-                    borderMargin.Top = Math.Max(BorderMargin.Top, (targetBounds.Top + targetBounds.Bottom) / 2.0 - stats.BorderSize.Height / 2.0);
-                    base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Top;
+                    borderMargin.Top = Math.Max(PopupMargin.Top, (targetBounds.Top + targetBounds.Bottom) / 2.0 - stats.BorderSize.Height / 2.0);
+                    _border.VerticalAlignment = VerticalAlignment.Top;
                 }
-                else if (BorderVerticalAlignment == VerticalAlignment.Bottom)
+                else if (PopupVerticalAlignment == VerticalAlignment.Bottom)
                 {
-                    borderMargin.Top = Math.Max(BorderMargin.Top, targetBounds.Bottom - stats.BorderSize.Height);
-                    base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Top;
+                    borderMargin.Top = Math.Max(PopupMargin.Top, targetBounds.Bottom - stats.BorderSize.Height);
+                    _border.VerticalAlignment = VerticalAlignment.Top;
                 }
                 else
                 {
-                    base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Stretch;
+                    _border.VerticalAlignment = VerticalAlignment.Stretch;
                 }
-                if (borderMargin.Top + stats.BorderSize.Height > windowSize.Height - BorderMargin.Bottom)
-                    borderMargin.Top = windowSize.Height - BorderMargin.Bottom - stats.BorderSize.Height;
+                if (borderMargin.Top + stats.BorderSize.Height > windowSize.Height - PopupMargin.Bottom)
+                    borderMargin.Top = windowSize.Height - PopupMargin.Bottom - stats.BorderSize.Height;
 
 
                 _border.PointerAxialPosition = (targetBounds.Top - borderMargin.Top) + targetBounds.Bottom - (targetBounds.Top + targetBounds.Bottom) / 2.0;
@@ -874,43 +886,43 @@ namespace P42.Uno.Controls
                 if (stats.PointerDirection == PointerDirection.Up)
                 {
                     borderMargin.Top = targetBounds.Bottom;
-                    base.VerticalAlignment = _border.VerticalAlignment = BorderVerticalAlignment == VerticalAlignment.Stretch ? VerticalAlignment.Stretch : VerticalAlignment.Top;
+                    _border.VerticalAlignment = PopupVerticalAlignment == VerticalAlignment.Stretch ? VerticalAlignment.Stretch : VerticalAlignment.Top;
                 }
                 else
                 {
-                    if (BorderVerticalAlignment == VerticalAlignment.Stretch)
+                    if (PopupVerticalAlignment == VerticalAlignment.Stretch)
                     {
-                        base.VerticalAlignment = _border.VerticalAlignment = BorderVerticalAlignment;
+                        _border.VerticalAlignment = PopupVerticalAlignment;
                     }
                     else
                     {
                         borderMargin.Top = targetBounds.Top - stats.BorderSize.Height;
-                        base.VerticalAlignment = _border.VerticalAlignment = VerticalAlignment.Top;
+                        _border.VerticalAlignment = VerticalAlignment.Top;
                     }
                 }
 
-                if (BorderHorizontalAlignment == HorizontalAlignment.Left)
+                if (PopupHorizontalAlignment == HorizontalAlignment.Left)
                 {
-                    borderMargin.Left = Math.Max(BorderMargin.Left, targetBounds.Left);
-                    base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
+                    borderMargin.Left = Math.Max(PopupMargin.Left, targetBounds.Left);
+                    _border.HorizontalAlignment = HorizontalAlignment.Left;
 
                 }
-                else if (BorderHorizontalAlignment == HorizontalAlignment.Center)
+                else if (PopupHorizontalAlignment == HorizontalAlignment.Center)
                 {
-                    borderMargin.Left = Math.Max(BorderMargin.Left, (targetBounds.Left + targetBounds.Right) / 2.0 - stats.BorderSize.Width / 2.0);
-                    base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
+                    borderMargin.Left = Math.Max(PopupMargin.Left, (targetBounds.Left + targetBounds.Right) / 2.0 - stats.BorderSize.Width / 2.0);
+                    _border.HorizontalAlignment = HorizontalAlignment.Left;
                 }
-                else if (BorderHorizontalAlignment == HorizontalAlignment.Right)
+                else if (PopupHorizontalAlignment == HorizontalAlignment.Right)
                 {
-                    borderMargin.Left = Math.Max(BorderMargin.Left, targetBounds.Right - stats.BorderSize.Width);
-                    base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
+                    borderMargin.Left = Math.Max(PopupMargin.Left, targetBounds.Right - stats.BorderSize.Width);
+                    _border.HorizontalAlignment = HorizontalAlignment.Left;
                 }
                 else
                 {
-                    base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    _border.HorizontalAlignment = HorizontalAlignment.Stretch;
                 }
-                if (borderMargin.Left + stats.BorderSize.Width > windowSize.Width - BorderMargin.Right)
-                    borderMargin.Left = windowSize.Width - BorderMargin.Right - stats.BorderSize.Width;
+                if (borderMargin.Left + stats.BorderSize.Width > windowSize.Width - PopupMargin.Right)
+                    borderMargin.Left = windowSize.Width - PopupMargin.Right - stats.BorderSize.Width;
 
                 _border.PointerAxialPosition = (targetBounds.Left - borderMargin.Left) + targetBounds.Right - (targetBounds.Left + targetBounds.Right) / 2.0;
             }
@@ -932,7 +944,7 @@ namespace P42.Uno.Controls
             if (_border is null)
                 return;
 
-            var borderMargin = BorderMargin;
+            var borderMargin = PopupMargin;
 
             var windowSize = AppWindow.Size();
             if (windowSize.Width < 1 || windowSize.Height < 1)
@@ -951,7 +963,7 @@ namespace P42.Uno.Controls
         DirectionStats BestFit(Thickness availableSpace, Size cleanSize)
         {
             // given the amount of free space, determine if the border will fit 
-            var windowSpace = new Size(AppWindow.Size().Width - BorderMargin.Horizontal(), AppWindow.Size().Height - BorderMargin.Vertical());
+            var windowSpace = new Size(AppWindow.Size().Width - PopupMargin.Horizontal(), AppWindow.Size().Height - PopupMargin.Vertical());
             var cleanStat = new DirectionStats
             {
                 PointerDirection = PointerDirection.None,
@@ -1029,15 +1041,15 @@ namespace P42.Uno.Controls
             {
                 if (target.Right > 0 && target.Left < windowBounds.Width && target.Bottom > 0 && target.Top < windowBounds.Height)
                 {
-                    var availL = target.Left - BorderMargin.Left;
-                    var availR = windowBounds.Width - BorderMargin.Right - target.Right;
-                    var availT = target.Top - BorderMargin.Top;
-                    var availB = windowBounds.Height - target.Bottom - BorderMargin.Bottom;
+                    var availL = target.Left - PopupMargin.Left;
+                    var availR = windowBounds.Width - PopupMargin.Right - target.Right;
+                    var availT = target.Top - PopupMargin.Top;
+                    var availB = windowBounds.Height - target.Bottom - PopupMargin.Bottom;
 
                     var maxWidth = MaxWidth;
                     if (Width > 0 && Width < maxWidth)
                         maxWidth = Width;
-                    if (maxWidth > 0 && BorderHorizontalAlignment != HorizontalAlignment.Stretch)
+                    if (maxWidth > 0 && PopupHorizontalAlignment != HorizontalAlignment.Stretch)
                     {
                         availL = Math.Min(availL, maxWidth);
                         availR = Math.Min(availR, maxWidth);
@@ -1046,7 +1058,7 @@ namespace P42.Uno.Controls
                     var maxHeight = MaxHeight;
                     if (Height > 0 && Height < maxHeight)
                         maxHeight = Height;
-                    if (maxHeight > 0 && BorderVerticalAlignment != VerticalAlignment.Stretch)
+                    if (maxHeight > 0 && PopupVerticalAlignment != VerticalAlignment.Stretch)
                     {
                         availT = Math.Min(availT, maxHeight);
                         availB = Math.Min(availB, maxHeight);
@@ -1057,7 +1069,7 @@ namespace P42.Uno.Controls
             }
 
             if (PointToOffScreenElements)
-                return new Thickness(windowBounds.Width - BorderMargin.Horizontal(), windowBounds.Height - BorderMargin.Vertical(), windowBounds.Width - BorderMargin.Horizontal(), windowBounds.Height - BorderMargin.Vertical());
+                return new Thickness(windowBounds.Width - PopupMargin.Horizontal(), windowBounds.Height - PopupMargin.Vertical(), windowBounds.Width - PopupMargin.Horizontal(), windowBounds.Height - PopupMargin.Vertical());
 
             return new Thickness(-1, -1, -1, -1);
         }
@@ -1202,21 +1214,21 @@ namespace P42.Uno.Controls
         Size RectangleBorderSize(Size available, Size failSize = default)
         {
             if (IsEmpty)
-                return new Size(50 + Padding.Horizontal(), 50 + Padding.Vertical());
+                return new Size(50 + PopupPadding.Horizontal(), 50 + PopupPadding.Vertical());
             var availableWidth = available.Width;
             var availableHeight = available.Height;
             var hasBorder = (BorderThickness.Average() > 0) && BorderBrush is SolidColorBrush brush && brush.Color.A > 0;
             var border = BorderThickness.Average() * (hasBorder ? 1 : 0) * 2;
-            availableWidth -= Padding.Horizontal() - border;
-            availableHeight -= Padding.Vertical() - border;
+            availableWidth -= PopupPadding.Horizontal() - border;
+            availableHeight -= PopupPadding.Vertical() - border;
             System.Diagnostics.Debug.WriteLine(GetType() + ".RectangleBorderSize availableWidth:["+availableWidth+"] availableHeight:["+availableHeight+"]");
             if (availableWidth > 0 && availableHeight > 0)
             {
                 _contentPresenter.Measure(new Size(availableWidth, availableHeight));
                 var result = _contentPresenter.DesiredSize;
                 System.Diagnostics.Debug.WriteLine("\t  _contentPresenter.DesiredSize:[" + _contentPresenter.DesiredSize + "]");
-                result.Width += Padding.Horizontal();
-                result.Height += Padding.Vertical();
+                result.Width += PopupPadding.Horizontal();
+                result.Height += PopupPadding.Vertical();
                 return result;
             }
 
