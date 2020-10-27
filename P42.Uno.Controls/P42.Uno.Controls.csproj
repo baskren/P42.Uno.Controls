@@ -57,18 +57,21 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Remove="Popups\Alert.xaml" />
+    <EmbeddedResource Remove="Popups\BusyPopup.xaml" />
     <EmbeddedResource Remove="Popups\PermissionPopup.xaml" />
     <EmbeddedResource Remove="Popups\TargetedPopup.xaml" />
     <EmbeddedResource Remove="Popups\Toast.xaml" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Popups\Alert.xaml" />
+    <None Remove="Popups\BusyPopup.xaml" />
     <None Remove="Popups\PermissionPopup.xaml" />
     <None Remove="Popups\TargetedPopup.xaml" />
     <None Remove="Popups\Toast.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Page Remove="Popups\Alert.xaml" />
+    <Page Remove="Popups\BusyPopup.xaml" />
     <Page Remove="Popups\PermissionPopup.xaml" />
     <Page Remove="Popups\TargetedPopup.xaml" />
     <Page Remove="Popups\Toast.xaml" />

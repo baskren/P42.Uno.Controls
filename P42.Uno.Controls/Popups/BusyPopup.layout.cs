@@ -15,7 +15,6 @@ namespace P42.Uno.Controls
     public partial class BusyPopup : Toast
     {
         protected ProgressRing _progressRing;
-        protected Grid _borderContent;
 
         void Build()
         {
@@ -25,24 +24,9 @@ namespace P42.Uno.Controls
                 .Height(40)
                 .Margin(10);
 
-            _titleBlock.Column(1);
+            _iconPresenter.Collapsed();
 
-            _contentPresenter.Row(1).Column(1);
-
-            _border.Content = null;
-
-            _borderContent = new Grid()
-                .Rows(
-                    GridLength.Auto, GridRowsColumns.Star
-                )
-                .Columns(
-                    GridLength.Auto, GridRowsColumns.Star
-                )
-                .Children(
-                    _progressRing,
-                    _titleBlock,
-                    _contentPresenter
-                );
+            _bubbleContentGrid.Children.Add(_progressRing);
         }
     }
 }

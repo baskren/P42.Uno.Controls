@@ -76,7 +76,7 @@ namespace P42.Uno.Controls
                             .Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
                             .Bind(ContentPresenter.FontWeightProperty, this, nameof(FontWeight))
                             .Bind(ContentPresenter.ContentProperty, this, nameof(PopupContent))
-                            .NullOrEmptyCollapse()
+                            .BindNullCollapse()
                     }
                         .Assign(out _border)
                         .Bind(BubbleBorder.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))

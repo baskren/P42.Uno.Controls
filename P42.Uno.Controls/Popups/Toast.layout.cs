@@ -32,7 +32,7 @@ namespace P42.Uno.Controls
                         .RowSpan(2)
                         .Margin(10)
                         .Bind(ContentPresenter.ContentProperty, this, nameof(IconElement))
-                        .NullOrEmptyCollapse(),
+                        .BindNullCollapse(),
 
                     new ContentPresenter()
                         .Assign(out _titleBlock)
@@ -45,7 +45,7 @@ namespace P42.Uno.Controls
                         .Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
                         .Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
                         .Bind(ContentPresenter.ContentProperty, this, nameof(TitleContent))
-                        .NullOrEmptyCollapse(),
+                        .BindNullCollapse(),
 
                     new ContentPresenter()
                         .Assign(out _messageBlock)
@@ -58,7 +58,7 @@ namespace P42.Uno.Controls
                         .Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
                         .Bind(ContentPresenter.FontWeightProperty, this, nameof(FontWeight))
                         .Bind(ContentPresenter.ContentProperty, this, nameof(Message))
-                        .NullOrEmptyCollapse()
+                        .BindNullCollapse()
 
                 );
         }
