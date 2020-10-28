@@ -14,8 +14,6 @@
             <ListView x:Name="_listView">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <local:StringButtonUserControl BindingContext="{Binding}" />
-                        <!--
                         <Button
                             x:Name="_button"
                             Padding="20,2,20,2"
@@ -27,6 +25,8 @@
                             Content="{Binding}"
                             CornerRadius="5"
                             Tapped="BorderTapped" />
+                        <!--
+                        <local:StringButtonUserControl BindingContext="{Binding}" />
                         -->
                     </DataTemplate>
                 </ListView.ItemTemplate>

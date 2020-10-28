@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
 
 namespace P42.Uno.Controls
 {
+    [ContentProperty(Name = "Message")]
     public partial class Toast : TargetedPopup
     {
         #region Title Property

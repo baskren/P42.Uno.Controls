@@ -31,8 +31,8 @@ namespace P42.Uno.Controls.Test
         );
         protected virtual void OnBindingContextChanged(DependencyPropertyChangedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(GetType() + ".OnBindingContextChanged e.NewValue:" + e.NewValue);
-            System.Diagnostics.Debug.WriteLine("\t DataContext:" + DataContext );
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".OnBindingContextChanged e.NewValue:" + e.NewValue);
+            //System.Diagnostics.Debug.WriteLine("\t DataContext:" + DataContext );
         }
         public object BindingContext
         {
@@ -46,14 +46,14 @@ namespace P42.Uno.Controls.Test
 
         public StringButtonUserControl()
         {
-            System.Diagnostics.Debug.WriteLine("StringButtonUserControl.ctr DataContext:" + DataContext);
+            //System.Diagnostics.Debug.WriteLine("StringButtonUserControl.ctr DataContext:" + DataContext);
             var x = this.RegisterPropertyChangedCallback(DataContextProperty, OnDataContextChanged);
             this.InitializeComponent();
         }
 
         private void OnContentChanged(DependencyObject sender, DependencyProperty dp)
         {
-            System.Diagnostics.Debug.WriteLine(GetType() + ".OnContentChanged sender:" + sender + " dp:" + dp);
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".OnContentChanged sender:" + sender + " dp:" + dp);
         }
 
 #if !NETFX_CORE
@@ -68,7 +68,7 @@ namespace P42.Uno.Controls.Test
         private void OnDataContextChanged(DependencyObject sender, DependencyProperty dp)
         {
             // works in Uno but not UWP?!?!
-            System.Diagnostics.Debug.WriteLine(GetType() + ".OnDataContextChanged sender:" + sender + " dp:" + dp);
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".OnDataContextChanged sender:" + sender + " dp:" + dp);
         }
 
         async void BorderTapped(object sender, TappedRoutedEventArgs e)
@@ -80,7 +80,7 @@ namespace P42.Uno.Controls.Test
 
         public void CellTapped()
         {
-            System.Diagnostics.Debug.WriteLine("StringButtonUserControl.");
+            //System.Diagnostics.Debug.WriteLine("StringButtonUserControl.");
         }
     }
 }

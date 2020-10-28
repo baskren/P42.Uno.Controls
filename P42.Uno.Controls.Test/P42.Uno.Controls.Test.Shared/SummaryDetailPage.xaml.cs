@@ -52,7 +52,7 @@ namespace P42.Uno.Controls.Test
                 rect.Opacity = 0;
                 //args.RegisterUpdateCallback(SetCellTitle);
             }
-            System.Diagnostics.Debug.WriteLine("SummaryDetailPage._listView_ContainerContentChanging itemContainer:" + itemContainer + " index:" + index);
+            //System.Diagnostics.Debug.WriteLine("SummaryDetailPage._listView_ContainerContentChanging itemContainer:" + itemContainer + " index:" + index);
         }
 
         private void SetCellTitle(ListViewBase sender, ContainerContentChangingEventArgs args)
@@ -95,6 +95,15 @@ namespace P42.Uno.Controls.Test
             }
         }
 
+        async void BorderTapped(object sender, TappedRoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine(GetType() + ".BorderTapped: sender:" + sender + " e.PointerDeviceType:" + e.PointerDeviceType);
+            if (sender is Button button && button.Content is string text)
+            {
+                _ContentAndDetailPresenter.Detail = new TextBlock { Text = text };
+                await _ContentAndDetailPresenter.PushDetail();
+            }
+        }
 
 
 
