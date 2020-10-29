@@ -526,6 +526,8 @@ namespace P42.Uno.Controls
             {
                 if (frame.Content is Page page)
                 {
+                    while (page.Content is Page subPage)
+                        page = subPage;
                     if (page.Content is Grid pageGrid)
                     {
                         var margin = pageGrid.Margin.Add(pageGrid.Padding).Negate();
