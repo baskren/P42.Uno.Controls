@@ -1,18 +1,7 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Animations;
-using P42.Utils.Uno;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using Uno.Extensions;
-using Uno.Extensions.ValueType;
-using Windows.Foundation;
-using Windows.UI;
+﻿using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Shapes;
 using P42.Uno.Markup;
 

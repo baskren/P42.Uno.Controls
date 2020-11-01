@@ -31,6 +31,7 @@ namespace P42.Uno.Controls
     /// if there are too many to fit in a single row or column, and also has many options for orientation, alignment,
     /// and adapting to various screen sizes.
     /// </summary>
+    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class FlexPanel : Panel
     {
         /// <summary>

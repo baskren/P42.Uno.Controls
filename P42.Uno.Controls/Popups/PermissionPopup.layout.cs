@@ -1,14 +1,4 @@
-﻿using P42.Utils.Uno;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+﻿using Windows.UI.Xaml.Controls;
 using P42.Uno.Markup;
 
 namespace P42.Uno.Controls
