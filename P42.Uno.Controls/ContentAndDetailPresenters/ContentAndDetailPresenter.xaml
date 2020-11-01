@@ -13,32 +13,21 @@
 
     <ControlTemplate x:Key="BaseContentAndDetailPresenterTemplate" TargetType="local:ContentAndDetailPresenter">
         <Grid x:Name="_grid">
-            <Grid.RowDefinitions>
-                <RowDefinition x:Name="_row0" Height="*" />
-                <RowDefinition x:Name="_row1" Height="0" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="_col0" Width="*" />
-                <ColumnDefinition x:Name="_col1" Width="0" />
-            </Grid.ColumnDefinitions>
-            <ContentPresenter Content="{TemplateBinding Content}" />
+            <ContentPresenter x:Name="_footerContentPresenter" Content="{TemplateBinding Footer}" />
+            <ContentPresenter x:Name="_contentPresenter" Content="{TemplateBinding Content}" />
+            <ContentPresenter x:Name="_detailContentPresenter" Content="{TemplateBinding Detail}" />
             <Rectangle
                 x:Name="_lightDismissOverlay"
                 Fill="{TemplateBinding LightDismissOverlayBrush}"
                 Visibility="Collapsed" />
             <Border
-                x:Name="_detailPaneBorder"
+                x:Name="_detailDrawerBorder"
                 Grid.Row="1"
                 Grid.Column="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Background="{TemplateBinding DetailPaneBackground}"
-                Visibility="Collapsed">
-                <ContentPresenter
-                    x:Name="_detailPaneContentPresenter"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch" />
-            </Border>
+                Visibility="Collapsed" />
             <local:TargetedPopup
                 x:Name="_targetedPopup"
                 Padding="4"
@@ -46,9 +35,7 @@
                 Opacity="0"
                 PopupMargin="0"
                 PreferredPointerDirection="Vertical"
-                Target="{TemplateBinding Target}">
-                <ContentPresenter x:Name="_detailPopupContentPresenter" />
-            </local:TargetedPopup>
+                Target="{TemplateBinding Target}" />
         </Grid>
     </ControlTemplate>
 

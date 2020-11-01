@@ -1,4 +1,5 @@
-﻿using System;
+﻿using P42.Utils.Uno;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,11 +21,13 @@ namespace P42.Uno.Controls
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            if (availableSize.IsZero())
+                return availableSize;
             var size = new Size(availableSize.Width, 40);
             foreach (var child in Children)
                 child.Measure(size);
             _moreButton.Measure(size);
-            return base.MeasureOverride(size);
+            return size;
         }
 
         protected override Size ArrangeOverride(Size finalSize)

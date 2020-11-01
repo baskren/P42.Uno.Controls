@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using ElementType = P42.Uno.Controls.TargetedPopup;
 
 
@@ -108,7 +111,8 @@ namespace P42.Uno.Controls
 		public static TElement Target<TElement>(this TElement element, UIElement value) where TElement : ElementType
 		{ element.Target = value; return element; }
 
-		public static TElement PointerBias<TElement>(this TElement element, double value) where TElement : ElementType
+        #region Pointer Properties
+        public static TElement PointerBias<TElement>(this TElement element, double value) where TElement : ElementType
 		{ element.PointerBias = value; return element; }
 
 		public static TElement PointerCornerRadius<TElement>(this TElement element, double value) where TElement : ElementType
@@ -125,6 +129,25 @@ namespace P42.Uno.Controls
 
 		public static TElement PointerTipRadius<TElement>(this TElement element, double value) where TElement : ElementType
 		{ element.PointerTipRadius = value; return element; }
+        #endregion
 
-	}
+        #region LightDismiss Properties
+        public static TElement IsLightDismissEnabled<TElement>(this TElement element, bool value = true) where TElement : ElementType
+		{ element.IsLightDismissEnabled = value; return element; }
+
+		public static TElement LightDismissOverlayMode<TElement>(this TElement element, LightDismissOverlayMode value) where TElement : ElementType
+		{ element.LightDismissOverlayMode = value; return element; }
+
+		public static TElement LightDismissOverlayBrush<TElement>(this TElement element, Brush value) where TElement : ElementType
+		{ element.LightDismissOverlayBrush = value; return element; }
+
+		public static TElement LightDismissOverlayBrush<TElement>(this TElement element, Color value) where TElement : ElementType
+		{ element.LightDismissOverlayBrush = new SolidColorBrush(value); return element; }
+
+		public static TElement LightDismissOverlayBrush<TElement>(this TElement element, string value) where TElement : ElementType
+		{ element.LightDismissOverlayBrush = new SolidColorBrush(P42.Utils.Uno.ColorExtensions.ColorFromString(value)); return element; }
+        #endregion
+
+
+    }
 }

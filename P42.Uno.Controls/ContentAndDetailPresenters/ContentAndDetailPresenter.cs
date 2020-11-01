@@ -1,47 +1,57 @@
-using Microsoft.Toolkit.Uwp.UI.Animations;
+using P42.Uno.Markup;
 using P42.Utils.Uno;
 using System;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Shapes;
 
 namespace P42.Uno.Controls
 {
-    [TemplatePart(Name = DetailPaneContentPresenterName, Type = typeof(ContentPresenter))]
-    [TemplatePart(Name = DetailPopupContentPresenterName, Type = typeof(ContentPresenter))]
-    [TemplatePart(Name = Row1Name, Type = typeof(RowDefinition))]
-    [TemplatePart(Name = Col1Name, Type = typeof(ColumnDefinition))]
-    [TemplatePart(Name = TargetedPopupName, Type = typeof(TargetedPopup))]
-    [TemplatePart(Name = DetailPaneBorderName, Type = typeof(Border))]
-    [TemplatePart(Name = LightDismissOverlayName, Type = typeof(Rectangle))]
-    [TemplatePart(Name = GridName, Type = typeof(Grid))]
-    public partial class ContentAndDetailPresenter : ContentControl
+    public partial class ContentAndDetailPresenter : Panel
     {
         #region Properties
+
+        #region Content Property
+        public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
+            nameof(Content),
+            typeof(object),
+            typeof(ContentAndDetailPresenter),
+            new PropertyMetadata(null, new PropertyChangedCallback(OnContentChanged))
+        );
+        private static void OnContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ContentAndDetailPresenter view)
+                view._contentPresenter.Content = e.NewValue;
+        }
+        public object Content
+        {
+            get => GetValue(ContentProperty);
+            set => SetValue(ContentProperty, value);
+        }
+        #endregion Content Property
+
 
         #region Detail Properties
 
         #region Detail Property
         public static readonly DependencyProperty DetailProperty = DependencyProperty.Register(
             nameof(Detail),
-            typeof(UIElement),
+            typeof(object),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(default(UIElement), new PropertyChangedCallback((d, e) => ((ContentAndDetailPresenter)d).OnDetailChanged(e)))
+            new PropertyMetadata(null, new PropertyChangedCallback(OnDetailChanged))
         );
-        protected virtual void OnDetailChanged(DependencyPropertyChangedEventArgs e)
+        private static void OnDetailChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (IsInPaneMode)
-                _detailPaneContentPresenter.Content = Detail;
-            else
-                _detailPopupContentPresenter.Content = Detail;
+            if (d is ContentAndDetailPresenter view)
+                view._detailContentPresenter.Content = e.NewValue;
         }
-        public UIElement Detail
+        public object Detail
         {
-            get => (UIElement)GetValue(DetailProperty);
+            get => GetValue(DetailProperty);
             set => SetValue(DetailProperty, value);
         }
         #endregion Detail Property
@@ -52,7 +62,7 @@ namespace P42.Uno.Controls
             nameof(DetailPaneBackground),
             typeof(Brush),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(default(int))
+            new PropertyMetadata(SystemColors.BaseLow.ToBrush())
         );
         public Brush DetailPaneBackground
         {
@@ -84,27 +94,42 @@ namespace P42.Uno.Controls
         #endregion
 
 
+        #region Footer Property
+        public static readonly DependencyProperty FooterProperty = DependencyProperty.Register(
+            nameof(Footer),
+            typeof(object),
+            typeof(ContentAndDetailPresenter),
+            new PropertyMetadata(null, new PropertyChangedCallback(OnFooterChanged))
+        );
+        private static void OnFooterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ContentAndDetailPresenter view)
+                view._footerContentPresenter.Content = e.NewValue;
+        }
+        public object Footer
+        {
+            get => GetValue(FooterProperty);
+            set => SetValue(FooterProperty, value);
+        }
+        #endregion Footer Property
+
+
         #region PopupContentHeight Property
         public static readonly DependencyProperty PopupContentHeightProperty = DependencyProperty.Register(
             nameof(PopupContentHeight),
             typeof(double),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(300.0, new PropertyChangedCallback((d, e) => ((ContentAndDetailPresenter)d).OnPopupHeightChanged(e)))
+            new PropertyMetadata(300.0)
         );
-        protected virtual void OnPopupHeightChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (PopupContentHeight <= 4)
-                throw new Exception("Invalid PopupHeight [" + PopupContentHeight + "].  Must be greater than 4.");
-        }
         public double PopupContentHeight
         {
             get => (double)GetValue(PopupContentHeightProperty);
             set => SetValue(PopupContentHeightProperty, value);
         }
-        #endregion PopupHeight Property
+        #endregion PopupContentHeight Property
 
 
-        public bool IsInPaneMode
+        public bool IsInDrawerMode
         {
             get
             {
@@ -118,31 +143,53 @@ namespace P42.Uno.Controls
             }
         }
 
-        double Aspect
+        double Aspect 
         {
             get
             {
-                var aspect = 0.0;
-                if (ActualWidth > 0 && ActualWidth > 0)
-                    aspect = ActualWidth / ActualHeight;
-                else if (DesiredSize.Width > 0 && DesiredSize.Height > 0)
-                    aspect = DesiredSize.Width / DesiredSize.Height;
-                else if (AppWindow.Size().Width > 0 && AppWindow.Size().Height > 0)
-                    aspect = AppWindow.Size().Width / AppWindow.Size().Height;
-                return aspect;
+                if (EstHeight > 0)
+                    return EstWidth / EstHeight;
+                return 0;
             }
         }
 
+        double EstWidth
+        {
+            get
+            {
+                if (ActualWidth > 0)
+                    return ActualWidth;
+                if (DesiredSize.Width > 0)
+                    return DesiredSize.Width;
+                return AppWindow.Size().Width;
+            }
+        }
+
+        double EstHeight
+        {
+            get
+            {
+                if (ActualHeight > 0)
+                    return ActualHeight;
+                if (DesiredSize.Height > 0)
+                    return DesiredSize.Height;
+                return AppWindow.Size().Height;
+            }
+        }
+
+        public PushPopState DetailPushPopState { get; private set; } = PushPopState.Popped;
 
         #region Target Property
         public static readonly DependencyProperty TargetProperty = DependencyProperty.Register(
             nameof(Target),
             typeof(UIElement),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(default(UIElement), new PropertyChangedCallback((d, e) => ((ContentAndDetailPresenter)d).OnTargetChanged(e)))
+            new PropertyMetadata(default(UIElement), new PropertyChangedCallback(OnTargetChanged))
         );
-        protected virtual void OnTargetChanged(DependencyPropertyChangedEventArgs e)
+        protected static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            if (d is ContentAndDetailPresenter view)
+                view._targetedPopup.Target = e.NewValue as UIElement;
         }
         public UIElement Target
         {
@@ -150,49 +197,6 @@ namespace P42.Uno.Controls
             set => SetValue(TargetProperty, value);
         }
         #endregion Target Property
-
-
-        #region Row1/Col1 Properties
-
-        #region Row1Height Property
-        private static readonly DependencyProperty Row1HeightProperty = DependencyProperty.Register(
-            nameof(Row1Height),
-            typeof(double),
-            typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(default(double), new PropertyChangedCallback(OnRow1HeightChanged))
-        );
-        private static void OnRow1HeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is ContentAndDetailPresenter sdv)
-                sdv._row1.Height = new GridLength(sdv.Row1Height);
-        }
-        private double Row1Height
-        {
-            get => (double)GetValue(Row1HeightProperty);
-            set => SetValue(Row1HeightProperty, value);
-        }
-        #endregion Row1Height Property
-
-        #region Column1Width Property
-        private static readonly DependencyProperty Column1WidthProperty = DependencyProperty.Register(
-            nameof(Column1Width),
-            typeof(double),
-            typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(default(double), new PropertyChangedCallback(OnColumn1WidthChanged))
-        );
-        private static void OnColumn1WidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is ContentAndDetailPresenter sdv)
-                sdv._col1.Width = new GridLength(sdv.Column1Width);
-        }
-        private double Column1Width
-        {
-            get => (double)GetValue(Column1WidthProperty);
-            set => SetValue(Column1WidthProperty, value);
-        }
-        #endregion Column1Width Property
-
-        #endregion
 
 
         #region IsAnimated Property
@@ -255,13 +259,8 @@ namespace P42.Uno.Controls
             nameof(LightDismissOverlayBrush),
             typeof(Brush),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(default(SolidColorBrush), new PropertyChangedCallback((d, e) => ((ContentAndDetailPresenter)d).OnLightDismissOverlayBrushChanged(e)))
+            new PropertyMetadata(SystemColors.AltMedium.ToBrush())
         );
-        protected virtual void OnLightDismissOverlayBrushChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (LightDismissOverlayBrush is SolidColorBrush brush && brush.Color != LightDismissOverlayColor)
-                LightDismissOverlayColor = brush.Color;
-        }
         public Brush LightDismissOverlayBrush
         {
             get => (Brush)GetValue(LightDismissOverlayBrushProperty);
@@ -269,74 +268,111 @@ namespace P42.Uno.Controls
         }
         #endregion LightDismissOverlayBrush Property
 
-        #region LightDismissOverlayColor Property
-        public static readonly DependencyProperty LightDismissOverlayColorProperty = DependencyProperty.Register(
-            nameof(LightDismissOverlayColor),
-            typeof(Color),
-            typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(default(Color), new PropertyChangedCallback((d, e) => ((ContentAndDetailPresenter)d).OnLightDismissOverlayColorChanged(e)))
-        );
-        protected virtual void OnLightDismissOverlayColorChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (!(LightDismissOverlayBrush is SolidColorBrush brush) || brush.Color != LightDismissOverlayColor)
-                LightDismissOverlayBrush = new SolidColorBrush(LightDismissOverlayColor);
-        }
-        public Color LightDismissOverlayColor
-        {
-            get => (Color)GetValue(LightDismissOverlayColorProperty);
-            set => SetValue(LightDismissOverlayColorProperty, value);
-        }
-        #endregion LightDismissOverlayColor Property
-
         #endregion
 
         #endregion
 
-
-        #region Fields
-        const string DetailPaneContentPresenterName = "_detailPaneContentPresenter";
-        const string DetailPopupContentPresenterName = "_detailPopupContentPresenter";
-        const string Row1Name = "_row1";
-        const string Col1Name = "_col1";
-        const string TargetedPopupName = "_targetedPopup";
-        const string DetailPaneBorderName = "_detailPaneBorder";
-        const string LightDismissOverlayName = "_lightDismissOverlay";
-        const string GridName = "_grid";
-
-        ContentPresenter _detailPaneContentPresenter;
-        ContentPresenter _detailPopupContentPresenter;
-        RowDefinition _row1;
-        ColumnDefinition _col1;
-        TargetedPopup _targetedPopup;
-        Border _detailPaneBorder;
-        Rectangle _overlay;
-        Grid _grid;
-
-        public PushPopState DetailPushPopState = PushPopState.Popped;
-
-        #endregion
 
 
         #region Construction / Initialization
         public ContentAndDetailPresenter()
         {
-            DefaultStyleKey = typeof(ContentAndDetailPresenter);
+            Build();
+            SizeChanged += OnSizeChanged;
         }
 
-        protected override void OnApplyTemplate()
-        {
-            _detailPaneContentPresenter = (ContentPresenter)GetTemplateChild(DetailPaneContentPresenterName);
-            _detailPopupContentPresenter = (ContentPresenter)GetTemplateChild(DetailPopupContentPresenterName);
-            _row1 = (RowDefinition)GetTemplateChild(Row1Name);
-            _col1 = (ColumnDefinition)GetTemplateChild(Col1Name);
-            _targetedPopup = (TargetedPopup)GetTemplateChild(TargetedPopupName);
-            _detailPaneBorder = (Border)GetTemplateChild(DetailPaneBorderName);
-            _overlay = (Rectangle)GetTemplateChild(LightDismissOverlayName);
+        #endregion
 
-            _grid = (Grid)GetTemplateChild(GridName);
-            _grid.Children.Remove(_targetedPopup);
-            // must call base.OnApplyTemplate last so completion handler won't be called until template loading is truly complete
-            base.OnApplyTemplate();
+
+        #region Layout
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ChildrenMeasure(e.NewSize, true);
+        }
+
+
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            //ChildrenMeasure(availableSize);
+            return availableSize;
+        }
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            ChildrenMeasure(finalSize, true);
+            return finalSize;
+        }
+
+        void ChildrenMeasure(Size size, bool arrange = false)
+        {
+            if (size.IsZero())
+                return;
+
+
+            if (double.IsNaN(size.Width))
+                size.Width = AppWindow.Size().Width;
+            if (double.IsNaN(size.Height))
+                size.Height = AppWindow.Size().Height;
+
+            var y = size.Height;
+
+            if (arrange && _footerContentPresenter.Content != null)
+            {
+                //if (!arrange || _footerContentPresenter.DesiredSize.Width != size.Width)
+                    _footerContentPresenter.Measure(size);
+                y -= _footerContentPresenter.DesiredSize.Height;
+                if (arrange)
+                {
+                    var rect = new Rect(new Point(0, y), new Size(size.Width, _footerContentPresenter.DesiredSize.Height));
+                    _footerContentPresenter.Arrange(rect);
+                }
+            }
+
+            if (DetailPushPopState == PushPopState.Popped ||
+                (!IsInDrawerMode && DetailPushPopState == PushPopState.Pushed))
+            {
+                var s = new Size(size.Width, y);
+                if (!arrange || _contentPresenter.DesiredSize.Width != size.Width)
+                    _contentPresenter.Measure(s);
+                if (arrange)
+                    _contentPresenter.Arrange(new Rect(new Point(), s));
+            }
+            else if (DetailPushPopState == PushPopState.Pushed)
+            {
+                _targetedPopup.PopupContent = null;
+                _detailDrawerBorder.Child = _detailContentPresenter;
+                var aspect = size.Width / size.Height;
+                Rect drawerRect;
+                Size contentSize;
+                if (aspect > 1)
+                {
+                    var drawerSize = new Size(size.Height / DetailAspectRatio, size.Height);
+                    contentSize = new Size(size.Width - drawerSize.Width, size.Height);
+                    if (!arrange || _detailDrawerBorder.DesiredSize != drawerSize)
+                        _detailDrawerBorder.Measure(drawerSize);
+                    if (!arrange || _contentPresenter.DesiredSize != contentSize)
+                        _contentPresenter.Measure(contentSize);
+                    var x = size.Width - _detailDrawerBorder.DesiredSize.Width;
+                    drawerRect = new Rect(new Point(x, 0), new Size(_detailDrawerBorder.DesiredSize.Width, size.Height));
+                }
+                else
+                {
+                    var drawerSize = new Size(size.Width, size.Width * DetailAspectRatio);
+                    contentSize = new Size(size.Width, size.Height - drawerSize.Height);
+                    //if (!arrange || _detailDrawerBorder.DesiredSize != drawerSize)
+                        _detailDrawerBorder.Measure(drawerSize);
+                    if (!arrange || _contentPresenter.DesiredSize != contentSize)
+                        _contentPresenter.Measure(contentSize);
+                    y = size.Height - _detailDrawerBorder.DesiredSize.Height;
+                    drawerRect = new Rect(new Point(0, y), new Size(size.Width, _detailDrawerBorder.DesiredSize.Height));
+                }
+                if (arrange && !_detailDrawerBorder.DesiredSize.IsZero())
+                {
+                    _contentPresenter.Arrange(new Rect(new Point(), contentSize));
+                    _overlay.Arrange(new Rect(new Point(), contentSize));
+                    _detailDrawerBorder.Arrange(drawerRect);
+                }
+            }
         }
         #endregion
 
@@ -361,9 +397,10 @@ namespace P42.Uno.Controls
 
 
             // where is the detail going?
-            if (IsInPaneMode)
+            if (IsInDrawerMode)
             {
-                _detailPopupContentPresenter.Content = null;
+                _targetedPopup.PopupContent = null;
+                _detailDrawerBorder.Child = _detailContentPresenter;
 
                 _overlay.Opacity = 0.0;
                 _overlay.Visibility = LightDismissOverlayMode == LightDismissOverlayMode.On
@@ -371,80 +408,68 @@ namespace P42.Uno.Controls
                         : Visibility.Collapsed;
                 _overlay.PointerPressed += OnDismissPointerPressed;
 
-
+                double from = 0.0;
                 double to = 0.0;
-                string targetProperty = null;
+                Action<double> action;
                 if (Aspect > 1)
                 {
-                    var height = ActualHeight;
+                    var height = EstHeight;
                     var width = DetailAspectRatio * height;
-                    _detailPaneBorder.Height = height;
-                    _detailPaneBorder.Width = DetailAspectRatio * height;
-                    Grid.SetColumn(_detailPaneBorder, 1);
-                    Grid.SetRow(_detailPaneBorder, 0);
-
-                    to = width;
-                    targetProperty = nameof(Column1Width);
+                    var size = new Size(width, height);
+                    _detailDrawerBorder.Height = height;
+                    _detailDrawerBorder.Width = DetailAspectRatio * height;
+                    _detailDrawerBorder.BorderThickness = new Thickness(1, 0, 0, 0);
+                    from = EstWidth;
+                    to = EstWidth - width;
+                    action = x =>
+                    {
+                        _contentPresenter.Arrange(new Rect(0, 0, x, height));
+                        _overlay.Opacity = (from - x) / (from - to);
+                        _overlay.Arrange(new Rect(0, 0, x, height));
+                        _detailDrawerBorder.Arrange(new Rect(x, 0, width, height));
+                    };
                 }
                 else
                 {
-                    var width = ActualWidth;
+                    var width = EstWidth;
                     var height = width / DetailAspectRatio;
-                    _detailPaneBorder.Height = height;
-                    _detailPaneBorder.Width = width;
-                    Grid.SetColumn(_detailPaneBorder, 0);
-                    Grid.SetRow(_detailPaneBorder, 1);
-
-                    to = height;
-                    targetProperty = nameof(Row1Height);
+                    var size = new Size(width, height);
+                    _detailDrawerBorder.Height = height;
+                    _detailDrawerBorder.Width = width;
+                    _detailDrawerBorder.BorderThickness = new Thickness(0, 1, 0, 0);
+                    from = EstHeight;
+                    to = EstHeight - height;
+                    action = y =>
+                    {
+                        _contentPresenter.Arrange(new Rect(0, 0, width, y));
+                        _overlay.Opacity = (from - y) / (from - to);
+                        _overlay.Arrange(new Rect(0, 0, width, y));
+                        _detailDrawerBorder.Arrange(new Rect(0, y, width, height));
+                    };
                 }
-                _detailPaneContentPresenter.Content = Detail;
-                _detailPaneBorder.Visibility = Visibility.Visible;
+
+                _detailDrawerBorder.Visibility = Visibility.Visible;
 
                 //#if NETFX_CORE
                 if (IsAnimated)
                 {
-                    var storyboard = new Storyboard();
-                    var flyoutAnimation = new DoubleAnimation
-                    {
-                        EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
-                        Duration = TimeSpan.FromMilliseconds(500),
-                        EnableDependentAnimation = true,
-                        From = 0,
-                        To = to
-                    };
-                    var opacityAnimation = new DoubleAnimation
-                    {
-                        Duration = TimeSpan.FromMilliseconds(500),
-                        From = 0.0,
-                        To = 1.0
-                    };
-                    Storyboard.SetTarget(flyoutAnimation, this);
-                    Storyboard.SetTargetProperty(flyoutAnimation, targetProperty);
-                    Storyboard.SetTarget(opacityAnimation, _overlay);
-                    Storyboard.SetTargetProperty(opacityAnimation, nameof(UIElement.Opacity));
-                    storyboard.Children.Add(opacityAnimation);
-                    storyboard.Children.Add(flyoutAnimation);
-                    await storyboard.BeginAsync();
+                    var animator = new P42.Utils.Uno.ActionAnimator(from, to, TimeSpan.FromMilliseconds(500), action);
+                    await animator.RunAsync();
                 }
                 else
-                //#endif
-                {
-                    if (targetProperty == nameof(Row1Height))
-                        Row1Height = to;
-                    else
-                        Column1Width = to;
-                }
+                    action(to);
+
                 _overlay.Opacity = 1.0;
             }
             else
             {
-                _detailPaneContentPresenter.Content = null;
+
+                _detailDrawerBorder.Child = null;
+                _targetedPopup.PopupContent = _detailContentPresenter;
 
                 _targetedPopup.Target = Target;
-                _detailPopupContentPresenter.Height = PopupContentHeight;
-                _detailPopupContentPresenter.Width = PopupContentHeight * DetailAspectRatio;
-                _detailPopupContentPresenter.Content = Detail;
+                _detailContentPresenter.Height = PopupContentHeight;
+                _detailContentPresenter.Width = PopupContentHeight * DetailAspectRatio;
                 _targetedPopup.Popped += OnTargetedPopupPopped;
                 await _targetedPopup.PushAsync();
 
@@ -487,64 +512,63 @@ namespace P42.Uno.Controls
 
             _overlay.PointerPressed -= OnDismissPointerPressed;
 
-            if (_detailPopupContentPresenter.Content != null)
+            if (_targetedPopup.PopupContent != null)
                 await _targetedPopup.PopAsync();
             else
             {
-
                 double from = 0.0;
-                string targetProperty = null;
-                if (Row1Height > 0)
+                double to = 0.0;
+                var width = _detailDrawerBorder.ActualWidth;
+                var height = _detailDrawerBorder.ActualHeight;
+                var size = new Size(width, height);
+                Action<double> action;
+                if (Aspect > 1)
                 {
-                    from = Row1Height;
-                    targetProperty = nameof(Row1Height);
+                    from = EstWidth - width;
+                    to = EstWidth;
+                    action = x =>
+                    {
+                        _contentPresenter.Arrange(new Rect(0, 0, x, height));
+                        _overlay.Opacity = (to - x) / (to - from);
+                        _overlay.Arrange(new Rect(0, 0, x, height));
+                        _detailDrawerBorder.Arrange(new Rect(x, 0, width, height));
+                    };
                 }
                 else
                 {
-                    from = Column1Width;
-                    targetProperty = nameof(Column1Width);
+                    from = EstHeight - height;
+                    to = EstHeight;
+                    action = y =>
+                    {
+                        _contentPresenter.Arrange(new Rect(0, 0, width, y));
+                        _overlay.Opacity = (to - y) / (to - from);
+                        _overlay.Arrange(new Rect(0, 0, width, y));
+                        _detailDrawerBorder.Arrange(new Rect(0, y, width, height));
+                    };
                 }
 
+                System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PopDetailAsync A");
                 //#if NETFX_CORE
                 if (IsAnimated)
                 {
-                    var storyboard = new Storyboard();
-                    var flyoutAnimation = new DoubleAnimation
-                    {
-                        EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
-                        Duration = TimeSpan.FromMilliseconds(500),
-                        From = from,
-                        To = 0,
-                        EnableDependentAnimation = true,
-                    };
-                    var opacityAnimation = new DoubleAnimation
-                    {
-                        Duration = TimeSpan.FromMilliseconds(500),
-                        From = 1.0,
-                        To = 0.0
-                    };
-                    Storyboard.SetTarget(flyoutAnimation, this);
-                    Storyboard.SetTargetProperty(flyoutAnimation, targetProperty);
-                    Storyboard.SetTarget(opacityAnimation, _overlay);
-                    Storyboard.SetTargetProperty(opacityAnimation, nameof(UIElement.Opacity));
-                    storyboard.Children.Add(flyoutAnimation);
-                    storyboard.Children.Add(opacityAnimation);
-                    await storyboard.BeginAsync();
+                    var animator = new P42.Utils.Uno.ActionAnimator(from, to, TimeSpan.FromMilliseconds(500), action);
+                    await animator.RunAsync();
                 }
                 else
-                //#endif
-                {
-                    Row1Height = 0;
-                    Column1Width = 0;
-                }
+                    action(to);
+
+                _detailDrawerBorder.Collapsed();
             }
 
+            System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PopDetailAsync D");
             if (LightDismissOverlayMode == LightDismissOverlayMode.On)
                 _overlay.Visibility = Visibility.Collapsed;
             _overlay.Opacity = 1.0;
 
+            System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PopDetailAsync E");
             DetailPushPopState = PushPopState.Popped;
             _popCompletionSource?.SetResult(true);
+            System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PopDetailAsync F");
 
 
         }
