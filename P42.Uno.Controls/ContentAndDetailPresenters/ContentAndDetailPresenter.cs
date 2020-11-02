@@ -104,7 +104,16 @@ namespace P42.Uno.Controls
         private static void OnFooterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is ContentAndDetailPresenter view)
-                view._footerContentPresenter.Content = e.NewValue;
+            {
+                if (e.OldValue is FrameworkElement oldElement)
+                    view.Children.Remove(oldElement);
+                if (e.NewValue is FrameworkElement newElement)
+                {
+                    view.Children.Add(newElement);
+                }
+            }
+            //    view._footerContentPresenter.Content = e.NewValue;
+            
         }
         public object Footer
         {
@@ -316,15 +325,15 @@ namespace P42.Uno.Controls
 
             var y = size.Height;
 
-            if (arrange && _footerContentPresenter.Content != null)
+            if (arrange && Footer is UIElement footer)
             {
                 //if (!arrange || _footerContentPresenter.DesiredSize.Width != size.Width)
-                    _footerContentPresenter.Measure(size);
-                y -= _footerContentPresenter.DesiredSize.Height;
+                    footer.Measure(size);
+                y -= footer.DesiredSize.Height;
                 if (arrange)
                 {
-                    var rect = new Rect(new Point(0, y), new Size(size.Width, _footerContentPresenter.DesiredSize.Height));
-                    _footerContentPresenter.Arrange(rect);
+                    var rect = new Rect(new Point(0, y), new Size(size.Width, footer.DesiredSize.Height));
+                    footer.Arrange(rect);
                 }
             }
 

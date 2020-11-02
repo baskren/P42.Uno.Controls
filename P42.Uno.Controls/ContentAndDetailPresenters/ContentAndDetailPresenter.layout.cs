@@ -15,7 +15,7 @@ namespace P42.Uno.Controls
     {
         ContentPresenter _contentPresenter;
         ContentPresenter _detailContentPresenter;
-        ContentPresenter _footerContentPresenter;
+        //ContentPresenter _footerContentPresenter;
         TargetedPopup _targetedPopup;
         Border _detailDrawerBorder;
         Rectangle _overlay;
@@ -26,8 +26,8 @@ namespace P42.Uno.Controls
                 new ContentPresenter()
                     .Assign(out _contentPresenter),
 
-                new ContentPresenter()
-                    .Assign(out _footerContentPresenter),
+                //new ContentPresenter()
+                //    .Assign(out _footerContentPresenter),
 
                 new Border()
                     .Assign(out _detailDrawerBorder)
