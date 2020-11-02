@@ -321,7 +321,9 @@ namespace P42.Uno.Controls
 
         protected override Size MeasureOverride(Size availableSize)
         {
+#if !NETFX_CORE  // Causes UWP to crash!  (Layout cycle detected) but WASM won't update changes to ListView contents without it
             ChildrenMeasure(availableSize);
+#endif
             return availableSize;
         }
 
@@ -402,10 +404,10 @@ namespace P42.Uno.Controls
                 }
             }
         }
-        #endregion
+#endregion
 
 
-        #region Push / Pop
+#region Push / Pop
 
         public async Task PushDetailAsync()
         {
@@ -618,7 +620,7 @@ namespace P42.Uno.Controls
             return await _pushCompletionSource.Task;
         }
 
-        #endregion
+#endregion
 
     }
 }
