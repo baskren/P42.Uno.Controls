@@ -13,24 +13,19 @@ namespace P42.Uno.Controls
 {
     public partial class ContentAndDetailPresenter : Panel
     {
-        ContentPresenter _contentPresenter;
-        ContentPresenter _detailContentPresenter;
+        //ContentPresenter _contentPresenter;
+        //ContentPresenter _detailContentPresenter;
         //ContentPresenter _footerContentPresenter;
         TargetedPopup _targetedPopup;
-        Border _detailDrawerBorder;
+        Border _detailDrawer;
         Rectangle _overlay;
 
         void Build()
         {
             this.Children(
-                new ContentPresenter()
-                    .Assign(out _contentPresenter),
-
-                //new ContentPresenter()
-                //    .Assign(out _footerContentPresenter),
 
                 new Border()
-                    .Assign(out _detailDrawerBorder)
+                    .Assign(out _detailDrawer)
                     .BorderBrush(SystemColors.BaseMediumHigh)
                     .Background(SystemColors.AltHigh)
                     .BorderThickness(1),
@@ -41,7 +36,7 @@ namespace P42.Uno.Controls
                     .Bind(Rectangle.FillProperty, this, nameof(LightDismissOverlayBrush))
             );
 
-            _detailContentPresenter = new ContentPresenter();
+            //_detailContentPresenter = new ContentPresenter();
 
             _targetedPopup = new TargetedPopup()
                 .Padding(4)
