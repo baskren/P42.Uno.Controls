@@ -68,7 +68,6 @@ namespace P42.Uno.Controls
 
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
-
             var canvas = e.Surface?.Canvas;
             if (canvas == null)
                 return;
