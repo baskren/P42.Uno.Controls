@@ -60,7 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.SkiaSharp.Views" Version="2.80.0-uno.483" />
+    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.2" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>6.1.0-build.191.gc988bdd4ff</Version>
     </PackageReference>
