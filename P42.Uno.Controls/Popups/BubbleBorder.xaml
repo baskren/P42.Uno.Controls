@@ -2,10 +2,10 @@
     x:Class="P42.Uno.Controls.BubbleBorder"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:P42.Uno.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:unoTk="using:Uno.UI.Toolkit"
     x:Name="_contentControl"
     HorizontalAlignment="Left"
     VerticalAlignment="Top"
@@ -20,20 +20,14 @@
     <ContentControl.Template>
         <ControlTemplate TargetType="local:BubbleBorder">
             <Grid SizeChanged="OnSizeChanged">
-                <controls:DropShadowPanel
-                    x:Name="_dropShadow"
-                    BlurRadius="4.0"
-                    OffsetX="4.0"
-                    OffsetY="4.0"
-                    ShadowOpacity="{TemplateBinding ShadowOpacity}"
-                    Color="{StaticResource SystemBaseMediumHighColor}">
+                <unoTk:ElevatedView x:Name="_dropShadow">
                     <Path
                         x:Name="_path"
                         Data="{TemplateBinding PathGeometry}"
                         Fill="{TemplateBinding Background}"
                         Stroke="{TemplateBinding BorderBrush}"
                         StrokeThickness="{TemplateBinding BorderThickness}" />
-                </controls:DropShadowPanel>
+                </unoTk:ElevatedView>
                 <!--
                 xmlns:skia="using:SkiaSharp.Views.UWP"
                 <skia:SKXamlCanvas x:Name="_skCanvas" PaintSurface="OnPaintSurface" />

@@ -96,11 +96,11 @@ namespace P42.Uno.Controls
         /// <param name="isRelative">If set to <c>true</c> is relative.</param>
         public FlexBasis(double length, bool isRelative = false)
         {
-            Guard.IsGreaterThanOrEqualTo(length, 0, nameof(length));
+            //Guard.IsGreaterThanOrEqualTo(length, 0, nameof(length));
 
             if (isRelative)
             {
-                Guard.IsLessThanOrEqualTo(length, 1, nameof(length));
+                //Guard.IsLessThanOrEqualTo(length, 1, nameof(length));
             }
 
             isLength = !isRelative;

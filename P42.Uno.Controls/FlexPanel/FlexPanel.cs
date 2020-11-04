@@ -893,8 +893,8 @@ namespace P42.Uno.Controls
 
             public void Add(FlexItem child)
             {
-                Guard.IsNotNull(child, nameof(child));
-                Guard.IsNull(child.Parent, "child.Parent");
+                //Guard.IsNotNull(child, nameof(child));
+                //Guard.IsNull(child.Parent, "child.Parent");
                 (children = children ?? new List<FlexItem>()).Add(child);
                 child.Parent = this;
                 ShouldOrderChildren |= child.Order != 0;
@@ -902,8 +902,8 @@ namespace P42.Uno.Controls
 
             public void InsertAt(int index, FlexItem child)
             {
-                Guard.IsNotNull(child, nameof(child));
-                Guard.IsNull(child.Parent, "child.Parent");
+                //Guard.IsNotNull(child, nameof(child));
+                //Guard.IsNull(child.Parent, "child.Parent");
                 (children = children ?? new List<FlexItem>()).Insert(index, child);
                 child.Parent = this;
                 ShouldOrderChildren |= child.Order != 0;
@@ -942,8 +942,8 @@ namespace P42.Uno.Controls
 
             public void Layout()
             {
-                Guard.IsNull(Parent, nameof(Parent));
-                Guard.IsNull(SelfSizing, nameof(SelfSizing));
+                //Guard.IsNull(Parent, nameof(Parent));
+                //Guard.IsNull(SelfSizing, nameof(SelfSizing));
 
                 if (double.IsNaN(Width) || double.IsNaN(Height))
                 {
@@ -1045,10 +1045,10 @@ namespace P42.Uno.Controls
                     // Honor the `basis' property which overrides the main-axis size.
                     if (!child.Basis.IsAuto)
                     {
-                        Guard.IsGreaterThanOrEqualTo(child.Basis.Length, 0, nameof(child.Basis.Length));
+                        //Guard.IsGreaterThanOrEqualTo(child.Basis.Length, 0, nameof(child.Basis.Length));
                         if (child.Basis.IsRelative)
                         {
-                            Guard.IsLessThanOrEqualTo(child.Basis.Length, 1, nameof(child.Basis.Length));
+                            //Guard.IsLessThanOrEqualTo(child.Basis.Length, 1, nameof(child.Basis.Length));
                         }
 
                         double basis = child.Basis.Length;
@@ -1081,8 +1081,8 @@ namespace P42.Uno.Controls
                         }
                     }
 
-                    Guard.IsGreaterThanOrEqualTo(child.Grow, 0, nameof(child.Grow));
-                    Guard.IsGreaterThanOrEqualTo(child.Shrink, 0, nameof(child.Shrink));
+                    //Guard.IsGreaterThanOrEqualTo(child.Grow, 0, nameof(child.Grow));
+                    //Guard.IsGreaterThanOrEqualTo(child.Shrink, 0, nameof(child.Shrink));
 
                     layout.LineFlexGrows += child.Grow;
                     layout.LineFlexShrinks += child.Shrink;
@@ -1169,7 +1169,7 @@ namespace P42.Uno.Controls
 
             private static void LayoutAlign1(FlexJustify align, double flexDim, int childrenCount, ref double posP, ref double spacingP)
             {
-                Guard.IsGreaterThanOrEqualTo(flexDim, 0, nameof(flexDim));
+                //Guard.IsGreaterThanOrEqualTo(flexDim, 0, nameof(flexDim));
 
                 posP = 0;
                 spacingP = 0;
@@ -1212,7 +1212,7 @@ namespace P42.Uno.Controls
 
             private static void LayoutAlign(FlexAlignContent align, double flexDim, uint childrenCount, ref double posP, ref double spacingP)
             {
-                Guard.IsGreaterThanOrEqualTo(flexDim, 0, nameof(flexDim));
+                //Guard.IsGreaterThanOrEqualTo(flexDim, 0, nameof(flexDim));
 
                 posP = 0;
                 spacingP = 0;
@@ -1258,8 +1258,8 @@ namespace P42.Uno.Controls
 
             private static void LayoutItems(FlexItem item, int childBegin, int childEnd, int childrenCount, ref FlexLayout layout)
             {
-                Guard.IsGreaterThan(childrenCount, 0, nameof(childrenCount));
-                Guard.IsLessThanOrEqualTo(childrenCount, childEnd - childBegin, nameof(childrenCount));
+                //Guard.IsGreaterThan(childrenCount, 0, nameof(childrenCount));
+                //Guard.IsLessThanOrEqualTo(childrenCount, childEnd - childBegin, nameof(childrenCount));
 
                 if (layout.LineFlexibleMainAxisSize > 0 && layout.LineExtraFlexDim > 0)
                 {
@@ -1461,10 +1461,10 @@ namespace P42.Uno.Controls
 
                 public void Init(FlexItem item, double width, double height)
                 {
-                    Guard.IsGreaterThanOrEqualTo(item.PaddingLeft, 0, nameof(item.PaddingLeft));
-                    Guard.IsGreaterThanOrEqualTo(item.PaddingRight, 0, nameof(item.PaddingRight));
-                    Guard.IsGreaterThanOrEqualTo(item.PaddingTop, 0, nameof(item.PaddingTop));
-                    Guard.IsGreaterThanOrEqualTo(item.PaddingBottom, 0, nameof(item.PaddingBottom));
+                    //Guard.IsGreaterThanOrEqualTo(item.PaddingLeft, 0, nameof(item.PaddingLeft));
+                    //Guard.IsGreaterThanOrEqualTo(item.PaddingRight, 0, nameof(item.PaddingRight));
+                    //Guard.IsGreaterThanOrEqualTo(item.PaddingTop, 0, nameof(item.PaddingTop));
+                    //Guard.IsGreaterThanOrEqualTo(item.PaddingBottom, 0, nameof(item.PaddingBottom));
 
                     width = Math.Max(0, width - item.PaddingLeft + item.PaddingRight);
                     height = Math.Max(0, height - item.PaddingTop + item.PaddingBottom);

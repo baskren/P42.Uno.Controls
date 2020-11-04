@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Media;
 using SkiaSharp;
 using Windows.UI;
 using P42.Utils.Uno;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+using Uno.UI.Toolkit;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -15,7 +15,7 @@ namespace P42.Uno.Controls
 {
     [TemplatePart(Name = ContentPresenterName, Type=typeof(ContentPresenter))]
     [TemplatePart(Name = PathElementName, Type = typeof(Path))]
-    [TemplatePart(Name = DropShadowPanelElementName, Type = typeof(DropShadowPanel))]
+    [TemplatePart(Name = DropShadowPanelElementName, Type = typeof(ElevatedView))]
     public partial class BubbleBorder : ContentControl
     {
         #region Properties
@@ -297,12 +297,12 @@ namespace P42.Uno.Controls
         #region Fields
         const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Left;
         const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Top;
-        const string ContentPresenterName = "_contentPresenter";
-        const string PathElementName = "_path";
-        const string DropShadowPanelElementName = "_dropShadow";
+        const string ContentPresenterName = nameof(_contentPresenter);
+        const string PathElementName = nameof(_path);
+        const string DropShadowPanelElementName = nameof(_dropShadow);
         ContentPresenter _contentPresenter;
         Windows.UI.Xaml.Shapes.Path _path;
-        DropShadowPanel _dropShadow;
+        ElevatedView _dropShadow;
         #endregion
 
 
@@ -328,7 +328,7 @@ namespace P42.Uno.Controls
             //System.Diagnostics.Debug.WriteLine(GetType() + "\t path.GetType: " + path?.GetType());
 
             var dropShadow = GetTemplateChild(DropShadowPanelElementName);
-            _dropShadow = dropShadow as DropShadowPanel;
+            _dropShadow = dropShadow as ElevatedView;
             //System.Diagnostics.Debug.WriteLine(GetType() + "\t dropShadow.GetType: " + dropShadow?.GetType());
             //System.Diagnostics.Debug.WriteLine(GetType() + ".OnApplyTemplate ==============================================================");
         }

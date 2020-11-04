@@ -4,6 +4,3 @@
 [submodule "P42.Uno.Markup"]
 	path = P42.Uno.Markup
 	url = https://github.com/baskren/P42.Uno.Markup.git
-[submodule "SkiaSharp.Extended"]
-	path = SkiaSharp.Extended
-	url = https://github.com/mono/SkiaSharp.Extended.git

@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Animations;
-using P42.Utils.Uno;
+﻿using P42.Utils.Uno;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +19,7 @@ using Windows.UI.Xaml.Shapes;
 namespace P42.Uno.Controls
 {
 
-    [ContentProperty(Name = "PopupContent")]
+    [ContentProperty(Name = nameof(PopupContent))]
     public partial class TargetedPopup : UserControl, ITargetedPopup
     {
         #region Properties
