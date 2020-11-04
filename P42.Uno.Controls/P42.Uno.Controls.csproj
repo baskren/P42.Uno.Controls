@@ -15,33 +15,38 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0" />
     <PackageReference Include="Uno.UI" Version="3.1.6" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.191.gc988bdd4ff" />
+    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
     <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.2" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Uno.UI" Version="3.1.6" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.191.gc988bdd4ff" />
-    <PackageReference Include="Uno.SkiaSharp.Views" Version="2.80.0-uno.483" />
-    <PackageReference Include="Uno.SkiaSharp.Wasm" Version="2.80.0-uno.483" />
+    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
+    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.2" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'xamarinios10'">
     <PackageReference Include="Uno.UI" Version="3.1.6" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.191.gc988bdd4ff" />
-    <PackageReference Include="Uno.SkiaSharp.Views" Version="2.80.0-uno.483" />
+    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
+    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.2" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'xamarinmac20'">
     <PackageReference Include="Uno.UI" Version="3.1.6" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.191.gc988bdd4ff" />
-    <PackageReference Include="Uno.SkiaSharp.Views" Version="2.80.0-uno.483" />
+    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
+    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.2" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid90'">
     <PackageReference Include="Uno.UI" Version="3.1.6" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.191.gc988bdd4ff" />
-    <PackageReference Include="Uno.SkiaSharp.Views" Version="2.80.0-uno.483" />
+    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
+    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.2" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'monoandroid10.0'">
     <PackageReference Include="Uno.UI" Version="3.1.6" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.191.gc988bdd4ff" />
-    <PackageReference Include="Uno.SkiaSharp.Views" Version="2.80.0-uno.483" />
+    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
+    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.2" />
   </ItemGroup>
 
   <!-- BLANKET PAGE AND COMPILE -->
