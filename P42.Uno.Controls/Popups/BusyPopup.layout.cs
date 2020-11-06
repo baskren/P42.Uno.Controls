@@ -16,6 +16,10 @@ namespace P42.Uno.Controls
                 .Height(40)
                 .Margin(10);
 
+#if NETSTANDARD
+            _progressRing.Collapsed();
+#endif
+
             _iconPresenter.Collapsed();
 
             _bubbleContentGrid.Children.Add(_progressRing);
