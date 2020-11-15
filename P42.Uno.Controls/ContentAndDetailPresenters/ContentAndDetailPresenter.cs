@@ -333,10 +333,15 @@ namespace P42.Uno.Controls
             return finalSize;
         }
 
+        bool _measuring;
         void ChildrenMeasure(Size size, bool arrange = false)
         {
             if (size.IsZero())
                 return;
+
+            if (_measuring)
+                return;
+            _measuring = true;
 
 
             if (double.IsNaN(size.Width))
@@ -403,6 +408,7 @@ namespace P42.Uno.Controls
                     _detailDrawer.Arrange(drawerRect);
                 }
             }
+            _measuring = false;
         }
 #endregion
 
