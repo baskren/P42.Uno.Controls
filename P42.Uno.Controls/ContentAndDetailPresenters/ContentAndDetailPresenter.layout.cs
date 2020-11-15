@@ -33,7 +33,7 @@ namespace P42.Uno.Controls
                 new Rectangle()
                     .Assign(out _overlay)
                     .Collapsed()
-                    //.Bind(Rectangle.FillProperty, this, nameof(LightDismissOverlayBrush))
+                    .Bind(Rectangle.FillProperty, this, nameof(LightDismissOverlayBrush))
             );
 
             //_detailContentPresenter = new ContentPresenter();

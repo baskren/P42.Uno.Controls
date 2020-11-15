@@ -32,7 +32,7 @@ namespace P42.Uno.Controls
                 if (e.OldValue is FrameworkElement oldElement)
                     view.Children.Remove(oldElement);
                 if (e.NewValue is FrameworkElement newElement)
-                    view.Children.Add(newElement);
+                    view.Children.Insert(0,newElement);
             }
         }
         public FrameworkElement Content
@@ -287,8 +287,8 @@ namespace P42.Uno.Controls
             nameof(LightDismissOverlayBrush),
             typeof(Brush),
             typeof(ContentAndDetailPresenter),
-            //new PropertyMetadata(SystemColors.AltMedium.ToBrush())
-            new PropertyMetadata(Colors.Pink.ToBrush())
+            new PropertyMetadata(SystemColors.AltMedium.WithAlpha(0.1).ToBrush())
+            //new PropertyMetadata(Colors.Pink.ToBrush())
         );
         public Brush LightDismissOverlayBrush
         {
@@ -386,10 +386,13 @@ namespace P42.Uno.Controls
                 {
                     var drawerSize = new Size(size.Height / DetailAspectRatio, size.Height);
                     contentSize = new Size(size.Width - drawerSize.Width, size.Height);
-                    if (!arrange || _detailDrawer.DesiredSize != drawerSize)
-                        _detailDrawer.Measure(drawerSize);
-                    if (!arrange || Content!=null && Content.DesiredSize != contentSize)
+                    if (!arrange || Content != null && Content.DesiredSize != contentSize)
                         Content.Measure(contentSize);
+                    if (!arrange || _detailDrawer.DesiredSize != drawerSize)
+                    {
+                        _overlay.Measure(contentSize);
+                        _detailDrawer.Measure(drawerSize);
+                    }
                     var x = size.Width - _detailDrawer.DesiredSize.Width;
                     drawerRect = new Rect(new Point(x, 0), new Size(_detailDrawer.DesiredSize.Width, size.Height));
                 }
@@ -397,10 +400,13 @@ namespace P42.Uno.Controls
                 {
                     var drawerSize = new Size(size.Width, size.Width * DetailAspectRatio);
                     contentSize = new Size(size.Width, size.Height - drawerSize.Height);
-                    if (!arrange || _detailDrawer.DesiredSize != drawerSize)
-                        _detailDrawer.Measure(drawerSize);
                     if (!arrange || Content != null && Content.DesiredSize != contentSize)
                         Content.Measure(contentSize);
+                    if (!arrange || _detailDrawer.DesiredSize != drawerSize)
+                    {
+                        _overlay.Measure(contentSize);
+                        _detailDrawer.Measure(drawerSize);
+                    }
                     y = size.Height - _detailDrawer.DesiredSize.Height;
                     drawerRect = new Rect(new Point(0, y), new Size(size.Width, _detailDrawer.DesiredSize.Height));
                 }
@@ -443,7 +449,7 @@ namespace P42.Uno.Controls
                 Detail.Width = double.NaN;
                 _detailDrawer.Child = Detail;
 
-                _overlay.Opacity = 1.0;
+                _overlay.Opacity = 0.0;
                 _overlay.Visibility = LightDismissOverlayMode == LightDismissOverlayMode.On
                         ? Visibility.Visible
                         : Visibility.Collapsed;
@@ -465,7 +471,7 @@ namespace P42.Uno.Controls
                     action = x =>
                     {
                         Content?.Arrange(new Rect(0, 0, x, height));
-                        //_overlay.Opacity = (from - x) / (from - to);
+                        _overlay.Opacity = (from - x) / (from - to);
                         _overlay.Arrange(new Rect(0, 0, x, height));
                         _detailDrawer.Arrange(new Rect(x, 0, width, height));
                     };
@@ -483,8 +489,8 @@ namespace P42.Uno.Controls
                     action = y =>
                     {
                         Content?.Arrange(new Rect(0, 0, width, y));
-                        //_overlay.Opacity = (from - y) / (from - to);
-                        System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PushDetailAsync _overlay.Opacity["+_overlay.Opacity+"] _overlay.Fill["+_overlay.Fill+"]");
+                        _overlay.Opacity = (from - y) / (from - to);
+                        System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PushDetailAsync _overlay.Opacity["+_overlay.Opacity+"] _overlay.Fill["+((SolidColorBrush)_overlay.Fill).Color+"]");
                         _overlay.Arrange(new Rect(0, 0, width, y));
                         _detailDrawer.Arrange(new Rect(0, y, width, height));
                     };
@@ -493,7 +499,7 @@ namespace P42.Uno.Controls
                 _detailDrawer.Visibility = Visibility.Visible;
 
                 //#if NETFX_CORE
-                if (false)
+                if (true)
                 {
                     var animator = new P42.Utils.Uno.ActionAnimator(from, to, TimeSpan.FromMilliseconds(500), action);
                     await animator.RunAsync();
@@ -502,7 +508,6 @@ namespace P42.Uno.Controls
                     action(to);
 
                 _overlay.Opacity = 1.0;
-                _overlay.Fill = Colors.Orange.ToBrush();
             }
             else
             {
@@ -572,7 +577,7 @@ namespace P42.Uno.Controls
                     action = x =>
                     {
                         Content?.Arrange(new Rect(0, 0, x, height));
-                        //_overlay.Opacity = (to - x) / (to - from);
+                        _overlay.Opacity = (to - x) / (to - from);
                         _overlay.Arrange(new Rect(0, 0, x, height));
                         _detailDrawer.Arrange(new Rect(x, 0, width, height));
                     };
@@ -584,7 +589,7 @@ namespace P42.Uno.Controls
                     action = y =>
                     {
                         Content?.Arrange(new Rect(0, 0, width, y));
-                        //_overlay.Opacity = (to - y) / (to - from);
+                        _overlay.Opacity = (to - y) / (to - from);
                         _overlay.Arrange(new Rect(0, 0, width, y));
                         _detailDrawer.Arrange(new Rect(0, y, width, height));
                     };
