@@ -331,10 +331,21 @@ namespace P42.Uno.Controls
         protected override Size ArrangeOverride(Size finalSize)
         {
             ChildrenMeasure(finalSize, true);
+#if NETSTANDARD
+            _detailDrawer.InvalidateMeasure();
+#endif
+#if __ANDROID__
+            _detailDrawer.Child.InvalidateMeasure();
+#endif
             return finalSize;
         }
 
-        //bool _measuring;
+#if __ANDROID__
+        bool _android = true;
+#else
+        bool _android = false;
+#endif
+
         void ChildrenMeasure(Size size, bool arrange = false)
         {
             if (size.IsZero())
@@ -423,7 +434,7 @@ namespace P42.Uno.Controls
 
 
 #region Push / Pop
-
+        bool _freshPushCycle;
         public async Task PushDetailAsync()
         {
             if (DetailPushPopState == PushPopState.Pushing || DetailPushPopState == PushPopState.Pushed)
@@ -444,6 +455,7 @@ namespace P42.Uno.Controls
             // where is the detail going?
             if (IsInDrawerMode)
             {
+                _freshPushCycle = true;
                 _targetedPopup.PopupContent = null;
                 Detail.Height = double.NaN;
                 Detail.Width = double.NaN;
@@ -457,6 +469,7 @@ namespace P42.Uno.Controls
 
                 var from = 0.0;
                 var to = 0.0;
+                _freshPushCycle = true;
                 Action<double> action;
                 if (Aspect > 1)
                 {
@@ -473,7 +486,10 @@ namespace P42.Uno.Controls
                         Content?.Arrange(new Rect(0, 0, x, height));
                         _overlay.Opacity = (from - x) / (from - to);
                         _overlay.Arrange(new Rect(0, 0, x, height));
+                        if (_android && _freshPushCycle)
+                            _detailDrawer.Measure(new Size(width, height));
                         _detailDrawer.Arrange(new Rect(x, 0, width, height));
+
                     };
                 }
                 else
@@ -489,9 +505,11 @@ namespace P42.Uno.Controls
                     action = y =>
                     {
                         Content?.Arrange(new Rect(0, 0, width, y));
-                        _overlay.Opacity = (from - y) / (from - to);
+                       _overlay.Opacity = (from - y) / (from - to);
                         System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PushDetailAsync _overlay.Opacity["+_overlay.Opacity+"] _overlay.Fill["+((SolidColorBrush)_overlay.Fill).Color+"]");
                         _overlay.Arrange(new Rect(0, 0, width, y));
+                        if (_android && _freshPushCycle)
+                            _detailDrawer.Measure(new Size(width, height));
                         _detailDrawer.Arrange(new Rect(0, y, width, height));
                     };
                 }
@@ -508,6 +526,7 @@ namespace P42.Uno.Controls
                     action(to);
 
                 _overlay.Opacity = 1.0;
+                _freshPushCycle = false;
             }
             else
             {
