@@ -287,7 +287,8 @@ namespace P42.Uno.Controls
             nameof(LightDismissOverlayBrush),
             typeof(Brush),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(SystemColors.AltMedium.ToBrush())
+            //new PropertyMetadata(SystemColors.AltMedium.ToBrush())
+            new PropertyMetadata(Colors.Pink.ToBrush())
         );
         public Brush LightDismissOverlayBrush
         {
@@ -333,15 +334,17 @@ namespace P42.Uno.Controls
             return finalSize;
         }
 
-        bool _measuring;
+        //bool _measuring;
         void ChildrenMeasure(Size size, bool arrange = false)
         {
             if (size.IsZero())
                 return;
 
-            if (_measuring)
-                return;
-            _measuring = true;
+            //if (_measuring)
+            //    return;
+            //_measuring = true;
+
+            System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.ChildrenMeasure ENTER");
 
 
             if (double.IsNaN(size.Width))
@@ -351,7 +354,7 @@ namespace P42.Uno.Controls
 
             var y = size.Height;
 
-            if (arrange && Footer is UIElement footer)
+            if (Footer is UIElement footer)
             {
                 //if (!arrange || _footerContentPresenter.DesiredSize.Width != size.Width)
                     footer.Measure(size);
@@ -394,7 +397,7 @@ namespace P42.Uno.Controls
                 {
                     var drawerSize = new Size(size.Width, size.Width * DetailAspectRatio);
                     contentSize = new Size(size.Width, size.Height - drawerSize.Height);
-                    //if (!arrange || _detailDrawerBorder.DesiredSize != drawerSize)
+                    if (!arrange || _detailDrawer.DesiredSize != drawerSize)
                         _detailDrawer.Measure(drawerSize);
                     if (!arrange || Content != null && Content.DesiredSize != contentSize)
                         Content.Measure(contentSize);
@@ -408,7 +411,7 @@ namespace P42.Uno.Controls
                     _detailDrawer.Arrange(drawerRect);
                 }
             }
-            _measuring = false;
+            //_measuring = false;
         }
 #endregion
 
@@ -440,14 +443,14 @@ namespace P42.Uno.Controls
                 Detail.Width = double.NaN;
                 _detailDrawer.Child = Detail;
 
-                _overlay.Opacity = 0.0;
+                _overlay.Opacity = 1.0;
                 _overlay.Visibility = LightDismissOverlayMode == LightDismissOverlayMode.On
                         ? Visibility.Visible
                         : Visibility.Collapsed;
                 _overlay.PointerPressed += OnDismissPointerPressed;
 
-                double from = 0.0;
-                double to = 0.0;
+                var from = 0.0;
+                var to = 0.0;
                 Action<double> action;
                 if (Aspect > 1)
                 {
@@ -462,7 +465,7 @@ namespace P42.Uno.Controls
                     action = x =>
                     {
                         Content?.Arrange(new Rect(0, 0, x, height));
-                        _overlay.Opacity = (from - x) / (from - to);
+                        //_overlay.Opacity = (from - x) / (from - to);
                         _overlay.Arrange(new Rect(0, 0, x, height));
                         _detailDrawer.Arrange(new Rect(x, 0, width, height));
                     };
@@ -480,7 +483,8 @@ namespace P42.Uno.Controls
                     action = y =>
                     {
                         Content?.Arrange(new Rect(0, 0, width, y));
-                        _overlay.Opacity = (from - y) / (from - to);
+                        //_overlay.Opacity = (from - y) / (from - to);
+                        System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PushDetailAsync _overlay.Opacity["+_overlay.Opacity+"] _overlay.Fill["+_overlay.Fill+"]");
                         _overlay.Arrange(new Rect(0, 0, width, y));
                         _detailDrawer.Arrange(new Rect(0, y, width, height));
                     };
@@ -489,7 +493,7 @@ namespace P42.Uno.Controls
                 _detailDrawer.Visibility = Visibility.Visible;
 
                 //#if NETFX_CORE
-                if (IsAnimated)
+                if (false)
                 {
                     var animator = new P42.Utils.Uno.ActionAnimator(from, to, TimeSpan.FromMilliseconds(500), action);
                     await animator.RunAsync();
@@ -498,6 +502,7 @@ namespace P42.Uno.Controls
                     action(to);
 
                 _overlay.Opacity = 1.0;
+                _overlay.Fill = Colors.Orange.ToBrush();
             }
             else
             {
@@ -567,7 +572,7 @@ namespace P42.Uno.Controls
                     action = x =>
                     {
                         Content?.Arrange(new Rect(0, 0, x, height));
-                        _overlay.Opacity = (to - x) / (to - from);
+                        //_overlay.Opacity = (to - x) / (to - from);
                         _overlay.Arrange(new Rect(0, 0, x, height));
                         _detailDrawer.Arrange(new Rect(x, 0, width, height));
                     };
@@ -579,7 +584,7 @@ namespace P42.Uno.Controls
                     action = y =>
                     {
                         Content?.Arrange(new Rect(0, 0, width, y));
-                        _overlay.Opacity = (to - y) / (to - from);
+                        //_overlay.Opacity = (to - y) / (to - from);
                         _overlay.Arrange(new Rect(0, 0, width, y));
                         _detailDrawer.Arrange(new Rect(0, y, width, height));
                     };
