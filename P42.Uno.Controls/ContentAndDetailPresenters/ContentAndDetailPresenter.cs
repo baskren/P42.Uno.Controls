@@ -165,9 +165,10 @@ namespace P42.Uno.Controls
                 if (idiom == Utils.Uno.DeviceIdiom.Phone)
                     return true;
                 var aspect = Aspect;
-                if (aspect < 1)
-                    aspect = 1 / aspect;
-                return aspect > 1.75 && ActualWidth <= 500;
+                //if (aspect < 1)
+                //    aspect = 1 / aspect;
+                System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.IsInDrawerMode aspect:" + aspect + "  ActualWidth:" + ActualWidth);
+                return (aspect < 1.0 / 1.25 && ActualWidth <= 500) || (aspect > 1.75 && ActualHeight <= 500 / DetailAspectRatio);
             }
         }
 
@@ -331,9 +332,6 @@ namespace P42.Uno.Controls
         protected override Size ArrangeOverride(Size finalSize)
         {
             ChildrenMeasure(finalSize, true);
-#if NETSTANDARD
-            _detailDrawer.InvalidateMeasure();
-#endif
 #if __ANDROID__
             _detailDrawer.Child.InvalidateMeasure();
 #endif
@@ -433,7 +431,7 @@ namespace P42.Uno.Controls
 #endregion
 
 
-#region Push / Pop
+        #region Push / Pop
         bool _freshPushCycle;
         public async Task PushDetailAsync()
         {
@@ -655,7 +653,7 @@ namespace P42.Uno.Controls
             return await _pushCompletionSource.Task;
         }
 
-#endregion
+        #endregion
 
     }
 }

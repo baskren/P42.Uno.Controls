@@ -43,7 +43,8 @@ namespace P42.Uno.Controls
                 .LightDismissOverlayBrush("#01FFFFFF")
                 .Opacity(0)
                 .Margin(30)
-                .PreferredPointerDirection(PointerDirection.Vertical);
+                .PreferredPointerDirection(PointerDirection.Vertical)
+                .FallbackPointerDirection(PointerDirection.Any);
 
         }
     }
