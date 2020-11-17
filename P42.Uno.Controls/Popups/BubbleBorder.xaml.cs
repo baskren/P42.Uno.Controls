@@ -402,6 +402,8 @@ namespace P42.Uno.Controls
                 case (int)PointerDirection.Down:
                     result.Bottom += PointerLength;
                     break;
+                default:
+                    break;
             }
             ContentPresenterMargin = result;
         }
@@ -511,70 +513,70 @@ namespace P42.Uno.Controls
             if (strokeColor.Alpha > 0 && BorderThickness.Left > 0)
                 borderWidth = (float)BorderThickness.Left;
 
-            var length = PointerDirection == PointerDirection.None ? 0 : (float)PointerLength;
+            var pointerLength = PointerDirection == PointerDirection.None ? 0 : (float)PointerLength;
 
             var left = 0.0f + borderWidth / 2;
             var right = (float)(width - Margin.Left - Margin.Right - borderWidth / 2);
             var top = 0.0f + borderWidth / 2;
             var bottom = (float)(height - Margin.Top - Margin.Bottom - borderWidth / 2);
 
-            width -= (PointerDirection.IsHorizontal() ? length : 0);
-            height -= (PointerDirection.IsVertical() ? length : 0);
+            width -= (PointerDirection.IsHorizontal() ? pointerLength : 0);
+            height -= (PointerDirection.IsVertical() ? pointerLength : 0);
 
-            var radius = (float)((CornerRadius.TopLeft + CornerRadius.TopRight + CornerRadius.BottomLeft + CornerRadius.BottomRight)/4.0);
+            var cornerRadius = (float)((CornerRadius.TopLeft + CornerRadius.TopRight + CornerRadius.BottomLeft + CornerRadius.BottomRight)/4.0);
 
-            if (radius * 2 > width)
-                radius = width / 2.0f;
-            if (radius * 2 > height)
-                radius = height / 2.0f;
+            if (cornerRadius * 2 > width)
+                cornerRadius = width / 2.0f;
+            if (cornerRadius * 2 > height)
+                cornerRadius = height / 2.0f;
 
 
             var filetRadius = (float)PointerCornerRadius;
             var tipRadius = (float)PointerTipRadius;
 
-            if (filetRadius / 2.0 + tipRadius / 2.0 > length)
+            if (filetRadius / 2.0 + tipRadius / 2.0 > pointerLength)
             {
-                filetRadius = 2 * (length - tipRadius / 2.0f);
+                filetRadius = 2 * (pointerLength - tipRadius / 2.0f);
                 if (filetRadius < 0)
                 {
                     filetRadius = 0;
-                    tipRadius = 2 * length;
+                    tipRadius = 2 * pointerLength;
                 }
             }
 
-            if (length - filetRadius / 2.0 < tipRadius / 2.0)
-                tipRadius = 2 * (length - filetRadius / 2.0f);
+            if (pointerLength - filetRadius / 2.0 < tipRadius / 2.0)
+                tipRadius = 2 * (pointerLength - filetRadius / 2.0f);
 
             var result = new SKPath();
-            var position = (float)PointerAxialPosition;
-            if (position <= 1.0)
-                position = (float)(PointerDirection == PointerDirection.Down || PointerDirection == PointerDirection.Up
-                    ? left + (right - left) * position
-                    : top + (bottom - top)  * position);
+            var pointerPosition = (float)PointerAxialPosition;
+            if (pointerPosition <= 1.0)
+                pointerPosition = (float)(PointerDirection == PointerDirection.Down || PointerDirection == PointerDirection.Up
+                    ? left + (right - left) * pointerPosition
+                    : top + (bottom - top)  * pointerPosition);
 
 
             const float sqrt3 = (float)1.732050807568877;
             const float sqrt3d2 = (float)0.86602540378444;
 
             var tipCornerHalfWidth = tipRadius * sqrt3d2;
-            var pointerToCornerIntercept = (float)Math.Sqrt((2 * radius * Math.Sin(Math.PI / 12.0)) * (2 * radius * Math.Sin(Math.PI / 12.0)) - (radius * radius / 4.0));
+            var pointerToCornerIntercept = (float)Math.Sqrt((2 * cornerRadius * Math.Sin(Math.PI / 12.0)) * (2 * cornerRadius * Math.Sin(Math.PI / 12.0)) - (cornerRadius * cornerRadius / 4.0));
 
-            var pointerAtLimitSansTipHalfWidth = (float)(pointerToCornerIntercept + radius / (2.0 * sqrt3) + (length - tipRadius / 2.0) / sqrt3);
+            var pointerAtLimitSansTipHalfWidth = (float)(pointerToCornerIntercept + cornerRadius / (2.0 * sqrt3) + (pointerLength - tipRadius / 2.0) / sqrt3);
             var pointerAtLimitHalfWidth = pointerAtLimitSansTipHalfWidth + tipRadius * sqrt3d2;
 
-            var pointerSansFiletHalfWidth = (float)(tipCornerHalfWidth + (length - filetRadius / 2.0 - tipRadius / 2.0) / sqrt3);
+            var pointerSansFiletHalfWidth = (float)(tipCornerHalfWidth + (pointerLength - filetRadius / 2.0 - tipRadius / 2.0) / sqrt3);
             var pointerFiletWidth = filetRadius * sqrt3d2;
             var pointerAndFiletHalfWidth = pointerSansFiletHalfWidth + pointerFiletWidth;
 
             var dir = 1;
 
-            if (length <= 1)
+            if (pointerLength <= 1)
             {
-                result.MoveTo(right - radius, top);
-                result.ArcTo(right, top, right, bottom - radius, radius);
-                result.ArcTo(right, bottom, left + radius, bottom, radius);
-                result.ArcTo(left, bottom, left, top + radius, radius);
-                result.ArcTo(left, top, right - radius, top, radius);
+                result.MoveTo(right - cornerRadius, top);
+                result.ArcTo(right, top, right, bottom - cornerRadius, cornerRadius);
+                result.ArcTo(right, bottom, left + cornerRadius, bottom, cornerRadius);
+                result.ArcTo(left, bottom, left, top + cornerRadius, cornerRadius);
+                result.ArcTo(left, top, right - cornerRadius, top, cornerRadius);
                 result.Close();
             }
             else if (PointerDirection.IsHorizontal())
@@ -587,50 +589,50 @@ namespace P42.Uno.Controls
                     start = right;
                     end = left;
                 }
-                var baseX = start + dir * length;
+                var baseX = start + dir * pointerLength;
 
-                var tipY = Math.Min(position, (float)(height - pointerAtLimitHalfWidth));
+                var tipY = Math.Min(pointerPosition, (float)(height - pointerAtLimitHalfWidth));
                 tipY = Math.Max(tipY, pointerAtLimitHalfWidth);
 
                 if (height <= 2 * pointerAtLimitHalfWidth)
                     tipY = (float)(height / 2.0);
 
-                result.MoveTo(start + dir * (length + radius), top);
-                result.ArcTo(end, top, end, bottom, radius);
-                result.ArcTo(end, bottom, start, bottom, radius);
+                result.MoveTo(start + dir * (pointerLength + cornerRadius), top);
+                result.ArcTo(end, top, end, bottom, cornerRadius);
+                result.ArcTo(end, bottom, start, bottom, cornerRadius);
 
                 // bottom half
-                if (tipY >= height - pointerAndFiletHalfWidth - radius)
+                if (tipY >= bottom - pointerAndFiletHalfWidth - cornerRadius)
                 {
-                    result.LineTo(start + dir * (length + radius), bottom);
-                    var endRatio = (float)((height - tipY) / (pointerAndFiletHalfWidth + radius));
+                    result.LineTo(start + dir * (pointerLength + cornerRadius), bottom);
+                    var endRatio = (float)((height - tipY) / (pointerAndFiletHalfWidth + cornerRadius));
                     result.CubicTo(
-                        start + dir * (length + radius - endRatio * 4 * radius / 3.0f), bottom,
-                        start + dir * (length - filetRadius / 2.0f + filetRadius * sqrt3d2), top + tipY + pointerSansFiletHalfWidth + filetRadius / 2.0f,
-                        start + dir * (length - filetRadius / 2.0f), top + tipY + pointerSansFiletHalfWidth);
+                        start + dir * (pointerLength + cornerRadius - endRatio * 4 * cornerRadius / 3.0f), bottom,
+                        start + dir * (pointerLength - filetRadius / 2.0f + filetRadius * sqrt3d2), top + tipY + pointerSansFiletHalfWidth + filetRadius / 2.0f,
+                        start + dir * (pointerLength - filetRadius / 2.0f), top + tipY + pointerSansFiletHalfWidth);
                 }
                 else
                 {
-                    result.ArcTo(baseX, bottom, baseX, top, radius);
-                    result.ArcWithCenterTo(start + dir * (length - filetRadius), top + tipY + pointerAndFiletHalfWidth, filetRadius, 90 - 90 * dir, dir * -60);
+                    result.ArcTo(baseX, bottom, baseX, top, cornerRadius);
+                    result.ArcWithCenterTo(start + dir * (pointerLength - filetRadius), top + tipY + pointerAndFiletHalfWidth, filetRadius, 90 - 90 * dir, dir * -60);
                 }
 
                 //tip
                 result.ArcWithCenterTo(start + dir * tipRadius, top + tipY, tipRadius, 90 + dir * 30, dir * 2 * 60);
 
                 // top half
-                if (tipY <= pointerAndFiletHalfWidth + radius)
+                if (tipY <= pointerAndFiletHalfWidth + cornerRadius)
                 {
-                    var startRatio = tipY / (pointerAndFiletHalfWidth + radius);
+                    var startRatio = tipY / (pointerAndFiletHalfWidth + cornerRadius);
                     result.CubicTo(
-                        start + dir * (length - filetRadius / 2.0f + filetRadius * sqrt3d2), top + tipY - pointerSansFiletHalfWidth - filetRadius / 2.0f,
-                        start + dir * (length + radius - startRatio * 4 * radius / 3.0f), top,
-                        start + dir * (length + radius), top);
+                        start + dir * (pointerLength - filetRadius / 2.0f + filetRadius * sqrt3d2), top + tipY - pointerSansFiletHalfWidth - filetRadius / 2.0f,
+                        start + dir * (pointerLength + cornerRadius - startRatio * 4 * cornerRadius / 3.0f), top,
+                        start + dir * (pointerLength + cornerRadius), top);
                 }
                 else
                 {
-                    result.ArcWithCenterTo(start + dir * (length - filetRadius), top + tipY - pointerAndFiletHalfWidth, filetRadius, 90 - dir * 30, dir * -60);
-                    result.ArcWithCenterTo(start + dir * (length + radius), top + radius, radius, 90 + dir * 90, dir * 90);
+                    result.ArcWithCenterTo(start + dir * (pointerLength - filetRadius), top + tipY - pointerAndFiletHalfWidth, filetRadius, 90 - dir * 30, dir * -60);
+                    result.ArcWithCenterTo(start + dir * (pointerLength + cornerRadius), top + cornerRadius, cornerRadius, 90 + dir * 90, dir * 90);
                 }
 
                 if (dir > 0)
@@ -650,38 +652,48 @@ namespace P42.Uno.Controls
                     start = bottom;
                     end = top;
                 }
-                var tip = Math.Min(position, (float)(width - pointerAtLimitHalfWidth));
+                var tip = Math.Min(pointerPosition, (float)(width - pointerAtLimitHalfWidth));
                 tip = Math.Max(tip, pointerAtLimitHalfWidth);
                 if (width <= 2 * pointerAtLimitHalfWidth)
                     tip = (float)(width / 2.0);
-                result.MoveTo(left, start + dir * (length + radius));
-                result.ArcTo(left, end, right, end, radius);
-                result.ArcTo(right, end, right, start, radius);
+                result.MoveTo(left, start + dir * (pointerLength + cornerRadius));
+                result.ArcTo(left, end, left + cornerRadius, end, cornerRadius);
+                result.ArcTo(right, end, right, start + cornerRadius, cornerRadius);
 
                 // right half
-                if (tip > width - pointerAndFiletHalfWidth - radius)
+                if (tip > right - pointerAndFiletHalfWidth - cornerRadius)
                 {
-                    var endRatio = (float)((width - tip) / (pointerAndFiletHalfWidth + radius));
+                    var endRatio = (float)((width - tip) / (pointerAndFiletHalfWidth + cornerRadius));
+                    /*
+                    result.LineTo(right, (float)(start + dir * (pointerLength - PointerTipRadius)));
                     result.CubicTo(
-                        right, start + dir * (length + radius - endRatio * 4 * radius / 3.0f),
-                        left + tip + pointerSansFiletHalfWidth + filetRadius / 2.0f, start + dir * (length - filetRadius / 2.0f + filetRadius * sqrt3d2),
-                        left + tip + pointerSansFiletHalfWidth, start + dir * (length - filetRadius / 2.0f)
+                        right, start + dir * (pointerLength + cornerRadius - endRatio * 4 * cornerRadius / 3.0f),
+                        left + tip + pointerSansFiletHalfWidth + filetRadius / 2.0f, start + dir * (pointerLength - filetRadius / 2.0f + filetRadius * sqrt3d2),
+                        left + tip + pointerSansFiletHalfWidth, start + dir * (pointerLength - filetRadius / 2.0f)
                         );
+                    */
+                    //result.ArcTo(right, start + dir * (pointerLength), right - (float)PointerTipRadius, start + dir * (pointerLength), (float)PointerTipRadius);
+                    result.LineTo(right, start + dir * (pointerLength - (float)PointerTipRadius));
+                    //result.LineTo(right - (float)PointerTipRadius, start + dir * pointerLength);
+                    //result.ArcWithCenterTo(
+                    //    right - (float)PointerTipRadius,
+                    //    start + dir * (pointerLength - (float)PointerTipRadius),
+                    //    (float)PointerTipRadius, 0, dir * -120
+                    //    );
                 }
                 else
                 {
                     result.ArcWithCenterTo(
-                        right - radius,
-                        start + dir * (length + radius),
-                        radius, 0, dir * -90
+                        right - cornerRadius,
+                        start + dir * (pointerLength + cornerRadius),
+                        cornerRadius, 0, dir * -90
                         );
                     result.ArcWithCenterTo(
                         left + tip + pointerAndFiletHalfWidth,
-                        start + dir * (length - filetRadius),
+                        start + dir * (pointerLength - filetRadius),
                         filetRadius, dir * 90, dir * 60
                         );
                 }
-
                 //tip
                 result.ArcWithCenterTo(
                     left + tip,
@@ -693,31 +705,31 @@ namespace P42.Uno.Controls
 
 
                 // left half
-                if (tip < pointerAndFiletHalfWidth + radius)
+                if (tip < pointerAndFiletHalfWidth + cornerRadius)
                 {
-                    var startRatio = tip / (pointerAndFiletHalfWidth + radius);
+                    var startRatio = tip / (pointerAndFiletHalfWidth + cornerRadius);
                     result.CubicTo(
                             left + tip - pointerSansFiletHalfWidth - filetRadius / 2.0f,
-                            start + dir * (length - filetRadius / 2.0f + filetRadius * sqrt3d2),
+                            start + dir * (pointerLength - filetRadius / 2.0f + filetRadius * sqrt3d2),
                             left,
-                            start + dir * (length + radius - startRatio * 4 * radius / 3.0f),
+                            start + dir * (pointerLength + cornerRadius - startRatio * 4 * cornerRadius / 3.0f),
                             left,
-                            start + dir * (length + radius)
+                            start + dir * (pointerLength + cornerRadius)
                         );
                 }
                 else
                 {
                    result.ArcWithCenterTo(
                         left + tip - pointerAndFiletHalfWidth,
-                        start + dir * (length - filetRadius),
+                        start + dir * (pointerLength - filetRadius),
                         filetRadius,
                         dir * 30,
                         dir * 60
                         );
                     result.ArcWithCenterTo(
-                        left + radius,
-                        start + dir * (length + radius),
-                        radius,
+                        left + cornerRadius,
+                        start + dir * (pointerLength + cornerRadius),
+                        cornerRadius,
                         dir * -90,
                         dir * -90
                         );
