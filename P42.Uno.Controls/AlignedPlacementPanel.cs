@@ -89,7 +89,7 @@ namespace P42.Uno.Controls
             _arranging = true;
             Clip = new RectangleGeometry { Rect = new Rect(new Point(), finalSize) };
 
-            System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange ENTER");
+            //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange ENTER");
             //foreach (var child in MoreChildren)
             //    Children.Add(child);
             //MoreChildren.Clear();
@@ -125,11 +125,14 @@ namespace P42.Uno.Controls
             if (width > finalSize.Width)
             {
                 centerChildren.Insert(0, _moreButton);
+                //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange : width > finalSize.Width  : centerChildrenCount=["+centerChildren.Count+"]");
             }
             var maxSectionCount = Math.Max(leftChildren.Count, Math.Max(rightChildren.Count, centerChildren.Count));
+            //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrage maxSectionCount["+maxSectionCount+"]");
             bool leftDone = false, rightDone = false, centerDone = false;
             for (int i=0;i< maxSectionCount;i++)
             {
+                //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange i["+i+"] LEFT");
                 if (i<leftChildren.Count)
                 {
                     var element = leftChildren[i];
@@ -137,19 +140,24 @@ namespace P42.Uno.Controls
                     {
                         if (ExtraChildren.Contains(element))
                             ExtraChildren.Remove(element);
-                        System.Diagnostics.Debug.Write("AlignedPlacementPanel.Arrange left["+i+"] ...");
+                        //System.Diagnostics.Debug.Write("AlignedPlacementPanel.Arrange left["+i+"] ...");
                         element.Arrange(new Rect(new Point(leftWidth, (finalSize.Height - element.DesiredSize.Height)/2.0), element.DesiredSize));
-                        System.Diagnostics.Debug.WriteLine(" ! ");
+                        //System.Diagnostics.Debug.WriteLine(" ! ");
                         leftWidth += element.DesiredSize.Width;
                     }
                     else
                     {
                         leftDone = true;
-                        leftChildren.Remove(element);
-                        if (!ExtraChildren.Contains(element))
-                            ExtraChildren.Add(element);
+                        while (leftChildren.Count > i)
+                        {
+                            element = leftChildren[i];
+                            leftChildren.Remove(element);
+                            if (!ExtraChildren.Contains(element))
+                                ExtraChildren.Add(element);
+                        }
                     }
                 }
+               // System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange i[" + i + "] RIGHT");
                 if (i<rightChildren.Count)
                 {
                     var element = rightChildren[i];
@@ -158,36 +166,46 @@ namespace P42.Uno.Controls
                         if (ExtraChildren.Contains(element))
                             ExtraChildren.Remove(element);
                         rightWidth += element.DesiredSize.Width;
-                        System.Diagnostics.Debug.Write("AlignedPlacementPanel.Arrange right[" + i + "] ...");
+                        //System.Diagnostics.Debug.Write("AlignedPlacementPanel.Arrange right[" + i + "] ...");
                         element.Arrange(new Rect(new Point(finalSize.Width-rightWidth, (finalSize.Height - element.DesiredSize.Height) / 2.0), element.DesiredSize));
                         System.Diagnostics.Debug.WriteLine(" ! ");
                     }
                     else
                     {
                         rightDone = true;
-                        rightChildren.Remove(element);
-                        if (!ExtraChildren.Contains(element))
-                            ExtraChildren.Add(element);
+                        while (rightChildren.Count > i)
+                        {
+                            element = rightChildren[i];
+                            rightChildren.Remove(element);
+                            if (!ExtraChildren.Contains(element))
+                                ExtraChildren.Add(element);
+                        }
                     }
                 }
+                //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange i[" + i + "] CENTER centerChildren.Count["+centerChildren.Count+"]");
                 if (i<centerChildren.Count)
                 {
                     var element = centerChildren[i];
-                    System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange center[" + i + "] size:[" + element.DesiredSize + "] centerDone: "+ centerDone);
+                    //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange center[" + i + "]["+element+"] size:[" + element.DesiredSize + "] centerDone: "+ centerDone);
+                    //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange leftWidth["+leftWidth+"] centerWidth["+centerWidth+"] rightWidth["+rightWidth+"] element.Des.W["+element.DesiredSize.Width+"] finalSize.W["+finalSize.Width+"]");
                     if (!centerDone && leftWidth + centerWidth + rightWidth + element.DesiredSize.Width < finalSize.Width)
                     {
                         if (ExtraChildren.Contains(element))
                             ExtraChildren.Remove(element);
-                        System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange KEEP");
+                        //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange KEEP");
                         centerWidth += element.DesiredSize.Width;
                     }
                     else
                     {
                         centerDone = true;
-                        System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange REMOVE");
-                        centerChildren.Remove(element);
-                        if (!ExtraChildren.Contains(element))
-                            ExtraChildren.Add(element);
+                        while (centerChildren.Count > i)
+                        {
+                            element = centerChildren[i];
+                            //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange REMOVE ["+element+"]");
+                            centerChildren.Remove(element);
+                            if (!ExtraChildren.Contains(element))
+                                ExtraChildren.Add(element);
+                        }
                     }
                 }
             }
@@ -198,9 +216,9 @@ namespace P42.Uno.Controls
                 _moreButton.Arrange(new Rect(new Point(finalSize.Width + 10, finalSize.Height +10), _moreButton.DesiredSize));
             foreach (var element in centerChildren)
             {
-                System.Diagnostics.Debug.Write("AlignedPlacementPanel.Arrange center[" + element + "] ...");
+                //System.Diagnostics.Debug.Write("AlignedPlacementPanel.Arrange center[" + element + "] ...");
                 element.Arrange(new Rect(new Point(centerX, (finalSize.Height - element.DesiredSize.Height) / 2.0), element.DesiredSize));
-                System.Diagnostics.Debug.WriteLine(" ! ");
+                //System.Diagnostics.Debug.WriteLine(" ! ");
                 centerX += element.DesiredSize.Width;
             }
 
@@ -213,7 +231,7 @@ namespace P42.Uno.Controls
             }
 
             _arranging = false;
-            System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange EXIT");
+            //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange EXIT");
             return finalSize;
         }
     }
