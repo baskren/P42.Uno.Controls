@@ -101,7 +101,7 @@ namespace P42.Uno.Controls.Test
             if (sender is Button button && button.Content is string text)
             {
                 _ContentAndDetailPresenter.Detail = new TextBlock { Text = text };
-                await _ContentAndDetailPresenter.PushDetail();
+                await _ContentAndDetailPresenter.PushDetailAsync();
             }
         }
 

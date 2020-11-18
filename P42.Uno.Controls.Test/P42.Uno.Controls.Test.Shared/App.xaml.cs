@@ -60,7 +60,7 @@ namespace P42.Uno.Controls.Test
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
+                {   
                     //TODO: Load state from previously suspended application
                 }
 
@@ -76,7 +76,8 @@ namespace P42.Uno.Controls.Test
                     // configuring the new page by passing required information as a navigation
                     // parameter
                     //rootFrame.Navigate(typeof(MainPage), e.Arguments);
-                    rootFrame.Navigate(typeof(SummaryDetailPage), e.Arguments);
+                    //rootFrame.Navigate(typeof(SummaryDetailPage), e.Arguments);
+                    rootFrame.Navigate(typeof(BubblePointerAdjust), e.Arguments);
                 }
                 // Ensure the current window is active
                 Windows.UI.Xaml.Window.Current.Activate();

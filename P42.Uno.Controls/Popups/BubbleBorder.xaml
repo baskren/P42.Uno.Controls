@@ -26,7 +26,7 @@
                         Data="{TemplateBinding PathGeometry}"
                         Fill="{TemplateBinding Background}"
                         Stroke="{TemplateBinding BorderBrush}"
-                        StrokeThickness="{TemplateBinding BorderThickness}" />
+                         />
                 </unoTk:ElevatedView>
                 <!--
                 xmlns:skia="using:SkiaSharp.Views.UWP"

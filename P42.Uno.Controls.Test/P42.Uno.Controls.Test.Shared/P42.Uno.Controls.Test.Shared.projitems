@@ -8,7 +8,6 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>P42.Uno.Controls.Test</Import_RootNamespace>
   </PropertyGroup>
-
   <!-- Original (working) -->
   <!--
   <ItemGroup>
@@ -40,7 +39,6 @@
     </Compile>
   </ItemGroup>
   -->
-
   <!-- Me trying to be clever -->
   <!-- Blanket XAML -->
   <ItemGroup>
@@ -50,7 +48,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="$(MSBuildThisFileDirectory)\**\*.xaml" Exclude="$(MSBuildThisFileDirectory)App.xaml;$(MSBuildThisFileDirectory)\bin\**\*.xaml;$(MSBuildThisFileDirectory)\obj\**\*.xaml;" >
+    <Page Include="$(MSBuildThisFileDirectory)\**\*.xaml" Exclude="$(MSBuildThisFileDirectory)App.xaml;$(MSBuildThisFileDirectory)\bin\**\*.xaml;$(MSBuildThisFileDirectory)\obj\**\*.xaml;">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -60,7 +58,6 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
   </ItemGroup>
-
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
   </ItemGroup>
