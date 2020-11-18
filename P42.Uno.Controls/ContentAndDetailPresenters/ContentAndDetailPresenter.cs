@@ -161,13 +161,14 @@ namespace P42.Uno.Controls
         {
             get
             {
+                return false;
                 var idiom = Utils.Uno.Device.Idiom;
                 if (idiom == Utils.Uno.DeviceIdiom.Phone)
                     return true;
                 var aspect = Aspect;
                 //if (aspect < 1)
                 //    aspect = 1 / aspect;
-                System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.IsInDrawerMode aspect:" + aspect + "  ActualWidth:" + ActualWidth);
+                //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.IsInDrawerMode aspect:" + aspect + "  ActualWidth:" + ActualWidth);
                 return (aspect < 1.0 / 1.25 && ActualWidth <= 500) || (aspect > 1.75 && ActualHeight <= 500 / DetailAspectRatio);
             }
         }
@@ -301,7 +302,6 @@ namespace P42.Uno.Controls
         #endregion
 
         #endregion
-
 
 
         #region Construction / Initialization
@@ -504,7 +504,7 @@ namespace P42.Uno.Controls
                     {
                         Content?.Arrange(new Rect(0, 0, width, y));
                        _overlay.Opacity = (from - y) / (from - to);
-                        System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PushDetailAsync _overlay.Opacity["+_overlay.Opacity+"] _overlay.Fill["+((SolidColorBrush)_overlay.Fill).Color+"]");
+                        //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PushDetailAsync _overlay.Opacity["+_overlay.Opacity+"] _overlay.Fill["+((SolidColorBrush)_overlay.Fill).Color+"]");
                         _overlay.Arrange(new Rect(0, 0, width, y));
                         if (_android && _freshPushCycle)
                             _detailDrawer.Measure(new Size(width, height));
@@ -517,7 +517,7 @@ namespace P42.Uno.Controls
                 //#if NETFX_CORE
                 if (true)
                 {
-                    var animator = new P42.Utils.Uno.ActionAnimator(from, to, TimeSpan.FromMilliseconds(500), action);
+                    var animator = new P42.Utils.Uno.ActionAnimator(from, to, TimeSpan.FromMilliseconds(300), action);
                     await animator.RunAsync();
                 }
                 else
@@ -544,20 +544,6 @@ namespace P42.Uno.Controls
             _pushCompletionSource?.SetResult(true);
         }
 
-        private void OnTargetedPopupPopped(object sender, PopupPoppedEventArgs e)
-        {
-            _targetedPopup.Popped -= OnTargetedPopupPopped;
-            DetailPushPopState = PushPopState.Popped;
-        }
-
-        async void OnDismissPointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            if (IsLightDismissEnabled)
-            {
-                await PopDetailAsync();
-            }
-        }
-
         public async Task PopDetailAsync()
         {
 
@@ -581,8 +567,8 @@ namespace P42.Uno.Controls
                 await _targetedPopup.PopAsync();
             else
             {
-                double from = 0.0;
-                double to = 0.0;
+                var from = 0.0;
+                var to = 0.0;
                 var width = _detailDrawer.ActualWidth;
                 var height = _detailDrawer.ActualHeight;
                 var size = new Size(width, height);
@@ -612,11 +598,11 @@ namespace P42.Uno.Controls
                     };
                 }
 
-                System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PopDetailAsync A");
+                //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PopDetailAsync A");
                 //#if NETFX_CORE
                 if (IsAnimated)
                 {
-                    var animator = new P42.Utils.Uno.ActionAnimator(from, to, TimeSpan.FromMilliseconds(500), action);
+                    var animator = new P42.Utils.Uno.ActionAnimator(from, to, TimeSpan.FromMilliseconds(300), action);
                     await animator.RunAsync();
                 }
                 else
@@ -637,6 +623,22 @@ namespace P42.Uno.Controls
 
 
         }
+
+        private void OnTargetedPopupPopped(object sender, PopupPoppedEventArgs e)
+        {
+            _targetedPopup.Popped -= OnTargetedPopupPopped;
+            DetailPushPopState = PushPopState.Popped;
+        }
+
+        async void OnDismissPointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (IsLightDismissEnabled)
+            {
+                await PopDetailAsync();
+            }
+        }
+
+
 
         TaskCompletionSource<bool> _popCompletionSource;
         public async Task<bool> WaitForPop()

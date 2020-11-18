@@ -105,7 +105,7 @@ namespace P42.Uno.Controls
             if (okButtonTextColor != default)
                 popup.OkButtonForeground = okButtonTextColor.ToBrush();
             if (okButtonColor != default)
-                popup.OkButtonForeground = okButtonColor.ToBrush();
+                popup.OkButtonBackground = okButtonColor.ToBrush();
             if (cancelTextColor != default)
                 popup.CancelButtonForeground = cancelTextColor.ToBrush();
             if (cancelButtonColor != default)
@@ -133,7 +133,7 @@ namespace P42.Uno.Controls
             if (okButtonTextColor != default)
                 popup.OkButtonForeground = okButtonTextColor.ToBrush();
             if (okButtonColor != default)
-                popup.OkButtonForeground = okButtonColor.ToBrush();
+                popup.OkButtonBackground = okButtonColor.ToBrush();
             if (cancelTextColor != default)
                 popup.CancelButtonForeground = cancelTextColor.ToBrush();
             if (cancelButtonColor != default)
