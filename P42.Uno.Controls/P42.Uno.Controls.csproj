@@ -13,7 +13,7 @@
 
   <!-- PACKAGE REFERENCES -->
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="3.1.6" />
+    <PackageReference Include="Uno.UI" Version="3.3.0" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -62,47 +62,10 @@
 
   <!-- REFERENCES -->
   <ItemGroup>
-    <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
-    <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
+    <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
+    <ProjectReference Include="..\..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
   </ItemGroup>
 
-  <!-- XAML COMPILE -->
-  <!--
-  <ItemGroup>
-    <EmbeddedResource Include="Themes\generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Popups\BubbleBorder.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Popups\TargetedPopup.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Popups\Alert.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Popups\Toast.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Popups\PermissionPopup.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Popups\BusyPopup.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ContentAndDetailPresenters\ContentAndDetailPresenter.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  -->
   
   <!-- NUGET PACKAGES -->
   <ItemGroup>
