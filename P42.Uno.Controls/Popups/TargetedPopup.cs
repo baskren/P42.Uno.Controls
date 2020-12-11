@@ -649,7 +649,7 @@ namespace P42.Uno.Controls
             Opacity = 1.0;
             if (PopAfter > default(TimeSpan))
             {
-                Device.StartTimer(PopAfter, async () =>
+                P42.Utils.Timer.StartTimer(PopAfter, async () =>
                 {
                     await PopAsync(PopupPoppedCause.Timeout, "Timeout");
                     return false;
