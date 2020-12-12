@@ -85,15 +85,15 @@ namespace P42.Uno.Controls
         }
 
         /// <summary>
-        /// Create and present the specified target, title, text, okText, cancelText, okButtonColor, cancelButtonColor, okTextColor and cancelTextColor.
+        /// Creates the Alert
         /// </summary>
-        /// <returns>The create.</returns>
-        /// <param name="target">Target.</param>
-        /// <param name="title">Title.</param>
-        /// <param name="text">Text.</param>
-        /// <param name="okText">Ok text.</param>
-        /// <param name="okButtonColor">Ok button color.</param>
-        /// <param name="okTextColor">Ok text color.</param>
+        /// <param name="target"></param>
+        /// <param name="title"></param>
+        /// <param name="message"></param>
+        /// <param name="okContent"></param>
+        /// <param name="okButtonColor"></param>
+        /// <param name="okTextColor"></param>
+        /// <returns></returns>
         public static async Task<Alert> CreateAsync(UIElement target, object title, object message, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
         {
             var popup = new Alert() {Target = target, TitleContent = title, Message = message, OkButtonContent = okContent ?? "OK" };
@@ -115,7 +115,7 @@ namespace P42.Uno.Controls
 
 
         #region Event Handlers
-        async void OnOkButtonClicked(object sender, RoutedEventArgs e)
+        protected virtual async void OnOkButtonClicked(object sender, RoutedEventArgs e)
         {
             await PopAsync(PopupPoppedCause.ButtonTapped, sender);
         }
