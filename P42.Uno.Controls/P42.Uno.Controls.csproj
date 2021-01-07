@@ -13,7 +13,7 @@
 
   <!-- PACKAGE REFERENCES -->
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="3.3.0" />
+    <PackageReference Include="Uno.UI" Version="3.4.0" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -69,6 +69,6 @@
   
   <!-- NUGET PACKAGES -->
   <ItemGroup>
-    <PackageReference Include="Xamarin.Essentials" Version="1.3.0" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.0" />
   </ItemGroup>
 </Project>
