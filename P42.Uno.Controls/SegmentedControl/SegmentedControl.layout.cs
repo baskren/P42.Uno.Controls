@@ -17,6 +17,7 @@ namespace P42.Uno.Controls
 
         void Build()
         {
+            /*
             Content =
                 new Border()
                 .Assign(out _border)
@@ -28,8 +29,16 @@ namespace P42.Uno.Controls
                     .Stretch()
                     .Bind(SegmentPanel.OrientationProperty, this, nameof(Orientation))
                 );
+            */
+            Content = new SegmentPanel()
+                    .Assign(out _panel)
+                    .Margin(0)
+                    .Stretch()
+                    .Bind(SegmentPanel.OrientationProperty, this, nameof(Orientation));
+
             HorizontalContentAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
             VerticalContentAlignment = Windows.UI.Xaml.VerticalAlignment.Center;
+            Padding = new Windows.UI.Xaml.Thickness(-1);
         }
     }
 }

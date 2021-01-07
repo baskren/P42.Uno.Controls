@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -15,8 +16,6 @@ namespace P42.Uno.Controls
 {
     public partial class SegmentedControl : ContentControl
     {
-
-
         #region Properties
 
         #region Segments Property
@@ -203,12 +202,12 @@ namespace P42.Uno.Controls
                     .BindFont(this)
                     .Stretch()
                     .Bind(ForegroundProperty, this, nameof(Foreground))
-                    //.Bind(PaddingProperty, this, nameof(Padding))
                     .Bind(HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
                     .Bind(BackgroundProperty, this, nameof(Background))
                     .Bind(VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
                     .Bind(IsTextScaleFactorEnabledProperty, this, nameof(IsTextScaleFactorEnabled))
                     .Bind(ElementSoundModeProperty, this, nameof(ElementSoundMode))
+                    .BorderBrush(SystemColors.Accent)
                     ;
                 segment.Index = startIndex + i;
                 _panel.Children.Insert(segment.Index, segment);
@@ -230,7 +229,24 @@ namespace P42.Uno.Controls
         void ReindexSegments()
         {
             for (int i = 0; i < Segments.Count; i++)
+            {
                 Segments[i].Index = i;
+                if (i == 0)
+                {
+                    Segments[i].BorderThickness(1.5, 1.5, 0.5, 1.5);
+                    Segments[i].CornerRadius(CornerRadius.TopLeft, 0, 0, CornerRadius.BottomLeft);
+                }
+                else if (i == Segments.Count-1)
+                {
+                    Segments[i].BorderThickness(0.5, 1.5, 1.5, 1.5);
+                    Segments[i].CornerRadius(0, CornerRadius.TopRight, CornerRadius.BottomRight, 0);
+                }
+                else
+                {
+                    Segments[i].BorderThickness(0.5, 1.5);
+                    Segments[i].CornerRadius(0);
+                }
+            }
         }
         #endregion
 
