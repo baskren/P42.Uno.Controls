@@ -304,6 +304,11 @@ namespace P42.Uno.Controls
         #endregion
 
 
+        #region Events
+        public event EventHandler<DismissPointerPressedEventArgs> DismissPointerPressed;
+        #endregion
+
+
         #region Construction / Initialization
         public ContentAndDetailPresenter()
         {
@@ -536,8 +541,9 @@ namespace P42.Uno.Controls
                 _targetedPopup.PopupContent = Detail;
                 _targetedPopup.Target = Target;
                 _targetedPopup.Popped += OnTargetedPopupPopped;
-                await _targetedPopup.PushAsync();
+                _targetedPopup.DismissPointerPressed += OnTargetedPopupDismissPointerPressed;
 
+                await _targetedPopup.PushAsync();
             }
 
             DetailPushPopState = PushPopState.Pushed;
@@ -626,19 +632,29 @@ namespace P42.Uno.Controls
 
         private void OnTargetedPopupPopped(object sender, PopupPoppedEventArgs e)
         {
+            _targetedPopup.DismissPointerPressed -= OnTargetedPopupDismissPointerPressed;
             _targetedPopup.Popped -= OnTargetedPopupPopped;
             DetailPushPopState = PushPopState.Popped;
+        }
+
+        void OnTargetedPopupDismissPointerPressed(object sender, DismissPointerPressedEventArgs e)
+        {
+            if (IsLightDismissEnabled)
+                DismissPointerPressed?.Invoke(this, e);
+            else
+                e.CancelDismiss = true;
         }
 
         async void OnDismissPointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             if (IsLightDismissEnabled)
             {
-                await PopDetailAsync();
+                var dismissEventArgs = new DismissPointerPressedEventArgs();
+                DismissPointerPressed?.Invoke(this, dismissEventArgs);
+                if (!dismissEventArgs.CancelDismiss)
+                    await PopDetailAsync();
             }
         }
-
-
 
         TaskCompletionSource<bool> _popCompletionSource;
         public async Task<bool> WaitForPop()

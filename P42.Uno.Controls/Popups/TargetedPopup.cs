@@ -489,6 +489,7 @@ namespace P42.Uno.Controls
         /// </summary>
         public event EventHandler<PopupPoppedEventArgs> Popped;
 
+        public event EventHandler<DismissPointerPressedEventArgs> DismissPointerPressed;
         #endregion
 
 
@@ -574,7 +575,10 @@ namespace P42.Uno.Controls
         {
             if (IsLightDismissEnabled)
             {
-                await PopAsync();
+                var dismissEventArgs = new DismissPointerPressedEventArgs();
+                DismissPointerPressed?.Invoke(this, dismissEventArgs);
+                if (!dismissEventArgs.CancelDismiss)
+                    await PopAsync();
             }
         }
         #endregion
