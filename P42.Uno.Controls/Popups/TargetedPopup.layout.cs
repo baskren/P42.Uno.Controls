@@ -4,6 +4,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 using P42.Uno.Markup;
+using P42.Utils.Uno;
 
 namespace P42.Uno.Controls
 {
