@@ -340,6 +340,24 @@ namespace P42.Uno.Controls
 
         #endregion
 
+        #region DismissOnPointerMove Property
+        public static readonly DependencyProperty DismissOnPointerMoveProperty = DependencyProperty.Register(
+            nameof(DismissOnPointerMove),
+            typeof(bool),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(bool))
+        );
+        /// <summary>
+        /// Causes the popup to be dismissed (popped) when the Pointer (mouse) moves outside of the Target
+        /// </summary>
+        public bool DismissOnPointerMove
+        {
+            get => (bool)GetValue(DismissOnPointerMoveProperty);
+            set => SetValue(DismissOnPointerMoveProperty, value);
+        }
+        #endregion DismissOnPointerMove Property
+
+
         #region LightDismiss Properties
 
         #region IsLightDismissEnabled Property
@@ -578,7 +596,116 @@ namespace P42.Uno.Controls
                 var dismissEventArgs = new DismissPointerPressedEventArgs();
                 DismissPointerPressed?.Invoke(this, dismissEventArgs);
                 if (!dismissEventArgs.CancelDismiss)
-                    await PopAsync();
+                    await PopAsync(PopupPoppedCause.BackgroundTouch);
+            }
+        }
+
+        Point _enteredPoint = new Point(-1,-1);
+        private void OnPointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            _enteredPoint = e.GetCurrentPoint(Windows.UI.Xaml.Window.Current.Content).Position;
+            //System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPointerEntered e: [" + _enteredPoint.X + ", " + _enteredPoint.Y + "]");
+        }
+
+        async void OnPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (DismissOnPointerMove)
+            {
+                var position = e.GetCurrentPoint(Windows.UI.Xaml.Window.Current.Content).Position;
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPointerMoved e: [" + position.X + ", " + position.Y + "]");
+
+                if (Target != null)
+                {
+
+                    var zone = new Rect(position.X - 5, position.Y - 5, 10, 10);
+
+                    var targetBounts = Target.GetBounds();
+                    var borderBounds = _border.GetBounds();
+
+                    if (Windows.UI.Xaml.RectHelper.Intersect(targetBounts, zone) is Rect intersect0
+                        && intersect0.Width > 0
+                        && intersect0.Height > 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine("\t\t RectHelper.Intersect(targetBounts, zone) = " + RectHelper.Intersect(targetBounts, zone));
+                        System.Diagnostics.Debug.WriteLine("\t\t in Target ["+ targetBounts + "]");
+                        return;
+                    }
+                    else if (Windows.UI.Xaml.RectHelper.Intersect(borderBounds, zone) is Rect intersect1
+                        && intersect1.Width > 0
+                        && intersect1.Height > 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine("\t\t RectHelper.Intersect(borderBounds, zone) = " + RectHelper.Intersect(borderBounds, zone));
+                        System.Diagnostics.Debug.WriteLine("\t\t in Border");
+                        return;
+                    }
+                    else if (Windows.UI.Xaml.RectHelper.Intersect(borderBounds, targetBounts) is Rect intersect2
+                        && intersect2.Width <= 0
+                        && intersect2.Height <= 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine("\t\t RectHelper.Intersect(borderBounds, targetBounts) = " + RectHelper.Intersect(borderBounds, targetBounts));
+                        System.Diagnostics.Debug.WriteLine("\t\t testing Bridge");
+
+                        var bridge = new Rect();
+                        if (targetBounts.Left > borderBounds.Right)
+                        {
+                            bridge.X = borderBounds.Right;
+                            bridge.Width = targetBounts.Left - borderBounds.Right;
+                        }
+                        else if (targetBounts.Right < borderBounds.Left)
+                        {
+                            bridge.X = targetBounts.Right;
+                            bridge.Width = borderBounds.Left - targetBounts.Right;
+                        }
+                        else
+                        {
+                            bridge.X = Math.Max(targetBounts.X, borderBounds.X);
+                            bridge.Width = Math.Min(targetBounts.Width, borderBounds.Width);
+                        }
+                        if (targetBounts.Top > borderBounds.Bottom)
+                        {
+                            bridge.Y = borderBounds.Bottom;
+                            bridge.Height = targetBounts.Top - borderBounds.Bottom;
+                        }
+                        else if (targetBounts.Bottom < borderBounds.Top)
+                        {
+                            bridge.Y = targetBounts.Bottom;
+                            bridge.Height = borderBounds.Top - targetBounts.Bottom;
+                        }
+                        else
+                        {
+                            bridge.Y = Math.Max(targetBounts.Y, borderBounds.Y);
+                            bridge.Width = Math.Min(targetBounts.Height, borderBounds.Height);
+                        }
+
+                        bridge.X -= 5;
+                        bridge.Y -= 5;
+                        bridge.Width += 10;
+                        bridge.Height += 10;
+
+                        if (Windows.UI.Xaml.RectHelper.Intersect(bridge, zone) is Rect intersect3
+                            && intersect3.Width > 0
+                            && intersect3.Height > 0)
+                        {
+                            System.Diagnostics.Debug.WriteLine("\t\t in Bridge");
+                            return;
+                        }
+                        
+                    }
+                    System.Diagnostics.Debug.WriteLine("\t\t Popping");
+                    await PopAsync(PopupPoppedCause.PointerMoved);
+
+                }
+                else
+                {
+                    if (_enteredPoint.X == -1 && _enteredPoint.Y == -1)
+                        _enteredPoint = e.GetCurrentPoint(Windows.UI.Xaml.Window.Current.Content).Position;
+
+                    var dx = position.X - _enteredPoint.X;
+                    var dy = position.Y - _enteredPoint.Y;
+                    var dist = Math.Sqrt(dx * dx + dy * dy);
+                    if (dist > 10)
+                        await PopAsync(PopupPoppedCause.PointerMoved);
+                }
             }
         }
         #endregion

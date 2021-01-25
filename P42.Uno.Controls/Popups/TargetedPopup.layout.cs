@@ -90,7 +90,8 @@ namespace P42.Uno.Controls
                 .Stretch()
                 ;
 
-
+            this.PointerMoved += OnPointerMoved;
+            this.PointerEntered += OnPointerEntered;
         }
 
     }

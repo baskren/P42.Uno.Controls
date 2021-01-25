@@ -53,5 +53,9 @@ namespace P42.Uno.Controls
         /// </summary>
         Disposed
         */
+        /// <summary>
+        /// User moved pointer outside of Target
+        /// </summary>
+        PointerMoved,
     }
 }
