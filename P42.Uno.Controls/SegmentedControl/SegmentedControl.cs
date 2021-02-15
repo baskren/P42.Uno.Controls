@@ -146,8 +146,6 @@ namespace P42.Uno.Controls
         {
             var result =  base.MeasureOverride(availableSize);
             ExceedsAvailableSpace = _panel.ExceedsAvailableSpace;
-            if (Segments.Any(c => c is Segment s && ((string)s.Content) == "Floor Joists"))
-                System.Diagnostics.Debug.WriteLine("SegmentPanel.MeasureOverride available[" + availableSize + "] _panel[" + _panel.DesiredSize  + "]");
             return result;
         }
         #endregion

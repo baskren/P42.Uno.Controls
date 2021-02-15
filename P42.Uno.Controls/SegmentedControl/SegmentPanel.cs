@@ -94,8 +94,6 @@ namespace P42.Uno.Controls
             if (width <= 0 || height <= 0)
                 return new Size(width, height);
 
-            if (Children.Any(c=>c is Segment s && ((string)s.Content) == "Floor Joists"))
-            System.Diagnostics.Debug.WriteLine("SegmentPanel.MeasureOverride available["+availableSize+"] calc["+width+","+height+"]");
             ExceedsAvailableSpace = Orientation == Orientation.Horizontal
                 ? width > availableSize.Width
                 : height > availableSize.Height;

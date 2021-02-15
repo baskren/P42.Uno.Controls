@@ -358,7 +358,7 @@ namespace P42.Uno.Controls
             //    return;
             //_measuring = true;
 
-            System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.ChildrenMeasure ENTER");
+            //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.ChildrenMeasure ENTER");
 
 
             if (double.IsNaN(size.Width))
@@ -617,15 +617,15 @@ namespace P42.Uno.Controls
                 _detailDrawer.Collapsed();
             }
 
-            System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PopDetailAsync D");
+            //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PopDetailAsync D");
             if (LightDismissOverlayMode == LightDismissOverlayMode.On)
                 _overlay.Visibility = Visibility.Collapsed;
             _overlay.Opacity = 1.0;
 
-            System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PopDetailAsync E");
+            //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PopDetailAsync E");
             DetailPushPopState = PushPopState.Popped;
             _popCompletionSource?.SetResult(true);
-            System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PopDetailAsync F");
+            //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.PopDetailAsync F");
 
 
         }
