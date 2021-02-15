@@ -26,6 +26,7 @@ namespace P42.Uno.Controls
 
         public AlignedPlacementPanel()
         {
+            Background = SystemColors.BaseLow.ToBrush();
             Children.Add(_moreButton);
             _moreButton.Click += OnMoreButtonClicked;
         }
