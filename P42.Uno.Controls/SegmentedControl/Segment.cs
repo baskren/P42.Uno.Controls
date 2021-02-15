@@ -13,35 +13,6 @@ namespace P42.Uno.Controls
     public partial class Segment : ToggleButton
     {
         #region Properties
-        /*
-        #region Text Property
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            nameof(Text),
-            typeof(string),
-            typeof(Segment),
-            new PropertyMetadata(default(string))
-        );
-        public string Text
-        {
-            get => (string)GetValue(TextProperty);
-            set => SetValue(TextProperty, value);
-        }
-        #endregion Text Property
-
-        #region Icon Property
-        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-            nameof(Icon),
-            typeof(IconElement),
-            typeof(Segment),
-            new PropertyMetadata(default(IconElement))
-        );
-        public IconElement Icon
-        {
-            get => (IconElement)GetValue(IconProperty);
-            set => SetValue(IconProperty, value);
-        }
-        #endregion Icon Property
-        */
 
         public int Index { get; internal set; } = -1;
 
