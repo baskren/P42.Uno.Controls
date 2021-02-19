@@ -443,6 +443,21 @@ namespace P42.Uno.Controls
         }
         #endregion LightDismissOverlayColor Property
 
+        #region AnimationDuration Property
+        public static readonly DependencyProperty AnimationDurationProperty = DependencyProperty.Register(
+            nameof(AnimationDuration),
+            typeof(int),
+            typeof(TargetedPopup),
+            new PropertyMetadata(200)
+        );
+        public int AnimationDuration
+        {
+            get => (int)GetValue(AnimationDurationProperty);
+            set => SetValue(AnimationDurationProperty, value);
+        }
+        #endregion AnimationDuration Property
+
+
         #endregion
 
         public PopupPoppedCause PoppedCause { get; private set; }
@@ -488,7 +503,7 @@ namespace P42.Uno.Controls
             nameof(IsAnimated),
             typeof(bool),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(bool))
+            new PropertyMetadata(true)
         );
         public bool IsAnimated
         {
@@ -766,7 +781,7 @@ namespace P42.Uno.Controls
                 var storyboard = new Storyboard();
                 var opacityAnimation = new DoubleAnimation
                 {
-                    Duration = TimeSpan.FromMilliseconds(400),
+                    Duration = TimeSpan.FromMilliseconds(AnimationDuration),
                     EnableDependentAnimation = true,
                     To = 1
                 };
@@ -774,6 +789,11 @@ namespace P42.Uno.Controls
                 Storyboard.SetTarget(opacityAnimation, this);
                 storyboard.Children.Add(opacityAnimation);
                 await storyboard.BeginAsync();
+            }
+#else
+            if (IsAnimated)
+            {
+                await AnimateAppearing();
             }
 #endif
 
@@ -793,6 +813,17 @@ namespace P42.Uno.Controls
             Pushed?.Invoke(this, EventArgs.Empty);
             _pushCompletionSource?.SetResult(true);
             
+        }
+
+        async Task AnimateAppearing()
+        {
+            var start = DateTime.Now;
+            TimeSpan elapsed;
+            while ((elapsed = DateTime.Now - start) < TimeSpan.FromMilliseconds(AnimationDuration))
+            {
+                Opacity = elapsed.TotalMilliseconds / AnimationDuration;
+                await Task.Delay(50);
+            }
         }
 
         public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, [CallerMemberName] object trigger = null)
@@ -825,7 +856,7 @@ namespace P42.Uno.Controls
                 var storyboard = new Storyboard();
                 var opacityAnimation = new DoubleAnimation
                 {
-                    Duration = TimeSpan.FromMilliseconds(400),
+                    Duration = TimeSpan.FromMilliseconds(AnimationDuration),
                     EnableDependentAnimation = true,
                     From = 1.0,
                     To = 0.0
@@ -834,6 +865,11 @@ namespace P42.Uno.Controls
                 Storyboard.SetTarget(opacityAnimation, this);
                 storyboard.Children.Add(opacityAnimation);
                 await storyboard.BeginAsync();
+            }
+#else
+            if (IsAnimated)
+            {
+                await AnimateDisappearing();
             }
 #endif
             Visibility = Visibility.Collapsed;
@@ -847,6 +883,18 @@ namespace P42.Uno.Controls
             _popCompletionSource?.SetResult(result);
             Popped?.Invoke(this, result);
         }
+
+        async Task AnimateDisappearing()
+        {
+            var start = DateTime.Now;
+            TimeSpan elapsed;
+            while ((elapsed = DateTime.Now - start) < TimeSpan.FromMilliseconds(AnimationDuration))
+            {
+                Opacity = 1 - (elapsed.TotalMilliseconds / AnimationDuration);
+                await Task.Delay(50);
+            }
+        }
+
 
         TaskCompletionSource<PopupPoppedEventArgs> _popCompletionSource;
         public async Task<PopupPoppedEventArgs> WaitForPoppedAsync()
