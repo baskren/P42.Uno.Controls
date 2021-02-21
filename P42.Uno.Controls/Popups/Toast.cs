@@ -17,8 +17,15 @@ namespace P42.Uno.Controls
             nameof(TitleContent),
             typeof(object),
             typeof(Toast),
-            new PropertyMetadata(null)
+            new PropertyMetadata(null, OnTitleChanged)
         );
+
+        private static void OnTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        {
+            if (d is Toast toast)
+                toast._titleBlock.Content = args.NewValue;
+        }
+
         public object TitleContent
         {
             get => GetValue(TitleProperty);
@@ -32,8 +39,15 @@ namespace P42.Uno.Controls
             nameof(Message),
             typeof(object),
             typeof(Toast),
-            new PropertyMetadata(default(object))
+            new PropertyMetadata(default(object), OnMessageChanged)
         );
+
+        private static void OnMessageChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        {
+            if (d is Toast toast)
+                toast._messageBlock.Content = args.NewValue;
+        }
+
         public object Message
         {
             get => (object)GetValue(MessageProperty);
@@ -47,8 +61,15 @@ namespace P42.Uno.Controls
             nameof(IconElement),
             typeof(IconElement),
             typeof(Toast),
-            new PropertyMetadata(default(IconElement))
+            new PropertyMetadata(default(IconElement), OnIconElementChanged)
         );
+
+        private static void OnIconElementChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        {
+            if (d is Toast toast)
+                toast._iconPresenter.Content = args.NewValue;
+        }
+
         public IconElement IconElement
         {
             get => (IconElement)GetValue(IconElementProperty);

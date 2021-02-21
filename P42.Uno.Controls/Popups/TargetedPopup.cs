@@ -29,8 +29,15 @@ namespace P42.Uno.Controls
             nameof(PopupContent),
             typeof(object),
             typeof(TargetedPopup),
-            new PropertyMetadata(null)
+            new PropertyMetadata(null, OnPopupContentChanged)
         );
+
+        private static void OnPopupContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        {
+            if (d is TargetedPopup popup)
+                popup._contentPresenter.Content = args.NewValue;
+        }
+
         public object PopupContent
         {
             get => GetValue(PopupContentProperty);
@@ -100,8 +107,15 @@ namespace P42.Uno.Controls
             nameof(PopupPadding),
             typeof(Thickness),
             typeof(TargetedPopup),
-            new PropertyMetadata(new Thickness(DefaultPopupPadding))
+            new PropertyMetadata(new Thickness(DefaultPopupPadding), OnPopupPaddingChanged)
         );
+
+        private static void OnPopupPaddingChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        {
+            if (d is TargetedPopup popup)
+                popup._border.Padding = (Thickness)args.NewValue;
+        }
+
         public Thickness PopupPadding
         {
             get => (Thickness)GetValue(PopupPaddingProperty);
@@ -114,8 +128,15 @@ namespace P42.Uno.Controls
             nameof(HasShadow),
             typeof(bool),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(bool))
+            new PropertyMetadata(default(bool), OnHasShadowChanged)
         );
+
+        private static void OnHasShadowChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        {
+            if (d is TargetedPopup popup)
+                popup._border.HasShadow = (bool)args.NewValue;
+        }
+
         public bool HasShadow
         {
             get => (bool)GetValue(HasShadowProperty);
@@ -494,7 +515,7 @@ namespace P42.Uno.Controls
                 while (contentPresenter?.Content is ContentPresenter cp)
                     contentPresenter = cp;
                 //System.Diagnostics.Debug.WriteLine("TargetedPopup.IsEmpty: " + (contentPresenter.Content is null ? "TRUE" : "FALSE") );
-                return contentPresenter.Content is null;
+                return contentPresenter?.Content is null;
             }
         }
 

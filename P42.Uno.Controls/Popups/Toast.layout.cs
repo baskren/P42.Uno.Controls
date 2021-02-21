@@ -13,6 +13,7 @@ namespace P42.Uno.Controls
 
         void Build()
         {
+            PopupPadding = new Windows.UI.Xaml.Thickness(5);
             PopupContent = _bubbleContentGrid = new Grid()
                 .RowSpacing(3)
                 .Rows(
@@ -25,7 +26,7 @@ namespace P42.Uno.Controls
                         .Assign(out _iconPresenter)
                         .RowSpan(2)
                         .Margin(10)
-                        .Bind(ContentPresenter.ContentProperty, this, nameof(IconElement))
+                        //.Bind(ContentPresenter.ContentProperty, this, nameof(IconElement))
                         .BindNullCollapse(),
 
                     new ContentPresenter()
@@ -34,11 +35,12 @@ namespace P42.Uno.Controls
                         .Column(1)
                         .Bold()
                         .TextWrapping(Windows.UI.Xaml.TextWrapping.WrapWholeWords)
-                        .Bind(ContentPresenter.FontFamilyProperty, this, nameof(FontFamily))
-                        .Bind(ContentPresenter.FontSizeProperty, this, nameof(FontSize))
-                        .Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
-                        .Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
-                        .Bind(ContentPresenter.ContentProperty, this, nameof(TitleContent))
+                        .BindFont(this, except: nameof(FontWeight))
+                        //.Bind(ContentPresenter.FontFamilyProperty, this, nameof(FontFamily))
+                        //.Bind(ContentPresenter.FontSizeProperty, this, nameof(FontSize))
+                        //.Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
+                        //.Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
+                        //.Bind(ContentPresenter.ContentProperty, this, nameof(TitleContent))
                         .BindNullCollapse(),
 
                     new ContentPresenter()
@@ -46,15 +48,16 @@ namespace P42.Uno.Controls
                         .Row(1)
                         .Column(1)
                         .TextWrapping(Windows.UI.Xaml.TextWrapping.WrapWholeWords)
-                        .Bind(ContentPresenter.FontFamilyProperty, this, nameof(FontFamily))
-                        .Bind(ContentPresenter.FontSizeProperty, this, nameof(FontSize))
-                        .Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
-                        .Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
-                        .Bind(ContentPresenter.FontWeightProperty, this, nameof(FontWeight))
-                        .Bind(ContentPresenter.ContentProperty, this, nameof(Message))
+                        .BindFont(this)
+                        //.Bind(ContentPresenter.FontFamilyProperty, this, nameof(FontFamily))
+                        //.Bind(ContentPresenter.FontSizeProperty, this, nameof(FontSize))
+                        //.Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
+                        //.Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
+                        //.Bind(ContentPresenter.FontWeightProperty, this, nameof(FontWeight))
+                        //.Bind(ContentPresenter.ContentProperty, this, nameof(Message))
                         .BindNullCollapse()
 
-                );
+                ); ;
         }
     }
 }

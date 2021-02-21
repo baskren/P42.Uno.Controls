@@ -19,8 +19,8 @@ namespace P42.Uno.Controls
                 .StretchHorizontal()
                 .CornerRadius(2)
                 .Bind(BackgroundProperty, this, nameof(OkButtonBackground))
-                .Bind(ForegroundProperty, this, nameof(OkButtonForeground))
-                .Bind(Button.ContentProperty, this, nameof(OkButtonContent));
+                .Bind(ForegroundProperty, this, nameof(OkButtonForeground));
+                //.Bind(Button.ContentProperty, this, nameof(OkButtonContent));
 
             _bubbleContentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             _bubbleContentGrid.Children.Add(_okButton);

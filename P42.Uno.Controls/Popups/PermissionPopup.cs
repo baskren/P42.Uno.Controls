@@ -21,8 +21,15 @@ namespace P42.Uno.Controls
             nameof(CancelButtonContent),
             typeof(object),
             typeof(PermissionPopup),
-            new PropertyMetadata("Cancel")
+            new PropertyMetadata("Cancel", OnCancelButtonContentChanged)
         );
+
+        private static void OnCancelButtonContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        {
+            if (d is PermissionPopup popup)
+                popup._cancelButton.Content = args.NewValue;
+        }
+
         public object CancelButtonContent
         {
             get => (object)GetValue(CancelButtonContentProperty);

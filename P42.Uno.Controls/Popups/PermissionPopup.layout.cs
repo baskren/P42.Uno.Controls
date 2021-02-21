@@ -21,8 +21,8 @@ namespace P42.Uno.Controls
                 .StretchHorizontal()
                 .CornerRadius(2)
                 .Bind(Button.ForegroundProperty, this, nameof(CancelButtonForeground))
-                .Bind(Button.BackgroundProperty, this, nameof(CancelButtonBackground))
-                .Bind(Button.ContentProperty, this, nameof(CancelButtonContent));
+                .Bind(Button.BackgroundProperty, this, nameof(CancelButtonBackground));
+                //.Bind(Button.ContentProperty, this, nameof(CancelButtonContent));
 
             new Grid()
                 .Assign(out _buttonBar)
