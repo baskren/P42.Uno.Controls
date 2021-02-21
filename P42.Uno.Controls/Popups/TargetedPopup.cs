@@ -1137,12 +1137,18 @@ namespace P42.Uno.Controls
         DirectionStats BestFit(Thickness availableSpace, Size cleanSize)
         {
             // given the amount of free space, determine if the border will fit 
-            var windowSpace = new Size(AppWindow.Size().Width - PopupMargin.Horizontal(), AppWindow.Size().Height - PopupMargin.Vertical());
+            var windowSpaceW = Math.Max(0, AppWindow.Size().Width - PopupMargin.Horizontal());
+            var windowSpaceH = Math.Max(0, AppWindow.Size().Height - PopupMargin.Vertical());
+            var windowSpace = new Size(windowSpaceW, windowSpaceH);
+
+            var freeSpaceW = Math.Max(0, windowSpace.Width - cleanSize.Width);
+            var freeSpaceH = Math.Max(0, windowSpace.Height - cleanSize.Height);
+
             var cleanStat = new DirectionStats
             {
                 PointerDirection = PointerDirection.None,
                 BorderSize = cleanSize,
-                FreeSpace = new Size(windowSpace.Width - cleanSize.Width, windowSpace.Height - cleanSize.Height)
+                FreeSpace = new Size(freeSpaceW, freeSpaceH)
             };
 
             #region Check if clean border fits in preferred pointer quadrants
