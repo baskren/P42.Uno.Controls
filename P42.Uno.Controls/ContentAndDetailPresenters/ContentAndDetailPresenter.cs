@@ -338,7 +338,7 @@ namespace P42.Uno.Controls
         {
             ChildrenMeasure(finalSize, true);
 #if __ANDROID__
-            _detailDrawer.Child.InvalidateMeasure();
+            _detailDrawer.Child?.InvalidateMeasure();
 #endif
             return finalSize;
         }
