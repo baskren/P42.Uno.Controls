@@ -161,7 +161,8 @@ namespace P42.Uno.Controls
         {
             get
             {
-                return false;
+                /*
+                //return false;
                 var idiom = Utils.Uno.Device.Idiom;
                 if (idiom == Utils.Uno.DeviceIdiom.Phone)
                     return true;
@@ -170,6 +171,17 @@ namespace P42.Uno.Controls
                 //    aspect = 1 / aspect;
                 //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.IsInDrawerMode aspect:" + aspect + "  ActualWidth:" + ActualWidth);
                 return (aspect < 1.0 / 1.25 && ActualWidth <= 500) || (aspect > 1.75 && ActualHeight <= 500 / DetailAspectRatio);
+                */
+
+                if (PopupContentHeight * DetailAspectRatio <= ActualWidth)
+                    return true;
+
+                if (PopupContentHeight * DetailAspectRatio <= ActualWidth * 1.5)
+                {
+                    if (ActualWidth / DetailAspectRatio <= ActualHeight * 0.75)
+                        return true;
+                }
+                return false;
             }
         }
 

@@ -69,7 +69,7 @@
     <Reference Include="System.Memory" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.2" />
+    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.3-preview.40" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>6.1.0-build.207.gcac670e618</Version>
     </PackageReference>
@@ -108,13 +108,17 @@
     </BundleResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.csproj">
-      <Project>{cd121e71-57be-4a32-807c-62e00df1e640}</Project>
-      <Name>P42.Uno.Controls</Name>
+    <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.MacOS.csproj">
+      <Project>{f8efa179-d2c6-45f8-99cd-24005d6f27ce}</Project>
+      <Name>P42.Uno.Controls.MacOS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj">
-      <Project>{2188f334-5533-4e03-94df-7e896eb251ae}</Project>
-      <Name>P42.Utils.Uno</Name>
+    <ProjectReference Include="..\..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.MacOS.csproj">
+      <Project>{4c06e63d-d381-45e4-9926-ea9497cb8ce2}</Project>
+      <Name>P42.Uno.Markup.MacOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.MacOS.csproj">
+      <Project>{06d6c2b4-dd18-48cd-9736-dc29e03bd716}</Project>
+      <Name>P42.Utils.Uno.MacOS</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\P42.Utils\P42.Utils\P42.Utils.csproj">
       <Project>{609de145-9639-4456-b25f-b323d0f7a338}</Project>

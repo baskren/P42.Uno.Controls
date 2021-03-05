@@ -60,7 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.2" />
+    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.3-preview.40" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>6.1.0-build.207.gcac670e618</Version>
     </PackageReference>
@@ -99,17 +99,17 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.csproj">
-      <Project>{cd121e71-57be-4a32-807c-62e00df1e640}</Project>
-      <Name>P42.Uno.Controls</Name>
+    <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.Android.csproj">
+      <Project>{d11f4fbb-dce0-4e8f-8df8-780604b79447}</Project>
+      <Name>P42.Uno.Controls.Android</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj">
-      <Project>{f9cfd459-9a1d-4bb5-b1c5-984e291cb88e}</Project>
-      <Name>P42.Uno.Markup</Name>
+    <ProjectReference Include="..\..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.Android.csproj">
+      <Project>{6b0f2b0b-06f9-4f82-a082-89df9ae5014b}</Project>
+      <Name>P42.Uno.Markup.Android</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj">
-      <Project>{2188f334-5533-4e03-94df-7e896eb251ae}</Project>
-      <Name>P42.Utils.Uno</Name>
+    <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.Android.csproj">
+      <Project>{15f449a8-d9e7-4080-85c2-73ffb8953826}</Project>
+      <Name>P42.Utils.Uno.Android</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\P42.Utils\P42.Utils\P42.Utils.csproj">
       <Project>{609de145-9639-4456-b25f-b323d0f7a338}</Project>

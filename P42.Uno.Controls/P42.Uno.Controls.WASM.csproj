@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="MSBuild.Sdk.Extras/3.0.22">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;</TargetFrameworks>
+  </PropertyGroup>
+
+  <!-- PACKAGE REFERENCES -->
+  <ItemGroup>
+  </ItemGroup>
+
+  <!-- REFERENCES -->
+  <ItemGroup>
+    <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.WASM.csproj" />
+    <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.WASM.csproj" />
+  </ItemGroup>
+  
+</Project>

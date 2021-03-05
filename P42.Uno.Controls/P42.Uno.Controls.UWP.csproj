@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="MSBuild.Sdk.Extras/3.0.22">
+  <PropertyGroup>
+    <TargetFrameworks>uap10.0.17763;</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <NoWarn>1701;1702</NoWarn>
+  </PropertyGroup>
+
+
+  <!-- PACKAGE REFERENCES -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI" Version="6.1.0" />
+  </ItemGroup>
+
+
+  <!-- REFERENCES -->
+  <ItemGroup>
+    <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.UWP.csproj" />
+    <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.UWP.csproj" />
+  </ItemGroup>
+
+  
+  <!-- NUGET PACKAGES -->
+</Project>
