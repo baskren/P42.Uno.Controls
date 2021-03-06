@@ -8,7 +8,7 @@
     <AssemblyName>P42.Uno.Controls</AssemblyName>
     <RootNamespace>P42.Uno.Controls</RootNamespace>
 
-    <NoWarn>Uno0001</NoWarn>
+    <NoWarn>Uno0001;1701;1702</NoWarn>
 
     <!--
     Force all projects of this folder to use a different output
