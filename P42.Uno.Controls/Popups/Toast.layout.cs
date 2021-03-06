@@ -36,11 +36,6 @@ namespace P42.Uno.Controls
                         .Bold()
                         .TextWrapping(Windows.UI.Xaml.TextWrapping.WrapWholeWords)
                         .BindFont(this, except: nameof(FontWeight))
-                        //.Bind(ContentPresenter.FontFamilyProperty, this, nameof(FontFamily))
-                        //.Bind(ContentPresenter.FontSizeProperty, this, nameof(FontSize))
-                        //.Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
-                        //.Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
-                        //.Bind(ContentPresenter.ContentProperty, this, nameof(TitleContent))
                         .BindNullCollapse(),
 
                     new ContentPresenter()
@@ -49,12 +44,6 @@ namespace P42.Uno.Controls
                         .Column(1)
                         .TextWrapping(Windows.UI.Xaml.TextWrapping.WrapWholeWords)
                         .BindFont(this)
-                        //.Bind(ContentPresenter.FontFamilyProperty, this, nameof(FontFamily))
-                        //.Bind(ContentPresenter.FontSizeProperty, this, nameof(FontSize))
-                        //.Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
-                        //.Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
-                        //.Bind(ContentPresenter.FontWeightProperty, this, nameof(FontWeight))
-                        //.Bind(ContentPresenter.ContentProperty, this, nameof(Message))
                         .BindNullCollapse()
 
                 ); ;

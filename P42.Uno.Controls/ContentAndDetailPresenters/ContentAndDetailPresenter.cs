@@ -141,7 +141,6 @@ namespace P42.Uno.Controls
         #endregion
 
 
-
         #region PopupContentHeight Property
         public static readonly DependencyProperty PopupContentHeightProperty = DependencyProperty.Register(
             nameof(PopupContentHeight),

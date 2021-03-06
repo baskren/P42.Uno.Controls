@@ -46,6 +46,8 @@ namespace P42.Uno.Controls
                 .PreferredPointerDirection(PointerDirection.Vertical)
                 .FallbackPointerDirection(PointerDirection.Any);
 
+            LightDismissOverlayBrush = SystemColors.AltMedium.ToBrush();
+
         }
     }
 }

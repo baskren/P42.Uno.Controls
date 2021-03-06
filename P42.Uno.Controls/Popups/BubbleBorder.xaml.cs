@@ -411,7 +411,7 @@ namespace P42.Uno.Controls
 
         void UpdateContentPresenterMargin()
         {
-            var result = new Thickness(Padding.Left, Padding.Top, Padding.Right, Padding.Bottom);
+            var result = new Thickness(Padding.Left + BorderThickness.Left, Padding.Top + BorderThickness.Top, Padding.Right + BorderThickness.Right, Padding.Bottom + BorderThickness.Bottom);
             switch ((int)PointerDirection)
             {
                 case (int)PointerDirection.Left:

@@ -13,11 +13,11 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using P42.Uno.Controls;
 using Windows.UI;
 using System.Threading.Tasks;
 using P42.Utils.Uno;
 using P42.Uno.Markup;
+using P42.Uno.Controls;
 using System.Reflection.Emit;
 
 #if NETFX_CORE

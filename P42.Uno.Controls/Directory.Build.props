@@ -24,7 +24,7 @@
     <DebugType>portable</DebugType>
 
   </PropertyGroup>
-
+ 
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
@@ -33,9 +33,7 @@
     <PackageReference Include="Uno.UI" Version="3.5.1" />
     <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.3-preview.40" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
-    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI">
-      <Version>6.1.0-build.207.gcac670e618</Version>
-    </PackageReference>
+    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="6.1.0-build.207.gcac670e618" />
   </ItemGroup>
 
   <!-- BLANKET PAGE AND COMPILE -->
@@ -50,5 +48,5 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-
+  
 </Project>

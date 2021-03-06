@@ -22,7 +22,7 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Background="Blue"
-                    BorderBrush="White"
+                    BorderBrush="Green"
                     BorderThickness="5"
                     CornerRadius="5"
                     PointerDirection="Down"
