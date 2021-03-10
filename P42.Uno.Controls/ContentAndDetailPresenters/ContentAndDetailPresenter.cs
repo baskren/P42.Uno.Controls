@@ -172,10 +172,10 @@ namespace P42.Uno.Controls
                 return (aspect < 1.0 / 1.25 && ActualWidth <= 500) || (aspect > 1.75 && ActualHeight <= 500 / DetailAspectRatio);
                 */
 
-                if (PopupContentHeight * DetailAspectRatio <= ActualWidth)
+                if (Aspect > DetailAspectRatio * 1.5 &&  PopupContentHeight * DetailAspectRatio <= ActualWidth)
                     return true;
 
-                if (PopupContentHeight * DetailAspectRatio <= ActualWidth * 1.5)
+                if (Aspect <(DetailAspectRatio * 0.66) && PopupContentHeight * DetailAspectRatio <= ActualWidth * 1.5)
                 {
                     if (ActualWidth / DetailAspectRatio <= ActualHeight * 0.75)
                         return true;
