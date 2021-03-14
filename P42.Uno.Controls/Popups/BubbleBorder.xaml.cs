@@ -14,6 +14,8 @@ using P42.Uno.Markup;
 
 namespace P42.Uno.Controls
 {
+    [Windows.UI.Xaml.Data.Bindable]
+    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [TemplatePart(Name = ContentPresenterName, Type=typeof(ContentPresenter))]
     [TemplatePart(Name = PathElementName, Type = typeof(Path))]
     [TemplatePart(Name = DropShadowPanelElementName, Type = typeof(ElevatedView))]

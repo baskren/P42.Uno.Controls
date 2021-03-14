@@ -28,10 +28,6 @@
                         Stroke="{TemplateBinding BorderBrush}"
                          />
                 </unoTk:ElevatedView>
-                <!--
-                xmlns:skia="using:SkiaSharp.Views.UWP"
-                <skia:SKXamlCanvas x:Name="_skCanvas" PaintSurface="OnPaintSurface" />
-                -->
                 <ContentPresenter
                     x:Name="_contentPresenter"
                     Margin="{TemplateBinding ContentPresenterMargin}"

@@ -5,10 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 
 namespace P42.Uno.Controls
 {
+    [Windows.UI.Xaml.Data.Bindable]
+    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = "Message")]
     public partial class Toast : TargetedPopup
     {

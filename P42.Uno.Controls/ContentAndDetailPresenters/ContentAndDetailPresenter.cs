@@ -12,6 +12,8 @@ using Windows.UI.Xaml.Shapes;
 
 namespace P42.Uno.Controls
 {
+    [Windows.UI.Xaml.Data.Bindable]
+    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = "Content")]
     public partial class ContentAndDetailPresenter : Panel
     {
@@ -531,13 +533,13 @@ namespace P42.Uno.Controls
                 _detailDrawer.Visibility = Visibility.Visible;
 
                 //#if NETFX_CORE
-                if (true)
+                //if (true)
                 {
                     var animator = new P42.Utils.Uno.ActionAnimator(from, to, TimeSpan.FromMilliseconds(300), action);
                     await animator.RunAsync();
                 }
-                else
-                    action(to);
+                //else
+                //    action(to);
 
                 _overlay.Opacity = 1.0;
                 _freshPushCycle = false;

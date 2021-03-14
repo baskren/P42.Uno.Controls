@@ -9,6 +9,8 @@ using Uno.Foundation;
 
 namespace P42.Uno.Controls
 {
+    [Windows.UI.Xaml.Data.Bindable]
+    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [HtmlElement("img")]
     public partial class Spinner : Control
     {

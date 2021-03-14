@@ -13,7 +13,6 @@ namespace P42.Uno.Controls
     public partial class SegmentedControl : ContentControl
     {
         SegmentPanel _panel;
-        Border _border;
 
         void Build()
         {

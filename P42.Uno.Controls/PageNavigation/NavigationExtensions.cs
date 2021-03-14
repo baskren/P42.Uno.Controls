@@ -88,7 +88,9 @@ namespace P42.Uno.Controls
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public static async Task Navigate(this Frame frame, Page page)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
 
         }

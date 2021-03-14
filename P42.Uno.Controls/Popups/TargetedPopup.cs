@@ -10,6 +10,7 @@ using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
@@ -18,7 +19,8 @@ using Windows.UI.Xaml.Shapes;
 
 namespace P42.Uno.Controls
 {
-
+    [Windows.UI.Xaml.Data.Bindable]
+    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = nameof(PopupContent))]
     public partial class TargetedPopup : UserControl, ITargetedPopup
     {
