@@ -174,13 +174,37 @@ namespace P42.Uno.Controls
                 return (aspect < 1.0 / 1.25 && ActualWidth <= 500) || (aspect > 1.75 && ActualHeight <= 500 / DetailAspectRatio);
                 */
 
-                if (Aspect > DetailAspectRatio * 1.5 &&  PopupContentHeight * DetailAspectRatio <= ActualWidth)
-                    return true;
+                var popupSize = new Size(PopupContentHeight * DetailAspectRatio, PopupContentHeight);
 
-                if (Aspect <(DetailAspectRatio * 0.66) && PopupContentHeight * DetailAspectRatio <= ActualWidth * 1.5)
+                // landscape
+                if (Aspect > DetailAspectRatio * 1.5 && popupSize.Width <= ActualWidth)
                 {
-                    if (ActualWidth / DetailAspectRatio <= ActualHeight * 0.75)
+                    var drawerSize = new Size(ActualHeight * DetailAspectRatio, ActualHeight);
+                    if (drawerSize.Width <= ActualWidth * 0.5 && drawerSize.Height < popupSize.Height + popupMargin*2 && drawerSize.Width < popupSize.Width + popupMargin*2)
+                    {
+                        System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.IsInDrawerMode: ");
+                        System.Diagnostics.Debug.WriteLine("\t Aspect: " + Aspect);
+                        System.Diagnostics.Debug.WriteLine("\t DetailAspectRatio: " + DetailAspectRatio);
+                        System.Diagnostics.Debug.WriteLine("\t PopupContentHeight: " + PopupContentHeight);
+                        System.Diagnostics.Debug.WriteLine("\t ActualWidth: " + ActualWidth);
                         return true;
+                    }
+                }
+
+                // portrait
+                if (Aspect <(DetailAspectRatio * 0.66) && popupSize.Width <= ActualWidth * 1.5)
+                {
+                    var drawerSize = new Size(ActualWidth, ActualWidth / DetailAspectRatio);
+                    if (drawerSize.Height <= ActualHeight * 0.5 && drawerSize.Height < popupSize.Height + popupMargin * 2 && drawerSize.Width < popupSize.Width + popupMargin * 2)
+                    {
+                        System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.IsInDrawerMode: ");
+                        System.Diagnostics.Debug.WriteLine("\t Aspect: " + Aspect);
+                        System.Diagnostics.Debug.WriteLine("\t DetailAspectRatio: " + DetailAspectRatio);
+                        System.Diagnostics.Debug.WriteLine("\t PopupContentHeight: " + PopupContentHeight);
+                        System.Diagnostics.Debug.WriteLine("\t ActualWidth: " + ActualWidth);
+                        System.Diagnostics.Debug.WriteLine("\t ActualHeight: " + ActualHeight);
+                        return true;
+                    }
                 }
                 return false;
             }

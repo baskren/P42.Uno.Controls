@@ -19,6 +19,7 @@ namespace P42.Uno.Controls
         TargetedPopup _targetedPopup;
         Border _detailDrawer;
         Rectangle _overlay;
+        const double popupMargin = 30;
 
         void Build()
         {
@@ -42,7 +43,7 @@ namespace P42.Uno.Controls
                 .Padding(4)
                 .LightDismissOverlayBrush("#01FFFFFF")
                 .Opacity(0)
-                .Margin(30)
+                .Margin(popupMargin)
                 .PreferredPointerDirection(PointerDirection.Vertical)
                 .FallbackPointerDirection(PointerDirection.Any);
 
