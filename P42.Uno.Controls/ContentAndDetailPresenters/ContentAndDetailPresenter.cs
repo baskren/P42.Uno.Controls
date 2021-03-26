@@ -182,11 +182,13 @@ namespace P42.Uno.Controls
                     var drawerSize = new Size(ActualHeight * DetailAspectRatio, ActualHeight);
                     if (drawerSize.Width <= ActualWidth * 0.5 && drawerSize.Height < popupSize.Height + popupMargin*2 && drawerSize.Width < popupSize.Width + popupMargin*2)
                     {
+                        /*
                         System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.IsInDrawerMode: ");
                         System.Diagnostics.Debug.WriteLine("\t Aspect: " + Aspect);
                         System.Diagnostics.Debug.WriteLine("\t DetailAspectRatio: " + DetailAspectRatio);
                         System.Diagnostics.Debug.WriteLine("\t PopupContentHeight: " + PopupContentHeight);
                         System.Diagnostics.Debug.WriteLine("\t ActualWidth: " + ActualWidth);
+                        */
                         return true;
                     }
                 }
@@ -197,12 +199,14 @@ namespace P42.Uno.Controls
                     var drawerSize = new Size(ActualWidth, ActualWidth / DetailAspectRatio);
                     if (drawerSize.Height <= ActualHeight * 0.5 && drawerSize.Height < popupSize.Height + popupMargin * 2 && drawerSize.Width < popupSize.Width + popupMargin * 2)
                     {
+                        /*
                         System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.IsInDrawerMode: ");
                         System.Diagnostics.Debug.WriteLine("\t Aspect: " + Aspect);
                         System.Diagnostics.Debug.WriteLine("\t DetailAspectRatio: " + DetailAspectRatio);
                         System.Diagnostics.Debug.WriteLine("\t PopupContentHeight: " + PopupContentHeight);
                         System.Diagnostics.Debug.WriteLine("\t ActualWidth: " + ActualWidth);
                         System.Diagnostics.Debug.WriteLine("\t ActualHeight: " + ActualHeight);
+                        */
                         return true;
                     }
                 }
@@ -353,6 +357,42 @@ namespace P42.Uno.Controls
             SizeChanged += OnSizeChanged;
         }
 
+        bool _disposed;
+#if NETFX_CORE
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+#else
+        public new void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+            base.Dispose();
+        }
+#endif
+
+#if __ANDROID__ 
+        protected override void Dispose(bool disposing)
+#elif __MACOS__ || __IOS__
+        protected virtual new void Dispose(bool disposing)
+#else
+        protected virtual void Dispose(bool disposing)
+#endif
+        {
+            if (disposing && !_disposed)
+            {
+                _disposed = true;
+                SizeChanged -= OnSizeChanged;
+            }
+#if __ANDROID__ || __MACOS__ || __IOS__
+            base.Dispose(disposing);
+#endif
+        }
+
+
+
         #endregion
 
 
@@ -473,7 +513,7 @@ namespace P42.Uno.Controls
 #endregion
 
 
-        #region Push / Pop
+#region Push / Pop
         bool _freshPushCycle;
         public async Task PushDetailAsync()
         {
@@ -708,7 +748,7 @@ namespace P42.Uno.Controls
             return await _pushCompletionSource.Task;
         }
 
-        #endregion
+#endregion
 
     }
 }

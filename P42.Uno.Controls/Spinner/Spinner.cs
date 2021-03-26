@@ -21,7 +21,7 @@ namespace P42.Uno.Controls
             PackageLocation = WebAssemblyRuntime.InvokeJS("window.scriptDirectory");
         }
 
-        #region IsActive Property
+#region IsActive Property
         public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(
             nameof(IsActive),
             typeof(bool),
@@ -33,7 +33,7 @@ namespace P42.Uno.Controls
             get => (bool)GetValue(IsActiveProperty);
             set => SetValue(IsActiveProperty, value);
         }
-        #endregion IsActive Property
+#endregion IsActive Property
 
 
 
@@ -43,6 +43,14 @@ namespace P42.Uno.Controls
             Height = 100;
             this.SetHtmlAttribute("src", $"{PackageLocation}Assets/loading_apple.gif");
         }
+    }
+}
+#else
+namespace P42.Uno.Controls
+{
+    public partial class Spinner : FrameworkElement
+    {
+
     }
 }
 #endif

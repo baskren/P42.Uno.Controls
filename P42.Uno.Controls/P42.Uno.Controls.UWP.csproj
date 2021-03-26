@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/3.0.22">
   <PropertyGroup>
-    <TargetFrameworks>uap10.0.17763;</TargetFrameworks>
+    <TargetFrameworks>uap10.0.18362;</TargetFrameworks>
   </PropertyGroup>
 
   <!-- PACKAGE REFERENCES -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI" Version="6.1.0" />
   </ItemGroup>
 
   <!-- REFERENCES -->
