@@ -23,51 +23,51 @@ namespace P42.Uno.Controls
 
 		public static TElement Center<TElement>(this TElement element) where TElement : ElementType
 		{
-			element.PopupVerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center;
-			element.PopupHorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
+			element.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center;
+			element.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
 			return element;
 		}
 
 		public static TElement Stretch<TElement>(this TElement element) where TElement : ElementType
 		{
-			element.PopupVerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Stretch;
-			element.PopupHorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch;
+			element.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Stretch;
+			element.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch;
 			return element;
 		}
 
 		#region Vertical Alignment
 		public static TElement VerticalAlignment<TElement>(this TElement element, VerticalAlignment verticalAlignment) where TElement : ElementType
-		{ element.PopupVerticalAlignment = verticalAlignment; return element; }
+		{ element.VerticalAlignment = verticalAlignment; return element; }
 
 		public static TElement Top<TElement>(this TElement element) where TElement : ElementType
-		{ element.PopupVerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Top; return element; }
+		{ element.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Top; return element; }
 
 		public static TElement CenterVertical<TElement>(this TElement element) where TElement : ElementType
-		{ element.PopupVerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center; return element; }
+		{ element.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center; return element; }
 
 		public static TElement Bottom<TElement>(this TElement element) where TElement : ElementType
-		{ element.PopupVerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Bottom; return element; }
+		{ element.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Bottom; return element; }
 
 		public static TElement StretchVertical<TElement>(this TElement element) where TElement : ElementType
-		{ element.PopupVerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Stretch; return element; }
+		{ element.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Stretch; return element; }
 
 		#endregion
 
 		#region Horizontal Alignment
 		public static TElement HorizontalAlignment<TElement>(this TElement element, HorizontalAlignment horizontalAlignment) where TElement : ElementType
-		{ element.PopupHorizontalAlignment = horizontalAlignment; return element; }
+		{ element.HorizontalAlignment = horizontalAlignment; return element; }
 
 		public static TElement Left<TElement>(this TElement element) where TElement : ElementType
-		{ element.PopupHorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Left; return element; }
+		{ element.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Left; return element; }
 
 		public static TElement CenterHorizontal<TElement>(this TElement element) where TElement : ElementType
-		{ element.PopupHorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center; return element; }
+		{ element.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center; return element; }
 
 		public static TElement Right<TElement>(this TElement element) where TElement : ElementType
-		{ element.PopupHorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Right; return element; }
+		{ element.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Right; return element; }
 
 		public static TElement StretchHorizontal<TElement>(this TElement element) where TElement : ElementType
-		{ element.PopupHorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch; return element; }
+		{ element.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch; return element; }
 		#endregion
 
 		#endregion
@@ -75,31 +75,31 @@ namespace P42.Uno.Controls
 		#region Margin
 
 		public static TElement Margin<TElement>(this TElement element, double value) where TElement : ElementType
-		{ element.PopupMargin = new Thickness(value); return element; }
+		{ element.Margin = new Thickness(value); return element; }
 
 		public static TElement Margin<TElement>(this TElement element, double horizontal, double vertical) where TElement : ElementType
-		{ element.PopupMargin = new Thickness(horizontal, vertical, horizontal, vertical); return element; }
+		{ element.Margin = new Thickness(horizontal, vertical, horizontal, vertical); return element; }
 
 		public static TElement Margin<TElement>(this TElement element, double left, double top, double right, double bottom) where TElement : ElementType
-		{ element.PopupMargin = new Thickness(left, top, right, bottom); return element; }
+		{ element.Margin = new Thickness(left, top, right, bottom); return element; }
 
 		public static TElement Margin<TElement>(this TElement element, Thickness margin) where TElement : ElementType
-		{ element.PopupMargin = margin; return element; }
+		{ element.Margin = margin; return element; }
 
 		#endregion
 
 		#region Padding
 		public static TElement Padding<TElement>(this TElement element, double value) where TElement : ElementType
-		{ element.PopupPadding = new Thickness(value); return element; }
+		{ element.Padding = new Thickness(value); return element; }
 
 		public static TElement Padding<TElement>(this TElement element, double horizontal, double vertical) where TElement : ElementType
-		{ element.PopupPadding = new Thickness(horizontal, vertical, horizontal, vertical); return element; }
+		{ element.Padding = new Thickness(horizontal, vertical, horizontal, vertical); return element; }
 
 		public static TElement Padding<TElement>(this TElement element, double left, double top, double right, double bottom) where TElement : ElementType
-		{ element.PopupPadding = new Thickness(left, top, right, bottom); return element; }
+		{ element.Padding = new Thickness(left, top, right, bottom); return element; }
 
 		public static TElement Padding<TElement>(this TElement element, Thickness padding) where TElement : ElementType
-		{ element.PopupPadding = padding; return element; }
+		{ element.Padding = padding; return element; }
 		#endregion
 
 		public static TElement HasShadow<TElement>(this TElement element, bool value = true) where TElement : ElementType
@@ -137,7 +137,7 @@ namespace P42.Uno.Controls
 
 		public static TElement LightDismissOverlayMode<TElement>(this TElement element, LightDismissOverlayMode value) where TElement : ElementType
 		{ element.LightDismissOverlayMode = value; return element; }
-
+		/*
 		public static TElement LightDismissOverlayBrush<TElement>(this TElement element, Brush value) where TElement : ElementType
 		{ element.LightDismissOverlayBrush = value; return element; }
 
@@ -146,6 +146,7 @@ namespace P42.Uno.Controls
 
 		public static TElement LightDismissOverlayBrush<TElement>(this TElement element, string value) where TElement : ElementType
 		{ element.LightDismissOverlayBrush = new SolidColorBrush(P42.Utils.Uno.ColorExtensions.ColorFromString(value)); return element; }
+		*/
         #endregion
 
 

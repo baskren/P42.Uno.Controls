@@ -13,7 +13,7 @@ namespace P42.Uno.Controls
 
         void Build()
         {
-            PopupPadding = new Windows.UI.Xaml.Thickness(5);
+            Padding = new Windows.UI.Xaml.Thickness(5);
             PopupContent = _bubbleContentGrid = new Grid()
                 .RowSpacing(3)
                 .Rows(

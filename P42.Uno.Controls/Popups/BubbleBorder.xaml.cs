@@ -459,8 +459,9 @@ namespace P42.Uno.Controls
             UpdateContentPresenterMargin();
             //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") ======= hzAlign: " + HorizontalAlignment + " ======= margin: " + Margin + " ====== WindowSize: " + AppWindow.Size());
 
-            var windowWidth = AppWindow.Size().Width;
-            var windowHeight = AppWindow.Size().Height;
+            var windowSize = AppWindow.Size();
+            var windowWidth = windowSize.Width;
+            var windowHeight = windowSize.Height;
 
             //System.Diagnostics.Debug.WriteLine("\t ContentPresenterMargin: " + ContentPresenterMargin);
             //this.DebugLogProperties();
@@ -518,8 +519,9 @@ namespace P42.Uno.Controls
 
         SKPath GeneratePath(Size measuredSize = default)
         {
-            var windowWidth = AppWindow.Size().Width;
-            var windowHeight = AppWindow.Size().Height;
+            var windowSize = AppWindow.Size();
+            var windowWidth = windowSize.Width;
+            var windowHeight = windowSize.Height;
 
             var width = (float)Math.Min(DesiredSize.Width, windowWidth - Margin.Horizontal());
             var height = (float)Math.Min(DesiredSize.Height, windowHeight - Margin.Vertical());

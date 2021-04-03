@@ -162,8 +162,8 @@ namespace P42.Uno.Controls.Test
 #endif
             _bubbleBorder.HorizontalAlignment = (HorizontalAlignment)hzAlign;
 
-            popup.PopupVerticalAlignment = (VerticalAlignment)vtAlign;
-            popup.PopupHorizontalAlignment = (HorizontalAlignment)hzAlign;
+            popup.VerticalAlignment = (VerticalAlignment)vtAlign;
+            popup.HorizontalAlignment = (HorizontalAlignment)hzAlign;
             popup.PreferredPointerDirection = prefDir;
             popup.Target = sender as UIElement;
 

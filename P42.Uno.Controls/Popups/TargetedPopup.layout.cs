@@ -5,6 +5,11 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 using P42.Uno.Markup;
 using P42.Utils.Uno;
+#if NETFX_CORE
+using Popup = Windows.UI.Xaml.Controls.Primitives.Popup;
+#else
+using Popup = Windows.UI.Xaml.Controls.Popup;
+#endif
 
 namespace P42.Uno.Controls
 {
@@ -20,15 +25,14 @@ namespace P42.Uno.Controls
         #endregion
 
         #region Visual Elements
-        protected Rectangle _overlay;
         protected BubbleBorder _border;
         protected ContentPresenter _contentPresenter;
-        protected Grid _grid;
+        protected Popup _popup;
         #endregion
 
         void Build()
         {
-            Visibility = Visibility.Collapsed;
+            //Visibility = Visibility.Collapsed;
             HorizontalContentAlignment = HorizontalAlignment.Center;
             VerticalContentAlignment = VerticalAlignment.Center;
             ActualPointerDirection = PointerDirection.None;
@@ -36,22 +40,14 @@ namespace P42.Uno.Controls
             Background = (Brush)Application.Current.Resources["SystemControlBackgroundChromeMediumBrush"];
             BorderBrush = (Brush)Application.Current.Resources["SystemControlForegroundBaseLowBrush"];
             Foreground = (Brush)Application.Current.Resources["SystemControlForegroundBaseHighBrush"];
-            LightDismissOverlayBrush = new SolidColorBrush((Color)Application.Current.Resources["SystemAltMediumColor"]);
             BorderThickness = new Thickness(DefaultBorderThickness);
             CornerRadius = new CornerRadius(DefaultCornerRadius);
             FontSize = 16;
 
-            Content = new Grid
+            Content = new Popup
             {
-                Children =
-                {
-                     new Rectangle()
-                        .Assign(out _overlay)
-                        .Margin(0)
-                        .Stretch()
-                        .Collapsed()
-                        .Bind(Rectangle.FillProperty, this, nameof(LightDismissOverlayBrush))
-                        ,
+                Child =
+                
                     new BubbleBorder()
                     {
                         Content = new ContentPresenter()
@@ -60,18 +56,12 @@ namespace P42.Uno.Controls
                             .Padding(0)
                             .TextWrapping(TextWrapping.WrapWholeWords)
                             .BindFont(this)
-                            //.Bind(ContentPresenter.FontFamilyProperty, this, nameof(FontFamily))
-                            //.Bind(ContentPresenter.FontSizeProperty, this, nameof(FontSize))
-                            //.Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
-                            //.Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
-                            //.Bind(ContentPresenter.FontWeightProperty, this, nameof(FontWeight))
-                            //.Bind(ContentPresenter.ContentProperty, this, nameof(PopupContent))
                             .BindNullCollapse()
                     }
                         .Assign(out _border)
                         .Bind(BubbleBorder.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
                         .Bind(BubbleBorder.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
-                        //.Bind(BubbleBorder.PaddingProperty, this, nameof(PopupPadding))
+                        .Bind(BubbleBorder.PaddingProperty, this, nameof(Padding))
                         .Bind(BubbleBorder.BackgroundProperty, this, nameof(Background))
                         .Bind(BubbleBorder.BorderBrushProperty, this, nameof(BorderBrush))
                         .Bind(BubbleBorder.BorderThicknessProperty, this, nameof(BorderThickness))
@@ -81,17 +71,19 @@ namespace P42.Uno.Controls
                         .Bind(BubbleBorder.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
                         .Bind(BubbleBorder.PointerLengthProperty, this, nameof(PointerLength))
                         .Bind(BubbleBorder.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
-                }
+                
             }
-                .Assign(out _grid)
+                .Assign(out _popup)
                 .DataContext(this)
                 .Margin(0)
-                .Padding(0)
+                //.Padding(0)
                 .Stretch()
                 ;
 
-            this.PointerMoved += OnPointerMoved;
-            this.PointerEntered += OnPointerEntered;
+            //this.PointerMoved += OnPointerMoved;
+            //this.PointerEntered += OnPointerEntered;
+            _popup.Opened += OnPopupOpened;
+            _popup.Closed += OnPopupClosed;
         }
 
     }

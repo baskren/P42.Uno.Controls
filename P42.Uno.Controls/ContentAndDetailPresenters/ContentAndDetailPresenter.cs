@@ -173,6 +173,7 @@ namespace P42.Uno.Controls
                 //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.IsInDrawerMode aspect:" + aspect + "  ActualWidth:" + ActualWidth);
                 return (aspect < 1.0 / 1.25 && ActualWidth <= 500) || (aspect > 1.75 && ActualHeight <= 500 / DetailAspectRatio);
                 */
+                //return true;
 
                 var popupSize = new Size(PopupContentHeight * DetailAspectRatio, PopupContentHeight);
 
@@ -218,12 +219,40 @@ namespace P42.Uno.Controls
         {
             get
             {
-                if (EstHeight > 0)
-                    return EstWidth / EstHeight;
+                var size = EstimatedSize;
+                if (size.Height > 0)
+                    return size.Width / size.Height;
                 return 0;
             }
         }
 
+        Size EstimatedSize
+        {
+            get
+            {
+                Size windowSize = Size.Empty;
+                var width = ActualWidth;
+                if (width <= 0)
+                    width = DesiredSize.Width;
+                if (width <= 0)
+                {
+                    if (windowSize == Size.Empty)
+                        windowSize = AppWindow.Size();
+                    width = windowSize.Width;
+                }
+                var height = ActualHeight;
+                if (height <= 0)
+                    height = DesiredSize.Height;
+                if (height <= 0)
+                {
+                    if (windowSize == Size.Empty)
+                        windowSize = AppWindow.Size();
+                    height = windowSize.Height;
+                }
+                return new Size(width, height);
+            }
+        }
+        /*
         double EstWidth
         {
             get
@@ -232,7 +261,7 @@ namespace P42.Uno.Controls
                     return ActualWidth;
                 if (DesiredSize.Width > 0)
                     return DesiredSize.Width;
-                return AppWindow.Size().Width;
+                return AppWindow.Size(this).Width;
             }
         }
 
@@ -244,10 +273,10 @@ namespace P42.Uno.Controls
                     return ActualHeight;
                 if (DesiredSize.Height > 0)
                     return DesiredSize.Height;
-                return AppWindow.Size().Height;
+                return AppWindow.Size(this).Height;
             }
         }
-
+        */
         public PushPopState DetailPushPopState { get; private set; } = PushPopState.Popped;
 
         #region Target Property
@@ -437,11 +466,11 @@ namespace P42.Uno.Controls
 
             //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.ChildrenMeasure ENTER");
 
-
+            var windowSize = AppWindow.Size();
             if (double.IsNaN(size.Width))
-                size.Width = AppWindow.Size().Width;
+                size.Width = windowSize.Width;
             if (double.IsNaN(size.Height))
-                size.Height = AppWindow.Size().Height;
+                size.Height = windowSize.Height;
 
             var y = size.Height;
 
@@ -551,16 +580,17 @@ namespace P42.Uno.Controls
                 var to = 0.0;
                 _freshPushCycle = true;
                 Action<double> action;
+                var estSize = EstimatedSize;
                 if (Aspect > 1)
                 {
-                    var height = EstHeight;
+                    var height = estSize.Height;
                     var width = DetailAspectRatio * height;
                     var size = new Size(width, height);
                     _detailDrawer.Height = height;
                     _detailDrawer.Width = DetailAspectRatio * height;
                     _detailDrawer.BorderThickness = new Thickness(1, 0, 0, 0);
-                    from = EstWidth;
-                    to = EstWidth - width;
+                    from = estSize.Width;
+                    to = estSize.Width - width;
                     action = x =>
                     {
                         Content?.Arrange(new Rect(0, 0, x, height));
@@ -574,14 +604,14 @@ namespace P42.Uno.Controls
                 }
                 else
                 {
-                    var width = EstWidth;
+                    var width = estSize.Width;
                     var height = width / DetailAspectRatio;
                     var size = new Size(width, height);
                     _detailDrawer.Height = height;
                     _detailDrawer.Width = width;
                     _detailDrawer.BorderThickness = new Thickness(0, 1, 0, 0);
-                    from = EstHeight;
-                    to = EstHeight - height;
+                    from = estSize.Height;
+                    to = estSize.Height - height;
                     action = y =>
                     {
                         Content?.Arrange(new Rect(0, 0, width, y));
@@ -656,10 +686,11 @@ namespace P42.Uno.Controls
                 var height = _detailDrawer.ActualHeight;
                 var size = new Size(width, height);
                 Action<double> action;
+                var estSize = EstimatedSize;
                 if (Aspect > 1)
                 {
-                    from = EstWidth - width;
-                    to = EstWidth;
+                    from = estSize.Width - width;
+                    to = estSize.Width;
                     action = x =>
                     {
                         Content?.Arrange(new Rect(0, 0, x, height));
@@ -670,8 +701,8 @@ namespace P42.Uno.Controls
                 }
                 else
                 {
-                    from = EstHeight - height;
-                    to = EstHeight;
+                    from = estSize.Height - height;
+                    to = estSize.Height;
                     action = y =>
                     {
                         Content?.Arrange(new Rect(0, 0, width, y));

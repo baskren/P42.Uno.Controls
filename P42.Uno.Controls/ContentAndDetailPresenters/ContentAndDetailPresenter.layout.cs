@@ -41,7 +41,7 @@ namespace P42.Uno.Controls
 
             _targetedPopup = new TargetedPopup()
                 .Padding(4)
-                .LightDismissOverlayBrush("#01FFFFFF")
+                //.LightDismissOverlayBrush("#01FFFFFF")
                 .Opacity(0)
                 .Margin(popupMargin)
                 .PreferredPointerDirection(PointerDirection.Vertical)
