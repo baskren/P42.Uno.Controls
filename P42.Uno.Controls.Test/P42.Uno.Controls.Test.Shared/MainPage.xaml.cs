@@ -171,7 +171,7 @@ namespace P42.Uno.Controls.Test
             //popup.Content(new TextBlock { Text = "Green Car" });
             popup.Background(Colors.Yellow);
             popup.BorderBrush(Colors.Red);
-            popup.Margin(50);
+            popup.Margin(5);
                 
             await popup.PushAsync();
             /*

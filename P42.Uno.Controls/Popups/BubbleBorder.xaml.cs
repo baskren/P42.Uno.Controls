@@ -459,7 +459,7 @@ namespace P42.Uno.Controls
             UpdateContentPresenterMargin();
             //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") ======= hzAlign: " + HorizontalAlignment + " ======= margin: " + Margin + " ====== WindowSize: " + AppWindow.Size());
 
-            var windowSize = AppWindow.Size();
+            var windowSize = AppWindow.Size(this);
             var windowWidth = windowSize.Width;
             var windowHeight = windowSize.Height;
 
@@ -519,7 +519,7 @@ namespace P42.Uno.Controls
 
         SKPath GeneratePath(Size measuredSize = default)
         {
-            var windowSize = AppWindow.Size();
+            var windowSize = AppWindow.Size(this);
             var windowWidth = windowSize.Width;
             var windowHeight = windowSize.Height;
 

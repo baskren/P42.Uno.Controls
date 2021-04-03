@@ -237,7 +237,7 @@ namespace P42.Uno.Controls
                 if (width <= 0)
                 {
                     if (windowSize == Size.Empty)
-                        windowSize = AppWindow.Size();
+                        windowSize = AppWindow.Size(this);
                     width = windowSize.Width;
                 }
                 var height = ActualHeight;
@@ -246,7 +246,7 @@ namespace P42.Uno.Controls
                 if (height <= 0)
                 {
                     if (windowSize == Size.Empty)
-                        windowSize = AppWindow.Size();
+                        windowSize = AppWindow.Size(this);
                     height = windowSize.Height;
                 }
                 return new Size(width, height);
@@ -466,7 +466,7 @@ namespace P42.Uno.Controls
 
             //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.ChildrenMeasure ENTER");
 
-            var windowSize = AppWindow.Size();
+            var windowSize = AppWindow.Size(this);
             if (double.IsNaN(size.Width))
                 size.Width = windowSize.Width;
             if (double.IsNaN(size.Height))

@@ -839,7 +839,7 @@ namespace P42.Uno.Controls
 
             _popup.Margin = Margin;
 
-            var windowSize = AppWindow.Size();
+            var windowSize = AppWindow.Size(this);
             if (windowSize.Width < 1 || windowSize.Height < 1)
                 return;
             var windowWidth = windowSize.Width - Margin.Horizontal();
@@ -1025,7 +1025,7 @@ namespace P42.Uno.Controls
 
             _popup.Margin = new Thickness(0);
             _popup.HorizontalOffset = frame.Left;
-            _popup.VerticalOffset = frame.Top;
+            _popup.VerticalOffset = frame.Top + P42.Utils.Uno.AppWindow.StatusBarHeight(this);
 
             _border.Margin = new Thickness(0);
             _border.Width = frame.Width;
@@ -1050,7 +1050,7 @@ namespace P42.Uno.Controls
         DirectionStats BestFit(Thickness availableSpace, Size cleanSize)
         {
             // given the amount of free space, determine if the border will fit 
-            var windowSize = AppWindow.Size();
+            var windowSize = AppWindow.Size(this);
             var windowSpaceW = Math.Max(0, windowSize.Width - Margin.Horizontal());
             var windowSpaceH = Math.Max(0, windowSize.Height - Margin.Vertical());
             var windowSpace = new Size(windowSpaceW, windowSpaceH);
@@ -1130,7 +1130,7 @@ namespace P42.Uno.Controls
 
         Thickness AvailableSpace(Rect target)
         {
-            var windowBounds = AppWindow.Size();
+            var windowBounds = AppWindow.Size(this);
             if (Target != null || (TargetPoint.X > 0 || TargetPoint.Y > 0))
             {
                 if (target.Right > 0 && target.Left < windowBounds.Width && target.Bottom > 0 && target.Top < windowBounds.Height)
