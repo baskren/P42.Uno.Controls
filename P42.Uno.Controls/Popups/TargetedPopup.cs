@@ -580,13 +580,13 @@ namespace P42.Uno.Controls
         TaskCompletionSource<bool> _popupClosedCompletionSource;
         private void OnPopupClosed(object sender, object e)
         {
-            _popupClosedCompletionSource?.SetResult(true);
+            _popupClosedCompletionSource?.TrySetResult(true);
         }
 
         TaskCompletionSource<bool> _popupOpenedCompletionSource;
         private void OnPopupOpened(object sender, object e)
         {
-            _popupOpenedCompletionSource?.SetResult(true);
+            _popupOpenedCompletionSource?.TrySetResult(true);
         }
 
 
@@ -669,7 +669,7 @@ namespace P42.Uno.Controls
 
             PushPopState = PushPopState.Pushed;
             Pushed?.Invoke(this, EventArgs.Empty);
-            _pushCompletionSource?.SetResult(true);
+            _pushCompletionSource?.TrySetResult(true);
             
         }
 
@@ -739,7 +739,7 @@ namespace P42.Uno.Controls
 
             var result = new PopupPoppedEventArgs(PoppedCause, PoppedTrigger);
             PushPopState = PushPopState.Popped;
-            _popCompletionSource?.SetResult(result);
+            _popCompletionSource?.TrySetResult(result);
             Popped?.Invoke(this, result);
         }
 
