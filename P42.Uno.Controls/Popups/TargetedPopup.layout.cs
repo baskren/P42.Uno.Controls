@@ -18,8 +18,6 @@ namespace P42.Uno.Controls
         #region Defaults
         const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Center;
         const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Center;
-        const double DefaultPopupMargin = 50;
-        const double DefaultPopupPadding = 10;
         const double DefaultBorderThickness = 1;
         const double DefaultCornerRadius = 4;
         #endregion
@@ -33,6 +31,8 @@ namespace P42.Uno.Controls
         void Build()
         {
             //Visibility = Visibility.Collapsed;
+            HorizontalAlignment = HorizontalAlignment.Center;
+            VerticalAlignment = VerticalAlignment.Center;
             HorizontalContentAlignment = HorizontalAlignment.Center;
             VerticalContentAlignment = VerticalAlignment.Center;
             ActualPointerDirection = PointerDirection.None;
