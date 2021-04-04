@@ -835,9 +835,6 @@ namespace P42.Uno.Controls
         {
             if (_border is null)
                 return;
-            //await AssureGraft();
-
-            _popup.Margin = Margin;
 
             var windowSize = AppWindow.Size(this);
             if (windowSize.Width < 1 || windowSize.Height < 1)
@@ -853,10 +850,10 @@ namespace P42.Uno.Controls
                 return;
             }
 
-            var targetBounds = TargetBounds();
+            var target = TargetBounds();
 
             //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateBorderMarginAndAlignment targetBounds:["+targetBounds+"]");
-            var availableSpace = AvailableSpace(targetBounds);
+            var availableSpace = AvailableSpace(target);
             var stats = BestFit(availableSpace, cleanSize);
 
             if (stats.PointerDirection == PointerDirection.None)
@@ -866,149 +863,80 @@ namespace P42.Uno.Controls
             }
 
             ActualPointerDirection = stats.PointerDirection;
-            var borderMargin = Margin;
+            var margin = Margin;
+            var hzAlign = HorizontalAlignment;
+            var vtAlign = VerticalAlignment;
 
             if (stats.PointerDirection.IsHorizontal())
             {
                 if (stats.PointerDirection == PointerDirection.Left)
                 {
-                    borderMargin.Left = targetBounds.Right;
-                    base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment == HorizontalAlignment.Stretch ? HorizontalAlignment.Stretch : HorizontalAlignment.Left;
+                    margin.Left = target.Right;
+                    if (HorizontalAlignment != HorizontalAlignment.Stretch)
+                        hzAlign = HorizontalAlignment.Left;
                 }
-                else
+                else if (stats.PointerDirection == PointerDirection.Right)
                 {
-                    if (HorizontalAlignment == HorizontalAlignment.Stretch)
-                    {
-                        base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment;
-                    }
-                    else
-                    {
-                        borderMargin.Left = targetBounds.Left - stats.BorderSize.Width;
-                        base.HorizontalAlignment = _border.HorizontalAlignment = HorizontalAlignment.Left;
-                    }
+                    margin.Right = windowSize.Width - target.Left;
+                    if (HorizontalAlignment != HorizontalAlignment.Stretch)
+                        hzAlign = HorizontalAlignment.Right;
                 }
 
                 if (VerticalAlignment == VerticalAlignment.Top)
                 {
-                    borderMargin.Top = Math.Max(Margin.Top, targetBounds.Top);
-                    _border.VerticalAlignment = VerticalAlignment.Top;
+                    margin.Top = Math.Max(Margin.Top, target.Top);
                 }
                 else if (VerticalAlignment == VerticalAlignment.Center)
                 {
-                    borderMargin.Top = Math.Max(Margin.Top, (targetBounds.Top + targetBounds.Bottom) / 2.0 - stats.BorderSize.Height / 2.0);
-                    _border.VerticalAlignment = VerticalAlignment.Top;
+                    margin.Top = Math.Max(Margin.Top, (target.Top + target.Bottom) / 2.0 - stats.BorderSize.Height / 2.0);
+                    vtAlign = VerticalAlignment.Top;
                 }
                 else if (VerticalAlignment == VerticalAlignment.Bottom)
                 {
-                    borderMargin.Top = Math.Max(Margin.Top, targetBounds.Bottom - stats.BorderSize.Height);
-                    _border.VerticalAlignment = VerticalAlignment.Top;
+                    margin.Bottom = Math.Max(Margin.Bottom, windowSize.Height - target.Bottom);
                 }
+
+                if (margin.Top + stats.BorderSize.Height > windowSize.Height - Margin.Bottom)
+                    margin.Top = windowSize.Height - Margin.Bottom - stats.BorderSize.Height;
+
+                if (VerticalAlignment == VerticalAlignment.Bottom)
+                    _border.PointerAxialPosition = (target.Top - (windowSize.Height - margin.Bottom - cleanSize.Height)) + target.Bottom - (target.Top + target.Bottom) / 2.0;
                 else
-                {
-                    _border.VerticalAlignment = VerticalAlignment.Stretch;
-                }
-                if (borderMargin.Top + stats.BorderSize.Height > windowSize.Height - Margin.Bottom)
-                    borderMargin.Top = windowSize.Height - Margin.Bottom - stats.BorderSize.Height;
-
-
-                _border.PointerAxialPosition = (targetBounds.Top - borderMargin.Top) + targetBounds.Bottom - (targetBounds.Top + targetBounds.Bottom) / 2.0;
+                    _border.PointerAxialPosition = (target.Top - margin.Top) + target.Bottom - (target.Top + target.Bottom) / 2.0;
             }
             else
             {
                 if (stats.PointerDirection == PointerDirection.Up)
                 {
-                    borderMargin.Top = targetBounds.Bottom;
-                    _border.VerticalAlignment = VerticalAlignment == VerticalAlignment.Stretch ? VerticalAlignment.Stretch : VerticalAlignment.Top;
+                    margin.Top = target.Bottom;
+                    if (VerticalAlignment != VerticalAlignment.Stretch)
+                        vtAlign = VerticalAlignment.Top;
                 }
-                else
+                else if (stats.PointerDirection == PointerDirection.Down)
                 {
-                    if (VerticalAlignment == VerticalAlignment.Stretch)
-                    {
-                        _border.VerticalAlignment = VerticalAlignment;
-                    }
-                    else
-                    {
-                        borderMargin.Top = targetBounds.Top - stats.BorderSize.Height;
-                        _border.VerticalAlignment = VerticalAlignment.Top;
-                    }
+                    margin.Bottom = windowSize.Height - target.Top;
+                    if (VerticalAlignment != VerticalAlignment.Stretch)
+                        vtAlign = VerticalAlignment.Bottom;
                 }
 
                 if (HorizontalAlignment == HorizontalAlignment.Left)
-                {
-                    borderMargin.Left = Math.Max(Margin.Left, targetBounds.Left);
-                    _border.HorizontalAlignment = HorizontalAlignment.Left;
-
-                }
+                    margin.Left = Math.Max(Margin.Left, target.Left);
                 else if (HorizontalAlignment == HorizontalAlignment.Center)
-                {
-                    borderMargin.Left = Math.Max(Margin.Left, (targetBounds.Left + targetBounds.Right) / 2.0 - stats.BorderSize.Width / 2.0);
-                    _border.HorizontalAlignment = HorizontalAlignment.Left;
-                }
+                    margin.Left = Math.Max(Margin.Left, (target.Left + target.Right) / 2.0 - stats.BorderSize.Width / 2.0);
                 else if (HorizontalAlignment == HorizontalAlignment.Right)
-                {
-                    borderMargin.Left = Math.Max(Margin.Left, targetBounds.Right - stats.BorderSize.Width);
-                    _border.HorizontalAlignment = HorizontalAlignment.Left;
-                }
+                    margin.Right = Math.Max(Margin.Right, windowSize.Width - target.Right);
+
+                if (margin.Left + stats.BorderSize.Width > windowSize.Width - Margin.Right)
+                    margin.Left = windowSize.Width - Margin.Right - stats.BorderSize.Width;
+
+                if (HorizontalAlignment == HorizontalAlignment.Right)
+                    _border.PointerAxialPosition = (target.Left - (windowSize.Width - margin.Right - cleanSize.Width)) + (target.Right - (target.Left + target.Right) / 2.0);
                 else
-                {
-                    _border.HorizontalAlignment = HorizontalAlignment.Stretch;
-                }
-                if (borderMargin.Left + stats.BorderSize.Width > windowSize.Width - Margin.Right)
-                    borderMargin.Left = windowSize.Width - Margin.Right - stats.BorderSize.Width;
-
-                _border.PointerAxialPosition = (targetBounds.Left - borderMargin.Left) + targetBounds.Right - (targetBounds.Left + targetBounds.Right) / 2.0;
+                    _border.PointerAxialPosition = (target.Left - margin.Left) + (target.Right - (target.Left + target.Right) / 2.0);
             }
 
-            _border.PointerDirection = stats.PointerDirection;
-            _popup.Margin = borderMargin;
-
-#if __ANDROID__
-            /*
-            _grid.Measure(windowSize);
-            _grid.Arrange(new Rect(0, 0, windowSize.Width, windowSize.Height));
-            */
-#endif
-
-        }
-
-        Rect CalculateFrame(HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size borderSize, Size windowSize)
-        {
-            var left = Margin.Left;
-            var top = Margin.Top;
-            var right = Math.Min(left + borderSize.Width, windowSize.Width - Margin.Right);
-            var bottom = Math.Min(top + borderSize.Height, windowSize.Height - Margin.Bottom);
-
-            if (hzAlign == HorizontalAlignment.Center)
-            {
-                left = Math.Max((windowSize.Width - borderSize.Width) / 2.0, left);
-                right = Math.Min(left + borderSize.Width, windowSize.Width - Margin.Right);
-            }
-            else if (hzAlign == HorizontalAlignment.Right)
-            {
-                left = Math.Max(windowSize.Width - Margin.Right - borderSize.Width, left);
-                right = windowSize.Width - Margin.Right;
-            }
-            else if (hzAlign == HorizontalAlignment.Stretch)
-            {
-                right = windowSize.Width - Margin.Right;
-            }
-
-            if (vtAlign == VerticalAlignment.Center)
-            {
-                top = Math.Max((windowSize.Height - borderSize.Height) / 2.0, top);
-                bottom = Math.Min(top + borderSize.Height, windowSize.Height - Margin.Bottom);
-            }
-            else if (vtAlign == VerticalAlignment.Bottom)
-            {
-                top = Math.Max(windowSize.Height - Margin.Bottom - borderSize.Height, top);
-                bottom = windowSize.Height - Margin.Bottom;
-            }
-            else if (vtAlign == VerticalAlignment.Stretch)
-            {
-                bottom = windowSize.Height - Margin.Bottom;
-            }
-
-            return new Rect(left, top, right - left, bottom - top);
+            ActualPointerDirection = _border.PointerDirection = stats.PointerDirection;
+            SetMarginAndAlignment(margin, hzAlign, vtAlign, windowSize, cleanSize);
         }
 
         void CleanMarginAndAlignment(HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size windowSize, Size cleanSize)
@@ -1019,9 +947,12 @@ namespace P42.Uno.Controls
                 return;
 
             _border.PointerDirection = ActualPointerDirection;
+            SetMarginAndAlignment(Margin, hzAlign, vtAlign, windowSize, cleanSize);
+        }
 
-            var borderSize = cleanSize;
-            var frame = CalculateFrame(hzAlign, vtAlign, borderSize, windowSize);
+        void SetMarginAndAlignment(Thickness margin, HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size windowSize, Size cleanSize)
+        { 
+            var frame = CalculateFrame(margin, hzAlign, vtAlign, windowSize, cleanSize);
 
             _popup.Margin = new Thickness(0);
             _popup.HorizontalOffset = frame.Left;
@@ -1039,12 +970,48 @@ namespace P42.Uno.Controls
                 : VerticalAlignment.Top;
 
             System.Diagnostics.Debug.WriteLine("TargetedPopup.CleanMarginAndAlignment frame: " + frame);
-#if __ANDROID__
-            /*
-            _grid.Measure(windowSize);
-            _grid.Arrange(new Rect(0, 0, windowSize.Width, windowSize.Height));
-            */
-#endif
+        }
+
+        Rect CalculateFrame(Thickness margin, HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size windowSize, Size borderSize)
+        {
+            var hzPointer = ActualPointerDirection.IsHorizontal() ? PointerLength : 0;
+            var vtPointer = ActualPointerDirection.IsVertical() ? PointerLength : 0;
+            var left = margin.Left;
+            var top = margin.Top;
+            var right = Math.Min(left + borderSize.Width + hzPointer, windowSize.Width - margin.Right);
+            var bottom = Math.Min(top + borderSize.Height + vtPointer, windowSize.Height - margin.Bottom);
+
+            if (hzAlign == HorizontalAlignment.Center)
+            {
+                left = Math.Max((windowSize.Width - borderSize.Width) / 2.0, left);
+                right = Math.Min(left + borderSize.Width, windowSize.Width - margin.Right);
+            }
+            else if (hzAlign == HorizontalAlignment.Right)
+            {
+                left = Math.Max(windowSize.Width - margin.Right - hzPointer - borderSize.Width, left);
+                right = windowSize.Width - margin.Right;
+            }
+            else if (hzAlign == HorizontalAlignment.Stretch)
+            {
+                right = windowSize.Width - margin.Right;
+            }
+
+            if (vtAlign == VerticalAlignment.Center)
+            {
+                top = Math.Max((windowSize.Height - borderSize.Height) / 2.0, top);
+                bottom = Math.Min(top + borderSize.Height, windowSize.Height - margin.Bottom);
+            }
+            else if (vtAlign == VerticalAlignment.Bottom)
+            {
+                top = Math.Max(windowSize.Height - margin.Bottom - vtPointer - borderSize.Height, top);
+                bottom = windowSize.Height - margin.Bottom;
+            }
+            else if (vtAlign == VerticalAlignment.Stretch)
+            {
+                bottom = windowSize.Height - margin.Bottom;
+            }
+
+            return new Rect(left, top, right - left, bottom - top);
         }
 
         DirectionStats BestFit(Thickness availableSpace, Size cleanSize)
