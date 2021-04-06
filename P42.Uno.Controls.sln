@@ -57,12 +57,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P42.Utils.Uno.WASM", "P42.U
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		P42.Uno.Controls.Test\P42.Uno.Controls.Test.Shared\P42.Uno.Controls.Test.Shared.projitems*{2b511ed3-25a2-419d-bed3-2e55b6eae130}*SharedItemsImports = 4
 		P42.Uno.Controls.Test\P42.Uno.Controls.Test.Shared\P42.Uno.Controls.Test.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
 		P42.Uno.Controls.Test\P42.Uno.Controls.Test.Shared\P42.Uno.Controls.Test.Shared.projitems*{a3afb69e-6b4a-4533-b6f9-a299a206fee1}*SharedItemsImports = 4
 		P42.Uno.Controls.Test\P42.Uno.Controls.Test.Shared\P42.Uno.Controls.Test.Shared.projitems*{d887c14a-4473-4758-858c-ffb88dd45ad7}*SharedItemsImports = 4
-		P42.Uno.Controls.Test\P42.Uno.Controls.Test.Shared\P42.Uno.Controls.Test.Shared.projitems*{f714af07-29e9-4a5b-9100-b33136006113}*SharedItemsImports = 4
-		P42.Uno.Controls.Test\P42.Uno.Controls.Test.Shared\P42.Uno.Controls.Test.Shared.projitems*{fc79cf30-39c8-442f-b595-e011a1e26236}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU

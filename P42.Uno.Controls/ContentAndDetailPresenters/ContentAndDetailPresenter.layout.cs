@@ -11,44 +11,53 @@ using Windows.UI.Xaml.Shapes;
 
 namespace P42.Uno.Controls
 {
-    public partial class ContentAndDetailPresenter : Panel
+    public partial class ContentAndDetailPresenter : Grid
     {
-        //ContentPresenter _contentPresenter;
-        //ContentPresenter _detailContentPresenter;
-        //ContentPresenter _footerContentPresenter;
         TargetedPopup _targetedPopup;
         Border _detailDrawer;
         Rectangle _overlay;
+
+        ColumnDefinition _drawerColumnDefinition = new ColumnDefinition { Width = new GridLength(0) };
+        RowDefinition _drawerRowDefinition = new RowDefinition { Height = new GridLength(0) };
+
         const double popupMargin = 30;
 
         void Build()
         {
-            this.Children(
+            // r0,c0 : Content
+            // r1,c0 : Footer
+            this.Rows("*", "auto");
+            this.Columns("*");
+            _detailDrawer = new Border()
+                .BorderBrush(SystemColors.BaseMediumHigh)
+                .Background(SystemColors.AltHigh)
+                .BorderThickness(1);
 
-                new Border()
-                    .Assign(out _detailDrawer)
-                    .BorderBrush(SystemColors.BaseMediumHigh)
-                    .Background(SystemColors.AltHigh)
-                    .BorderThickness(1),
+            _overlay = new Rectangle()
+                .Row(0)
+                .RowSpan(2)
+                .Bind(Rectangle.FillProperty, this, nameof(LightDismissOverlayBrush));
 
-                new Rectangle()
-                    .Assign(out _overlay)
-                    .Collapsed()
-                    .Bind(Rectangle.FillProperty, this, nameof(LightDismissOverlayBrush))
-            );
-
-            //_detailContentPresenter = new ContentPresenter();
-
-            _targetedPopup = new TargetedPopup()
+            _targetedPopup = new TargetedPopup
+            {
+                IsLightDismissEnabled = false,
+                LightDismissOverlayMode = LightDismissOverlayMode.Off,
+                IsAnimated = false
+            }
+                .Bind(TargetedPopup.TargetProperty, this, nameof(Target))
                 .Padding(4)
-                //.LightDismissOverlayBrush("#01FFFFFF")
                 .Opacity(0)
                 .Margin(popupMargin)
                 .PreferredPointerDirection(PointerDirection.Vertical)
                 .FallbackPointerDirection(PointerDirection.Any);
 
-            LightDismissOverlayBrush = SystemColors.AltMedium.ToBrush();
+            LightDismissOverlayBrush = SystemColors.AltMedium.WithAlpha(0.25).ToBrush();
+            _overlay.PointerPressed += OnDismissPointerPressed;
 
+            _targetedPopup.Popped += OnTargetedPopupPopped;
+#if __ANDROID__
+            _targetedPopup.IsLightDismissEnabled = true;
+#endif
         }
     }
 }

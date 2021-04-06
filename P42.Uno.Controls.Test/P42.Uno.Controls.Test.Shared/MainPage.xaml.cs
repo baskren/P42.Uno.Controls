@@ -77,7 +77,8 @@ namespace P42.Uno.Controls.Test
             IconElement = new SymbolIcon { Symbol = Symbol.Audio },
             OkButtonContent = "YUP",
             CancelButtonContent = "NOPE!",
-            CancelButtonBackground = new SolidColorBrush(Colors.Red)
+            CancelButtonBackground = new SolidColorBrush(Colors.Red),
+            IsAnimated = false
         };
 
 

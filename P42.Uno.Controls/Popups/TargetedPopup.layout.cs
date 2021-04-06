@@ -23,7 +23,7 @@ namespace P42.Uno.Controls
         #endregion
 
         #region Visual Elements
-        protected BubbleBorder _border;
+        internal BubbleBorder _border;
         protected ContentPresenter _contentPresenter;
         protected Popup _popup;
         #endregion
@@ -59,6 +59,7 @@ namespace P42.Uno.Controls
                             .BindNullCollapse()
                     }
                         .Assign(out _border)
+                        .Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity))
                         .Bind(BubbleBorder.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
                         .Bind(BubbleBorder.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
                         .Bind(BubbleBorder.PaddingProperty, this, nameof(Padding))
@@ -78,6 +79,8 @@ namespace P42.Uno.Controls
                 .Margin(0)
                 //.Padding(0)
                 .Stretch()
+                .Bind(Popup.IsLightDismissEnabledProperty, this, nameof(IsLightDismissEnabled))
+                .Bind(Popup.LightDismissOverlayModeProperty, this, nameof(LightDismissOverlayMode))
                 ;
 
             //this.PointerMoved += OnPointerMoved;

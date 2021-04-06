@@ -6,14 +6,9 @@
 
     <Application.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <!--
-                <ResourceDictionary Source="ms-appx:///P42.Uno.Controls/Themes/generic.xaml" />
-                <ResourceDictionary Source="ms-appx:///P42.Uno.Controls/Styles.xaml" />
-                <ResourceDictionary Source="Popups/BubblePopup.xaml" />
-                -->
-            </ResourceDictionary.MergedDictionaries>
-
+            <DataTemplate x:Key="TextCellTemplate" >
+                <local:TextCell/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

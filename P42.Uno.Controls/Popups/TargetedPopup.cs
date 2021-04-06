@@ -429,7 +429,7 @@ namespace P42.Uno.Controls
         /// </summary>
         public event EventHandler<PopupPoppedEventArgs> Popped;
 
-        public event EventHandler<DismissPointerPressedEventArgs> DismissPointerPressed;
+        //public event EventHandler<DismissPointerPressedEventArgs> DismissPointerPressed;
         #endregion
 
 
@@ -454,6 +454,7 @@ namespace P42.Uno.Controls
 
 
         #region Event Handlers
+        /*
         async void OnDismissPointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             if (IsLightDismissEnabled)
@@ -464,6 +465,7 @@ namespace P42.Uno.Controls
                     await PopAsync(PopupPoppedCause.BackgroundTouch);
             }
         }
+        */
 
         Point _enteredPoint = new Point(-1,-1);
         private void OnPointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
@@ -580,7 +582,10 @@ namespace P42.Uno.Controls
         TaskCompletionSource<bool> _popupClosedCompletionSource;
         private void OnPopupClosed(object sender, object e)
         {
-            _popupClosedCompletionSource?.TrySetResult(true);
+            if (PushPopState == PushPopState.Pushed || PushPopState == PushPopState.Popping)
+            {
+                CompletePop(PopupPoppedCause.BackgroundTouch, null);
+            }
         }
 
         TaskCompletionSource<bool> _popupOpenedCompletionSource;
@@ -593,21 +598,24 @@ namespace P42.Uno.Controls
         bool _firstPush = true;
         public virtual async Task PushAsync()
         {
+            var stopWatch = new System.Diagnostics.Stopwatch();
+            stopWatch.Start();
+
             if (PushPopState == PushPopState.Pushed || PushPopState == PushPopState.Pushing)
                 return;
+
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: A " + stopWatch.ElapsedMilliseconds);
 
             if (PushPopState == PushPopState.Popping)
             {
                 if (_popCompletionSource is null)
                 {
                     await WaitForPoppedAsync();
-                    _popCompletionSource = null;
                 }
                 else
                     return;
             }
-
-            //AssureGraft();
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: B " + stopWatch.ElapsedMilliseconds);
 
             PushPopState = PushPopState.Pushing;
             _popCompletionSource = null;
@@ -615,47 +623,44 @@ namespace P42.Uno.Controls
             PoppedCause = PopupPoppedCause.BackgroundTouch;
             PoppedTrigger = null;
 
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: C " + stopWatch.ElapsedMilliseconds);
             await OnPushBeginAsync();
-
-            Opacity = 0.0;
-            if (_firstPush)
-            {
-                // requiired to render popup the first time.
-                _border.Opacity = 0.0;
-                _popup.IsOpen = true;
-                await Task.Delay(50);
-                _popup.IsOpen = false;
-                _firstPush = false;
-            }
-            _border.Opacity = 1.0;
-            UpdateMarginAndAlignment();
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: D " + stopWatch.ElapsedMilliseconds);
+            // requiired to render popup the first time.
+            _border.Opacity = 0.0;
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: D' " + stopWatch.ElapsedMilliseconds);
             _popupOpenedCompletionSource = new TaskCompletionSource<bool>();
             _popup.IsOpen = true;
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: D'' " + stopWatch.ElapsedMilliseconds);
+            await Task.Delay(5);
+            UpdateMarginAndAlignment();
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: D''' " + stopWatch.ElapsedMilliseconds);
+            _popup.InvalidateMeasure();
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: D'''' " + stopWatch.ElapsedMilliseconds);
+            /*
+            await Task.Delay(5);
+            _popup.IsOpen = false;
 
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: E " + stopWatch.ElapsedMilliseconds);
 
-#if NETFX_CORE
+            UpdateMarginAndAlignment();
+            _popupOpenedCompletionSource = new TaskCompletionSource<bool>();
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: F " + stopWatch.ElapsedMilliseconds);
+            _popup.IsOpen = true;
+            */
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: G " + stopWatch.ElapsedMilliseconds);
+
             if (IsAnimated)
             {
-                var storyboard = new Storyboard();
-                var opacityAnimation = new DoubleAnimation
-                {
-                    Duration = TimeSpan.FromMilliseconds(AnimationDuration),
-                    EnableDependentAnimation = true,
-                    To = 1
-                };
-                Storyboard.SetTargetProperty(opacityAnimation, nameof(UIElement.Opacity));
-                Storyboard.SetTarget(opacityAnimation, this);
-                storyboard.Children.Add(opacityAnimation);
-                await storyboard.BeginAsync();
+                Action<double> action = percent => _border.Opacity = Opacity * percent;
+                var animator = new P42.Utils.Uno.ActionAnimator(0.11, 0.95, TimeSpan.FromMilliseconds(300), action);
+                await animator.RunAsync();
             }
-#else
-            if (IsAnimated)
-            {
-                await AnimateAppearing();
-            }
-#endif
 
-            Opacity = 1.0;
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: H " + stopWatch.ElapsedMilliseconds);
+            _border.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: I " + stopWatch.ElapsedMilliseconds);
+
             if (PopAfter > default(TimeSpan))
             {
                 P42.Utils.Timer.StartTimer(PopAfter, async () =>
@@ -665,12 +670,16 @@ namespace P42.Uno.Controls
                 });
             }
 
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: J " + stopWatch.ElapsedMilliseconds);
             await OnPushEndAsync();
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: K " + stopWatch.ElapsedMilliseconds);
 
             PushPopState = PushPopState.Pushed;
             Pushed?.Invoke(this, EventArgs.Empty);
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: L " + stopWatch.ElapsedMilliseconds);
             _pushCompletionSource?.TrySetResult(true);
-            
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: M " + stopWatch.ElapsedMilliseconds);
+
         }
 
         async Task AnimateAppearing()
@@ -707,53 +716,26 @@ namespace P42.Uno.Controls
             PoppedTrigger = trigger;
             await OnPopBeginAsync();
 
-#if NETFX_CORE
             if (IsAnimated)
             {
-                var storyboard = new Storyboard();
-                var opacityAnimation = new DoubleAnimation
-                {
-                    Duration = TimeSpan.FromMilliseconds(AnimationDuration),
-                    EnableDependentAnimation = true,
-                    From = 1.0,
-                    To = 0.0
-                };
-                Storyboard.SetTargetProperty(opacityAnimation, nameof(UIElement.Opacity));
-                Storyboard.SetTarget(opacityAnimation, this);
-                storyboard.Children.Add(opacityAnimation);
-                await storyboard.BeginAsync();
+                Action<double> action = percent => _border.Opacity = Opacity * percent;
+                var animator = new P42.Utils.Uno.ActionAnimator(0.95, 0.11, TimeSpan.FromMilliseconds(300), action);
+                await animator.RunAsync();
             }
-#else
-            if (IsAnimated)
-            {
-                await AnimateDisappearing();
-            }
-#endif
-            Visibility = Visibility.Collapsed;
-            if (this.Parent is Grid grid)
-                grid.Children.Remove(this);
 
-            _popupClosedCompletionSource = new TaskCompletionSource<bool>();
             _popup.IsOpen = false;
-            await OnPopEndAsync();
 
+            CompletePop(PoppedCause, PoppedTrigger);
+        }
+
+        void CompletePop(PopupPoppedCause poppedCause, object poppedTrigger)
+        {
             var result = new PopupPoppedEventArgs(PoppedCause, PoppedTrigger);
             PushPopState = PushPopState.Popped;
+            _border.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
             _popCompletionSource?.TrySetResult(result);
             Popped?.Invoke(this, result);
         }
-
-        async Task AnimateDisappearing()
-        {
-            var start = DateTime.Now;
-            TimeSpan elapsed;
-            while ((elapsed = DateTime.Now - start) < TimeSpan.FromMilliseconds(AnimationDuration))
-            {
-                Opacity = 1 - (elapsed.TotalMilliseconds / AnimationDuration);
-                await Task.Delay(50);
-            }
-        }
-
 
         TaskCompletionSource<PopupPoppedEventArgs> _popCompletionSource;
         public async Task<PopupPoppedEventArgs> WaitForPoppedAsync()

@@ -54,6 +54,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)TextCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\ListEditPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\ListEditPage.layout.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\**\*.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
