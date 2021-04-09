@@ -56,7 +56,8 @@ namespace P42.Uno.Controls
                 .Bind(TargetedPopup.HeightProperty, this, nameof(PopupHeight))
                 ;
 
-            LightDismissOverlayBrush = SystemColors.AltMedium.WithAlpha(0.25).ToBrush();
+            //LightDismissOverlayBrush = SystemColors.AltMedium.WithAlpha(0.25).ToBrush();
+            LightDismissOverlayBrush = Colors.Gray.WithAlpha(0.25).ToBrush();
             _overlay.PointerPressed += OnDismissPointerPressed;
 
             _targetedPopup.Popped += OnTargetedPopupPopped;

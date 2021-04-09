@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
-    public static class ConentAndDetailPresenterMarkupExtensions
+    public static class ContentAndDetailPresenterMarkupExtensions
     {
         public static ContentAndDetailPresenter Content(this ContentAndDetailPresenter presenter, FrameworkElement element)
         { presenter.Content = element; return presenter; }

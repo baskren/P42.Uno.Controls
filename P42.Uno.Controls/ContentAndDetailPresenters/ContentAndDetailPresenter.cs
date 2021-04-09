@@ -91,21 +91,29 @@ namespace P42.Uno.Controls
         }
         #endregion Detail Property
 
-
         #region DetailBackground Property
         public static readonly DependencyProperty DetailBackgroundProperty = DependencyProperty.Register(
             nameof(DetailBackground),
             typeof(Brush),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(SystemColors.BaseLow.ToBrush())
+            new PropertyMetadata(SystemColors.BaseLow.ToBrush(), OnDetailBackgroundChanged)
         );
+
+        private static void OnDetailBackgroundChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ContentAndDetailPresenter cdp)
+            {
+                cdp._targetedPopup.Background = cdp.DetailBackground;
+                cdp._detailDrawer.Background = cdp.DetailBackground;
+            }    
+        }
+
         public Brush DetailBackground
         {
             get => (Brush)GetValue(DetailBackgroundProperty);
             set => SetValue(DetailBackgroundProperty, value);
         }
         #endregion DetailBackground Property
-
 
         #region DetailAspectRatio Property
         public static readonly DependencyProperty DetailAspectRatioProperty = DependencyProperty.Register(
@@ -411,7 +419,7 @@ namespace P42.Uno.Controls
                 _detailDrawer.Child = null;
                 _targetedPopup.Width = PopupWidth;
                 _targetedPopup.Height = PopupHeight;
-                System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LayoutDetailAndOverlay _targetedPopup.Size:[{_targetedPopup.Width},{_targetedPopup.Height}]");
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LayoutDetailAndOverlay _targetedPopup.Size:[{_targetedPopup.Width},{_targetedPopup.Height}]");
                 _targetedPopup.PopupContent = Detail;
 
                 while (RowDefinitions.Count > 2)
@@ -432,11 +440,12 @@ namespace P42.Uno.Controls
                     Children.Remove(_overlay);
             }
 
-            System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.LayoutDetailAndOverlay percentOpen: " + percentOpen);
+            //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.LayoutDetailAndOverlay percentOpen: " + percentOpen);
         }
 
         public bool IsInDrawerMode(Size size)
         {
+            // until Uno.Android.ListView issue are addressed, we're not going here!
             /*
             var popupSize = new Size(PopupWidth, PopupHeight);
             var aspect = AspectRatio(size);

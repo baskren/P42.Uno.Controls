@@ -6,7 +6,7 @@
 
   <!-- PACKAGE REFERENCES -->
   <ItemGroup>
-    <Compile Remove="ContentAndDetailPresenters\ConentAndDetailPresenterMarkupExtensions.cs" />
+    <Compile Remove="ContentAndDetailPresenters\ContentAndDetailPresenterMarkupExtensions.cs" />
   </ItemGroup>
 
   <!-- REFERENCES -->

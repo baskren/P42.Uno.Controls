@@ -594,8 +594,6 @@ namespace P42.Uno.Controls
             _popupOpenedCompletionSource?.TrySetResult(true);
         }
 
-
-        bool _firstPush = true;
         public virtual async Task PushAsync()
         {
             var stopWatch = new System.Diagnostics.Stopwatch();
@@ -603,8 +601,6 @@ namespace P42.Uno.Controls
 
             if (PushPopState == PushPopState.Pushed || PushPopState == PushPopState.Pushing)
                 return;
-
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: A " + stopWatch.ElapsedMilliseconds);
 
             if (PushPopState == PushPopState.Popping)
             {
@@ -615,7 +611,6 @@ namespace P42.Uno.Controls
                 else
                     return;
             }
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: B " + stopWatch.ElapsedMilliseconds);
 
             PushPopState = PushPopState.Pushing;
             _popCompletionSource = null;
@@ -623,32 +618,17 @@ namespace P42.Uno.Controls
             PoppedCause = PopupPoppedCause.BackgroundTouch;
             PoppedTrigger = null;
 
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: C " + stopWatch.ElapsedMilliseconds);
             await OnPushBeginAsync();
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: D " + stopWatch.ElapsedMilliseconds);
+
             // requiired to render popup the first time.
             _border.Opacity = 0.0;
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: D' " + stopWatch.ElapsedMilliseconds);
             _popupOpenedCompletionSource = new TaskCompletionSource<bool>();
+
             _popup.IsOpen = true;
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: D'' " + stopWatch.ElapsedMilliseconds);
             await Task.Delay(5);
             UpdateMarginAndAlignment();
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: D''' " + stopWatch.ElapsedMilliseconds);
             _popup.InvalidateMeasure();
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: D'''' " + stopWatch.ElapsedMilliseconds);
-            /*
-            await Task.Delay(5);
-            _popup.IsOpen = false;
 
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: E " + stopWatch.ElapsedMilliseconds);
-
-            UpdateMarginAndAlignment();
-            _popupOpenedCompletionSource = new TaskCompletionSource<bool>();
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: F " + stopWatch.ElapsedMilliseconds);
-            _popup.IsOpen = true;
-            */
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: G " + stopWatch.ElapsedMilliseconds);
 
             if (IsAnimated)
             {
@@ -657,9 +637,7 @@ namespace P42.Uno.Controls
                 await animator.RunAsync();
             }
 
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: H " + stopWatch.ElapsedMilliseconds);
             _border.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: I " + stopWatch.ElapsedMilliseconds);
 
             if (PopAfter > default(TimeSpan))
             {
@@ -670,27 +648,12 @@ namespace P42.Uno.Controls
                 });
             }
 
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: J " + stopWatch.ElapsedMilliseconds);
             await OnPushEndAsync();
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: K " + stopWatch.ElapsedMilliseconds);
 
             PushPopState = PushPopState.Pushed;
             Pushed?.Invoke(this, EventArgs.Empty);
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: L " + stopWatch.ElapsedMilliseconds);
             _pushCompletionSource?.TrySetResult(true);
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.PushAsync: M " + stopWatch.ElapsedMilliseconds);
 
-        }
-
-        async Task AnimateAppearing()
-        {
-            var start = DateTime.Now;
-            TimeSpan elapsed;
-            while ((elapsed = DateTime.Now - start) < TimeSpan.FromMilliseconds(AnimationDuration))
-            {
-                Opacity = elapsed.TotalMilliseconds / AnimationDuration;
-                await Task.Delay(50);
-            }
         }
 
         public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, [CallerMemberName] object trigger = null)
@@ -1020,53 +983,49 @@ namespace P42.Uno.Controls
 
             #region Check if clean border fits in preferred pointer quadrants
             // see if the existing measurement data works
-            var prefStats = GetRectangleBorderStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace);
-            // At this point in time, only valid fits are in the stats list
-            if (prefStats.Count > 0)
-            {
-                (DirectionStats stat, double minFree) = prefStats.MaxBy(s => s.MinFree);
-                //if (minFree >=0)  // At this point in time, only valid fits are in the stats list
-                    return stat;
-            }
+            if (GetBestDirectionStat(GetRectangleBorderStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace)) is DirectionStats stats0)
+                return stats0;
             #endregion
 
             #region Check if border + content could fit in any of the preferred pointer quadrants
             // at this point in time valid and invalid fits are in the stats list
-            prefStats = GetMeasuredStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace, windowSpace);
-
-            if (prefStats.Count > 0)
-            {
-                (DirectionStats stat, double minFree) = prefStats.MaxBy(s => s.MinFree);
-                if (minFree >= 0)
-                    return stat;
-            }
+            if (GetBestDirectionStat(GetMeasuredStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace, windowSpace)) is DirectionStats stats1)
+                return stats1;
             #endregion
 
             // the stats list only contains invalid fallback fits ... but perhaps not all fallback fits have yet been tried
             var uncheckedFallbackPointerDirection = (FallbackPointerDirection ^ PreferredPointerDirection) | FallbackPointerDirection;
 
             #region Check if clean border fits in unchecked fallback pointer quadrants
-            var fallbackStats = GetRectangleBorderStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace);
-            if (fallbackStats.Count > 0)
-            {
-                (DirectionStats stat, double minFree) = fallbackStats.MaxBy(s => s.MinFree);
-                //if (minFree >=0)  // At this point in time, only valid fits are in the stats list
-                return stat;
-            }
+            if (GetBestDirectionStat(GetRectangleBorderStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace)) is DirectionStats stats2)
+                return stats2;
             #endregion
 
             #region Check if border + content could fit in any of the unchecked fallback pointer quadrants
-            fallbackStats = GetMeasuredStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace, windowSpace);
-
-            if (fallbackStats.Count > 0)
-            {
-                (DirectionStats stat, double minFree) = fallbackStats.MaxBy(s => s.MinFree);
-                if (minFree >= 0)
-                    return stat;
-            }
+            if (GetBestDirectionStat(GetMeasuredStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace, windowSpace)) is DirectionStats stats3)
+                return stats3;
             #endregion
 
             return cleanStat;
+        }
+
+        DirectionStats? GetBestDirectionStat(List<DirectionStats> stats)
+        {
+            if (stats.Count == 1)
+                return stats[0];
+            if (stats.Count > 1)
+            {
+                var max = stats[0];
+                foreach (var s in stats)
+                {
+                    if (s.MinAvail == max.MinAvail && s.MaxAvail > max.MaxAvail)
+                        max = s;
+                    else if (s.MinAvail > max.MinAvail)
+                        max = s;
+                }
+                return max;
+            }
+            return null;
         }
 
         Rect TargetBounds()
@@ -1159,7 +1118,7 @@ namespace P42.Uno.Controls
                 var free = availableSpace.Bottom - stat.BorderSize.Height;
                 if (free >= 0)
                 {
-                    stat.FreeSpace.Width = free;
+                    stat.FreeSpace.Height = free;
                     stats.Add(stat);
                 }
             }
@@ -1172,7 +1131,7 @@ namespace P42.Uno.Controls
                 var free = availableSpace.Top - stat.BorderSize.Height;
                 if (free >= 0)
                 {
-                    stat.FreeSpace.Width = free;
+                    stat.FreeSpace.Height = free;
                     stats.Add(stat);
                 }
             }
@@ -1231,7 +1190,7 @@ namespace P42.Uno.Controls
                     var free = availableSpace.Bottom - border.Height;
                     if (free >= 0)
                     {
-                        stat.FreeSpace.Width = free;
+                        stat.FreeSpace.Height = free;
                         stats.Add(stat);
                     }
                 }
@@ -1249,7 +1208,7 @@ namespace P42.Uno.Controls
                     var free = availableSpace.Top - border.Height;
                     if (free >= 0)
                     {
-                        stat.FreeSpace.Width = free;
+                        stat.FreeSpace.Height = free;
                         stats.Add(stat);
                     }
                 }
@@ -1260,6 +1219,8 @@ namespace P42.Uno.Controls
 
         Size MeasureBorder(Size available, Size failSize = default)
         {
+            System.Diagnostics.Debug.WriteLine("\n");
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder({available})");
             var width = available.Width;
             var height = available.Height;
             if (this.HasPrescribedWidth())
@@ -1278,27 +1239,30 @@ namespace P42.Uno.Controls
                         ? height : 50 + Padding.Vertical()
                     );
 
-            var availableWidth = width;
-            var availableHeight = height;
             var hasBorder = (BorderThickness.Average() > 0) && BorderBrush is SolidColorBrush brush && brush.Color.A > 0;
             var border = BorderThickness.Average() * (hasBorder ? 1 : 0) * 2;
-            availableWidth -= Padding.Horizontal() + border;
-            availableHeight -= Padding.Vertical() + border;
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".RectangleBorderSize availableWidth:["+availableWidth+"] availableHeight:["+availableHeight+"]");
+            var availableWidth = width - Padding.Horizontal() - border -1;
+            var availableHeight = height - Padding.Vertical() - border -1;
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder border:[{border}] Padding:[{Padding}]  availableWidth:[" + availableWidth+"] availableHeight:["+availableHeight+"]");
             if (availableWidth > 0 && availableHeight > 0 && _contentPresenter.Content != null)
             {
-                _contentPresenter.Measure(new Size(Math.Floor(availableWidth), Math.Floor(availableHeight)));
+                _contentPresenter.Measure(new Size(availableWidth, availableHeight));
                 var result = _contentPresenter.DesiredSize;
-                //System.Diagnostics.Debug.WriteLine("\t  _contentPresenter.DesiredSize:[" + _contentPresenter.DesiredSize + "]");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.DesiredSize:[" + _contentPresenter.DesiredSize + "]");
                 result.Width += Padding.Horizontal() + border;
                 result.Height += Padding.Vertical() + border;
 
-                return new Size(
+
+
+                var resultSize = new Size(
                     this.HasPrescribedWidth()
                         ? width : result.Width,
                     this.HasPrescribedHeight()
                         ? height : result.Height
                     );
+
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder resultSize: {resultSize}");
+                return resultSize;
             }
 
             return failSize;
