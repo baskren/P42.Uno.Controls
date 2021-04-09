@@ -92,19 +92,19 @@ namespace P42.Uno.Controls
         #endregion Detail Property
 
 
-        #region DetailPaneBackground Property
-        public static readonly DependencyProperty DetailPaneBackgroundProperty = DependencyProperty.Register(
-            nameof(DetailPaneBackground),
+        #region DetailBackground Property
+        public static readonly DependencyProperty DetailBackgroundProperty = DependencyProperty.Register(
+            nameof(DetailBackground),
             typeof(Brush),
             typeof(ContentAndDetailPresenter),
             new PropertyMetadata(SystemColors.BaseLow.ToBrush())
         );
-        public Brush DetailPaneBackground
+        public Brush DetailBackground
         {
-            get => (Brush)GetValue(DetailPaneBackgroundProperty);
-            set => SetValue(DetailPaneBackgroundProperty, value);
+            get => (Brush)GetValue(DetailBackgroundProperty);
+            set => SetValue(DetailBackgroundProperty, value);
         }
-        #endregion DetailPaneBackground Property
+        #endregion DetailBackground Property
 
 
         #region DetailAspectRatio Property
@@ -129,90 +129,89 @@ namespace P42.Uno.Controls
         #endregion
 
 
-        #region DetailContentHeight Property
-        public static readonly DependencyProperty DetailContentHeightProperty = DependencyProperty.Register(
-            nameof(DetailContentHeight),
+        #region PopupProperties
+
+        #region Target Property
+        public static readonly DependencyProperty TargetProperty = DependencyProperty.Register(
+            nameof(Target),
+            typeof(UIElement),
+            typeof(ContentAndDetailPresenter),
+            new PropertyMetadata(default(UIElement), new PropertyChangedCallback(OnTargetChanged))
+        );
+        protected static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ContentAndDetailPresenter view)
+                view._targetedPopup.Target = e.NewValue as UIElement;
+        }
+        public UIElement Target
+        {
+            get => (UIElement)GetValue(TargetProperty);
+            set => SetValue(TargetProperty, value);
+        }
+        #endregion Target Property
+
+        #region PopupWidth Property
+        public static readonly DependencyProperty PopupWidthProperty = DependencyProperty.Register(
+            nameof(PopupWidth),
             typeof(double),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(300.0)
+            new PropertyMetadata(double.NaN)
         );
-        public double DetailContentHeight
+        public double PopupWidth
         {
-            get => (double)GetValue(DetailContentHeightProperty);
-            set => SetValue(DetailContentHeightProperty, value);
-        }
-        #endregion DetailContentHeight Property
-
-
-        public bool IsInDrawerMode
-        {
-            get
-            {
-                /*
-                //return false;
-                var idiom = Utils.Uno.Device.Idiom;
-                if (idiom == Utils.Uno.DeviceIdiom.Phone)
-                    return true;
-                var aspect = Aspect;
-                //if (aspect < 1)
-                //    aspect = 1 / aspect;
-                //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.IsInDrawerMode aspect:" + aspect + "  ActualWidth:" + ActualWidth);
-                return (aspect < 1.0 / 1.25 && ActualWidth <= 500) || (aspect > 1.75 && ActualHeight <= 500 / DetailAspectRatio);
-                */
-                //return true;
-
-                var popupSize = new Size(DetailContentHeight * DetailAspectRatio, DetailContentHeight);
-
-                // landscape
-                if (Aspect > DetailAspectRatio * 1.5 && popupSize.Width <= ActualWidth)
-                {
-                    var drawerSize = new Size(ActualHeight * DetailAspectRatio, ActualHeight);
-                    if (drawerSize.Width <= ActualWidth * 0.5 && drawerSize.Height < popupSize.Height + popupMargin*2 && drawerSize.Width < popupSize.Width + popupMargin*2)
-                    {
-                        /*
-                        System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.IsInDrawerMode: ");
-                        System.Diagnostics.Debug.WriteLine("\t Aspect: " + Aspect);
-                        System.Diagnostics.Debug.WriteLine("\t DetailAspectRatio: " + DetailAspectRatio);
-                        System.Diagnostics.Debug.WriteLine("\t PopupContentHeight: " + PopupContentHeight);
-                        System.Diagnostics.Debug.WriteLine("\t ActualWidth: " + ActualWidth);
-                        */
-                        return true;
-                    }
-                }
-
-                // portrait
-                if (Aspect <(DetailAspectRatio * 0.66) && popupSize.Width <= ActualWidth * 1.5)
-                {
-                    var drawerSize = new Size(ActualWidth, ActualWidth / DetailAspectRatio);
-                    if (drawerSize.Height <= ActualHeight * 0.5 && drawerSize.Height < popupSize.Height + popupMargin * 2 && drawerSize.Width < popupSize.Width + popupMargin * 2)
-                    {
-                        /*
-                        System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.IsInDrawerMode: ");
-                        System.Diagnostics.Debug.WriteLine("\t Aspect: " + Aspect);
-                        System.Diagnostics.Debug.WriteLine("\t DetailAspectRatio: " + DetailAspectRatio);
-                        System.Diagnostics.Debug.WriteLine("\t PopupContentHeight: " + PopupContentHeight);
-                        System.Diagnostics.Debug.WriteLine("\t ActualWidth: " + ActualWidth);
-                        System.Diagnostics.Debug.WriteLine("\t ActualHeight: " + ActualHeight);
-                        */
-                        return true;
-                    }
-                }
-                return false;
-            }
+            get => (double)GetValue(PopupWidthProperty);
+            set => SetValue(PopupWidthProperty, value);
         }
 
-        double Aspect 
-        {
-            get
-            {
-                var size = EstimatedSize;
-                if (size.Height > 0)
-                    return size.Width / size.Height;
-                return 0;
-            }
-        }
+        #endregion PopupWidth Property
 
-        Size EstimatedSize
+        #region PopupHeight Property
+        public static readonly DependencyProperty PopupHeightProperty = DependencyProperty.Register(
+            nameof(PopupHeight),
+            typeof(double),
+            typeof(ContentAndDetailPresenter),
+            new PropertyMetadata(double.NaN)
+        );
+        public double PopupHeight
+        {
+            get => (double)GetValue(PopupHeightProperty);
+            set => SetValue(PopupHeightProperty, value);
+        }
+        #endregion PopupHeight Property
+
+        #region PopupHorizontalAlignment Property
+        public static readonly DependencyProperty PopupHorizontalAlignmentProperty = DependencyProperty.Register(
+            nameof(PopupHorizontalAlignment),
+            typeof(HorizontalAlignment),
+            typeof(ContentAndDetailPresenter),
+            new PropertyMetadata(default(HorizontalAlignment))
+        );
+        public HorizontalAlignment PopupHorizontalAlignment
+        {
+            get => (HorizontalAlignment)GetValue(PopupHorizontalAlignmentProperty);
+            set => SetValue(PopupHorizontalAlignmentProperty, value);
+        }
+        #endregion PopupHorizontalAlignment Property
+
+        #region PopupVerticalAlignment Property
+        public static readonly DependencyProperty PopupVerticalAlignmentProperty = DependencyProperty.Register(
+            nameof(PopupVerticalAlignment),
+            typeof(VerticalAlignment),
+            typeof(ContentAndDetailPresenter),
+            new PropertyMetadata(default(VerticalAlignment))
+        );
+        public VerticalAlignment PopupVerticalAlignment
+        {
+            get => (VerticalAlignment)GetValue(PopupVerticalAlignmentProperty);
+            set => SetValue(PopupVerticalAlignmentProperty, value);
+        }
+        #endregion PopupVerticalAlignment Property
+
+        #endregion
+
+        public bool IsDrawer => IsInDrawerMode(ViewEstimatedSize);
+
+        Size ViewEstimatedSize
         {
             get
             {
@@ -240,25 +239,6 @@ namespace P42.Uno.Controls
         }
 
         public PushPopState DetailPushPopState { get; private set; } = PushPopState.Popped;
-
-        #region Target Property
-        public static readonly DependencyProperty TargetProperty = DependencyProperty.Register(
-            nameof(Target),
-            typeof(UIElement),
-            typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(default(UIElement), new PropertyChangedCallback(OnTargetChanged))
-        );
-        protected static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is ContentAndDetailPresenter view)
-                view._targetedPopup.Target = e.NewValue as UIElement;
-        }
-        public UIElement Target
-        {
-            get => (UIElement)GetValue(TargetProperty);
-            set => SetValue(TargetProperty, value);
-        }
-        #endregion Target Property
 
 
         #region IsAnimated Property
@@ -393,7 +373,7 @@ namespace P42.Uno.Controls
             if (double.IsNaN(size.Height))
                 return;
 
-            if (IsInDrawerMode)
+            if (IsInDrawerMode(size))
             {
                 _targetedPopup.Content = null;
                 _detailDrawer.Child = Detail;
@@ -429,6 +409,9 @@ namespace P42.Uno.Controls
             {
                 _targetedPopup.Opacity = percentOpen;
                 _detailDrawer.Child = null;
+                _targetedPopup.Width = PopupWidth;
+                _targetedPopup.Height = PopupHeight;
+                System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LayoutDetailAndOverlay _targetedPopup.Size:[{_targetedPopup.Width},{_targetedPopup.Height}]");
                 _targetedPopup.PopupContent = Detail;
 
                 while (RowDefinitions.Count > 2)
@@ -451,10 +434,46 @@ namespace P42.Uno.Controls
 
             System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.LayoutDetailAndOverlay percentOpen: " + percentOpen);
         }
-#endregion
+
+        public bool IsInDrawerMode(Size size)
+        {
+            /*
+            var popupSize = new Size(PopupWidth, PopupHeight);
+            var aspect = AspectRatio(size);
+            // landscape
+            if (aspect > DetailAspectRatio * 1.5 && popupSize.Width <= ActualWidth)
+            {
+                var drawerSize = new Size(ActualHeight * DetailAspectRatio, ActualHeight);
+                if (drawerSize.Width <= ActualWidth * 0.5 && drawerSize.Height < popupSize.Height + popupMargin * 2 && drawerSize.Width < popupSize.Width + popupMargin * 2)
+                {
+                    return true;
+                }
+            }
+
+            // portrait
+            if (aspect < (DetailAspectRatio * 0.66) && popupSize.Width <= ActualWidth * 1.5)
+            {
+                var drawerSize = new Size(ActualWidth, ActualWidth / DetailAspectRatio);
+                if (drawerSize.Height <= ActualHeight * 0.5 && drawerSize.Height < popupSize.Height + popupMargin * 2 && drawerSize.Width < popupSize.Width + popupMargin * 2)
+                {
+                    return true;
+                }
+            }
+            */
+            return false;
+        }
+
+        double AspectRatio(Size size)
+        {
+            if (size.Height > 0)
+                return size.Width / size.Height;
+            return 0;
+        }
+
+        #endregion
 
 
-#region Push / Pop
+        #region Push / Pop
         bool _freshPushCycle;
         public async Task PushDetailAsync()
         {
@@ -475,7 +494,7 @@ namespace P42.Uno.Controls
             var size = new Size(ActualWidth, ActualHeight);
 
             LayoutDetailAndOverlay(size, 0.11);
-            if (!IsInDrawerMode)
+            if (!IsInDrawerMode(size))
                 await _targetedPopup.PushAsync();
             if (IsAnimated)
             {
@@ -515,7 +534,7 @@ namespace P42.Uno.Controls
                 await animator.RunAsync();
             }
             LayoutDetailAndOverlay(size, 0);
-            if (!IsInDrawerMode)
+            if (!IsInDrawerMode(size))
                 await _targetedPopup.PopAsync();
 
             DetailPushPopState = PushPopState.Popped;

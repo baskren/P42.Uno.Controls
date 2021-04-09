@@ -62,6 +62,8 @@ namespace P42.Uno.Controls
                         .Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity))
                         .Bind(BubbleBorder.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
                         .Bind(BubbleBorder.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
+                        .Bind(BubbleBorder.WidthProperty, this, nameof(Width))
+                        .Bind(BubbleBorder.HeightProperty, this, nameof(Height))
                         .Bind(BubbleBorder.PaddingProperty, this, nameof(Padding))
                         .Bind(BubbleBorder.BackgroundProperty, this, nameof(Background))
                         .Bind(BubbleBorder.BorderBrushProperty, this, nameof(BorderBrush))

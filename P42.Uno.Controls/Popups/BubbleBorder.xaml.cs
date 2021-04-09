@@ -467,24 +467,28 @@ namespace P42.Uno.Controls
             //this.DebugLogProperties();
 
 
-            if (double.IsInfinity(availableSize.Width))
+            if (!this.HasPrescribedWidth())
                 availableSize.Width = windowWidth;
-            if (double.IsInfinity(availableSize.Height))
+            if (!this.HasPrescribedHeight())
                 availableSize.Height = windowHeight;
 
+            availableSize.Width -= Margin.Horizontal();
+            availableSize.Height -= Margin.Vertical();
+
             base.MeasureOverride(availableSize);
+
             Size result = Size.Empty;
             if (_contentPresenter is FrameworkElement element)
             {
-                if (availableSize != default)
+                if (availableSize.Width > 0 && availableSize.Height > 0)
                     element.Measure(availableSize);
                 result = element.DesiredSize;
                 //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride element.DesiredSize:" + result);
             }
             //System.Diagnostics.Debug.WriteLine("\t HorizontalAlignment: " + HorizontalAlignment);
-            if (HorizontalAlignment == HorizontalAlignment.Stretch)
+            if (HorizontalAlignment == HorizontalAlignment.Stretch || this.HasPrescribedWidth())
                 result.Width = availableSize.Width;
-            if (VerticalAlignment == VerticalAlignment.Stretch)
+            if (VerticalAlignment == VerticalAlignment.Stretch || this.HasPrescribedHeight())
                 result.Height = availableSize.Height;
 
 

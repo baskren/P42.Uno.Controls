@@ -48,8 +48,13 @@ namespace P42.Uno.Controls
                 .Padding(4)
                 .Opacity(0)
                 .Margin(popupMargin)
+                .HorizontalContentAlignment(HorizontalAlignment.Stretch)
+                .VerticalContentAlignment(VerticalAlignment.Stretch)
                 .PreferredPointerDirection(PointerDirection.Vertical)
-                .FallbackPointerDirection(PointerDirection.Any);
+                .FallbackPointerDirection(PointerDirection.Any)
+                .Bind(TargetedPopup.WidthProperty, this, nameof(PopupWidth))
+                .Bind(TargetedPopup.HeightProperty, this, nameof(PopupHeight))
+                ;
 
             LightDismissOverlayBrush = SystemColors.AltMedium.WithAlpha(0.25).ToBrush();
             _overlay.PointerPressed += OnDismissPointerPressed;

@@ -307,7 +307,6 @@ namespace P42.Uno.Controls
         }
         #endregion DismissOnPointerMove Property
 
-
         #region LightDismiss Properties
 
         #region IsLightDismissEnabled Property
@@ -418,6 +417,7 @@ namespace P42.Uno.Controls
             set => SetValue(IsAnimatedProperty, value);
         }
         #endregion IsAnimated Property
+
 
         #endregion
 
@@ -944,10 +944,10 @@ namespace P42.Uno.Controls
             _border.Width = frame.Width;
             _border.Height = frame.Height;
 
-            _border.HorizontalAlignment = hzAlign == HorizontalAlignment.Stretch
+            _border.HorizontalAlignment = hzAlign == HorizontalAlignment.Stretch && !this.HasPrescribedWidth()
                 ? HorizontalAlignment.Stretch
                 : HorizontalAlignment.Left;
-            _border.VerticalAlignment = vtAlign == VerticalAlignment.Stretch
+            _border.VerticalAlignment = vtAlign == VerticalAlignment.Stretch && !this.HasPrescribedHeight()
                 ? VerticalAlignment.Stretch
                 : VerticalAlignment.Top;
 
@@ -960,6 +960,10 @@ namespace P42.Uno.Controls
             var vtPointer = ActualPointerDirection.IsVertical() ? PointerLength : 0;
             var left = margin.Left;
             var top = margin.Top;
+            if (this.HasPrescribedWidth())
+                borderSize.Width = Width;
+            if (this.HasPrescribedHeight())
+                borderSize.Height = Height;
             var right = Math.Min(left + borderSize.Width + hzPointer, windowSize.Width - margin.Right);
             var bottom = Math.Min(top + borderSize.Height + vtPointer, windowSize.Height - margin.Bottom);
 
@@ -973,7 +977,7 @@ namespace P42.Uno.Controls
                 left = Math.Max(windowSize.Width - margin.Right - hzPointer - borderSize.Width, left);
                 right = windowSize.Width - margin.Right;
             }
-            else if (hzAlign == HorizontalAlignment.Stretch)
+            else if (hzAlign == HorizontalAlignment.Stretch && !this.HasPrescribedWidth())
             {
                 right = windowSize.Width - margin.Right;
             }
@@ -988,7 +992,7 @@ namespace P42.Uno.Controls
                 top = Math.Max(windowSize.Height - margin.Bottom - vtPointer - borderSize.Height, top);
                 bottom = windowSize.Height - margin.Bottom;
             }
-            else if (vtAlign == VerticalAlignment.Stretch)
+            else if (vtAlign == VerticalAlignment.Stretch && !this.HasPrescribedHeight())
             {
                 bottom = windowSize.Height - margin.Bottom;
             }
@@ -1256,10 +1260,26 @@ namespace P42.Uno.Controls
 
         Size MeasureBorder(Size available, Size failSize = default)
         {
+            var width = available.Width;
+            var height = available.Height;
+            if (this.HasPrescribedWidth())
+                width = Math.Min(Width, width);
+            if (this.HasPrescribedHeight())
+                height = Math.Min(Height, height);
+
+            if (this.HasPrescribedWidth() && this.HasPrescribedHeight())
+                return new Size(width, height);
+
             if (IsEmpty)
-                return new Size(50 + Padding.Horizontal(), 50 + Padding.Vertical());
-            var availableWidth = available.Width;
-            var availableHeight = available.Height;
+                return new Size(
+                    this.HasPrescribedWidth()
+                        ? width : 50 + Padding.Horizontal(),
+                    this.HasPrescribedHeight()
+                        ? height : 50 + Padding.Vertical()
+                    );
+
+            var availableWidth = width;
+            var availableHeight = height;
             var hasBorder = (BorderThickness.Average() > 0) && BorderBrush is SolidColorBrush brush && brush.Color.A > 0;
             var border = BorderThickness.Average() * (hasBorder ? 1 : 0) * 2;
             availableWidth -= Padding.Horizontal() + border;
@@ -1267,12 +1287,18 @@ namespace P42.Uno.Controls
             //System.Diagnostics.Debug.WriteLine(GetType() + ".RectangleBorderSize availableWidth:["+availableWidth+"] availableHeight:["+availableHeight+"]");
             if (availableWidth > 0 && availableHeight > 0 && _contentPresenter.Content != null)
             {
-                _contentPresenter.Measure(new Size(availableWidth, availableHeight));
+                _contentPresenter.Measure(new Size(Math.Floor(availableWidth), Math.Floor(availableHeight)));
                 var result = _contentPresenter.DesiredSize;
                 //System.Diagnostics.Debug.WriteLine("\t  _contentPresenter.DesiredSize:[" + _contentPresenter.DesiredSize + "]");
                 result.Width += Padding.Horizontal() + border;
                 result.Height += Padding.Vertical() + border;
-                return result;
+
+                return new Size(
+                    this.HasPrescribedWidth()
+                        ? width : result.Width,
+                    this.HasPrescribedHeight()
+                        ? height : result.Height
+                    );
             }
 
             return failSize;
