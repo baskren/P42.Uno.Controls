@@ -31,6 +31,7 @@ namespace P42.Uno.Controls
         void Build()
         {
             //Visibility = Visibility.Collapsed;
+            Margin = new Thickness(40, 40, 40, 40);
             HorizontalAlignment = HorizontalAlignment.Center;
             VerticalAlignment = VerticalAlignment.Center;
             HorizontalContentAlignment = HorizontalAlignment.Center;

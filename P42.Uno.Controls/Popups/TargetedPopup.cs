@@ -450,6 +450,16 @@ namespace P42.Uno.Controls
             Build();
         }
 
+#if __ANDROID__
+        protected override void OnNativeUnloaded()
+        {
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.OnNativeUnload ENTER");
+            base.OnNativeUnloaded();
+            P42.Utils.Uno.GC.Collect();
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.OnNativeUnload EXIT");
+        }
+#endif
+
         #endregion
 
 
@@ -579,7 +589,6 @@ namespace P42.Uno.Controls
 
 
         #region Push / Pop
-        TaskCompletionSource<bool> _popupClosedCompletionSource;
         private void OnPopupClosed(object sender, object e)
         {
             if (PushPopState == PushPopState.Pushed || PushPopState == PushPopState.Popping)
@@ -596,9 +605,6 @@ namespace P42.Uno.Controls
 
         public virtual async Task PushAsync()
         {
-            var stopWatch = new System.Diagnostics.Stopwatch();
-            stopWatch.Start();
-
             if (PushPopState == PushPopState.Pushed || PushPopState == PushPopState.Pushing)
                 return;
 
@@ -612,6 +618,11 @@ namespace P42.Uno.Controls
                     return;
             }
 
+            await InnerPushAsyc();
+        }
+
+        async Task InnerPushAsyc()
+        { 
             PushPopState = PushPopState.Pushing;
             _popCompletionSource = null;
 
@@ -698,6 +709,7 @@ namespace P42.Uno.Controls
             _border.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
             _popCompletionSource?.TrySetResult(result);
             Popped?.Invoke(this, result);
+            P42.Utils.Uno.GC.Collect();
         }
 
         TaskCompletionSource<PopupPoppedEventArgs> _popCompletionSource;
@@ -750,7 +762,7 @@ namespace P42.Uno.Controls
         /// <returns></returns>
         protected virtual async Task OnPopEndAsync()
         {
-            await (_popupClosedCompletionSource?.Task ?? Task.CompletedTask);
+            await Task.CompletedTask;
         }
         #endregion
 

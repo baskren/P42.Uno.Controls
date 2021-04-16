@@ -17,10 +17,43 @@ namespace P42.Uno.Controls
     [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class AlignedPlacementPanel : Panel
     {
+        #region Spacing Property
+        public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(
+            nameof(Spacing),
+            typeof(double),
+            typeof(AlignedPlacementPanel),
+            new PropertyMetadata(default(double))
+        );
+        public double Spacing
+        {
+            get => (double)GetValue(SpacingProperty);
+            set => SetValue(SpacingProperty, value);
+        }
+        #endregion Spacing Property
+
+#if NETFX_CORE
+
+        #region Padding Property
+        public static readonly DependencyProperty PaddingProperty = DependencyProperty.Register(
+            nameof(Padding),
+            typeof(Thickness),
+            typeof(AlignedPlacementPanel),
+            new PropertyMetadata(default(Thickness))
+        );
+        public Thickness Padding
+        {
+            get => (Thickness)GetValue(PaddingProperty);
+            set => SetValue(PaddingProperty, value);
+        }
+        #endregion Padding Property
+
+#endif
+
         Button _moreButton = new Button
         {
             Content = "...",
-            Background = Colors.Transparent.ToBrush()
+            Background = Colors.Transparent.ToBrush(),
+            Margin = new Thickness(0)
         };
         List<UIElement> ExtraChildren = new List<UIElement>();
 
@@ -90,6 +123,8 @@ namespace P42.Uno.Controls
             if (_arranging)
                 return finalSize;
             _arranging = true;
+
+            //System.Diagnostics.Debug.WriteLine($"AlignedPlacementPanel.ArrangeOverride({finalSize})");
             Clip = new RectangleGeometry { Rect = new Rect(new Point(), finalSize) };
 
             //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange ENTER");
@@ -101,13 +136,20 @@ namespace P42.Uno.Controls
             var centerChildren = new List<FrameworkElement>();
             var rightChildren = new List<FrameworkElement>();
 
-            var width = 0.0;
+            var width = Padding.Horizontal();
             //var children = new List<UIElement>(Children);
             //children.AddRange(MoreChildren);
+            int childIndex = -1;
             foreach (var child in Children)
             {
+                childIndex++;
+
                 if (child == _moreButton)
                     continue;
+
+                if (childIndex > 0)
+                    width += Spacing;
+
                 if (child is FrameworkElement element)
                 {
                     if (element.HorizontalAlignment == HorizontalAlignment.Left)
@@ -117,13 +159,16 @@ namespace P42.Uno.Controls
                     else
                         centerChildren.Add(element);
                     width += element.DesiredSize.Width;
+                    //if (element is Button button)
+                    //    System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.ArrangeOverride: element: " + button.Content);
+                    //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.ArrangeOverride: element["+childIndex+"].DesiredWidth: " + element.DesiredSize.Width);
                 }
                 else
                     throw new Exception("only FrameworkElement is allowed to be a child of " + GetType() + ".  ["+child+"] is not a FrameworkElement.");
             }
 
-            var leftWidth = 0.0;
-            var rightWidth = 0.0;
+            var leftWidth = Padding.Left;
+            var rightWidth = Padding.Right;
             var centerWidth = 0.0;
             if (width > finalSize.Width)
             {
@@ -139,6 +184,7 @@ namespace P42.Uno.Controls
                 if (i<leftChildren.Count)
                 {
                     var element = leftChildren[i];
+                    //System.Diagnostics.Debug.WriteLine($"AlignedPlacementPanel left: left[{leftWidth}] center[{centerWidth}] right[{rightWidth}]");
                     if (!leftDone && leftWidth + centerWidth + rightWidth + element.DesiredSize.Width < finalSize.Width)
                     {
                         if (ExtraChildren.Contains(element))
@@ -147,6 +193,8 @@ namespace P42.Uno.Controls
                         element.Arrange(new Rect(new Point(leftWidth, (finalSize.Height - element.DesiredSize.Height)/2.0), element.DesiredSize));
                         //System.Diagnostics.Debug.WriteLine(" ! ");
                         leftWidth += element.DesiredSize.Width;
+                        leftWidth += Spacing;  // always add spacing to LEFT
+                        //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel left: element.DesiredSize: " + element.DesiredSize);
                     }
                     else
                     {
@@ -159,19 +207,26 @@ namespace P42.Uno.Controls
                                 ExtraChildren.Add(element);
                         }
                     }
+                    //System.Diagnostics.Debug.WriteLine($"AlignedPlacementPanel left: left[{leftWidth}] center[{centerWidth}] right[{rightWidth}]");
                 }
-               // System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange i[" + i + "] RIGHT");
+                // System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange i[" + i + "] RIGHT");
                 if (i<rightChildren.Count)
                 {
                     var element = rightChildren[i];
+                    //System.Diagnostics.Debug.WriteLine($"AlignedPlacementPanel right: left[{leftWidth}] center[{centerWidth}] right[{rightWidth}]");
                     if (!rightDone && leftWidth + centerWidth + rightWidth +  element.DesiredSize.Width < finalSize.Width)
                     {
                         if (ExtraChildren.Contains(element))
                             ExtraChildren.Remove(element);
+
+                        if (i > 0) // only add spacing to right if there is another right element
+                            rightWidth += Spacing;
                         rightWidth += element.DesiredSize.Width;
                         //System.Diagnostics.Debug.Write("AlignedPlacementPanel.Arrange right[" + i + "] ...");
                         element.Arrange(new Rect(new Point(finalSize.Width-rightWidth, (finalSize.Height - element.DesiredSize.Height) / 2.0), element.DesiredSize));
-                        System.Diagnostics.Debug.WriteLine(" ! ");
+                        //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel right: finalSize.Width-rightWidth: " + (finalSize.Width - rightWidth));
+                        //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel right: element.DesiredSize: " + element.DesiredSize);
+                        //System.Diagnostics.Debug.WriteLine(" ! ");
                     }
                     else
                     {
@@ -184,6 +239,7 @@ namespace P42.Uno.Controls
                                 ExtraChildren.Add(element);
                         }
                     }
+                    //System.Diagnostics.Debug.WriteLine($"AlignedPlacementPanel right: left[{leftWidth}] center[{centerWidth}] right[{rightWidth}]");
                 }
                 //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange i[" + i + "] CENTER centerChildren.Count["+centerChildren.Count+"]");
                 if (i<centerChildren.Count)
@@ -191,12 +247,14 @@ namespace P42.Uno.Controls
                     var element = centerChildren[i];
                     //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange center[" + i + "]["+element+"] size:[" + element.DesiredSize + "] centerDone: "+ centerDone);
                     //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange leftWidth["+leftWidth+"] centerWidth["+centerWidth+"] rightWidth["+rightWidth+"] element.Des.W["+element.DesiredSize.Width+"] finalSize.W["+finalSize.Width+"]");
+                    //System.Diagnostics.Debug.WriteLine($"AlignedPlacementPanel center: left[{leftWidth}] center[{centerWidth}] right[{rightWidth}]");
                     if (!centerDone && leftWidth + centerWidth + rightWidth + element.DesiredSize.Width < finalSize.Width)
                     {
                         if (ExtraChildren.Contains(element))
                             ExtraChildren.Remove(element);
                         //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange KEEP");
                         centerWidth += element.DesiredSize.Width;
+                        centerWidth += Spacing; // like LEFT, always add spacing to CENTER
                     }
                     else
                     {
@@ -210,11 +268,14 @@ namespace P42.Uno.Controls
                                 ExtraChildren.Add(element);
                         }
                     }
+                    //System.Diagnostics.Debug.WriteLine($"AlignedPlacementPanel center: left[{leftWidth}] center[{centerWidth}] right[{rightWidth}]");
                 }
             }
 
             var gap = finalSize.Width - rightWidth - centerWidth - leftWidth;
+            //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.ArrangeOverride: gap: " + gap);
             var centerX = leftWidth + gap / 2;
+            //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.ArrangeOverride: centerX: " + centerX);
             if (!centerChildren.Contains(_moreButton))
                 _moreButton.Arrange(new Rect(new Point(finalSize.Width + 10, finalSize.Height +10), _moreButton.DesiredSize));
             foreach (var element in centerChildren)
@@ -222,8 +283,9 @@ namespace P42.Uno.Controls
                 //System.Diagnostics.Debug.Write("AlignedPlacementPanel.Arrange center[" + element + "] ...");
                 element.Arrange(new Rect(new Point(centerX, (finalSize.Height - element.DesiredSize.Height) / 2.0), element.DesiredSize));
                 //System.Diagnostics.Debug.WriteLine(" ! ");
-                centerX += element.DesiredSize.Width;
+                centerX += element.DesiredSize.Width + Spacing;
             }
+            //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.ArrangeOverride: centerX: " + centerX);
 
 
             foreach (var child in ExtraChildren)

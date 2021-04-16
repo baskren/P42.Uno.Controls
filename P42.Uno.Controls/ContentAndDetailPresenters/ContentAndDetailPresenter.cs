@@ -330,13 +330,13 @@ namespace P42.Uno.Controls
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
+            System.GC.SuppressFinalize(this);
         }
 #else
         public new void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
+            System.GC.SuppressFinalize(this);
             base.Dispose();
         }
 #endif
@@ -483,7 +483,6 @@ namespace P42.Uno.Controls
 
 
         #region Push / Pop
-        bool _freshPushCycle;
         public async Task PushDetailAsync()
         {
             if (DetailPushPopState == PushPopState.Pushing || DetailPushPopState == PushPopState.Pushed)

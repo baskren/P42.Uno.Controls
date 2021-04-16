@@ -137,6 +137,7 @@ namespace P42.Uno.Controls
             Build();
             _buttons.CollectionChanged += OnSegmentsCollectionChanged;
         }
+
         #endregion
 
 
