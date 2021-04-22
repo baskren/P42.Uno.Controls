@@ -24,7 +24,7 @@ namespace P42.Uno.Controls
         { presenter.DetailBackground = brush; return presenter; }
 
         public static ContentAndDetailPresenter DetailBackground(this ContentAndDetailPresenter presenter, Windows.UI.Color color)
-        { presenter.DetailBackground = color; return presenter; }
+        { presenter.DetailBackground = new SolidColorBrush(color); return presenter; }
 
         public static ContentAndDetailPresenter DetailAspectRatio(this ContentAndDetailPresenter presenter, double aspect)
         { presenter.DetailAspectRatio = aspect; return presenter; }
@@ -56,8 +56,8 @@ namespace P42.Uno.Controls
         public static ContentAndDetailPresenter LightDismissOverlay(this ContentAndDetailPresenter presenter, Brush lightDismissBrush)
         { presenter.LightDismissOverlayBrush = lightDismissBrush; return presenter; }
 
-        public static ContentAndDetailPresenter LightDismissOverlay(this ContentAndDetailPresenter presenter, Windows.UI.Color lightDismissBrush)
-        { presenter.LightDismissOverlayBrush = lightDismissBrush; return presenter; }
+        public static ContentAndDetailPresenter LightDismissOverlay(this ContentAndDetailPresenter presenter, Windows.UI.Color color)
+        { presenter.LightDismissOverlayBrush = new SolidColorBrush(color); return presenter; }
 
     }
 }
