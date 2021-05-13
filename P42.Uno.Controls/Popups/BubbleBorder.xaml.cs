@@ -606,10 +606,10 @@ namespace P42.Uno.Controls
             if (pointerLength <= 1)
             {
                 result.MoveTo(right - cornerRadius, top);
-                result.ArcTo(right, top, right, bottom - cornerRadius, cornerRadius);
-                result.ArcTo(right, bottom, left + cornerRadius, bottom, cornerRadius);
-                result.ArcTo(left, bottom, left, top + cornerRadius, cornerRadius);
-                result.ArcTo(left, top, right - cornerRadius, top, cornerRadius);
+                result.ArcTo(new SKRect(right - 2 * cornerRadius, top, right, top + 2 * cornerRadius), 270, 90, false);
+                result.ArcTo(new SKRect(right - 2 * cornerRadius, bottom - 2 * cornerRadius, right, bottom), 0, 90, false);
+                result.ArcTo(new SKRect(left, bottom - 2 * cornerRadius, left + 2 * cornerRadius, bottom), 90, 90, false);
+                result.ArcTo(new SKRect(left, top, left + 2 * cornerRadius, top + 2 * cornerRadius), 180, 90, false);
                 result.Close();
             }
             else if (PointerDirection.IsHorizontal())
@@ -629,8 +629,14 @@ namespace P42.Uno.Controls
                 if (height <= 2 * pointerAtLimitHalfWidth)
                     tipY = (float)((top + bottom) / 2.0);
                 result.MoveTo(start + dir * (pointerLength + cornerRadius), top);
-                result.ArcTo(end, top, end, top + cornerRadius, cornerRadius);
-                result.ArcTo(end, bottom, start + dir * (pointerLength + cornerRadius), bottom, cornerRadius);
+                result.ArcWithCenterTo(
+                    end - dir * cornerRadius,
+                    top + cornerRadius,
+                    cornerRadius, 270, dir * 90);
+                result.ArcWithCenterTo(
+                    end - dir * cornerRadius,
+                    bottom - cornerRadius,
+                    cornerRadius, 90 - dir * 90, dir * 90);
                 result.LineTo(start + dir * (pointerLength + cornerRadius), bottom);
 
                 // bottom half
@@ -648,7 +654,6 @@ namespace P42.Uno.Controls
                 }
                 else
                 {
-                    //result.ArcTo(baseX, bottom, baseX, top, cornerRadius);
                     result.ArcWithCenterTo(
                         start + dir * (pointerLength + cornerRadius),
                         bottom - cornerRadius,
@@ -712,8 +717,16 @@ namespace P42.Uno.Controls
                 if (width <= 2 * pointerAtLimitHalfWidth)
                     tipX = (float)((left + right) / 2.0);   // 8
                 result.MoveTo(left, start + dir * (pointerLength + cornerRadius));
-                result.ArcTo(left, end, left + cornerRadius, end, cornerRadius);
-                result.ArcTo(right, end, right, start + dir * (pointerLength + cornerRadius), cornerRadius);    //2
+                //result.LineTo(left, end - dir * cornerRadius);
+                result.ArcWithCenterTo(
+                    left + cornerRadius,
+                    end - dir * cornerRadius,
+                    cornerRadius, 180, dir * -90
+                    );
+                result.ArcWithCenterTo(
+                    right - cornerRadius,
+                    end - dir * cornerRadius,
+                    cornerRadius, 180 - dir * 90, dir * -90);
                 result.LineTo(right, start + dir * (pointerLength + cornerRadius));                             //2
 
                 // right half
