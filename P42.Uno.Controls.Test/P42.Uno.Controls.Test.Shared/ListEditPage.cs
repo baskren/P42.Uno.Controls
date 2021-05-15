@@ -51,7 +51,22 @@ namespace P42.Uno.Controls.Test
         //async void OnItemClicked(object sender, ItemClickEventArgs args)
         public async Task OnCellClicked(TextBlock textBlock)
         {
+            var items = new List<string> { "Item A", "Item B", "Item C", "Item D" };
+            var listView = new ListView
+            {
+                SelectionMode = ListViewSelectionMode.Single,
+                IsItemClickEnabled = true,
+                IsMultiSelectCheckBoxEnabled = false,
+                ItemsSource = items
+            };
+            listView.ItemClick += (s,e) =>
+            {
+                textBlock.Text = e.ClickedItem.ToString();
+            };
 
+
+
+            /*
             var before = (string)textBlock.Text;
 
             var button1 = new Button
@@ -123,7 +138,8 @@ namespace P42.Uno.Controls.Test
             */
             if (IsUsingCdPresenter)
             {
-                cdPresenter.Detail = grid;
+                cdPresenter.Detail = listView;
+
                 cdPresenter.Target = textBlock;
                 await cdPresenter.PushDetailAsync();
             }
@@ -145,5 +161,6 @@ namespace P42.Uno.Controls.Test
                 await popup.PushAsync();
             }
         }
+
     }
 }

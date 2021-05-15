@@ -29,6 +29,17 @@ namespace P42.Uno.Controls
     [ContentProperty(Name = nameof(PopupContent))]
     public partial class TargetedPopup : UserControl, ITargetedPopup
     {
+        static int _pushingCount = 0;
+        public static bool IsPushing
+        {
+            get => _pushingCount > 0;
+            private set
+            {
+                _pushingCount += value ? 1 : -1;
+            }
+
+        }
+
         #region Properties
 
         #region PopupContent Property
