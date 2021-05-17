@@ -5,12 +5,12 @@
     <TargetFrameworks>MonoAndroid10.0;</TargetFrameworks>
   </PropertyGroup>
 
+  <!-- PACKAGE REFERENCES -->
+
   <!-- REFERENCES -->
   <ItemGroup>
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.Android.csproj" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.Android.csproj" />
   </ItemGroup>
 
-  
-  <!-- NUGET PACKAGES -->
 </Project>

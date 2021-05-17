@@ -1,13 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/3.0.22">
+
   <PropertyGroup>
     <TargetFrameworks>uap10.0.18362;</TargetFrameworks>
   </PropertyGroup>
 
   <!-- PACKAGE REFERENCES -->
-  <ItemGroup>
-    <Compile Remove="ContentAndDetailPresenters\ContentAndDetailPresenterMarkupExtensions.cs" />
-  </ItemGroup>
 
   <!-- REFERENCES -->
   <ItemGroup>

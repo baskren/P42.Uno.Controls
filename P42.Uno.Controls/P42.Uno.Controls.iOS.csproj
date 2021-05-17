@@ -6,8 +6,6 @@
   </PropertyGroup>
 
   <!-- PACKAGE REFERENCES -->
-  <ItemGroup>
-  </ItemGroup>
 
   <!-- REFERENCES -->
   <ItemGroup>
@@ -15,6 +13,4 @@
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.iOS.csproj" />
   </ItemGroup>
 
-  
-  <!-- NUGET PACKAGES -->
 </Project>

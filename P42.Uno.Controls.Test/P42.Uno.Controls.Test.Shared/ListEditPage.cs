@@ -1,5 +1,11 @@
-﻿using P42.Uno.Markup;
+﻿#if __ANDROID__
+using Android.Content;
+using Android.Runtime;
+using Android.Views;
+#endif
+using P42.Uno.Markup;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -51,9 +57,30 @@ namespace P42.Uno.Controls.Test
         //async void OnItemClicked(object sender, ItemClickEventArgs args)
         public async Task OnCellClicked(TextBlock textBlock)
         {
-            var items = new List<string> { "Item A", "Item B", "Item C", "Item D" };
-            var listView = new ListView
+            QuickMeasureList.Stopwatch.Restart();
+
+            var items = new List<string> 
+            { 
+                "Item A", "Item B", "Item C", "Item D", "Item E", "Item F", "Item G", "Item H", "Item I", "Item J", "Item K", "Item L", "Item M", "Item N", "Item O", "Item P", "Item Q", "Item R", "Item S", "Item T", "Item U", "Item V", "Item W", "Item X", "Item Y", "Item Z",
+                "Item A1", "Item B1", "Item C1", "Item D1", "Item E1", "Item F1", "Item G1", "Item H1", "Item I1", "Item J1", "Item K1", "Item L1", "Item M1", "Item N1", "Item O1", "Item P1", "Item Q1", "Item R1", "Item S1", "Item T1", "Item U1", "Item V1", "Item W1", "Item X1", "Item Y1", "Item Z1",
+            };
+#if __ANDROID__
+
+            var aListView = new Android.Widget.ListView(global::Uno.UI.ContextHelper.Current)
             {
+                LayoutParameters = new LayoutParams(LayoutParams.MatchParent, LayoutParams.WrapContent),
+            };
+            var adapter = new SimpleAdapter<string>(items); //new Android.Widget.ArrayAdapter(global::Uno.UI.ContextHelper.Current, aListView.Id, items);
+            aListView.ItemClick += (s, e) =>
+            {
+                textBlock.Text = items[e.Position];
+            };
+            aListView.Adapter = adapter;
+            var listView = VisualTreeHelper.AdaptNative(aListView);
+#else
+            var listView = new QuickMeasureList
+            {
+                MinCellHeight = 40,
                 SelectionMode = ListViewSelectionMode.Single,
                 IsItemClickEnabled = true,
                 IsMultiSelectCheckBoxEnabled = false,
@@ -63,8 +90,8 @@ namespace P42.Uno.Controls.Test
             {
                 textBlock.Text = e.ClickedItem.ToString();
             };
-
-
+#endif
+            Grid.SetRow(listView, 1);
 
             /*
             var before = (string)textBlock.Text;
@@ -79,69 +106,48 @@ namespace P42.Uno.Controls.Test
                 Content = "Button 2",
                 Background = new SolidColorBrush(Colors.White)
             };
-            Grid.SetRow(button2, 1);
             var button3 = new Button
             {
                 Content = "ARRANGE",
                 Foreground = new SolidColorBrush(Colors.White),
                 Background = new SolidColorBrush(Colors.Red)
             };
-            Grid.SetRow(button3, 2);
+            var stack = new StackPanel
+            {
+                //Margin = new Thickness(),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Orientation = Orientation.Horizontal,
+                Padding = new Thickness(5),
+                Spacing = 5,
+                Background = new SolidColorBrush(Colors.Blue),
+                Children =
+                {
+                    button1, button2, button3
+                }
+            };
+
             var grid = new Grid
             {
-                Margin = new Thickness(10),
-                Padding = new Thickness(10),
-                RowSpacing = 10,
-                Background = new SolidColorBrush(Colors.Blue),
                 RowDefinitions =
-                    {
-                        new RowDefinition { Height = GridLength.Auto },
-                        new RowDefinition { Height = GridLength.Auto },
-                        new RowDefinition { Height = GridLength.Auto },
-                    },
-                Children =
-                    {
-                        button1, button2, button3
-                    }
+                {
+                    new RowDefinition { Height = new GridLength(40) },
+                    new RowDefinition { Height = GridLength.Auto }
+                }
             };
 
-            button1.Click += (s, e) =>
-            {
-                textBlock.Text = "BUTTON 1";
-            };
-            button2.Click += (s, e) =>
-            {
-                textBlock.Text = "BUTTON 2";
-            };
-            button3.Click += (s, e) =>
-            {
-                listView.Measure(new Size(ActualWidth, ActualHeight));
-                listView.Arrange(new Rect(new Point(0,0), listView.DesiredSize));
-                textBlock.Text = "ARRANGED";
-            };
-
-            grid.Loaded += async (s, e) =>
-            {
-                await Task.Delay(100);
-                System.Diagnostics.Debug.WriteLine("LOADED");
-            };
-            /*
-            var popup = new Popup
-            {
-                HorizontalOffset = 100,
-                VerticalOffset = 100,
-                Child = grid,
-                LightDismissOverlayMode = LightDismissOverlayMode.On,
-                IsLightDismissEnabled = true
-            };
-            popup.IsOpen = true;
+            grid.Children.Add(stack);
+            grid.Children.Add(listView);
             */
+
             if (IsUsingCdPresenter)
             {
                 cdPresenter.Detail = listView;
 
                 cdPresenter.Target = textBlock;
+
+                System.Diagnostics.Debug.WriteLine("ListEditPage t1: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
                 await cdPresenter.PushDetailAsync();
+                System.Diagnostics.Debug.WriteLine("ListEditPage t2: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
             }
             else
             {
@@ -163,4 +169,69 @@ namespace P42.Uno.Controls.Test
         }
 
     }
+
+#if __ANDROID__
+    partial class Cell : TextBlock
+    {
+        public Cell()
+        {
+            Margin = new Thickness(10, 5);
+            HorizontalAlignment = HorizontalAlignment.Stretch;
+        }
+    }
+
+
+    class SimpleAdapter<T> : Android.Widget.BaseAdapter<T> 
+    {
+        IList<T> Items;
+
+
+
+        public SimpleAdapter(IList<T> items)
+        {
+            Items = items;
+        }
+
+        public override T this[int position] => Items[position];
+
+        public override int Count => Items.Count;
+
+        public override long GetItemId(int position) => position;
+
+        public override View GetView(int position, View convertView, ViewGroup parent)
+        {
+            /*
+            var fields = System.Reflection.RuntimeReflectionExtensions.GetRuntimeFields(typeof(Cell));
+            foreach (var field in fields)
+                System.Diagnostics.Debug.WriteLine("SimpleAdapter.Field: " + field.Name);
+            var properties = System.Reflection.RuntimeReflectionExtensions.GetRuntimeMethods(typeof(Cell));
+            foreach (var property in properties)
+                System.Diagnostics.Debug.WriteLine("SimpleAdapter.Property: " + property.Name);
+            //var fields = P42.Utils.ReflectionExtensions.GetFieldValue(cell, "_native");
+            */
+            /*
+            if (!(convertView is Android.Widget.TextView textView))
+                textView = new Android.Widget.TextView(global::Uno.UI.ContextHelper.Current)
+                {
+                    LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, 40),
+                    TextAlignment = Android.Views.TextAlignment.TextStart
+                };
+            textView.Text = null;
+            textView.Text = Items[position].ToString();
+            //textView.Invalidate();
+            return textView;
+            */
+
+            if (!(convertView is Cell cell))
+                cell = new Cell();
+            cell.Text = null;
+            cell.Text = Items[position].ToString();
+            //textView.Invalidate();
+            return cell;
+
+        }
+
+
+    }
+#endif
 }

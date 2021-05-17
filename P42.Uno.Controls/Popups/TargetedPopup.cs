@@ -646,10 +646,17 @@ namespace P42.Uno.Controls
             _border.Opacity = 0.0;
             _popupOpenedCompletionSource = new TaskCompletionSource<bool>();
 
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t0: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
+            // WHAT IF WE PUT _popup.IsOpen AFTER UpdateMarginAndAlignment?
             _popup.IsOpen = true;
             await Task.Delay(5);
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t1: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
             UpdateMarginAndAlignment();
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t2: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
+
+            // IS THIS NECESSARY?!?!
             _popup.InvalidateMeasure();
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t3: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
 
 
             if (IsAnimated)
@@ -658,6 +665,7 @@ namespace P42.Uno.Controls
                 var animator = new P42.Utils.Uno.ActionAnimator(0.11, 0.95, TimeSpan.FromMilliseconds(300), action);
                 await animator.RunAsync();
             }
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t4: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
 
             _border.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
 
@@ -670,11 +678,14 @@ namespace P42.Uno.Controls
                 });
             }
 
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t5: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
             await OnPushEndAsync();
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t6: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
 
             PushPopState = PushPopState.Pushed;
             Pushed?.Invoke(this, EventArgs.Empty);
             _pushCompletionSource?.TrySetResult(true);
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t7: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
 
         }
 
@@ -1240,10 +1251,14 @@ namespace P42.Uno.Controls
             return stats;
         }
 
+        Size _lastSizeAvailable = Size.Empty;
+        Size _lastResultSize = Size.Empty;
+        bool _lastWasFixedWidth;
         Size MeasureBorder(Size available, Size failSize = default)
         {
             System.Diagnostics.Debug.WriteLine("\n");
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder({available})");
+
             var width = available.Width;
             var height = available.Height;
             if (this.HasPrescribedWidth())
@@ -1252,7 +1267,21 @@ namespace P42.Uno.Controls
                 height = Math.Min(Height, height);
 
             if (this.HasPrescribedWidth() && this.HasPrescribedHeight())
+            {
+                _lastSizeAvailable = Size.Empty;
+                _lastResultSize = Size.Empty;
+                _lastWasFixedWidth = false;
                 return new Size(width, height);
+            }
+
+            if (_lastWasFixedWidth && this.HasPrescribedWidth() &&
+                _lastSizeAvailable.Width == width)
+            {
+                if (VerticalAlignment == VerticalAlignment.Stretch || _lastResultSize.Height > height)
+                    return new Size(_lastSizeAvailable.Width, height);
+                return _lastResultSize;
+            }
+
 
             if (IsEmpty)
                 return new Size(
@@ -1261,6 +1290,14 @@ namespace P42.Uno.Controls
                     this.HasPrescribedHeight()
                         ? height : 50 + Padding.Vertical()
                     );
+
+            if (HorizontalAlignment == HorizontalAlignment.Stretch && VerticalAlignment == VerticalAlignment.Stretch)
+            {
+                _lastSizeAvailable = Size.Empty;
+                _lastResultSize = Size.Empty;
+                _lastWasFixedWidth = false;
+                return new Size(width, height);
+            }
 
             var hasBorder = (BorderThickness.Average() > 0) && BorderBrush is SolidColorBrush brush && brush.Color.A > 0;
             var border = BorderThickness.Average() * (hasBorder ? 1 : 0) * 2;
@@ -1285,9 +1322,17 @@ namespace P42.Uno.Controls
                     );
 
                 System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder resultSize: {resultSize}");
+
+                _lastSizeAvailable = available;
+                _lastResultSize = resultSize;
+                _lastWasFixedWidth = this.HasPrescribedWidth();
+
                 return resultSize;
             }
 
+            _lastSizeAvailable = Size.Empty;
+            _lastResultSize = Size.Empty;
+            _lastWasFixedWidth = false;
             return failSize;
         }
 
