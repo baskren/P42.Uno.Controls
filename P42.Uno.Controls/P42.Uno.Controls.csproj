@@ -7,6 +7,21 @@
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">uap10.0.18362;$(TargetFrameworks);</TargetFrameworks>
   </PropertyGroup>
 
+  <!-- WASM -->
+  <Import Project=".\P42.Uno.Controls.WASM.props" Condition=" $(TargetFramework.StartsWith('netstandard2.')) " />
+
+  <!-- UWP -->
+  <Import Project=".\P42.Uno.Controls.UWP.props" Condition=" $(TargetFramework.StartsWith('uap10.0')) " />
+
+  <!-- ANDROID -->
+  <Import Project=".\P42.Uno.Controls.Android.props" Condition=" $(TargetFramework.StartsWith('MonoAndroid')) " />
+
+  <!-- IOS -->
+  <Import Project=".\P42.Uno.Controls.iOS.props" Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) " />
+
+  <!-- MACOS -->
+  <Import Project=".\P42.Uno.Controls.MacOS.props" Condition=" $(TargetFramework.StartsWith('Xamarin.Mac20')) " />
+
   <!-- REFERENCES -->
   <ItemGroup>
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />

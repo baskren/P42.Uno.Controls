@@ -5,6 +5,8 @@
     <TargetFrameworks>Xamarin.Mac20;</TargetFrameworks>
   </PropertyGroup>
 
+  <Import Project=".\P42.Uno.Controls.MacOS.props" />
+
   <!-- PACKAGE REFERENCES -->
 
   <!-- REFERENCES -->

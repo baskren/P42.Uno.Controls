@@ -1,0 +1,11 @@
+<Project ToolsVersion="15.0">
+
+  <ItemGroup>
+  
+    <PackageReference Include="Uno.UI" Version="3.7.3" />
+    <Compile Include="**\*.ios.cs" />
+    <Compile Include="**\*.ios.*.cs" />
+
+  </ItemGroup>
+
+</Project>

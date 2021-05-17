@@ -37,12 +37,13 @@
 
   <!-- BLANKET PAGE AND COMPILE -->
   <ItemGroup>
-    <Compile Include="**\*.cs" Exclude="bin\**\*.cs;obj\**\*.cs"/>
-    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-    <Compile Update="**\*.xaml.cs">
+    <Compile Include="**\*.shared.cs" Exclude="bin\**\*.cs;obj\**\*.cs"/>
+    <Compile Include="**\*.shared.*.cs" Exclude="bin\**\*.cs;obj\**\*.cs"/>
+    <Page Include="**\*.shared.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    <Compile Update="**\*.shared.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml">
+    <EmbeddedResource Include="**\*.shared.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

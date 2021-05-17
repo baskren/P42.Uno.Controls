@@ -26,7 +26,7 @@ namespace P42.Uno.Controls.Test
     public partial class ListEditPage : Page
     {
         Grid grid;
-        ListView listView;
+        SimpleListView listView;
         ContentAndDetailPresenter cdPresenter;
 
         bool IsUsingCdPresenter = true;
@@ -35,7 +35,7 @@ namespace P42.Uno.Controls.Test
         {
             var itemTemplate = (DataTemplate)Application.Current.Resources ["TextCellTemplate"];
 
-            listView = new ListView
+            listView = new SimpleListView
             {
                 SelectionMode = ListViewSelectionMode.Single,
                 IsItemClickEnabled = true,
@@ -119,9 +119,11 @@ namespace P42.Uno.Controls.Test
             { 
                 if (listView.SelectedIndex > -1 && listView.SelectedIndex < items.Count)
                 {
+                    /*
                     var container = (ListViewItem)listView.ContainerFromIndex(listView.SelectedIndex);
                     var cell = container.ContentTemplateRoot as TextCell;
                     cell.ChangeValue(value);
+                    */
                 }
             }
         }

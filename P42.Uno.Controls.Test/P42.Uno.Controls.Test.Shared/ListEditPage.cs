@@ -64,6 +64,7 @@ namespace P42.Uno.Controls.Test
                 "Item A", "Item B", "Item C", "Item D", "Item E", "Item F", "Item G", "Item H", "Item I", "Item J", "Item K", "Item L", "Item M", "Item N", "Item O", "Item P", "Item Q", "Item R", "Item S", "Item T", "Item U", "Item V", "Item W", "Item X", "Item Y", "Item Z",
                 "Item A1", "Item B1", "Item C1", "Item D1", "Item E1", "Item F1", "Item G1", "Item H1", "Item I1", "Item J1", "Item K1", "Item L1", "Item M1", "Item N1", "Item O1", "Item P1", "Item Q1", "Item R1", "Item S1", "Item T1", "Item U1", "Item V1", "Item W1", "Item X1", "Item Y1", "Item Z1",
             };
+            /*
 #if __ANDROID__
 
             var aListView = new Android.Widget.ListView(global::Uno.UI.ContextHelper.Current)
@@ -91,6 +92,22 @@ namespace P42.Uno.Controls.Test
                 textBlock.Text = e.ClickedItem.ToString();
             };
 #endif
+            */
+
+            var listView = new P42.Uno.Controls.SimpleListView
+            {
+                SelectionMode = ListViewSelectionMode.Multiple,
+                IsItemClickEnabled = true,
+                ItemsSource = items,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                Width = 300
+            };
+            listView.ItemClick += (s, e) =>
+            {
+                textBlock.Text = e.ClickedItem.ToString();
+            };
+
+
             Grid.SetRow(listView, 1);
 
             /*
@@ -169,69 +186,5 @@ namespace P42.Uno.Controls.Test
         }
 
     }
-
-#if __ANDROID__
-    partial class Cell : TextBlock
-    {
-        public Cell()
-        {
-            Margin = new Thickness(10, 5);
-            HorizontalAlignment = HorizontalAlignment.Stretch;
-        }
-    }
-
-
-    class SimpleAdapter<T> : Android.Widget.BaseAdapter<T> 
-    {
-        IList<T> Items;
-
-
-
-        public SimpleAdapter(IList<T> items)
-        {
-            Items = items;
-        }
-
-        public override T this[int position] => Items[position];
-
-        public override int Count => Items.Count;
-
-        public override long GetItemId(int position) => position;
-
-        public override View GetView(int position, View convertView, ViewGroup parent)
-        {
-            /*
-            var fields = System.Reflection.RuntimeReflectionExtensions.GetRuntimeFields(typeof(Cell));
-            foreach (var field in fields)
-                System.Diagnostics.Debug.WriteLine("SimpleAdapter.Field: " + field.Name);
-            var properties = System.Reflection.RuntimeReflectionExtensions.GetRuntimeMethods(typeof(Cell));
-            foreach (var property in properties)
-                System.Diagnostics.Debug.WriteLine("SimpleAdapter.Property: " + property.Name);
-            //var fields = P42.Utils.ReflectionExtensions.GetFieldValue(cell, "_native");
-            */
-            /*
-            if (!(convertView is Android.Widget.TextView textView))
-                textView = new Android.Widget.TextView(global::Uno.UI.ContextHelper.Current)
-                {
-                    LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, 40),
-                    TextAlignment = Android.Views.TextAlignment.TextStart
-                };
-            textView.Text = null;
-            textView.Text = Items[position].ToString();
-            //textView.Invalidate();
-            return textView;
-            */
-
-            if (!(convertView is Cell cell))
-                cell = new Cell();
-            cell.Text = null;
-            cell.Text = Items[position].ToString();
-            //textView.Invalidate();
-            return cell;
-
-        }
-
-
-    }
-#endif
+    
 }

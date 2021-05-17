@@ -5,6 +5,8 @@
     <TargetFrameworks>uap10.0.18362;</TargetFrameworks>
   </PropertyGroup>
 
+  <Import Project=".\P42.Uno.Controls.UWP.props" />
+
   <!-- PACKAGE REFERENCES -->
 
   <!-- REFERENCES -->
