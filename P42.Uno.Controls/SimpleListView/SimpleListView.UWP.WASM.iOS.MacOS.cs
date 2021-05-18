@@ -5,6 +5,9 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using P42.Utils.Uno;
 using ScrollIntoViewAlignment = Windows.UI.Xaml.Controls.ScrollIntoViewAlignment;
+using Windows.UI;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace P42.Uno.Controls
 {
@@ -13,29 +16,53 @@ namespace P42.Uno.Controls
         ListView _listView = new ListView
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Top
+            VerticalAlignment = VerticalAlignment.Top,
+            IsMultiSelectCheckBoxEnabled = false,
         };
 
         public void PlatformBuild()
         {
             SelectedItems = _listView.SelectedItems;
+
+            var containerStyle = new Style
+            {
+                TargetType = typeof(ListViewItem),
+                Setters = {
+                    new Setter(ListViewItem.HorizontalContentAlignmentProperty, HorizontalAlignment.Stretch),
+                    new Setter(ListViewItem.VerticalContentAlignmentProperty, VerticalAlignment.Stretch),
+                    new Setter(ListViewItem.MarginProperty, new Thickness(0)),
+                    new Setter(ListViewItem.PaddingProperty, new Thickness(0)),
+                }
+            };
+            _listView.ItemContainerStyle = containerStyle;
+            
+
             _listView.Bind(ListView.IsItemClickEnabledProperty, this, nameof(IsItemClickEnabled));
             _listView.Bind(ListView.SelectionModeProperty, this, nameof(SelectionMode));
             _listView.Bind(ListView.SelectedIndexProperty, this, nameof(SelectedIndex));
             _listView.Bind(ListView.SelectedItemProperty, this, nameof(SelectedItem));
-            Content = _listView;
             _listView.ItemClick += OnListView_ItemClick;
             _listView.SelectionChanged += OnListView_SelectionChanged;
+
+            HorizontalAlignment = HorizontalAlignment.Stretch;
+            VerticalAlignment = VerticalAlignment.Stretch;
+            HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            VerticalContentAlignment = VerticalAlignment.Stretch;
+            Content = _listView;
         }
 
-        private void OnListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void OnListView_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
         {
-            SelectionChanged?.Invoke(this, e);
+            SelectionChanged?.Invoke(this, new SelectionChangedEventArgs(this, e.RemovedItems?.ToList(), e.AddedItems?.ToList()));
         }
 
-        private void OnListView_ItemClick(object sender, ItemClickEventArgs e)
+        private void OnListView_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
         {
-            ItemClick?.Invoke(this, e);
+            var item = e.ClickedItem;
+            var container = (ListViewItem)_listView.ContainerFromItem(item);
+            var cellElement = (FrameworkElement)container.ContentTemplateRoot;
+
+            ItemClick?.Invoke(this, new ItemClickEventArgs(this, e.ClickedItem, cellElement));
         }
 
         private static void OnItemsSourceChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
@@ -60,55 +87,16 @@ namespace P42.Uno.Controls
         #region ListViewBase Methods
 
 
-        public void ScrollIntoView(object item, ScrollIntoViewAlignment alignment)
+        public async Task ScrollIntoView(object item, ScrollIntoViewAlignment alignment)
         {
-            _listView.ScrollIntoView(item, alignment);
+            await _listView.ScrollToAsync(item, alignment.AsScrollToPosition(), true);
         }
 
         public void SelectAll()
         {
             _listView.SelectAll();
         }
-        /*
-        #region ItemsControl Methods
 
-        public DependencyObject ContainerFromIndex(int index)
-        {
-
-        }
-
-        public DependencyObject ContainerFromItem(object item)
-        {
-
-        }
-
-        public int IndexFromContainer(DependencyObject container)
-        {
-
-        }
-
-        public object ItemFromContainer(DependencyObject container)
-        {
-
-        }
-
-        protected virtual void OnItemsChanged(object e)
-        {
-
-        }
-
-        protected void OnItemTemplateChanged(DataTemplate oldItemTemplate, DataTemplate newItemTemplate)
-        {
-
-        }
-
-        protected void OnItemTemplateSelectorChanged(DataTemplateSelector oldItemTemplateSelector, DataTemplateSelector newItemTemplateSelector)
-        {
-
-        }
-
-        #endregion
-        */
         #endregion
 
     }

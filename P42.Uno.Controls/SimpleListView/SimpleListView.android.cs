@@ -14,12 +14,17 @@ using P42.Utils.Uno;
 using Windows.UI;
 using ScrollIntoViewAlignment = Windows.UI.Xaml.Controls.ScrollIntoViewAlignment;
 using System.Collections.ObjectModel;
+using Android.Runtime;
+using Android.Util;
 
 namespace P42.Uno.Controls
 {
     public partial class SimpleListView
     {
+        static int instances = 0;
+        int instance;
         internal ObservableCollection<object> _selectedItems = new ObservableCollection<object>();
+        internal ObservableCollection<int> NativeCellHeights = new ObservableCollection<int>();
 
         Android.Widget.ListView _nativeListView = new Android.Widget.ListView(global::Uno.UI.ContextHelper.Current)
         {
@@ -31,10 +36,34 @@ namespace P42.Uno.Controls
 
         public void PlatformBuild()
         {
+            instance = instances++;
             SelectedItems = _selectedItems;
+            _selectedItems.CollectionChanged += OnSelectedItems_CollectionChanged;
+            NativeCellHeights.CollectionChanged += OnNativeCellHeights_CollectionChanged;
             _nativeListView.Adapter = _adapter = new SimpleAdapter(this);
             var listView = VisualTreeHelper.AdaptNative(_nativeListView);
+            HorizontalAlignment = HorizontalAlignment.Stretch;
+            VerticalAlignment = VerticalAlignment.Stretch;
+            HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            VerticalContentAlignment = VerticalAlignment.Stretch;
             Content = listView;
+
+        }
+
+        private void OnSelectedItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangedAction.Reset:
+                    SelectionChanged?.Invoke(this, new P42.Uno.Controls.SelectionChangedEventArgs(this, e.OldItems, e.NewItems));
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                default:
+                    break;
+            }
         }
 
         internal void OnWrapperClicked(CellWrapper wrapper)
@@ -53,7 +82,7 @@ namespace P42.Uno.Controls
                     _selectedItems.Add(wrapper.DataContext);
             }
             if (IsItemClickEnabled)
-                ItemClick?.Invoke(this, new ItemClickEventArgs { ClickedItem = wrapper.DataContext });
+                ItemClick?.Invoke(this, new ItemClickEventArgs(this, wrapper.DataContext, wrapper.Child));
         }
 
         private static void OnItemsSourceChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
@@ -77,59 +106,77 @@ namespace P42.Uno.Controls
 
         #region ListViewBase Methods
 
-
-        public void ScrollIntoView(object item, ScrollIntoViewAlignment alignment)
+        int _waitingForIndex = -1;
+        ScrollIntoViewAlignment _waitingAlignment = ScrollIntoViewAlignment.Default;
+        public void ScrollIntoView(object item, P42.Uno.Controls.ScrollIntoViewAlignment alignment)
         {
-
+            if (ItemsSource.IndexOf(item) is int index && index > -1)
+            {
+                if (alignment == ScrollIntoViewAlignment.Default)
+                {
+                    _nativeListView.SmoothScrollToPosition(index);
+                    return;
+                }
+                else if (alignment == ScrollIntoViewAlignment.Leading)
+                {
+                    _nativeListView.SmoothScrollToPositionFromTop(index, 0);
+                    return;
+                }
+                var viewHeight = _nativeListView.Height;
+                if (index < NativeCellHeights.Count)
+                {
+                    var cellHeight = NativeCellHeights[index];
+                    if (alignment == ScrollIntoViewAlignment.Center)
+                        _nativeListView.SmoothScrollToPositionFromTop(index, (viewHeight + cellHeight) / 2);
+                    else
+                        _nativeListView.SmoothScrollToPositionFromTop(index, viewHeight - cellHeight);
+                }
+                else
+                {
+                    var estCellHeight = (int)(NativeCellHeights.Average() + 0.5);
+                    _waitingForIndex = index;
+                    _waitingAlignment = alignment;
+                    if (alignment == ScrollIntoViewAlignment.Center)
+                        _nativeListView.SmoothScrollToPositionFromTop(index, (viewHeight + estCellHeight) / 2);
+                    else
+                        _nativeListView.SmoothScrollToPositionFromTop(index, viewHeight - estCellHeight);
+                }
+            }
         }
+
+        private void OnNativeCellHeights_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (_waitingForIndex >= e.NewStartingIndex && _waitingForIndex < e.NewStartingIndex + e.NewItems.Count)
+            {
+                var index = _waitingForIndex;
+                _waitingForIndex = -1;
+                var viewHeight = _nativeListView.Height;
+                var cellHeight = NativeCellHeights[index];
+                if (_waitingAlignment == ScrollIntoViewAlignment.Trailing)
+                    _nativeListView.SmoothScrollToPositionFromTop(index, viewHeight - cellHeight);
+                else if (_waitingAlignment == ScrollIntoViewAlignment.Center)
+                    _nativeListView.SmoothScrollToPositionFromTop(index, (viewHeight + cellHeight) / 2);
+                else if (_waitingAlignment == ScrollIntoViewAlignment.Default ||
+                    _waitingAlignment == ScrollIntoViewAlignment.Leading)
+                    _nativeListView.SmoothScrollToPosition(index);
+
+                _waitingAlignment = ScrollIntoViewAlignment.Default;
+            }
+        }
+
 
         public void SelectAll()
         {
-
-        }
-
-        /*
-        #region ItemsControl Methods
-
-        public DependencyObject ContainerFromIndex(int index)
-        {
-
-        }
-
-        public DependencyObject ContainerFromItem(object item)
-        {
-
-        }
-
-        public int IndexFromContainer(DependencyObject container)
-        {
-
-        }
-
-        public object ItemFromContainer(DependencyObject container)
-        {
-
-        }
-
-        protected virtual void OnItemsChanged(object e)
-        {
-
-        }
-
-        protected void OnItemTemplateChanged(DataTemplate oldItemTemplate, DataTemplate newItemTemplate)
-        {
-
-        }
-
-        protected void OnItemTemplateSelectorChanged(DataTemplateSelector oldItemTemplateSelector, DataTemplateSelector newItemTemplateSelector)
-        {
-
+            var items = ItemsSource.ToObjectArray();
+            foreach (var item in items)
+            {
+                if (!SelectedItems.Contains(item))
+                    SelectedItems.Add(item);
+            }
         }
 
         #endregion
-        */
 
-        #endregion
 
 
     }
@@ -213,6 +260,7 @@ namespace P42.Uno.Controls
             return 0;
         }
 
+        // ALWAYS SET INDEX BEFORE DATACONTEXT
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
             if (convertView is CellWrapper wrapper)
@@ -282,6 +330,45 @@ namespace P42.Uno.Controls
             VerticalAlignment = VerticalAlignment.Top;
             Tapped += OnCellWrapper_Tapped;
             SimpleListView._selectedItems.CollectionChanged += OnSelectedItems_CollectionChanged;
+            SizeChanged += OnCellWrapper_SizeChanged;
+        }
+
+        static double _scale = -1;
+        static double DisplayScale
+        {
+            get
+            {
+                if (_scale > 0)
+                    return _scale;
+                using var displayMetrics = new DisplayMetrics();
+                using var service = global::Uno.UI.ContextHelper.Current.GetSystemService(Android.Content.Context.WindowService);
+                using var windowManager = service?.JavaCast<IWindowManager>();
+                var display = windowManager?.DefaultDisplay;
+                display?.GetRealMetrics(displayMetrics);
+                _scale = (double)displayMetrics?.Density;
+                return _scale;
+            }
+        }
+
+        private void OnCellWrapper_SizeChanged(object sender, SizeChangedEventArgs args)
+        {
+            RecordCellHeight();
+        }
+
+        void RecordCellHeight()
+        {
+            if (ActualHeight >-1 && DataContext != null && SimpleListView is SimpleListView parent)
+            {
+                var height = (int)(ActualHeight * DisplayScale + 0.5);
+                if (Index < parent.NativeCellHeights.Count)
+                {
+                    parent.NativeCellHeights[Index] = height;
+                    return;
+                }
+                while (Index > parent.NativeCellHeights.Count)
+                    parent.NativeCellHeights.Add(0);
+                parent.NativeCellHeights.Add(height);
+            }
         }
 
         private void OnSelectedItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -300,12 +387,13 @@ namespace P42.Uno.Controls
             base.OnDataContextChanged(e);
             UpdateSelection();
             Child.DataContext = DataContext;
+            RecordCellHeight();
         }
 
         private void UpdateSelection()
         {
             Background = IsSelected
-                ? SystemColors.Accent.ToBrush()
+                ? SystemColors.ListLow.ToBrush()
                 : Colors.Transparent.ToBrush();
         }
     }
@@ -327,4 +415,26 @@ namespace P42.Uno.Controls
         }
     }
 
+    /*
+    #region ScrollListener 
+    class ScrollListener : Java.Lang.Object, Android.Widget.ListView.IOnScrollListener
+    {
+        public SimpleListView ListView;
+        public bool IsBuildingLayOut;
+
+        public void OnScroll(Android.Widget.AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
+        {
+            if (!IsBuildingLayOut)
+                ListView?.OnScrolling(this, EventArgs.Empty);
+        }
+
+        public void OnScrollStateChanged(Android.Widget.AbsListView view, [GeneratedEnum] Android.Widget.ScrollState scrollState)
+        {
+            if (scrollState == ScrollState.Idle)
+                ListView?.OnScrolled(this, EventArgs.Empty);
+        }
+
+    }
+    #endregion
+    */
 }

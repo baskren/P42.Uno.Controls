@@ -77,7 +77,7 @@ namespace P42.Uno.Controls.Test
             System.Diagnostics.Debug.WriteLine("SummaryDetailPage._listView_ChoosingItemContainer itemContainer:" + itemContainer + " index:" + index);
         }
 
-        async void OnItemClick(object sender, ItemClickEventArgs e)
+        async void OnItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(GetType() + ".OnItemClick: sender:" + sender + "  e.ClickedItem:" + e.ClickedItem + " e.OriginalSource:" + e.OriginalSource);
 

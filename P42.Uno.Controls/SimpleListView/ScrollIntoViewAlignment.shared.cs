@@ -1,8 +1,9 @@
-﻿using System;
+﻿using P42.Utils.Uno;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace P42.Utils.Uno
+namespace P42.Uno.Controls
 {
     public enum ScrollIntoViewAlignment
     {
@@ -10,5 +11,23 @@ namespace P42.Utils.Uno
         Leading,
         Center,
         Trailing
+    }
+
+    static class ScrollIntoViewAlignmentExtensions
+    {
+        public static ScrollToPosition AsScrollToPosition(this ScrollIntoViewAlignment alignment)
+        {
+            switch (alignment)
+            {
+                case ScrollIntoViewAlignment.Leading:
+                    return ScrollToPosition.Start;
+                case ScrollIntoViewAlignment.Center:
+                    return ScrollToPosition.Center;
+                case ScrollIntoViewAlignment.Trailing:
+                    return ScrollToPosition.End;
+                default:
+                    return ScrollToPosition.MakeVisible;
+            }
+        }
     }
 }

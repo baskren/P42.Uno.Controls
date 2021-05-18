@@ -7,10 +7,6 @@
 
   <Import Project=".\P42.Uno.Controls.Android.props" />
 
-  <ItemGroup>
-    <Compile Remove="SimpleListView\SimpleListViewSelectionMode.shared.cs" />
-  </ItemGroup>
-
   <!-- PACKAGE REFERENCES -->
 
   <!-- REFERENCES -->

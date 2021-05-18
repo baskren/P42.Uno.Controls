@@ -63,7 +63,7 @@ namespace P42.Uno.Controls
             nameof(SelectedIndex),
             typeof(int),
             typeof(SimpleListView),
-            new PropertyMetadata(default(int))
+            new PropertyMetadata(-1)
         );
         public int SelectedIndex
         {

@@ -39,28 +39,31 @@ namespace P42.Uno.Controls.Test
             {
                 SelectionMode = ListViewSelectionMode.Single,
                 IsItemClickEnabled = true,
-                ItemTemplate = itemTemplate
+                ItemTemplate = itemTemplate,
             };
             
             Grid.SetRow(listView, 1);
 
             var button1 = new Button
             {
-                Content = "Button 1",
-                Background = new SolidColorBrush(Colors.White)
+                Content = "TOP",
+                Background = new SolidColorBrush(Colors.White),
+                Tag = P42.Uno.Controls.ScrollIntoViewAlignment.Leading
             };
             button1.Click += OnButtonClick;
             var button2 = new Button
             {
-                Content = "Button 2",
-                Background = new SolidColorBrush(Colors.White)
+                Content = "CENTER",
+                Background = new SolidColorBrush(Colors.White),
+                Tag = P42.Uno.Controls.ScrollIntoViewAlignment.Center
             };
             button2.Click += OnButtonClick;
             Grid.SetColumn(button2, 1);
             var button3 = new Button
             {
-                Content = "Button 3",
-                Background = new SolidColorBrush(Colors.White)
+                Content = "BOTTOM",
+                Background = new SolidColorBrush(Colors.White),
+                Tag = P42.Uno.Controls.ScrollIntoViewAlignment.Trailing
             };
             button3.Click += OnButtonClick;
             Grid.SetColumn(button3, 2);
@@ -116,15 +119,18 @@ namespace P42.Uno.Controls.Test
         private void OnButtonClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Content is string value)
-            { 
+            {
                 if (listView.SelectedIndex > -1 && listView.SelectedIndex < items.Count)
                 {
+                    listView.ScrollIntoView(listView.SelectedIndex, (P42.Uno.Controls.ScrollIntoViewAlignment)button.Tag);
                     /*
                     var container = (ListViewItem)listView.ContainerFromIndex(listView.SelectedIndex);
                     var cell = container.ContentTemplateRoot as TextCell;
                     cell.ChangeValue(value);
                     */
                 }
+                else
+                    listView.ScrollIntoView(items[25], (P42.Uno.Controls.ScrollIntoViewAlignment)button.Tag);
             }
         }
     }
