@@ -935,7 +935,10 @@ namespace P42.Uno.Controls
 
             _popup.Margin = new Thickness(0);
             _popup.HorizontalOffset = frame.Left;
-            _popup.VerticalOffset = frame.Top + P42.Utils.Uno.AppWindow.StatusBarHeight(this);
+            _popup.VerticalOffset = frame.Top;
+#if !__ANDROID__
+            _popup.VerticalOffset += P42.Utils.Uno.AppWindow.StatusBarHeight(this);
+#endif
 
             _border.Margin = new Thickness(0);
             _border.Width = frame.Width;

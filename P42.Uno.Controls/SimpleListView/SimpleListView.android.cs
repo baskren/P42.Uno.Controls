@@ -127,7 +127,7 @@ namespace P42.Uno.Controls
                 {
                     var cellHeight = NativeCellHeights[index];
                     if (alignment == ScrollIntoViewAlignment.Center)
-                        _nativeListView.SmoothScrollToPositionFromTop(index, (viewHeight + cellHeight) / 2);
+                        _nativeListView.SmoothScrollToPositionFromTop(index, (viewHeight - cellHeight) / 2);
                     else
                         _nativeListView.SmoothScrollToPositionFromTop(index, viewHeight - cellHeight);
                 }
@@ -137,7 +137,7 @@ namespace P42.Uno.Controls
                     _waitingForIndex = index;
                     _waitingAlignment = alignment;
                     if (alignment == ScrollIntoViewAlignment.Center)
-                        _nativeListView.SmoothScrollToPositionFromTop(index, (viewHeight + estCellHeight) / 2);
+                        _nativeListView.SmoothScrollToPositionFromTop(index, (viewHeight - estCellHeight) / 2);
                     else
                         _nativeListView.SmoothScrollToPositionFromTop(index, viewHeight - estCellHeight);
                 }
@@ -155,7 +155,7 @@ namespace P42.Uno.Controls
                 if (_waitingAlignment == ScrollIntoViewAlignment.Trailing)
                     _nativeListView.SmoothScrollToPositionFromTop(index, viewHeight - cellHeight);
                 else if (_waitingAlignment == ScrollIntoViewAlignment.Center)
-                    _nativeListView.SmoothScrollToPositionFromTop(index, (viewHeight + cellHeight) / 2);
+                    _nativeListView.SmoothScrollToPositionFromTop(index, (viewHeight - cellHeight) / 2);
                 else if (_waitingAlignment == ScrollIntoViewAlignment.Default ||
                     _waitingAlignment == ScrollIntoViewAlignment.Leading)
                     _nativeListView.SmoothScrollToPosition(index);
