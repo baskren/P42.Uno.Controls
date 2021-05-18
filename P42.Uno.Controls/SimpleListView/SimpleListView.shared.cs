@@ -77,8 +77,9 @@ namespace P42.Uno.Controls
             nameof(SelectedItem),
             typeof(object),
             typeof(SimpleListView),
-            new PropertyMetadata(default(object))
+            new PropertyMetadata(default(object), OnSelectedItemChanged)
         );
+
         public object SelectedItem
         {
             get => (object)GetValue(SelectedItemProperty);
@@ -164,7 +165,13 @@ namespace P42.Uno.Controls
 
         #region Constructors
         public SimpleListView()
-            => PlatformBuild();
+        {
+            PlatformBuild();
+            HorizontalAlignment = HorizontalAlignment.Stretch;
+            VerticalAlignment = VerticalAlignment.Top;
+            HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            VerticalContentAlignment = VerticalAlignment.Stretch;
+        }
         #endregion
 
 

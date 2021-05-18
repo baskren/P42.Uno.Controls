@@ -646,17 +646,13 @@ namespace P42.Uno.Controls
             _border.Opacity = 0.0;
             _popupOpenedCompletionSource = new TaskCompletionSource<bool>();
 
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t0: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
             // WHAT IF WE PUT _popup.IsOpen AFTER UpdateMarginAndAlignment?
             _popup.IsOpen = true;
             await Task.Delay(5);
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t1: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
             UpdateMarginAndAlignment();
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t2: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
 
             // IS THIS NECESSARY?!?!
             _popup.InvalidateMeasure();
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t3: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
 
 
             if (IsAnimated)
@@ -665,7 +661,6 @@ namespace P42.Uno.Controls
                 var animator = new P42.Utils.Uno.ActionAnimator(0.11, 0.95, TimeSpan.FromMilliseconds(300), action);
                 await animator.RunAsync();
             }
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t4: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
 
             _border.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
 
@@ -678,15 +673,11 @@ namespace P42.Uno.Controls
                 });
             }
 
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t5: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
             await OnPushEndAsync();
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t6: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
 
             PushPopState = PushPopState.Pushed;
             Pushed?.Invoke(this, EventArgs.Empty);
             _pushCompletionSource?.TrySetResult(true);
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyn t7: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
-
         }
 
         public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, [CallerMemberName] object trigger = null)
@@ -821,7 +812,7 @@ namespace P42.Uno.Controls
             var windowWidth = windowSize.Width - Margin.Horizontal();
             var windowHeight = windowSize.Height - Margin.Vertical();
             var cleanSize = MeasureBorder(new Size(windowWidth, windowHeight));
-
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment: cleanSize: " + cleanSize);
             if (PreferredPointerDirection == PointerDirection.None || Target is null)
             {
                 //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateMarginAndAlignment PreferredPointerDirection == PointerDirection.None");
@@ -885,6 +876,7 @@ namespace P42.Uno.Controls
             }
             else
             {
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment: stats: " + stats);
                 if (stats.PointerDirection == PointerDirection.Up)
                 {
                     margin.Top = target.Bottom;
@@ -897,6 +889,7 @@ namespace P42.Uno.Controls
                     if (VerticalAlignment != VerticalAlignment.Stretch)
                         vtAlign = VerticalAlignment.Bottom;
                 }
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment margin: " + margin);
 
                 if (HorizontalAlignment == HorizontalAlignment.Left)
                     margin.Left = Math.Max(Margin.Left, target.Left);
@@ -915,7 +908,8 @@ namespace P42.Uno.Controls
             }
 
             ActualPointerDirection = _border.PointerDirection = stats.PointerDirection;
-            SetMarginAndAlignment(margin, hzAlign, vtAlign, windowSize, cleanSize);
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment margin: "+margin+" vtAlign: " + vtAlign + " cleanSize: " + cleanSize);
+            SetMarginAndAlignment(margin, hzAlign, vtAlign, windowSize, stats.BorderSize);
         }
 
         void CleanMarginAndAlignment(HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size windowSize, Size cleanSize)

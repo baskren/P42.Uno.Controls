@@ -35,7 +35,6 @@ namespace P42.Uno.Controls
                 }
             };
             _listView.ItemContainerStyle = containerStyle;
-            
 
             _listView.Bind(ListView.IsItemClickEnabledProperty, this, nameof(IsItemClickEnabled));
             _listView.Bind(ListView.SelectionModeProperty, this, nameof(SelectionMode));
@@ -44,12 +43,17 @@ namespace P42.Uno.Controls
             _listView.ItemClick += OnListView_ItemClick;
             _listView.SelectionChanged += OnListView_SelectionChanged;
 
-            HorizontalAlignment = HorizontalAlignment.Stretch;
-            VerticalAlignment = VerticalAlignment.Stretch;
-            HorizontalContentAlignment = HorizontalAlignment.Stretch;
-            VerticalContentAlignment = VerticalAlignment.Stretch;
             Content = _listView;
         }
+
+        private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SimpleListView listView)
+            {
+                listView._listView.SelectedItem = listView.SelectedItem;
+            }
+        }
+
 
         private void OnListView_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
         {

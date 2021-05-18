@@ -16,11 +16,29 @@ using ScrollIntoViewAlignment = Windows.UI.Xaml.Controls.ScrollIntoViewAlignment
 using System.Collections.ObjectModel;
 using Android.Runtime;
 using Android.Util;
+using System.Threading.Tasks;
 
 namespace P42.Uno.Controls
 {
     public partial class SimpleListView
     {
+        static double _scale = -1;
+        internal static double DisplayScale
+        {
+            get
+            {
+                if (_scale > 0)
+                    return _scale;
+                using var displayMetrics = new DisplayMetrics();
+                using var service = global::Uno.UI.ContextHelper.Current.GetSystemService(Android.Content.Context.WindowService);
+                using var windowManager = service?.JavaCast<IWindowManager>();
+                var display = windowManager?.DefaultDisplay;
+                display?.GetRealMetrics(displayMetrics);
+                _scale = (double)displayMetrics?.Density;
+                return _scale;
+            }
+        }
+
         static int instances = 0;
         int instance;
         internal ObservableCollection<object> _selectedItems = new ObservableCollection<object>();
@@ -42,65 +60,95 @@ namespace P42.Uno.Controls
             NativeCellHeights.CollectionChanged += OnNativeCellHeights_CollectionChanged;
             _nativeListView.Adapter = _adapter = new SimpleAdapter(this);
             var listView = VisualTreeHelper.AdaptNative(_nativeListView);
-            HorizontalAlignment = HorizontalAlignment.Stretch;
-            VerticalAlignment = VerticalAlignment.Stretch;
-            HorizontalContentAlignment = HorizontalAlignment.Stretch;
-            VerticalContentAlignment = VerticalAlignment.Stretch;
             Content = listView;
-
         }
 
+        private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SimpleListView listView)
+            {
+                listView.SelectItem(listView.SelectedItem);
+            }
+        }
+
+        bool _repondingToSelectedItemsCollectionChanged;
         private void OnSelectedItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            _repondingToSelectedItemsCollectionChanged = true;
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                 case NotifyCollectionChangedAction.Remove:
                 case NotifyCollectionChangedAction.Replace:
                 case NotifyCollectionChangedAction.Reset:
+                    if (e.NewItems?.Any() ?? false)
+                        SelectedItem = e.NewItems[0];
+                    else if (SelectedItem != null && (e.OldItems?.Contains(SelectedItem) ?? false))
+                        SelectedItem = null;
                     SelectionChanged?.Invoke(this, new P42.Uno.Controls.SelectionChangedEventArgs(this, e.OldItems, e.NewItems));
                     break;
                 case NotifyCollectionChangedAction.Move:
                 default:
                     break;
             }
+            _repondingToSelectedItemsCollectionChanged = false;
         }
 
-        internal void OnWrapperClicked(CellWrapper wrapper)
+        internal async Task OnWrapperClicked(CellWrapper wrapper)
         {
             System.Diagnostics.Debug.WriteLine("SimpleListView. CLICK");
+            SelectItem(wrapper.DataContext);
+            await Task.Delay(10);
+            if (IsItemClickEnabled)
+                ItemClick?.Invoke(this, new ItemClickEventArgs(this, wrapper.DataContext, wrapper.Child));
+        }
+
+        void SelectItem(object item)
+        {
+            if (_repondingToSelectedItemsCollectionChanged)
+                return;
             if (SelectionMode == ListViewSelectionMode.Single)
             {
-                _selectedItems.Clear();
-                _selectedItems.Add(wrapper.DataContext);
+                if (!_selectedItems.Contains(item))
+                {
+                    _selectedItems.Clear();
+                    _selectedItems.Add(item);
+                }
             }
             else if (SelectionMode == ListViewSelectionMode.Multiple)
             {
-                if (_selectedItems.Contains(wrapper.DataContext))
-                    _selectedItems.Remove(wrapper.DataContext);
+                if (_selectedItems.Contains(item))
+                    _selectedItems.Remove(item);
                 else
-                    _selectedItems.Add(wrapper.DataContext);
+                    _selectedItems.Add(item);
             }
-            if (IsItemClickEnabled)
-                ItemClick?.Invoke(this, new ItemClickEventArgs(this, wrapper.DataContext, wrapper.Child));
         }
 
         private static void OnItemsSourceChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
             if (dependencyObject is SimpleListView simpleListView)
+            {
                 simpleListView._adapter.SetItems(simpleListView.ItemsSource);
+                simpleListView.InvalidateMeasure();
+            }
         }
 
         private static void OnItemTemplateChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
             if (dependencyObject is SimpleListView simpleListView)
+            {
                 simpleListView._adapter.SetItemTemplate(simpleListView.ItemTemplate);
+                simpleListView.InvalidateMeasure();
+            }
         }
 
         private static void OnItemTemplateSelectorChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
             if (dependencyObject is SimpleListView simpleListView)
+            {
                 simpleListView._adapter.SetTemplateSelector(simpleListView.ItemTemplateSelector);
+                simpleListView.InvalidateMeasure();
+            }
         }
 
 
@@ -333,22 +381,6 @@ namespace P42.Uno.Controls
             SizeChanged += OnCellWrapper_SizeChanged;
         }
 
-        static double _scale = -1;
-        static double DisplayScale
-        {
-            get
-            {
-                if (_scale > 0)
-                    return _scale;
-                using var displayMetrics = new DisplayMetrics();
-                using var service = global::Uno.UI.ContextHelper.Current.GetSystemService(Android.Content.Context.WindowService);
-                using var windowManager = service?.JavaCast<IWindowManager>();
-                var display = windowManager?.DefaultDisplay;
-                display?.GetRealMetrics(displayMetrics);
-                _scale = (double)displayMetrics?.Density;
-                return _scale;
-            }
-        }
 
         private void OnCellWrapper_SizeChanged(object sender, SizeChangedEventArgs args)
         {
@@ -359,7 +391,7 @@ namespace P42.Uno.Controls
         {
             if (ActualHeight >-1 && DataContext != null && SimpleListView is SimpleListView parent)
             {
-                var height = (int)(ActualHeight * DisplayScale + 0.5);
+                var height = (int)(ActualHeight * SimpleListView.DisplayScale + 0.5);
                 if (Index < parent.NativeCellHeights.Count)
                 {
                     parent.NativeCellHeights[Index] = height;
@@ -376,10 +408,10 @@ namespace P42.Uno.Controls
             UpdateSelection();
         }
 
-        private void OnCellWrapper_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        async void OnCellWrapper_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("CellWrapper.TAPPED");
-            SimpleListView.OnWrapperClicked(this);
+            await SimpleListView.OnWrapperClicked(this);
         }
 
         protected override void OnDataContextChanged(DependencyPropertyChangedEventArgs e)
