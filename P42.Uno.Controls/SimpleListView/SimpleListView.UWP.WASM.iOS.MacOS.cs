@@ -46,6 +46,39 @@ namespace P42.Uno.Controls
             Content = _listView;
         }
 
+        private static void OnFooterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SimpleListView listView)
+            {
+                listView._listView.Footer = listView.Footer;
+            }
+        }
+
+        private static void OnFooterTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SimpleListView listView)
+            {
+                listView._listView.FooterTemplate = listView.FooterTemplate;
+            }
+        }
+
+        private static void OnHeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SimpleListView listView)
+            {
+                listView._listView.Header = listView.Header;
+            }
+        }
+
+        private static void OnHeaderTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SimpleListView listView)
+            {
+                listView._listView.HeaderTemplate = listView.HeaderTemplate;
+            }
+        }
+
+
         private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is SimpleListView listView)

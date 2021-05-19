@@ -43,6 +43,8 @@ namespace P42.Uno.Controls
         int instance;
         internal ObservableCollection<object> _selectedItems = new ObservableCollection<object>();
         internal ObservableCollection<int> NativeCellHeights = new ObservableCollection<int>();
+        Android.Views.View _headerView;
+        Android.Views.View _footerView;
 
         Android.Widget.ListView _nativeListView = new Android.Widget.ListView(global::Uno.UI.ContextHelper.Current)
         {
@@ -61,6 +63,74 @@ namespace P42.Uno.Controls
             _nativeListView.Adapter = _adapter = new SimpleAdapter(this);
             var listView = VisualTreeHelper.AdaptNative(_nativeListView);
             Content = listView;
+        }
+
+        void UpdateFooter()
+        {
+            if (_footerView != null)
+                _nativeListView.RemoveFooterView(_footerView);
+            _footerView?.Dispose();
+            _footerView = null;
+            if (Footer != null)
+            {
+                if (Footer is Android.Views.View view)
+                {
+                    _footerView = view;
+                    _nativeListView.AddFooterView(view);
+                }
+                else if (FooterTemplate?.LoadContent() is FrameworkElement newFooter)
+                {
+                    _footerView = newFooter;
+                    newFooter.DataContext = Footer;
+                    _nativeListView.AddFooterView(newFooter);
+                }
+            }
+        }
+
+        private static void OnFooterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SimpleListView listView)
+                listView.UpdateFooter();
+        }
+
+        private static void OnFooterTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SimpleListView listView)
+                listView.UpdateFooter();
+        }
+
+        void UpdateHeader()
+        {
+            if (_headerView != null)
+                _nativeListView.RemoveHeaderView(_headerView);
+            _headerView?.Dispose();
+            _headerView = null;
+            if (Header != null)
+            {
+                if (Header is Android.Views.View view)
+                {
+                    _headerView = view;
+                    _nativeListView.AddHeaderView(view);
+                }
+                else if (HeaderTemplate?.LoadContent() is FrameworkElement newHeader)
+                {
+                    _headerView = newHeader;
+                    newHeader.DataContext = Header;
+                    _nativeListView.AddHeaderView(newHeader);
+                }
+            }
+        }
+
+        private static void OnHeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SimpleListView listView)
+                listView.UpdateHeader();
+        }
+
+        private static void OnHeaderTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SimpleListView listView)
+                listView.UpdateHeader();
         }
 
         private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -156,7 +226,7 @@ namespace P42.Uno.Controls
 
         int _waitingForIndex = -1;
         ScrollIntoViewAlignment _waitingAlignment = ScrollIntoViewAlignment.Default;
-        public void ScrollIntoView(object item, P42.Uno.Controls.ScrollIntoViewAlignment alignment)
+        public async Task ScrollIntoView(object item, P42.Uno.Controls.ScrollIntoViewAlignment alignment)
         {
             if (ItemsSource.IndexOf(item) is int index && index > -1)
             {
@@ -170,25 +240,32 @@ namespace P42.Uno.Controls
                     _nativeListView.SmoothScrollToPositionFromTop(index, 0);
                     return;
                 }
-                var viewHeight = _nativeListView.Height;
+                //var viewHeight = _nativeListView.Height;
                 if (index < NativeCellHeights.Count)
                 {
                     var cellHeight = NativeCellHeights[index];
+                    InternalScrollTo(index, alignment, cellHeight);
+                    /*
                     if (alignment == ScrollIntoViewAlignment.Center)
                         _nativeListView.SmoothScrollToPositionFromTop(index, (viewHeight - cellHeight) / 2);
                     else
                         _nativeListView.SmoothScrollToPositionFromTop(index, viewHeight - cellHeight);
+                    */
                 }
                 else
                 {
                     var estCellHeight = (int)(NativeCellHeights.Average() + 0.5);
                     _waitingForIndex = index;
                     _waitingAlignment = alignment;
+                    InternalScrollTo(index, alignment, estCellHeight);
+                    /*
                     if (alignment == ScrollIntoViewAlignment.Center)
                         _nativeListView.SmoothScrollToPositionFromTop(index, (viewHeight - estCellHeight) / 2);
                     else
                         _nativeListView.SmoothScrollToPositionFromTop(index, viewHeight - estCellHeight);
+                    */
                 }
+                await Task.Delay(10);
             }
         }
 
@@ -198,8 +275,9 @@ namespace P42.Uno.Controls
             {
                 var index = _waitingForIndex;
                 _waitingForIndex = -1;
-                var viewHeight = _nativeListView.Height;
                 var cellHeight = NativeCellHeights[index];
+                /*
+                var viewHeight = _nativeListView.Height;
                 if (_waitingAlignment == ScrollIntoViewAlignment.Trailing)
                     _nativeListView.SmoothScrollToPositionFromTop(index, viewHeight - cellHeight);
                 else if (_waitingAlignment == ScrollIntoViewAlignment.Center)
@@ -207,11 +285,23 @@ namespace P42.Uno.Controls
                 else if (_waitingAlignment == ScrollIntoViewAlignment.Default ||
                     _waitingAlignment == ScrollIntoViewAlignment.Leading)
                     _nativeListView.SmoothScrollToPosition(index);
-
+                */
+                InternalScrollTo(index, _waitingAlignment, cellHeight);
                 _waitingAlignment = ScrollIntoViewAlignment.Default;
             }
         }
 
+        void InternalScrollTo(int index, ScrollIntoViewAlignment alignment, int cellHeight)
+        {
+            var viewHeight = _nativeListView.Height;
+            if (_waitingAlignment == ScrollIntoViewAlignment.Trailing)
+                _nativeListView.SmoothScrollToPositionFromTop(index, viewHeight - cellHeight);
+            else if (_waitingAlignment == ScrollIntoViewAlignment.Center)
+                _nativeListView.SmoothScrollToPositionFromTop(index, (viewHeight - cellHeight) / 2);
+            else if (_waitingAlignment == ScrollIntoViewAlignment.Default ||
+                _waitingAlignment == ScrollIntoViewAlignment.Leading)
+                _nativeListView.SmoothScrollToPosition(index);
+        }
 
         public void SelectAll()
         {
@@ -249,6 +339,7 @@ namespace P42.Uno.Controls
             Items = items;
             if (Items is INotifyCollectionChanged newCollection)
                 newCollection.CollectionChanged += OnCollectionChaged;
+            NotifyDataSetChanged();
         }
 
         public void SetItemTemplate(DataTemplate template)
@@ -260,7 +351,6 @@ namespace P42.Uno.Controls
         public void SetTemplateSelector(DataTemplateSelector selector)
         {
             TemplateSelector = selector;
-            //Templates.Clear();
             NotifyDataSetChanged();
         }
 
@@ -271,9 +361,11 @@ namespace P42.Uno.Controls
 
 
 
-        public override object this[int position] => Items?.ElementAt(position);
+        public override object this[int position] 
+            => Items?.ElementAt(position);
 
-        public override int Count => Items?.Count() ?? 0;
+        public override int Count 
+            => Items?.Count() ?? 0;
 
         public override long GetItemId(int position) => position;
 

@@ -7,6 +7,13 @@ namespace P42.Uno.Controls
 {
     public class DataTemplateSelector : Windows.UI.Xaml.Controls.DataTemplateSelector
     {
-        public virtual IEnumerable<DataTemplate> Templates => throw new NotImplementedException();
+        public virtual IEnumerable<DataTemplate> Templates
+        {
+            get
+            {
+                System.Console.WriteLine(GetType() + " Templates NOT IMPLEMENTED!!!!");
+                throw new NotImplementedException();
+            }
+        }
     }
 }
