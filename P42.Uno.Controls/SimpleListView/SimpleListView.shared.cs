@@ -207,7 +207,6 @@ namespace P42.Uno.Controls
         #endregion
 
 
-
         #region Events
 
         #region ListViewBase Events

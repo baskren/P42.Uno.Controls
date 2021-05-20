@@ -46,11 +46,7 @@ namespace P42.Uno.Controls
         Android.Views.View _headerView;
         Android.Views.View _footerView;
 
-        Android.Widget.ListView _nativeListView = new Android.Widget.ListView(global::Uno.UI.ContextHelper.Current)
-        {
-            LayoutParameters = new LayoutParams(LayoutParams.MatchParent, LayoutParams.WrapContent),
-            Divider = null
-        };
+        Android.Widget.ListView _nativeListView;
 
         SimpleAdapter _adapter;
 
@@ -60,11 +56,30 @@ namespace P42.Uno.Controls
             SelectedItems = _selectedItems;
             _selectedItems.CollectionChanged += OnSelectedItems_CollectionChanged;
             NativeCellHeights.CollectionChanged += OnNativeCellHeights_CollectionChanged;
-            _nativeListView.Adapter = _adapter = new SimpleAdapter(this);
-            var listView = VisualTreeHelper.AdaptNative(_nativeListView);
-            Content = listView;
+            InjectNativeListView();
         }
 
+        void InjectNativeListView()
+        {
+            if (_nativeListView != null)
+            {
+                _adapter?.NotifyDataSetInvalidated();
+                _nativeListView.Adapter = null;
+                _adapter?.Dispose();
+                _nativeListView.Dispose();
+            }
+
+            _adapter = new SimpleAdapter(this);
+            _nativeListView = new Android.Widget.ListView(global::Uno.UI.ContextHelper.Current)
+            {
+                LayoutParameters = new LayoutParams(LayoutParams.MatchParent, LayoutParams.WrapContent),
+                Divider = null,
+                Adapter = _adapter
+            };
+            Content = VisualTreeHelper.AdaptNative(_nativeListView);
+        }
+
+        #region Header / Footer Change Handlers
         void UpdateFooter()
         {
             if (_footerView != null)
@@ -132,7 +147,10 @@ namespace P42.Uno.Controls
             if (d is SimpleListView listView)
                 listView.UpdateHeader();
         }
+        #endregion
 
+
+        #region Click / Selection Change Handlers
         private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is SimpleListView listView)
@@ -193,7 +211,10 @@ namespace P42.Uno.Controls
                     _selectedItems.Add(item);
             }
         }
+        #endregion
 
+
+        #region Source / Template Change Handlers
         private static void OnItemsSourceChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
             if (dependencyObject is SimpleListView simpleListView)
@@ -206,20 +227,15 @@ namespace P42.Uno.Controls
         private static void OnItemTemplateChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
             if (dependencyObject is SimpleListView simpleListView)
-            {
-                simpleListView._adapter.SetItemTemplate(simpleListView.ItemTemplate);
-                simpleListView.InvalidateMeasure();
-            }
+                simpleListView.InjectNativeListView();
         }
 
         private static void OnItemTemplateSelectorChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
             if (dependencyObject is SimpleListView simpleListView)
-            {
-                simpleListView._adapter.SetTemplateSelector(simpleListView.ItemTemplateSelector);
-                simpleListView.InvalidateMeasure();
-            }
+                simpleListView.InjectNativeListView();
         }
+        #endregion
 
 
         #region ListViewBase Methods
@@ -322,36 +338,28 @@ namespace P42.Uno.Controls
     class SimpleAdapter : Android.Widget.BaseAdapter<object>
     {
         IEnumerable Items;
-        DataTemplate ItemTemplate;
-        DataTemplateSelector TemplateSelector;
+        DataTemplate ItemTemplate => SimpleListView.ItemTemplate;
+        DataTemplateSelector TemplateSelector => SimpleListView.ItemTemplateSelector;
         SimpleListView SimpleListView;
         //List<DataTemplate> Templates = new List<DataTemplate>();
 
         public SimpleAdapter(SimpleListView simpleListView)
         {
             SimpleListView = simpleListView;
+            SetItems(SimpleListView.ItemsSource);
         }
 
         public void SetItems(IEnumerable items)
         {
-            if (Items is INotifyCollectionChanged oldCollection)
-                oldCollection.CollectionChanged -= OnCollectionChaged;
-            Items = items;
-            if (Items is INotifyCollectionChanged newCollection)
-                newCollection.CollectionChanged += OnCollectionChaged;
-            NotifyDataSetChanged();
-        }
-
-        public void SetItemTemplate(DataTemplate template)
-        {
-            ItemTemplate = template;
-            NotifyDataSetChanged();
-        }
-
-        public void SetTemplateSelector(DataTemplateSelector selector)
-        {
-            TemplateSelector = selector;
-            NotifyDataSetChanged();
+            if (items != Items)
+            {
+                if (Items is INotifyCollectionChanged oldCollection)
+                    oldCollection.CollectionChanged -= OnCollectionChaged;
+                Items = items;
+                if (Items is INotifyCollectionChanged newCollection)
+                    newCollection.CollectionChanged += OnCollectionChaged;
+                NotifyDataSetChanged();
+            }
         }
 
         private void OnCollectionChaged(object sender, NotifyCollectionChangedEventArgs e)
@@ -361,8 +369,15 @@ namespace P42.Uno.Controls
 
 
 
-        public override object this[int position] 
-            => Items?.ElementAt(position);
+        public override object this[int position]
+        {
+            get
+            {
+                if (position > -1 && position <= Items.Count())
+                    return Items?.ElementAt(position);
+                return null;
+            }
+        }
 
         public override int Count 
             => Items?.Count() ?? 0;
@@ -375,7 +390,7 @@ namespace P42.Uno.Controls
             {
                 if (ItemTemplate != null || TemplateSelector is null)
                     return 1;
-                return TemplateSelector.Templates.Count();
+                return TemplateSelector.Templates.Count() + 1;
             }
         }
 
@@ -383,20 +398,8 @@ namespace P42.Uno.Controls
         {
             if (ItemTemplate != null || TemplateSelector is null)
                 return 0;
-            if (position > -1 && position <= Items.Count())
-            {
-                var item = this[position];
-                if (TemplateSelector?.SelectTemplate(item) is DataTemplate template)
-                {
-                    var index = 0;
-                    foreach (var t in TemplateSelector.Templates)
-                    {
-                        if (template == t)
-                            return index;
-                        index++;
-                    }
-                }
-            }
+            if (TemplateSelector?.SelectTemplate(this[position]) is DataTemplate template)
+                return TemplateSelector.Templates.IndexOf(template) + 1;
             return 0;
         }
 
