@@ -1,7 +1,7 @@
 <Project ToolsVersion="15.0">
 
   <ItemGroup>
-    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="3.7.3" />
+    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="3.8.6" />
     <Compile Include="**\*.wasm.cs" />
     <Compile Include="**\*.wasm.*.cs" />
   </ItemGroup>
