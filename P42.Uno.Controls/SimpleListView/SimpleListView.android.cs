@@ -221,7 +221,7 @@ namespace P42.Uno.Controls
             if (dependencyObject is SimpleListView simpleListView)
             {
                 simpleListView._adapter.SetItems(simpleListView.ItemsSource);
-                simpleListView.InvalidateMeasure();
+                simpleListView.InjectNativeListView();
             }
         }
 
