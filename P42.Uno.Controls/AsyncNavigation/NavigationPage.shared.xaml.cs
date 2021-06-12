@@ -330,9 +330,9 @@ namespace P42.Uno.AsyncNavigation
             if (P42.Uno.Controls.TargetedPopup.IsPushing)
                 return availableSize;
             var cycle = _measureCycle++;
-            System.Diagnostics.Debug.WriteLine($"NavigationPage.MeasureOverride ============================== ENTER[{cycle}] [{availableSize}]============================");
+            //System.Diagnostics.Debug.WriteLine($"NavigationPage.MeasureOverride ============================== ENTER[{cycle}] [{availableSize}]============================");
             var result = base.MeasureOverride(availableSize);
-            System.Diagnostics.Debug.WriteLine($"NavigationPage.MeasureOverride ============================== EXIT [{cycle}] [{result}]============================");
+            //System.Diagnostics.Debug.WriteLine($"NavigationPage.MeasureOverride ============================== EXIT [{cycle}] [{result}]============================");
             return result;
         }
 
@@ -342,9 +342,9 @@ namespace P42.Uno.AsyncNavigation
             if (P42.Uno.Controls.TargetedPopup.IsPushing)
                 return finalSize;
             var cycle = _arrangeCycle++;
-            System.Diagnostics.Debug.WriteLine($"NavigationPage.ArrangeOverride ============================== ENTER[{cycle}] [{finalSize}]============================");
+            //System.Diagnostics.Debug.WriteLine($"NavigationPage.ArrangeOverride ============================== ENTER[{cycle}] [{finalSize}]============================");
             var result = base.ArrangeOverride(finalSize);
-            System.Diagnostics.Debug.WriteLine($"NavigationPage.MeasureOverride ============================== EXIT [{cycle}] [{result}]============================");
+            //System.Diagnostics.Debug.WriteLine($"NavigationPage.MeasureOverride ============================== EXIT [{cycle}] [{result}]============================");
             return result;
         }
         #endregion
