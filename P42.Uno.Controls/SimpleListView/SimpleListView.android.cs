@@ -77,6 +77,7 @@ namespace P42.Uno.Controls
                 Adapter = _adapter
             };
             Content = VisualTreeHelper.AdaptNative(_nativeListView);
+            ((FrameworkElement)Content).InvalidateMeasure();
         }
 
         #region Header / Footer Change Handlers
@@ -523,6 +524,7 @@ namespace P42.Uno.Controls
                 ? SystemColors.ListLow.ToBrush()
                 : Colors.Transparent.ToBrush();
         }
+
     }
 
     partial class Cell : TextBlock

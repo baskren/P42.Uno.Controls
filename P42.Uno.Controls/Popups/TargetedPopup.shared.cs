@@ -652,7 +652,9 @@ namespace P42.Uno.Controls
             UpdateMarginAndAlignment();
 
             // IS THIS NECESSARY?!?!
-            _popup.InvalidateMeasure();
+            //_popup.InvalidateMeasure();
+            //_popup.InvalidateArrange();
+            //UpdateMarginAndAlignment();
 
 
             if (IsAnimated)

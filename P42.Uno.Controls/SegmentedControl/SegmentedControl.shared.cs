@@ -130,6 +130,7 @@ namespace P42.Uno.Controls
         ObservableCollection<Segment> _buttons = new System.Collections.ObjectModel.ObservableCollection<Segment>();
         #endregion
 
+
         #region Construction
         public SegmentedControl()
         {
