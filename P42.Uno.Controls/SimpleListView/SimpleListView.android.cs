@@ -525,6 +525,19 @@ namespace P42.Uno.Controls
                 : Colors.Transparent.ToBrush();
         }
 
+        bool _isArranging;
+        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        {
+            if (_isArranging)
+                return finalSize;
+
+            _isArranging = true;
+
+            var result = base.ArrangeOverride(finalSize);
+
+            _isArranging = false;
+            return result;
+        }
     }
 
     partial class Cell : TextBlock
