@@ -42,16 +42,16 @@ namespace P42.Uno.Controls
             {
                 IsLightDismissEnabled = false,
                 LightDismissOverlayMode = LightDismissOverlayMode.Off,
-                IsAnimated = false
+                IsAnimated = false,
+                Padding = new Thickness(4),
+                Opacity = 0,
+                Margin = new Thickness(popupMargin),
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                VerticalContentAlignment = VerticalAlignment.Stretch,
+                PreferredPointerDirection = PointerDirection.Vertical,
+                FallbackPointerDirection = PointerDirection.Any
             }
                 .Bind(TargetedPopup.TargetProperty, this, nameof(Target))
-                .Padding(4)
-                .Opacity(0)
-                .Margin(popupMargin)
-                .HorizontalContentAlignment(HorizontalAlignment.Stretch)
-                .VerticalContentAlignment(VerticalAlignment.Stretch)
-                .PreferredPointerDirection(PointerDirection.Vertical)
-                .FallbackPointerDirection(PointerDirection.Any)
                 .Bind(TargetedPopup.WidthProperty, this, nameof(PopupWidth))
                 .Bind(TargetedPopup.HeightProperty, this, nameof(PopupHeight))
                 ;

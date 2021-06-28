@@ -63,8 +63,19 @@ namespace P42.Uno.Controls
         {
             using (var stream = assembly.GetManifestResourceStream(resourceId))
             {
-                _skSvg = new SkiaSharp.Extended.Svg.SKSvg();
-                _skSvg.Load(stream);  
+                if (stream is null)
+                {
+                    var resources = assembly.GetManifestResourceNames();
+                    Console.WriteLine($"ERROR: Cannot file resource [{resourceId}] in assembly [{assembly}].");
+                    Console.WriteLine($"       Resources found:");
+                    foreach (var resource in resources)
+                        Console.WriteLine($"       [{resource}]");
+                }
+                else
+                {
+                    _skSvg = new SkiaSharp.Extended.Svg.SKSvg();
+                    _skSvg.Load(stream);
+                }
             }
         }
 

@@ -461,6 +461,12 @@ namespace P42.Uno.Controls
             Build();
         }
 
+        public TargetedPopup(UIElement target = null) : this()
+        {
+            if (target != null)
+                Target = null;
+        }
+
 #if __ANDROID__
         protected override void OnNativeUnloaded()
         {
