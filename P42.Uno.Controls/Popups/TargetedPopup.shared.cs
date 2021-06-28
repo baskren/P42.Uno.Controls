@@ -900,11 +900,18 @@ namespace P42.Uno.Controls
                 //System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment margin: " + margin);
 
                 if (HorizontalAlignment == HorizontalAlignment.Left)
+                {
                     margin.Left = Math.Max(Margin.Left, target.Left);
+                }
                 else if (HorizontalAlignment == HorizontalAlignment.Center)
+                {
                     margin.Left = Math.Max(Margin.Left, (target.Left + target.Right) / 2.0 - stats.BorderSize.Width / 2.0);
+                    hzAlign = HorizontalAlignment.Left;
+                }
                 else if (HorizontalAlignment == HorizontalAlignment.Right)
+                {
                     margin.Right = Math.Max(Margin.Right, windowSize.Width - target.Right);
+                }
 
                 if (margin.Left + stats.BorderSize.Width > windowSize.Width - Margin.Right)
                     margin.Left = windowSize.Width - Margin.Right - stats.BorderSize.Width;
