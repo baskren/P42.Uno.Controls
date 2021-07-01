@@ -126,6 +126,7 @@ namespace P42.Uno.Controls
         public event EventHandler<Segment> SegmentClicked;
         #endregion
 
+
         #region Fields
         ObservableCollection<Segment> _buttons = new System.Collections.ObjectModel.ObservableCollection<Segment>();
         #endregion
@@ -137,6 +138,8 @@ namespace P42.Uno.Controls
             Segments = _buttons;
             Build();
             _buttons.CollectionChanged += OnSegmentsCollectionChanged;
+
+            Background = Colors.Black.WithAlpha(0.01).ToBrush();
         }
 
         #endregion

@@ -90,6 +90,23 @@ namespace P42.Uno.Controls
 
         private void OnListView_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
         {
+            if (SelectionMode == ListViewSelectionMode.None)
+            {
+                SelectedItem = null;
+                return;
+            }
+
+            if (SelectionMode == ListViewSelectionMode.Single)
+            {
+                if (e.AddedItems?.FirstOrDefault() is object addedItem && addedItem != null)
+                {
+                    if (!addedItem.Equals(SelectedItem))
+                        SelectedItem = addedItem;
+                }
+                else if (e.RemovedItems?.FirstOrDefault() is object removedItem && removedItem != null)
+                    _listView.SelectedItem = null;
+            }
+
             SelectionChanged?.Invoke(this, new SelectionChangedEventArgs(this, e.RemovedItems?.ToList(), e.AddedItems?.ToList()));
         }
 
