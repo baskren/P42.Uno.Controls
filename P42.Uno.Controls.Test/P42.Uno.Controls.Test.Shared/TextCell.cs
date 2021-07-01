@@ -43,14 +43,14 @@ namespace P42.Uno.Controls.Test
             System.Diagnostics.Debug.WriteLine("TextCell.DataContextChanged!!!");
             if (DataContext is string value)
             {
-                _titleLabel.Text = value;
-                _valueLabel.Text = value;
+                _titleLabel.Text = value ?? string.Empty;
+                _valueLabel.Text = value ?? string.Empty;
             }
         }
         
         public void ChangeValue(string newValue)
         {
-            _valueLabel.Text = newValue;
+            _valueLabel.Text = newValue ?? string.Empty;
         }
     }
 }

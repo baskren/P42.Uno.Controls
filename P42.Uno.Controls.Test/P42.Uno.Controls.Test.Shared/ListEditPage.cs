@@ -80,7 +80,7 @@ namespace P42.Uno.Controls.Test
             var adapter = new SimpleAdapter<string>(items); //new Android.Widget.ArrayAdapter(global::Uno.UI.ContextHelper.Current, aListView.Id, items);
             aListView.ItemClick += (s, e) =>
             {
-                textBlock.Text = items[e.Position];
+                textBlock.Text = items[e.Position] ?? string.Empty;
             };
             aListView.Adapter = adapter;
             var listView = VisualTreeHelper.AdaptNative(aListView);
