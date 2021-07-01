@@ -41,7 +41,7 @@ namespace P42.Uno.Controls
             _targetedPopup = new TargetedPopup
             {
                 IsLightDismissEnabled = false,
-                LightDismissOverlayMode = LightDismissOverlayMode.Off,
+                LightDismissOverlayMode = LightDismissOverlayMode.On,
                 IsAnimated = false,
                 Padding = new Thickness(4),
                 Opacity = 0,

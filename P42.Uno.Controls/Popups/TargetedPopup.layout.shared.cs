@@ -48,7 +48,6 @@ namespace P42.Uno.Controls
             Content = new Popup
             {
                 Child =
-                
                     new BubbleBorder()
                     {
                         Content = new ContentPresenter()
@@ -74,8 +73,7 @@ namespace P42.Uno.Controls
                         .Bind(BubbleBorder.PointerBiasProperty, this, nameof(PointerBias))
                         .Bind(BubbleBorder.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
                         .Bind(BubbleBorder.PointerLengthProperty, this, nameof(PointerLength))
-                        .Bind(BubbleBorder.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
-                
+                        .Bind(BubbleBorder.PointerTipRadiusProperty, this, nameof(PointerTipRadius)),
             }
                 .Assign(out _popup)
                 .DataContext(this)
@@ -90,6 +88,9 @@ namespace P42.Uno.Controls
             //this.PointerEntered += OnPointerEntered;
             _popup.Opened += OnPopupOpened;
             _popup.Closed += OnPopupClosed;
+
+            LightDismissOverlayMode = LightDismissOverlayMode.On;
+
         }
 
     }

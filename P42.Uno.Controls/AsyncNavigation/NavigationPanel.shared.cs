@@ -98,8 +98,7 @@ namespace P42.Uno.AsyncNavigation
             if (CurrentNavigationTask != null && !CurrentNavigationTask.IsCompleted)
                 await CurrentNavigationTask;
 
-            CurrentNavigationTask = PushAsyncInner(page, pageAnimationOptions);
-            var result = await CurrentNavigationTask;
+            var result = await (CurrentNavigationTask = PushAsyncInner(page, pageAnimationOptions));
             //System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] P42.Uno.AsyncNavigation.NavigationPanel.PushAsync EXIT  page:" + page);
             return result;
         }
@@ -151,11 +150,15 @@ namespace P42.Uno.AsyncNavigation
                     await animator.RunAsync();
 
                 }
+#if __ANDROID__
                 tcs = new TaskCompletionSource<bool>();
                 presenter.SetArrangedTaskCompletionSource(tcs);
+#endif
                 enteringNewPage = false;
                 InvalidateArrange();
+#if __ANDROID__
                 await tcs.Task;
+#endif
             }
             //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner EXIT [" + page.Content + "]");
             return true;
