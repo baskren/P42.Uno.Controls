@@ -38,15 +38,16 @@ namespace P42.Uno.Controls
                         .BindFont(this, except: nameof(FontWeight))
                         .BindNullCollapse(),
 
+                    new ScrollViewer()
+                        .RowCol(1,1)
+                        .Content(
                     new ContentPresenter()
                         .Assign(out _messageBlock)
-                        .Row(1)
-                        .Column(1)
                         .TextWrapping(Windows.UI.Xaml.TextWrapping.WrapWholeWords)
                         .BindFont(this)
                         .BindNullCollapse()
-
-                ); ;
+                        )
+                );
         }
     }
 }
