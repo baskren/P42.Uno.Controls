@@ -1,0 +1,73 @@
+﻿<Page
+    x:Class="FlexPanelTest.HolyGrailLayoutPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FlexPanelTest"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:P42.Uno.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Content>
+        <Grid>
+
+            <controls:FlexPanel Direction="Column">
+
+                <Border Background="Aqua">
+                    <TextBlock
+                Text="HEADER"
+                FontSize="40"
+                HorizontalTextAlignment="Center" />
+                </Border>
+
+
+                <!-- Body -->
+                <controls:FlexPanel 
+            Grid.Row="0"
+            Direction="Row"
+            Background="AliceBlue"
+            controls:FlexPanel.Grow="1.0"
+            >
+
+                    <!-- Navigation items-->
+                    <Rectangle 
+                    controls:FlexPanel.Order="-1"
+                    controls:FlexPanel.Basis="50"
+                     Fill="Blue" />
+
+                    <!-- Content -->
+                    <Border 
+                    Background="Gray"
+                    controls:FlexPanel.Grow="1" 
+                    >
+                        <TextBlock 
+                        Text="CONTENT"
+                        FontSize="40"
+                        HorizontalTextAlignment="Center"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        />
+                    </Border>
+
+
+                    <!-- Aside items -->
+                    <Rectangle 
+                    Fill="Green" 
+                    controls:FlexPanel.Basis="50"
+                    />
+
+                </controls:FlexPanel>
+                <Border Background="Pink" >
+                    <TextBlock Text="FOOTER"
+               FontSize="40"
+               HorizontalTextAlignment="Center" />
+                </Border>
+
+            </controls:FlexPanel>
+
+
+
+
+        </Grid>
+    </Page.Content>
+</Page>

@@ -1,0 +1,167 @@
+﻿<Page
+    x:Class="FlexPanelTest.ShrinkExperimentPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FlexPanelTest"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:controls="using:P42.Uno.Controls"
+    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:android="http://uno.ui/android"
+    xmlns:ios="http://uno.ui/ios"
+    xmlns:wasm="http://uno.ui/wasm"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:not_android="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:not_win="http:/uno.ui/not_win"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <converters:StringFormatConverter
+            x:Key="StringFormatConverter" />
+    </Page.Resources>
+    <Page.Content>
+        <Grid
+            Margin="10, 0">
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.Children>
+                <!-- Control Panel -->
+                <Grid
+                    Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="Auto" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.Resources>
+                        <Style
+                            TargetType="TextBlock">
+                            <Style.Setters>
+                                <Setter
+                                    Property="VerticalAlignment"
+                                    Value="Center" />
+                            </Style.Setters>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.Children>
+                        <!-- Controls for TextBlock 2 -->
+                        <TextBlock
+                            Text="TextBlock 2:"
+                            Grid.Row="0"
+                            Grid.Column="0" />
+
+                        <Slider
+                            x:Name="shrink2Slider"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Value="1"
+                            Maximum="5"
+                            StepFrequency="0.01"
+                            TickFrequency="1" />
+
+                        <TextBlock
+                            Text="{x:Bind shrink2Slider.Value,  Converter={StaticResource StringFormatConverter}, ConverterParameter='Shrink = {0:F2}', Mode=OneWay}"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            HorizontalAlignment="Center" />
+
+                        <!-- Controls for TextBlock 4 -->
+                        <TextBlock
+                            Text="TextBlock 4:"
+                            Grid.Row="2"
+                            Grid.Column="0" />
+
+                        <Slider
+                            x:Name="shrink4Slider"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Value="1"
+                            Maximum="5"
+                            StepFrequency="0.01"
+                            TickFrequency="1" />
+
+                        <TextBlock
+                            Text="{x:Bind shrink4Slider.Value,  Converter={StaticResource StringFormatConverter}, ConverterParameter='Shrink = {0:F2}', Mode=OneWay}"
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            HorizontalAlignment="Center" />
+                    </Grid.Children>
+                </Grid>
+
+                <!-- FlexPanel -->
+                <controls:FlexPanel
+                    Grid.Row="1"
+                    Background="AliceBlue">
+
+                    <controls:FlexPanel.Resources>
+                        <Style
+                            TargetType="TextBlock">
+                            <Style.Setters>
+                                <Setter
+                                    win:Property="FontSize"
+                                    Value="48" />
+                                <Setter
+                                    Property="FontSize"
+                                    Value="32"/>
+                            </Style.Setters>
+                        </Style>
+                    </controls:FlexPanel.Resources>
+
+                    <Border
+                        Background="Pink">
+                        <TextBlock
+                            Text="TextBlock 1"
+                            Foreground="Blue" />
+                    </Border>
+
+                    <Border
+                        Background="Cyan"
+                        controls:FlexPanel.Shrink="{x:Bind shrink2Slider.Value, Mode=TwoWay}">
+                        <TextBlock
+                            Text="TextBlock 2"
+                            Foreground="Red" />
+                    </Border>
+
+                    <Border
+                        Background="Pink">
+                        <TextBlock
+                            Text="TextBlock 3"
+                            Foreground="Blue" />
+                    </Border>
+
+                    <Border
+                        Background="Cyan"
+                        controls:FlexPanel.Shrink="{x:Bind shrink4Slider.Value, Mode=TwoWay}">
+                        <TextBlock
+                            Text="TextBlock 4"
+                            Foreground="Red" />
+                    </Border>
+
+                    <Border
+                        Background="Pink">
+                        <TextBlock
+                            Text="TextBlock 5"
+                            Foreground="Blue" />
+                    </Border>
+                </controls:FlexPanel>
+            </Grid.Children>
+        </Grid>
+    </Page.Content>
+</Page>

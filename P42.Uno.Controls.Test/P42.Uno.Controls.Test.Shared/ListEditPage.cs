@@ -63,7 +63,7 @@ namespace P42.Uno.Controls.Test
         public async Task OnCellClicked(TextBlock textBlock)
         {
             System.Diagnostics.Debug.WriteLine("ListEditPage.CLICK!!!");
-            QuickMeasureList.Stopwatch.Restart();
+            //QuickMeasureList.Stopwatch.Restart();
 
             var items = new List<string> 
             { 
@@ -168,9 +168,9 @@ namespace P42.Uno.Controls.Test
 
                 cdPresenter.Target = textBlock;
 
-                System.Diagnostics.Debug.WriteLine("ListEditPage t1: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
+                //System.Diagnostics.Debug.WriteLine("ListEditPage t1: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
                 await cdPresenter.PushDetailAsync();
-                System.Diagnostics.Debug.WriteLine("ListEditPage t2: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
+                //System.Diagnostics.Debug.WriteLine("ListEditPage t2: " + QuickMeasureList.Stopwatch.ElapsedMilliseconds);
             }
             else
             {

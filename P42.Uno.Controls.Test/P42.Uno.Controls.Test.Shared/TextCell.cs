@@ -34,10 +34,10 @@ namespace P42.Uno.Controls.Test
             await ListEditPage.Current.OnCellClicked(_valueLabel);
         }
 
-#if __ANDROID__ || __IOS__
-        private void TextCell_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
-#else
+#if NETFX_CORE
         private void TextCell_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+#else
+        private void TextCell_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
 #endif
         {
             System.Diagnostics.Debug.WriteLine("TextCell.DataContextChanged!!!");

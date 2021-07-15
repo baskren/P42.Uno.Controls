@@ -1,0 +1,121 @@
+﻿<Page
+    x:Class="FlexPanelTest.CatalogItemsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:P42.Uno.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:FlexPanelTest"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Margin="0"
+    Padding="0"
+    Background="LightGray"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="ItemStyle" TargetType="Border">
+            <Setter Property="Background" Value="LightYellow" />
+            <Setter Property="BorderBrush" Value="Blue" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Padding" Value="20" />
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="Width" Value="350" />
+            <Setter Property="Height" Value="500" />
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,2" />
+            <Setter Property="TextWrapping" Value="WrapWholeWords" />
+            <Setter Property="Foreground" Value="Black" />
+        </Style>
+
+        <Style x:Key="headerTextBlock" TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Margin" Value="0,8" />
+                <Setter Property="FontSize" Value="30" />
+                <Setter Property="Foreground" Value="Blue" />
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="Image">
+            <Style.Setters>
+                <Setter Property="controls:FlexPanel.Order" Value="-1" />
+                <Setter Property="controls:FlexPanel.AlignSelf" Value="Center" />
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="Button">
+            <Style.Setters>
+                <Setter Property="Content" Value="LEARN MORE" />
+                <Setter Property="FontSize" Value="30" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="Background" Value="Green" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="controls:FlexPanel.AlignSelf" Value="Center" />
+            </Style.Setters>
+        </Style>
+    </Page.Resources>
+
+    <Page.Content>
+        <ScrollViewer
+            Margin="0"
+            Padding="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="Pink"
+            HorizontalScrollBarVisibility="Visible"
+            HorizontalScrollMode="Enabled"
+            VerticalScrollBarVisibility="Auto"
+            VerticalScrollMode="Disabled">
+            <ScrollViewer.Content>
+                <controls:FlexPanel Background="Cyan">
+                    <Border Style="{StaticResource ItemStyle}">
+                        <controls:FlexPanel Direction="Column">
+                            <TextBlock Style="{StaticResource headerTextBlock}" Text="Seated Monkey" />
+                            <TextBlock Text="This monkey is laid back and relaxed, and likes to watch the world go by." />
+                            <TextBlock Text="  &#x2022; Doesn't make a lot of noise" />
+                            <TextBlock Text="  &#x2022; Often smiles mysteriously" />
+                            <TextBlock Text="  &#x2022; Sleeps sitting up" />
+                            <Image
+                                Width="180"
+                                Height="180"
+                                Source="/Assets/SeatedMonkey.jpg" />
+                            <TextBlock controls:FlexPanel.Grow="1" />
+                            <Button />
+                        </controls:FlexPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource ItemStyle}">
+                        <controls:FlexPanel Direction="Column">
+                            <TextBlock Style="{StaticResource headerTextBlock}" Text="Banana Monkey" />
+                            <TextBlock Text="Watch this monkey eat a giant banana." />
+                            <TextBlock Text="  &#x2022; More fun than a barrel of monkeys" />
+                            <TextBlock Text="  &#x2022; Banana not included" />
+                            <Image
+                                Width="240"
+                                Height="180"
+                                Source="/Assets/Banana.jpg" />
+                            <TextBlock controls:FlexPanel.Grow="1" />
+                            <Button />
+                        </controls:FlexPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource ItemStyle}">
+                        <controls:FlexPanel Direction="Column">
+                            <TextBlock Style="{StaticResource headerTextBlock}" Text="Face-Palm Monkey" />
+                            <TextBlock Text="This monkey reacts appropriately to ridiculous assertions and actions." />
+                            <TextBlock Text="  &#x2022; Cynical but not unfriendly" />
+                            <TextBlock Text="  &#x2022; Seven varieties of grimaces" />
+                            <TextBlock Text="  &#x2022; Doesn't laugh at your jokes" />
+                            <Image
+                                Width="180"
+                                Height="180"
+                                Source="/Assets/FacePalm.jpg" />
+                            <TextBlock controls:FlexPanel.Grow="1" />
+                            <Button />
+                        </controls:FlexPanel>
+                    </Border>
+                </controls:FlexPanel>
+            </ScrollViewer.Content>
+        </ScrollViewer>
+    </Page.Content>
+</Page>
