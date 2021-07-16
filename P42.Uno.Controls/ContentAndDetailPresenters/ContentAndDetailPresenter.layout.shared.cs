@@ -41,7 +41,7 @@ namespace P42.Uno.Controls
             _targetedPopup = new TargetedPopup
             {
                 IsLightDismissEnabled = false,
-                LightDismissOverlayMode = LightDismissOverlayMode.On,
+                LightDismissOverlayMode = LightDismissOverlayMode.Off,
                 IsAnimated = false,
                 Padding = new Thickness(4),
                 Opacity = 0,
@@ -57,7 +57,7 @@ namespace P42.Uno.Controls
                 ;
 
             //LightDismissOverlayBrush = SystemColors.AltMedium.WithAlpha(0.25).ToBrush();
-            LightDismissOverlayBrush = Colors.Gray.WithAlpha(0.25).ToBrush();
+            LightDismissOverlayBrush = Colors.Black.WithAlpha(0.01).ToBrush();
             _overlay.PointerPressed += OnDismissPointerPressed;
 
             _targetedPopup.Popped += OnTargetedPopupPopped;

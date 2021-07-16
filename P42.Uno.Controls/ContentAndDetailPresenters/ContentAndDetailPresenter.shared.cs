@@ -299,7 +299,7 @@ namespace P42.Uno.Controls
             nameof(LightDismissOverlayBrush),
             typeof(Brush),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(SystemColors.AltMedium.WithAlpha(0.1).ToBrush())
+            new PropertyMetadata(Colors.Black.WithAlpha(0.01).ToBrush())
         );
         public Brush LightDismissOverlayBrush
         {
