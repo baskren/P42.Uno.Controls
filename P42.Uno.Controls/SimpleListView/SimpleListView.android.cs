@@ -200,8 +200,11 @@ namespace P42.Uno.Controls
             {
                 if (!_selectedItems.Contains(item))
                 {
-                    _selectedItems.Clear();
-                    _selectedItems.Add(item);
+                    _selectedItems.Insert(0, item);
+                    if (_selectedItems.Last() is object last)
+                        _selectedItems.Remove(last);
+                    //_selectedItems.Clear();
+                    //_selectedItems.Add(item);
                 }
             }
             else if (SelectionMode == ListViewSelectionMode.Multiple)
