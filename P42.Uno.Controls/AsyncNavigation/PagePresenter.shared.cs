@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using P42.Utils.Uno;
 using Windows.Foundation;
 using Windows.System;
 using Windows.UI;
@@ -53,7 +54,9 @@ namespace P42.Uno.AsyncNavigation
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(5),
-            Foreground = new SolidColorBrush((Color)Application.Current.Resources["SystemAccentColor"])
+            Foreground = new SolidColorBrush((Color)Application.Current.Resources["SystemAccentColor"]),
+            TextTrimming = TextTrimming.None,
+            TextWrapping = TextWrapping.NoWrap
         };
         internal ContentPresenter IconContentPresenter = new ContentPresenter
         {
@@ -90,12 +93,19 @@ namespace P42.Uno.AsyncNavigation
                 TitleContentPresenter.FontStyle = headerFontStyle;
             else
             {
-                TitleContentPresenter.FontWeight = Windows.UI.Text.FontWeights.Bold;
+                TitleContentPresenter.FontWeight = Windows.UI.Text.FontWeights.Normal;
                 TitleContentPresenter.FontSize = 20;
             }
 
             TitlePanel.Children.Add(IconContentPresenter);
-            TitlePanel.Children.Add(TitleContentPresenter);
+            TitlePanel.Children.Add(new Viewbox()
+            {
+                //StretchDirection = StretchDirection.UpOnly,
+                Stretch = Stretch.Uniform,
+                //HorizontalAlignment = HorizontalAlignment.Stretch,
+                //VerticalAlignment = VerticalAlignment.Stretch,
+                Child = TitleContentPresenter,
+            });
             NavBar.Children.Add(TitlePanel);
 
             //RelativePanel.SetLeftOf(IconContentPresenter, TitleContentPresenter);
@@ -176,7 +186,7 @@ namespace P42.Uno.AsyncNavigation
         public new void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
+            System.GC.SuppressFinalize(this);
             base.Dispose();
         }
 #endif
