@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -280,7 +281,18 @@ namespace P42.Uno.AsyncNavigation
             Stopwatch.Start();
 
             var result = await _navPanel.PushAsync(page, pageAnimationOptions);
-
+            await Task.Delay(50);
+            var methods = typeof(Page).GetMember("OnNavigatedTo", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (methods.FirstOrDefault() is MethodInfo methodInfo)
+            {
+                if (typeof(NavigationEventArgs).GetConstructors(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).FirstOrDefault() is ConstructorInfo constructorInfo)
+                {
+                    //                                                                                                  NavTransInfo, param, sourcePageType, uri
+                    var args = (NavigationEventArgs)constructorInfo.Invoke(new object[] { null, NavigationMode.Forward, null, null, page.GetType(), null });
+                    //System.Diagnostics.Debug.WriteLine($"NavigationPage");
+                    methodInfo.Invoke(page, new object[] { args });
+                }
+            }
             Stopwatch.Stop();
 
             //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPage.PushAsync EXIT  page:[" + page + "]");
