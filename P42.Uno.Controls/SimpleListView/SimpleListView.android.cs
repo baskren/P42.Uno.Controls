@@ -548,6 +548,7 @@ namespace P42.Uno.Controls
 
         public Cell()
         {
+            Foreground = P42.Utils.Uno.SystemColors.BaseMediumHigh.ToBrush();
             Margin = new Thickness(10, 5);
             HorizontalAlignment = HorizontalAlignment.Stretch;
             VerticalAlignment = VerticalAlignment.Center;
