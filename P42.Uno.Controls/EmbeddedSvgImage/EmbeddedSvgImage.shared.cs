@@ -49,14 +49,18 @@ namespace P42.Uno.Controls
         #region Construction
         public EmbeddedSvgImage()
         {
+            Background = Colors.Transparent.ToBrush();
             PaintSurface += OnPaintSurface;
+#if __IOS__
+            Opaque = false;
+#endif
         }
 
         public EmbeddedSvgImage(Assembly assembly, string resourceId) : this()
         {
             SetSource(assembly, resourceId);
         }
-        #endregion
+#endregion
 
 
         public void SetSource(Assembly assembly, string resourceId)
@@ -90,6 +94,7 @@ namespace P42.Uno.Controls
             var workingCanvas = canvas;
             var fillRect = e.Info.Rect;
 
+            workingCanvas.Clear();
             workingCanvas.Save();
 
             var fillRectAspect = (float)fillRect.Width / (float)fillRect.Height;
@@ -172,6 +177,7 @@ namespace P42.Uno.Controls
                 var transparency = SKColors.White.WithAlpha((byte)(Opacity * 255)); // 127 => 50%
                 paint = new SKPaint { ColorFilter = SKColorFilter.CreateBlendMode(transparency, SKBlendMode.DstIn) };
             }
+            //workingCanvas.Clear();
             workingCanvas.DrawPicture(_skSvg.Picture, paint);
             workingCanvas.Restore();
 
