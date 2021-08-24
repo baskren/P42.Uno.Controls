@@ -80,6 +80,8 @@ namespace P42.Uno.AsyncNavigation
 
         public PagePresenter()
         {
+            global::Uno.UI.Toolkit.VisibleBoundsPadding.SetPaddingMask(NavBar, global::Uno.UI.Toolkit.VisibleBoundsPadding.PaddingMask.Top);
+
             Loaded += OnLoaded;
             Unloaded += OnUnloaded;
             _waitingForLoad = true;
