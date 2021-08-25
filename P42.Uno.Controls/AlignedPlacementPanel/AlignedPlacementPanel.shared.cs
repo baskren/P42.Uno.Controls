@@ -109,7 +109,7 @@ namespace P42.Uno.Controls
         protected override Size MeasureOverride(Size availableSize)
         {
             if (availableSize.IsZero())
-                return availableSize;
+                return new Size(Math.Min(availableSize.Width, 50), Math.Min(availableSize.Height, 50));
             var size = new Size(availableSize.Width, 40);
             foreach (var child in Children)
                 child.Measure(size);
