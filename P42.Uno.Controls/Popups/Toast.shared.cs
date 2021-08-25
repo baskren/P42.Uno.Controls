@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using P42.Utils.Uno;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -26,7 +28,10 @@ namespace P42.Uno.Controls
         private static void OnTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             if (d is Toast toast)
+            {
                 toast._titleBlock.Content = args.NewValue;
+                //toast._titleBlock.FontWeight = FontWeights.Bold;
+            }
         }
 
         public object TitleContent

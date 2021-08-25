@@ -33,9 +33,9 @@ namespace P42.Uno.Controls
                         .Assign(out _titleBlock)
                         .Row(0)
                         .Column(1)
-                        .Bold()
                         .TextWrapping(Windows.UI.Xaml.TextWrapping.WrapWholeWords)
-                        .BindFont(this, except: nameof(FontWeight))
+                        .FontFamily("ms-appx:///Assets/Fonts/Ubuntu-Bold.ttf#Ubuntu-Bold")
+                        //.BindFont(this, except: nameof(FontWeight))
                         .BindNullCollapse(),
 
                     new ScrollViewer()
