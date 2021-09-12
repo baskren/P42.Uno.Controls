@@ -55,7 +55,9 @@ namespace P42.Uno.AsyncNavigation
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(5),
             Foreground = new SolidColorBrush((Color)Application.Current.Resources["SystemAccentColor"]),
+#if !WINDOWS_UWP
             TextTrimming = TextTrimming.None,
+#endif
             TextWrapping = TextWrapping.NoWrap
         };
         internal ContentPresenter IconContentPresenter = new ContentPresenter
@@ -182,7 +184,7 @@ namespace P42.Uno.AsyncNavigation
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
+            System.GC.SuppressFinalize(this);
         }
 #else
         public new void Dispose()

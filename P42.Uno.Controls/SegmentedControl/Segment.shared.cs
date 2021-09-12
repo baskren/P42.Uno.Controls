@@ -25,7 +25,7 @@ namespace P42.Uno.Controls
         {
             Click += OnClicked;
             //Margin = new Thickness(0, Margin.Vertical());
-            Padding = new Thickness(0,4);
+            Padding = new Thickness(0,4,0,4);
         }
 
         private void OnClicked(object sender, RoutedEventArgs e)

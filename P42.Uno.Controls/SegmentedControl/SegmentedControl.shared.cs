@@ -163,7 +163,7 @@ namespace P42.Uno.Controls
         {
             if (SelectionMode == SelectionMode.None)
                 segment.IsChecked = false;
-            else if (SelectionMode == SelectionMode.Radio) 
+            else if (SelectionMode == SelectionMode.Radio)
             {
                 if (segment.IsSelected)
                 {
