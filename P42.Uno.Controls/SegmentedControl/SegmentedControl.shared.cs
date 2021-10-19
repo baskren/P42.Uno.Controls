@@ -238,8 +238,16 @@ namespace P42.Uno.Controls
                 Segments[i].Index = i;
                 if (i == 0)
                 {
-                    Segments[i].BorderThickness(1.5, 1.5, 0.5, 1.5);
-                    Segments[i].CornerRadius(CornerRadius.TopLeft, 0, 0, CornerRadius.BottomLeft);
+                    if (i == Segments.Count-1)
+                    {
+                        Segments[i].BorderThickness(1.5, 1.5, 1.5, 1.5);
+                        Segments[i].CornerRadius(CornerRadius.TopLeft, CornerRadius.TopRight, CornerRadius.BottomRight, CornerRadius.BottomLeft);
+                    }
+                    else
+                    {
+                        Segments[i].BorderThickness(1.5, 1.5, 0.5, 1.5);
+                        Segments[i].CornerRadius(CornerRadius.TopLeft, 0, 0, CornerRadius.BottomLeft);
+                    }
                 }
                 else if (i == Segments.Count-1)
                 {
