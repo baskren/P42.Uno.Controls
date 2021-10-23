@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <!-- WASM -->
-  <Import Project=".\P42.Uno.Controls.WASM.props" Condition=" $(TargetFramework.StartsWith('netstandard2.')) " />
+  <Import Project=".\P42.Uno.Controls.WASM.props" Condition=" $(TargetFramework.StartsWith('net')) " />
 
   <!-- UWP -->
   <Import Project=".\P42.Uno.Controls.UWP.props" Condition=" $(TargetFramework.StartsWith('uap10.0')) " />
