@@ -3,12 +3,14 @@
 
   <PropertyGroup>
     <NoWarn>Uno0001</NoWarn>
-    <TargetFrameworks>netstandard2.0;Xamarin.iOS10;Xamarin.Mac20;MonoAndroid11.0;MonoAndroid10.0;</TargetFrameworks>
+    <TargetFramework Condition=" '$(GitHubActionTarget)' == 'WASM' ">netstandard2.0</TargetFramework>
+    <TargetFrameworks  Condition=" '$(GitHubActionTarget)' != 'WASM' ">netstandard2.0;Xamarin.iOS10;Xamarin.Mac20;MonoAndroid11.0;MonoAndroid10.0;</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">uap10.0.18362;$(TargetFrameworks);</TargetFrameworks>
   </PropertyGroup>
 
   <!-- WASM -->
   <Import Project=".\P42.Uno.Controls.WASM.props" Condition=" $(TargetFramework.StartsWith('net')) " />
+  <Import Project=".\P42.Uno.Controls.WASM.props" Condition=" '$(GitHubActionTarget)' == 'WASM' " />
 
   <!-- UWP -->
   <Import Project=".\P42.Uno.Controls.UWP.props" Condition=" $(TargetFramework.StartsWith('uap10.0')) " />
