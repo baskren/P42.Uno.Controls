@@ -26,8 +26,11 @@
 
 
   <!-- WASM -->
-  <Import Project=".\P42.Uno.Controls.WASM.props" Condition=" $(TargetFramework.StartsWith('net')) " />
-  <Import Project=".\P42.Uno.Controls.WASM.props" Condition=" '$(GitHubActionTarget)' == 'WASM' " />
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('net')) OR  '$(GitHubActionTarget)' == 'WASM' " >
+    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="3.10.11" />
+    <Compile Include="**\*.wasm.cs" />
+    <Compile Include="**\*.wasm.*.cs" />
+  </ItemGroup>
 
   <!-- UWP -->
   <Import Project=".\P42.Uno.Controls.UWP.props" Condition=" $(TargetFramework.StartsWith('uap10.0')) " />
