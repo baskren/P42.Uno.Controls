@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.WASM.csproj" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.WASM.csproj" />
+    <ProjectReference Include="..\P42.Utils\P42.Utils\P42.Utils.csproj" />
   </ItemGroup>
   
 </Project>
