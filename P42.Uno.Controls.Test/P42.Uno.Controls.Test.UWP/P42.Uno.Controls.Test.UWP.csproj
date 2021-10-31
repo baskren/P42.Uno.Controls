@@ -3,13 +3,13 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.11" />
-      <!-- 
+    <!-- 
 			If, in the same solution, you are referencing a project that uses https://github.com/onovotny/MSBuildSdkExtras,
 			you need to make sure that the version provided here matches https://github.com/onovotny/MSBuildSdkExtras/blob/master/Source/MSBuild.Sdk.Extras/DefaultItems/ImplicitPackages.targets#L11.
 			This is not an issue when libraries are referenced through nuget packages. See https://github.com/unoplatform/uno/issues/446 for more details.
 			-->
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations" Version="7.0.0"/>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI" Version="7.0.0"/>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI" Version="7.0.0" />
     <PackageReference Include="Microsoft.UI.Xaml" Version="2.5.0" />
     <PackageReference Include="Uno.Core" Version="3.0.0" />
     <PackageReference Include="Uno.UI" Version="3.10.11" />
@@ -44,6 +44,8 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
+    <EnableGatekeeperAnalysis>false</EnableGatekeeperAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -146,17 +148,17 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.UWP.csproj">
-      <Project>{46657d93-3a0b-4aa7-a1c7-26a761e1968a}</Project>
-      <Name>P42.Uno.Controls.UWP</Name>
+    <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.csproj">
+      <Project>{e7acab8a-9e14-496f-b18d-a76d4f87d1be}</Project>
+      <Name>P42.Uno.Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.UWP.csproj">
-      <Project>{9bb71a17-b6a5-4c9e-b9b1-0d64ef04fec0}</Project>
-      <Name>P42.Uno.Markup.UWP</Name>
+    <ProjectReference Include="..\..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj">
+      <Project>{44962bbf-bd41-48e5-9a5d-2ac4a3a66397}</Project>
+      <Name>P42.Uno.Markup</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.UWP.csproj">
-      <Project>{b331d595-d0c6-4770-8755-ec7d247e1665}</Project>
-      <Name>P42.Utils.Uno.UWP</Name>
+    <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj">
+      <Project>{478923a9-5bbe-4245-812a-e6e75ba30ca6}</Project>
+      <Name>P42.Utils.Uno</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\P42.Utils\P42.Utils\P42.Utils.csproj">
       <Project>{609de145-9639-4456-b25f-b323d0f7a338}</Project>

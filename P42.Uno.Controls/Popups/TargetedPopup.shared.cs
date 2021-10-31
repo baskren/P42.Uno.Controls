@@ -26,7 +26,7 @@ namespace P42.Uno.Controls
 {
     [Windows.UI.Xaml.Data.Bindable]
     [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
-    [ContentProperty(Name = nameof(PopupContent))]
+    [ContentProperty(Name = nameof(XamlContent))]
     public partial class TargetedPopup : UserControl, ITargetedPopup
     {
         static int _pushingCount = 0;
@@ -42,9 +42,9 @@ namespace P42.Uno.Controls
 
         #region Properties
 
-        #region PopupContent Property
-        public static readonly DependencyProperty PopupContentProperty = DependencyProperty.Register(
-            nameof(PopupContent),
+        #region Content Property
+        public static readonly DependencyProperty XamlContentProperty = DependencyProperty.Register(
+            nameof(XamlContent),
             typeof(object),
             typeof(TargetedPopup),
             new PropertyMetadata(null, OnPopupContentChanged)
@@ -56,10 +56,16 @@ namespace P42.Uno.Controls
                 popup._contentPresenter.Content = args.NewValue;
         }
 
-        public object PopupContent
+        public object XamlContent
         {
-            get => GetValue(PopupContentProperty);
-            set => SetValue(PopupContentProperty, value);
+            get => GetValue(XamlContentProperty);
+            set => SetValue(XamlContentProperty, value);
+        }
+
+        public new object Content
+        {
+            get => XamlContent;
+            set => XamlContent = value;
         }
         #endregion 
 
@@ -450,7 +456,7 @@ namespace P42.Uno.Controls
             var result = new TargetedPopup
             {
                 Target = target,
-                PopupContent = bubbleContent
+                Content = bubbleContent
             };
             await result.PushAsync();
             return result;
@@ -799,16 +805,6 @@ namespace P42.Uno.Controls
 
 
         #region Layout
-        /*
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            if (IsEmpty)
-                return AppWindow.Size();
-
-            _border.Measure(AppWindow.Size());
-            return AppWindow.Size();
-        }
-        */
         void UpdateMarginAndAlignment()
         {
             if (_border is null)
@@ -817,31 +813,38 @@ namespace P42.Uno.Controls
             var windowSize = AppWindow.Size(this);
             if (windowSize.Width < 1 || windowSize.Height < 1)
                 return;
-            var windowWidth = windowSize.Width - Margin.Horizontal();
-            var windowHeight = windowSize.Height - Margin.Vertical();
+
+            var safeMargin = AppWindow.SafeArea(this);
+
+#if __ANDROID__
+            //safeMargin.Top = AppWindow.StatusBarHeight(this);
+#endif
+
+            var windowWidth = windowSize.Width - Margin.Horizontal() - safeMargin.Horizontal();
+            var windowHeight = windowSize.Height - Margin.Vertical() - safeMargin.Vertical();
             var cleanSize = MeasureBorder(new Size(windowWidth, windowHeight));
             //System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment: cleanSize: " + cleanSize);
             if (PreferredPointerDirection == PointerDirection.None || Target is null)
             {
                 //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateMarginAndAlignment PreferredPointerDirection == PointerDirection.None");
-                CleanMarginAndAlignment(HorizontalAlignment,VerticalAlignment, windowSize, cleanSize);
+                CleanMarginAndAlignment(HorizontalAlignment,VerticalAlignment, windowSize, cleanSize, safeMargin);
                 return;
             }
 
             var target = TargetBounds();
 
             //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateBorderMarginAndAlignment targetBounds:["+targetBounds+"]");
-            var availableSpace = AvailableSpace(target);
-            var stats = BestFit(availableSpace, cleanSize);
+            var availableSpace = AvailableSpace(target, safeMargin);
+            var stats = BestFit(availableSpace, cleanSize, safeMargin);
 
             if (stats.PointerDirection == PointerDirection.None)
             {
-                CleanMarginAndAlignment(HorizontalAlignment.Center, VerticalAlignment.Center, windowSize, cleanSize);
+                CleanMarginAndAlignment(HorizontalAlignment.Center, VerticalAlignment.Center, windowSize, cleanSize, safeMargin);
                 return;
             }
 
             ActualPointerDirection = stats.PointerDirection;
-            var margin = Margin;
+            var margin = Margin.Add(safeMargin);
             var hzAlign = HorizontalAlignment;
             var vtAlign = VerticalAlignment;
 
@@ -927,7 +930,7 @@ namespace P42.Uno.Controls
             SetMarginAndAlignment(margin, hzAlign, vtAlign, windowSize, stats.BorderSize);
         }
 
-        void CleanMarginAndAlignment(HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size windowSize, Size cleanSize)
+        void CleanMarginAndAlignment(HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size windowSize, Size cleanSize, Thickness safeMargin)
         {
             ActualPointerDirection = PointerDirection.None;
 
@@ -935,7 +938,7 @@ namespace P42.Uno.Controls
                 return;
 
             _border.PointerDirection = ActualPointerDirection;
-            SetMarginAndAlignment(Margin, hzAlign, vtAlign, windowSize, cleanSize);
+            SetMarginAndAlignment(Margin.Add(safeMargin), hzAlign, vtAlign, windowSize, cleanSize);
         }
 
         void SetMarginAndAlignment(Thickness margin, HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size windowSize, Size cleanSize)
@@ -1009,12 +1012,12 @@ namespace P42.Uno.Controls
             return new Rect(left, top, right - left, bottom - top);
         }
 
-        DirectionStats BestFit(Thickness availableSpace, Size cleanSize)
+        DirectionStats BestFit(Thickness availableSpace, Size cleanSize, Thickness safeMargin)
         {
             // given the amount of free space, determine if the border will fit 
             var windowSize = AppWindow.Size(this);
-            var windowSpaceW = Math.Max(0, windowSize.Width - Margin.Horizontal());
-            var windowSpaceH = Math.Max(0, windowSize.Height - Margin.Vertical());
+            var windowSpaceW = Math.Max(0, windowSize.Width - Margin.Horizontal() - safeMargin.Horizontal());
+            var windowSpaceH = Math.Max(0, windowSize.Height - Margin.Vertical() - safeMargin.Vertical());
             var windowSpace = new Size(windowSpaceW, windowSpaceH);
 
             var freeSpaceW = Math.Max(0, windowSpace.Width - cleanSize.Width);
@@ -1086,17 +1089,17 @@ namespace P42.Uno.Controls
             return new Rect(targetLeft, targetTop, targetRight - targetLeft, targetBottom - targetTop);
         }
 
-        Thickness AvailableSpace(Rect target)
+        Thickness AvailableSpace(Rect target, Thickness safeMargin)
         {
             var windowBounds = AppWindow.Size(this);
             if (Target != null || (TargetPoint.X > 0 || TargetPoint.Y > 0))
             {
                 if (target.Right > 0 && target.Left < windowBounds.Width && target.Bottom > 0 && target.Top < windowBounds.Height)
                 {
-                    var availL = target.Left - Margin.Left;
-                    var availR = windowBounds.Width - Margin.Right - target.Right;
-                    var availT = target.Top - Margin.Top;
-                    var availB = windowBounds.Height - target.Bottom - Margin.Bottom;
+                    var availL = target.Left - Margin.Left - safeMargin.Left;
+                    var availR = windowBounds.Width - Margin.Right - safeMargin.Right - target.Right;
+                    var availT = target.Top - Margin.Top - safeMargin.Top;
+                    var availB = windowBounds.Height - target.Bottom - Margin.Bottom - safeMargin.Bottom;
 
                     var maxWidth = MaxWidth;
                     if (Width > 0 && Width < maxWidth)
@@ -1121,7 +1124,7 @@ namespace P42.Uno.Controls
             }
 
             if (PointToOffScreenElements)
-                return new Thickness(windowBounds.Width - Margin.Horizontal(), windowBounds.Height - Margin.Vertical(), windowBounds.Width - Margin.Horizontal(), windowBounds.Height - Margin.Vertical());
+                return new Thickness(windowBounds.Width - Margin.Horizontal() - safeMargin.Horizontal(), windowBounds.Height - Margin.Vertical() - safeMargin.Vertical(), windowBounds.Width - Margin.Horizontal() - safeMargin.Horizontal(), windowBounds.Height - Margin.Vertical() - safeMargin.Vertical());
 
             return new Thickness(-1, -1, -1, -1);
         }

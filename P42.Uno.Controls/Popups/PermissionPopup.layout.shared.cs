@@ -18,6 +18,7 @@ namespace P42.Uno.Controls
             new Button()
                 .Assign(out _cancelButton)
                 .Column(1)
+                .Margin(0)
                 .StretchHorizontal()
                 .CornerRadius(2)
                 .Bind(Button.ForegroundProperty, this, nameof(CancelButtonForeground))

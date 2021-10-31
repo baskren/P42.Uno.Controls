@@ -16,6 +16,7 @@ namespace P42.Uno.Controls
                 .Assign(out _okButton)
                 .Row(2)
                 .Column(1)
+                .Margin(0)
                 .StretchHorizontal()
                 .CornerRadius(2)
                 .Bind(BackgroundProperty, this, nameof(OkButtonBackground))

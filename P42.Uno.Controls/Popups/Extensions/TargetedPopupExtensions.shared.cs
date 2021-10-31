@@ -17,7 +17,7 @@ namespace P42.Uno.Controls
 
     {
 		public static TElement Content<TElement>(this TElement element, object value) where TElement : ElementType
-		{ element.PopupContent = value; return element; }
+		{ element.XamlContent = value; return element; }
 
 		#region Alignment
 

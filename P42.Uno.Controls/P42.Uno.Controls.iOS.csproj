@@ -10,7 +10,6 @@
 
   <!-- REFERENCES -->
   <ItemGroup>
-    <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.iOS.csproj" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.iOS.csproj" />
   </ItemGroup>
 

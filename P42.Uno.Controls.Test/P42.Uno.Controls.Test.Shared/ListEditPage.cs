@@ -176,7 +176,7 @@ namespace P42.Uno.Controls.Test
             {
                 var popup = new TargetedPopup
                 {
-                    PopupContent = grid,
+                    Content = grid,
                     Background = new SolidColorBrush(Colors.Pink),
                     Target = textBlock
                 }

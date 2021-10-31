@@ -9,6 +9,7 @@ using Windows.UI;
 using P42.Utils.Uno;
 using Uno.UI.Toolkit;
 using P42.Uno.Markup;
+using Windows.UI.Xaml.Markup;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -16,14 +17,63 @@ namespace P42.Uno.Controls
 {
     [Windows.UI.Xaml.Data.Bindable]
     [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
-    [TemplatePart(Name = ContentPresenterName, Type=typeof(ContentPresenter))]
-    [TemplatePart(Name = PathElementName, Type = typeof(Path))]
-    [TemplatePart(Name = DropShadowPanelElementName, Type = typeof(ElevatedView))]
-    public partial class BubbleBorder : ContentControl
+    [ContentProperty(Name = nameof(XamlContent))]
+    public partial class BubbleBorder : UserControl
     {
         #region Properties
 
+
+
         #region Override Properties
+
+        #region Content Property
+        public static readonly DependencyProperty XamlContentProperty = DependencyProperty.Register(
+            nameof(XamlContent),
+            typeof(object),
+            typeof(BubbleBorder),
+            new PropertyMetadata(null, OnContentChanged)
+        );
+
+        private static void OnContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        {
+            if (d is BubbleBorder popup)
+            popup._contentPresenter.Content = args.NewValue;
+        }
+
+        public object XamlContent
+        {
+            get => GetValue(XamlContentProperty);
+            set => SetValue(XamlContentProperty, value);
+        }
+
+        public new object Content
+        {
+            get => XamlContent;
+            set => XamlContent = value;
+        }
+        #endregion
+
+        #region Padding Property
+        public static readonly new DependencyProperty PaddingProperty = DependencyProperty.Register(
+            nameof(Padding),
+            typeof(Thickness),
+            typeof(BubbleBorder),
+            new PropertyMetadata(default(Thickness), OnPaddingChanged)
+        );
+
+        private static void OnPaddingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is BubbleBorder border)
+                border.UpdateContentPresenterMargin();
+        }
+
+        public new Thickness Padding
+        {
+            get => (Thickness)GetValue(PaddingProperty);
+            set => SetValue(PaddingProperty, value);
+        }
+        #endregion Padding Property
+
 
         #region HorizontalAlignment Property
         public static readonly new DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
@@ -45,7 +95,7 @@ namespace P42.Uno.Controls
             get => (HorizontalAlignment)GetValue(HorizontalAlignmentProperty);
             set => SetValue(HorizontalAlignmentProperty, value);
         }
-#endregion HorizontalAlignment Property
+        #endregion HorizontalAlignment Property
 
         #region VerticalAlignment Property
         public static readonly new DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register(
@@ -203,29 +253,43 @@ namespace P42.Uno.Controls
         }
         #endregion PointerCornerRadius Property
 
-
+        /*
         #region ContentPresenterMargin Property
         internal static readonly DependencyProperty ContentPresenterMarginProperty = DependencyProperty.Register(
             nameof(ContentPresenterMargin),
             typeof(Thickness),
             typeof(BubbleBorder),
-            new PropertyMetadata(default(Thickness))
+            new PropertyMetadata(default(Thickness), OnContentPresenterMarginChanged)
         );
+
+        private static void OnContentPresenterMarginChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is BubbleBorder bubble && e.NewValue is Thickness margin)
+                bubble._contentPresenter.Margin = margin;
+        }
+
         internal Thickness ContentPresenterMargin
         {
             get => (Thickness)GetValue(ContentPresenterMarginProperty);
             set => SetValue(ContentPresenterMarginProperty, value);
         }
         #endregion ContentPresenterMargin Property
-
+        */
 
         #region PathGeometry Property
         internal static readonly DependencyProperty PathGeometryProperty = DependencyProperty.Register(
             nameof(PathGeometry),
             typeof(PathGeometry),
             typeof(BubbleBorder),
-            new PropertyMetadata(new PathGeometry())
+            new PropertyMetadata(new PathGeometry(), OnPathGeometryChanged)
         );
+
+        private static void OnPathGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is BubbleBorder bubble && e.NewValue is PathGeometry path)
+                bubble._path.Data = path;
+        }
+
         internal PathGeometry PathGeometry
         {
             get => (PathGeometry)GetValue(PathGeometryProperty);
@@ -243,7 +307,7 @@ namespace P42.Uno.Controls
         );
         protected virtual void OnHasShadowChanged(DependencyPropertyChangedEventArgs e)
         {
-            ShadowOpacity = HasShadow ? 0.5 : 0;
+            ShadowOpacity = HasShadow ? 0.25 : 0;
         }
         public bool HasShadow
         {
@@ -322,9 +386,6 @@ namespace P42.Uno.Controls
         #region Fields
         const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Left;
         const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Top;
-        const string ContentPresenterName = nameof(_contentPresenter);
-        const string PathElementName = nameof(_path);
-        const string DropShadowPanelElementName = nameof(_dropShadow);
         ContentPresenter _contentPresenter;
         Windows.UI.Xaml.Shapes.Path _path;
         ElevatedView _dropShadow;
@@ -334,83 +395,18 @@ namespace P42.Uno.Controls
         #region Construction / Loading
         public BubbleBorder()
         {
+            base.Padding = new Thickness(0);
+            base.Margin = new Thickness(0);
             base.HorizontalAlignment = DefaultHorizontalAlignment;
             base.VerticalAlignment = DefaultVerticalAlignment;
-            this.InitializeComponent();
+            Build();
             UpdateContentPresenterMargin();
         }
 
-
-        protected override void OnApplyTemplate()
-        {
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".OnApplyTemplate ==============================================================");
-            var contentPresenter = GetTemplateChild(ContentPresenterName);
-            _contentPresenter = contentPresenter as ContentPresenter;
-            //System.Diagnostics.Debug.WriteLine(GetType() + "\t contentPresenter.GetType: " + contentPresenter?.GetType());
-
-            var path = GetTemplateChild(PathElementName);
-            _path = path as Windows.UI.Xaml.Shapes.Path;
-            this.Bind(BorderThicknessProperty, this, nameof(InternalThickness), Windows.UI.Xaml.Data.BindingMode.TwoWay);
-            //System.Diagnostics.Debug.WriteLine(GetType() + "\t path.GetType: " + path?.GetType());
-
-            var dropShadow = GetTemplateChild(DropShadowPanelElementName);
-            _dropShadow = dropShadow as ElevatedView;
-            //System.Diagnostics.Debug.WriteLine(GetType() + "\t dropShadow.GetType: " + dropShadow?.GetType());
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".OnApplyTemplate ==============================================================");
-        }
         #endregion
 
 
         #region LayoutUpdate
-        /*
-        private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
-        {
-            // the canvas and properties
-            var canvas = e.Surface.Canvas;
-
-            // get the screen density for scaling
-            var display = DisplayInformation.GetForCurrentView();
-            var scale = display.LogicalDpi / 96.0f;
-            //var scaledSize = new SKSize(e.Info.Width / scale, e.Info.Height / scale);
-
-            // handle the device screen density
-            canvas.Scale(scale);
-
-            // make sure the canvas is blank
-            canvas.Clear(SKColors.Yellow);
-
-            SKColor fillColor =  SKColors.Transparent;
-            if (Background is SolidColorBrush backgroundBrush && backgroundBrush.Color is Color winBackgroundColor)
-                fillColor = new SKColor(winBackgroundColor.R, winBackgroundColor.G, winBackgroundColor.B, winBackgroundColor.A); // backgroundBrush.Color.ToSKColor();
-
-            SKColor strokeColor = SKColors.Transparent;
-            if (BorderBrush is SolidColorBrush borderBrush && borderBrush.Color is Color winStrokeColor)
-                strokeColor = new SKColor(winStrokeColor.R, winStrokeColor.G, winStrokeColor.B, winStrokeColor.A); //borderBrush.Color.ToSKColor();
-
-            //var scaledSize = new Size(DesiredSize.Width, DesiredSize.Height);
-            var borderSize = ContentPresenterSize();             
-            var path = GeneratePath(ContentPresenterSize());
-
-            // draw some text
-            var paint = new SKPaint
-            {
-                Color = fillColor,
-                IsAntialias = true,
-                Style = SKPaintStyle.Fill,
-            };
-            if (fillColor.Alpha > 0)
-                canvas.DrawPath(path, paint);
-
-            if (strokeColor.Alpha > 0 && BorderThickness.Left > 0)
-            {
-                paint.Color = strokeColor;
-                paint.Style = SKPaintStyle.Stroke;
-                paint.StrokeWidth = (float)(BorderThickness.Left);
-                canvas.DrawPath(path, paint);
-            }
-        }
-        */
-
         void UpdateContentPresenterMargin()
         {
             var result = new Thickness(Padding.Left + BorderThickness.Left, Padding.Top + BorderThickness.Top, Padding.Right + BorderThickness.Right, Padding.Bottom + BorderThickness.Bottom);
@@ -431,7 +427,8 @@ namespace P42.Uno.Controls
                 default:
                     break;
             }
-            ContentPresenterMargin = result;
+            //ContentPresenterMargin = result;
+            _contentPresenter.Margin = result;
         }
 
         void RegeneratePath(Size size = default)
@@ -440,7 +437,9 @@ namespace P42.Uno.Controls
                 p.StrokeThickness = BorderThickness.Average();
             var path = GeneratePath(size);
             var data = path.ToSvgPathData();
+            System.Console.WriteLine($"BubbleBorder.RegeneratePath [{data}]");
             PathGeometry = P42.Utils.Uno.StringToPathGeometryConverter.Current.Convert(data);
+            _path.Data = PathGeometry;
         }
 
         
@@ -457,14 +456,14 @@ namespace P42.Uno.Controls
                 return new Size(50 + Padding.Horizontal(), 50 + Padding.Vertical());
 
             UpdateContentPresenterMargin();
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") ======= hzAlign: " + HorizontalAlignment + " ======= margin: " + Margin + " ====== WindowSize: " + AppWindow.Size());
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") ======= hzAlign: " + HorizontalAlignment + " ======= margin: " + Margin + " ======= padding: " + Padding + " ====== WindowSize: " + AppWindow.Size(this));
 
             var windowSize = AppWindow.Size(this);
             var windowWidth = windowSize.Width;
             var windowHeight = windowSize.Height;
 
-            //System.Diagnostics.Debug.WriteLine("\t ContentPresenterMargin: " + ContentPresenterMargin);
-            //this.DebugLogProperties();
+            //System.Diagnostics.Debug.WriteLine("\t ContentPresenterMargin: " + _contentPresenter.Margin);
+            this.DebugLogProperties();
 
 
             if (!this.HasPrescribedWidth())
@@ -476,6 +475,7 @@ namespace P42.Uno.Controls
             availableSize.Height -= Margin.Vertical();
 
             base.MeasureOverride(availableSize);
+            //_innerContent.Measure(availableSize);
 
             Size result = Size.Empty;
             if (_contentPresenter is FrameworkElement element)
@@ -483,8 +483,18 @@ namespace P42.Uno.Controls
                 if (availableSize.Width > 0 && availableSize.Height > 0)
                     element.Measure(availableSize);
                 result = element.DesiredSize;
-                //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride element.DesiredSize:" + result);
+
+                //if( _contentPresenter.Content is FrameworkElement content)
+                //{
+                //    System.Diagnostics.Debug.WriteLine($"BubbleBorder.MeasureOverride _contentPresent.Content.DesiredSize [{content.DesiredSize}]");
+                //}
+                /*
+                var scale = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().ResolutionScale;
+                System.Diagnostics.Debug.WriteLine($"BubbleBorder.MeasureOverride scale=[{scale}]");
+                System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride _contentPresent.DesiredSize:" + result);
+                */
             }
+
             //System.Diagnostics.Debug.WriteLine("\t HorizontalAlignment: " + HorizontalAlignment);
             if (HorizontalAlignment == HorizontalAlignment.Stretch || this.HasPrescribedWidth())
                 result.Width = availableSize.Width;
@@ -495,18 +505,13 @@ namespace P42.Uno.Controls
             result.Width = Math.Max(0,Math.Min(windowWidth - Margin.Horizontal(), result.Width));
             result.Height = Math.Max(0,Math.Min(windowHeight - Margin.Vertical(), result.Height));
 
+
             var borderSize = result;
             borderSize.Width += Margin.Horizontal();
             borderSize.Height += Margin.Vertical();
 
             RegeneratePath(borderSize);
 
-
-#if NETFX_CORE
-#else
-            // the following fixes the DropShadowPanel clipping issue
-            _dropShadow?.Measure(borderSize);
-#endif
             //System.Diagnostics.Debug.WriteLine("\t RESULT: " + result);
             return result;
         }
@@ -516,9 +521,31 @@ namespace P42.Uno.Controls
             //System.Diagnostics.Debug.WriteLine(GetType() + ".ArrangeOverride(" + finalSize + ")");
 
             if (_contentPresenter.Content != null)
-                return base.ArrangeOverride(finalSize);
-            else
-                return finalSize;
+            {
+                /*
+                System.Diagnostics.Debug.WriteLine($"BubbleBorder.ArrangeOverride Background[{Background.AsColor()}] _path.Fill[{_path.Fill.AsColor()}]");
+                System.Diagnostics.Debug.WriteLine($"BubbleBorder.ArrangeOverride hzAlign[{HorizontalAlignment}] hzContentAlign[{HorizontalContentAlignment}] Margin[{Margin}] Padding[{Padding}]");
+                System.Diagnostics.Debug.WriteLine($"BubbleBorder.ArrangeOverride _innerContent.HzAlign[{_innerContent.HorizontalAlignment}] _innerContent.Margin[{_innerContent.Margin}] _innerContent.Padding[{_innerContent.Padding}]");
+                */
+                // base.ArrangeOverride(finalSize) doesn't work on Android (clips the border)
+                //return base.ArrangeOverride(finalSize);
+                _innerContent.Arrange(new Rect(0, 0, finalSize.Width, finalSize.Height));
+                /*
+                foreach (var child in _innerContent.Children)
+                {
+                    if (child is ContentPresenter cp)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"BubbleBorder.ArrangeOverride [{child}] cp.DesiredSize.Width [{cp.DesiredSize.Width}] [{cp.HorizontalAlignment}] [{cp.HorizontalContentAlignment}]");
+                    }
+                    else if (child is FrameworkElement fe)
+                        System.Diagnostics.Debug.WriteLine($"BubbleBorder.ArrangeOverride [{child}] fe.DesiredSize.Width [{fe.DesiredSize.Width}] [{fe.HorizontalAlignment}]");
+                    else
+                        System.Diagnostics.Debug.WriteLine($"BubbleBorder.ArrangeOverride [{child}] child.DesiredSize.Width [{child.DesiredSize.Width}]");
+                }
+                */
+            }
+            //else
+            return finalSize;
         }
 
         SKPath GeneratePath(Size measuredSize = default)
@@ -549,9 +576,9 @@ namespace P42.Uno.Controls
             var pointerLength = PointerDirection == PointerDirection.None ? 0 : (float)PointerLength;
 
             var left = 0.0f + borderWidth / 2;
-            var right = (float)(width - Margin.Left - Margin.Right - borderWidth / 2);
+            var right = (float)(width - Margin.Horizontal());// - borderWidth / 2);
             var top = 0.0f + borderWidth / 2;
-            var bottom = (float)(height - Margin.Top - Margin.Bottom - borderWidth / 2);
+            var bottom = (float)(height - Margin.Vertical());// - borderWidth / 2);
 
             width -= (PointerDirection.IsHorizontal() ? pointerLength : 0);
             height -= (PointerDirection.IsVertical() ? pointerLength : 0);

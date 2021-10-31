@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using P42.Uno.Markup;
 using P42.Utils.Uno;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
@@ -86,6 +87,44 @@ namespace P42.Uno.Controls
         #endregion IconElement Property
 
 
+        #region IsMessageScrollable Property
+        public static readonly DependencyProperty IsMessageScrollableProperty = DependencyProperty.Register(
+            nameof(IsMessageScrollable),
+            typeof(bool),
+            typeof(Toast),
+            new PropertyMetadata(default(bool), OnIsScrollableChanged)
+        );
+
+        private static void OnIsScrollableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Toast toast)
+            {
+                if (toast.IsMessageScrollable)
+                {
+                    if (!toast._bubbleContentGrid.Children.Any(c => c is ScrollViewer))
+                    {
+                        toast._bubbleContentGrid.Children.Add(new ScrollViewer()
+                            .RowCol(1, 1)
+                            .Content(toast._messageBlock)
+                            );
+                    }
+                }
+                else if (toast._bubbleContentGrid.Children.FirstOrDefault(c=>c is ScrollViewer) is ScrollViewer scroll)
+                {
+                    toast._bubbleContentGrid.Children.Remove(scroll);
+                    toast._bubbleContentGrid.Children.Add(toast._messageBlock);
+                }
+            }
+        }
+
+        public bool IsMessageScrollable
+        {
+            get => (bool)GetValue(IsMessageScrollableProperty);
+            set => SetValue(IsMessageScrollableProperty, value);
+        }
+        #endregion IsMessageScrollable Property
+
+
         #region Factory
         public static async Task<Toast> CreateAsync(object message, TimeSpan popAfter = default)
         {
@@ -124,6 +163,16 @@ namespace P42.Uno.Controls
         }
         #endregion
 
+        protected override void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
+        {
+            base.OnBorderSizeChanged(sender, args);
 
+            var size = _messageBlock.DesiredSize;
+            _messageBlock.Measure(new Windows.Foundation.Size(size.Width, 2 * size.Height));
+            var desiredSize = _messageBlock.DesiredSize;
+
+            IsMessageScrollable = desiredSize.Height > size.Height;
+            System.Diagnostics.Debug.WriteLine($"Toast.OnBorderSizeChanged height[{size.Height}] desiredHeight[{desiredSize.Height}]");
+        }
     }
 }

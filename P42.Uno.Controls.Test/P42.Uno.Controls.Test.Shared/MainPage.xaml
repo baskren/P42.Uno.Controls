@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:popups="using:P42.Uno.Controls"
     Padding="0"
+    Margin="0"
     mc:Ignorable="d">
 
     <!--
@@ -37,6 +38,7 @@
         <Grid
             x:Name="_grid"
             Margin="0"
+            Padding="0"
             Background="Yellow">
             <Grid.RowDefinitions>
                 <RowDefinition Height="150" />
@@ -53,6 +55,10 @@
                     Background="Pink"
                     Tapped="OnAltBorderTapped" />
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <TextBlock Text="Margin:" />
+                    <TextBox x:Name="_marginTextBox" Text="0" />
+                    <TextBlock Text="Padding:"/>
+                    <TextBox x:Name="_paddingTextBox" Text="0" />
                     <TextBlock Text="Pointer:" />
                     <ComboBox x:Name="_pointerDirectionCombo" Text="PointerDir" />
                     <TextBlock Text="HzAlign:" />
@@ -89,20 +95,21 @@
                     Fill="Beige" />
                 <popups:BubbleBorder
                     x:Name="_bubbleBorder"
-                    Margin="5"
-                    Padding="5"
+                    Margin="0"
+                    Padding="0"
+                    Width="400"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"
                     Background="Orange"
                     BorderBrush="Black"
                     BorderThickness="1"
                     CornerRadius="5"
                     HasShadow="true"
                     PointerDirection="Down">
-                    <Border Background="#40FF">
-                        <TextBlock Text="TEST TEST TEST" />
+                    <Border Background="#40FF" HorizontalAlignment="Stretch">
+                        <TextBlock Text="TEST TEST TEST" HorizontalAlignment="Stretch" />
                     </Border>
                 </popups:BubbleBorder>
 

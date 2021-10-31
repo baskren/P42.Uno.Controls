@@ -65,6 +65,8 @@ namespace P42.Uno.Controls.Test
 			_window = Windows.UI.Xaml.Window.Current;
 #endif
 
+            P42.Uno.Controls.Settings.Init(this);
+
             var rootFrame = _window.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,

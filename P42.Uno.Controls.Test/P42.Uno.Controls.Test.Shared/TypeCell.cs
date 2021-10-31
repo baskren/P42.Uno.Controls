@@ -19,7 +19,11 @@ namespace P42.Uno.Controls.Test
             DataContextChanged += OnDataContextChanged;
         }
 
+#if WINDOWS_UWP
         private void OnDataContextChanged(Windows.UI.Xaml.FrameworkElement sender, Windows.UI.Xaml.DataContextChangedEventArgs args)
+#else
+        private void OnDataContextChanged(Windows.UI.Xaml.DependencyObject sender, Windows.UI.Xaml.DataContextChangedEventArgs args)
+#endif
         {
             if (DataContext is Type type)
                 _textBlock.Text = type.Namespace + "." + type.Name;

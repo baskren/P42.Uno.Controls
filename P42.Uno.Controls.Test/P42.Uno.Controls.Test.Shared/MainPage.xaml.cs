@@ -48,19 +48,31 @@ namespace P42.Uno.Controls.Test
         string[] _hzSource;
         string[] _vtSource;
 
-        /*
+
+        
         TargetedPopup _targetedPopup = new TargetedPopup
         {
-            PopupContent = "TEXT BUBBLE COTNENT"
-            //BubbleContent = new TextBlock { Text = "I am a targeted popup!" }
+            Content = new Border
+            {
+                Child = new TextBlock { Text = "TEXT BUBBLE CONTENT" },
+                //Background = Colors.Orange.WithAlpha(0.5).ToBrush()
+            }
+            //Content = new TextBlock { Text = "I am a targeted popup!" }
         };
+        
         Toast _toast = new Toast
         {
-            TitleContent =  "TOAST TITLE 2" ,
-            Message = new TextBlock {  Text = "Toast message content"},
+            TitleContent = new Border
+            {
+                Child = new TextBlock
+                {
+                    Text = "TOAST TITLE 2 - THIS IS TO BE LONGER THAN THE CONTENT",
+                },
+            },
+            Message = new Border { Child = new TextBlock { Text = "Toast message content" } },
             IconElement = new SymbolIcon { Symbol=Symbol.AddFriend }
         };
-
+        
         Alert _alert = new Alert
         {
             TitleContent = "ALERT TITLE",
@@ -68,7 +80,8 @@ namespace P42.Uno.Controls.Test
             IconElement = new SymbolIcon { Symbol = Symbol.Important },
             OkButtonContent = "GO FOR IT!"
         };
-        */
+        
+        
         PermissionPopup _permission = new PermissionPopup
         {
             TitleContent =  new TextBlock { Text = "PERMISSION TITLE" },
@@ -78,9 +91,9 @@ namespace P42.Uno.Controls.Test
             OkButtonContent = "YUP",
             CancelButtonContent = "NOPE!",
             CancelButtonBackground = new SolidColorBrush(Colors.Red),
-            IsAnimated = false
+            IsAnimated = true
         };
-
+        
 
         public MainPage()
         {
@@ -93,6 +106,8 @@ namespace P42.Uno.Controls.Test
             _vtAlignCombo.ItemsSource = _vtSource = Enum.GetNames(typeof(VerticalAlignment));
             _vtAlignCombo.SelectedIndex = 0;
 
+            _marginTextBox.TextChanged += _marginTextBox_TextChanged;
+            _paddingTextBox.TextChanged += _paddingTextBox_TextChanged;
             /*
             _bubbleBorder = new BubbleBorder()
                 .Margin(5)
@@ -113,19 +128,33 @@ namespace P42.Uno.Controls.Test
                 );
             _grid.Children.Add(_bubbleBorder);
             */
-            
+
         }
-        /*
-        TargetedPopup _TargetedPopup = new TargetedPopup
+
+        private void _paddingTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Margin = new Thickness(10),
-            Padding = new Thickness(20),
-            Background = new SolidColorBrush(Colors.White),
-            BorderBrush = new SolidColorBrush(Colors.Blue)
-        };
-        */
+            if (double.TryParse(_paddingTextBox.Text, out double result))
+                _bubbleBorder.Padding(result);
+        }
+
+        private void _marginTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (double.TryParse(_marginTextBox.Text, out double result))
+                _bubbleBorder.Margin(result);
+        }
+
+
+        /*
+TargetedPopup _TargetedPopup = new TargetedPopup
+{
+   BorderThickness = new Thickness(1),
+   CornerRadius = new CornerRadius(4),
+   Margin = new Thickness(10),
+   Padding = new Thickness(20),
+   Background = new SolidColorBrush(Colors.White),
+   BorderBrush = new SolidColorBrush(Colors.Blue)
+};
+*/
 
 
         private void OnAltBorderTapped(object sender, TappedRoutedEventArgs e)
@@ -151,7 +180,7 @@ namespace P42.Uno.Controls.Test
         async void _button_Click(object sender, RoutedEventArgs e)
         {
 
-            var popup = _permission;
+            var popup = _targetedPopup;
 #if __WASM__
                 var prefDir = (PointerDirection) Enum.Parse(typeof(PointerDirection), _pointerDirectionCombo.SelectedItem as string);
                 var hzAlign = Enum.Parse(typeof(HorizontalAlignment),_hzAlignCombo.SelectedItem as string, true);
@@ -163,6 +192,7 @@ namespace P42.Uno.Controls.Test
 #endif
             _bubbleBorder.HorizontalAlignment = (HorizontalAlignment)hzAlign;
 
+            
             popup.VerticalAlignment = (VerticalAlignment)vtAlign;
             popup.HorizontalAlignment = (HorizontalAlignment)hzAlign;
             popup.PreferredPointerDirection = prefDir;
@@ -172,9 +202,19 @@ namespace P42.Uno.Controls.Test
             //popup.Content(new TextBlock { Text = "Green Car" });
             popup.Background(Colors.Yellow);
             popup.BorderBrush(Colors.Red);
-            popup.Margin(5);
+
+            var margin = 0.0;
+            if (double.TryParse(_marginTextBox.Text, out double m))
+                margin = m;
+            var padding = 0.0;
+            if (double.TryParse(_paddingTextBox.Text, out double p))
+                padding = p;
+
+            popup.Margin(m);
+            popup.Padding(p);
                 
             await popup.PushAsync();
+            
             /*
             _toast.Content = "I like pizza";
 

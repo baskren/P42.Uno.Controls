@@ -12,7 +12,38 @@ namespace P42.Uno.Controls
     public static class BubbleBorderExtensions
 
     {
-		#region BubbleBorder
+        #region BubbleBorder
+
+        #region Content
+		public static TElement Content<TElement>(this TElement element, object content) where TElement : ElementType
+        {
+			element.Content = content;
+			return element;
+        }
+        #endregion
+
+        #region Padding
+		public static TElement Padding<TElement>(this TElement element, Thickness thickness) where TElement : ElementType
+        {
+			element.Padding = thickness;
+			return element;
+        }
+		public static TElement Padding<TElement>(this TElement element, double t) where TElement : ElementType
+		{
+			element.Padding = new Thickness(t);
+			return element;
+		}
+		public static TElement Padding<TElement>(this TElement element, double h, double v) where TElement : ElementType
+		{
+			element.Padding = new Thickness(h, v, h, v);
+			return element;
+		}
+		public static TElement Padding<TElement>(this TElement element, double l, double t, double r, double b) where TElement : ElementType
+		{
+			element.Padding = new Thickness(l, t, r, b);
+			return element;
+		}
+		#endregion
 
 		#region Alignment
 

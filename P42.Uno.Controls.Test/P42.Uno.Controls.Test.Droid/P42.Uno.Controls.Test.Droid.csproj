@@ -59,16 +59,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="7.0.0"/>
-    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.0.0"/>
-    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.3" />
     <PackageReference Include="Uno.UI" Version="3.10.11" />
     <PackageReference Include="Uno.UI.RemoteControl" Version="3.10.11" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.35" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.33" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
-    <PackageReference Include="Xamarin.AndroidX.Browser" Version="1.0.0"/>
-    <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.3.0.1"/>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Xamarin.AndroidX.Browser" Version="1.0.0" />
+    <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.3.0.1" />
+    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="7.0.0" />
+    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.0.0" />
+    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.3" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -93,17 +93,17 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.Android.csproj">
-      <Project>{d11f4fbb-dce0-4e8f-8df8-780604b79447}</Project>
-      <Name>P42.Uno.Controls.Android</Name>
+    <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.csproj">
+      <Project>{e7acab8a-9e14-496f-b18d-a76d4f87d1be}</Project>
+      <Name>P42.Uno.Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.Android.csproj">
-      <Project>{6b0f2b0b-06f9-4f82-a082-89df9ae5014b}</Project>
-      <Name>P42.Uno.Markup.Android</Name>
+    <ProjectReference Include="..\..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj">
+      <Project>{44962bbf-bd41-48e5-9a5d-2ac4a3a66397}</Project>
+      <Name>P42.Uno.Markup</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.Android.csproj">
-      <Project>{15f449a8-d9e7-4080-85c2-73ffb8953826}</Project>
-      <Name>P42.Utils.Uno.Android</Name>
+    <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj">
+      <Project>{478923a9-5bbe-4245-812a-e6e75ba30ca6}</Project>
+      <Name>P42.Utils.Uno</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\P42.Utils\P42.Utils\P42.Utils.csproj">
       <Project>{609de145-9639-4456-b25f-b323d0f7a338}</Project>

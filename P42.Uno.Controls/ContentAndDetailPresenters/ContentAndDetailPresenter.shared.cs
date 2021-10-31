@@ -420,7 +420,7 @@ namespace P42.Uno.Controls
                 _targetedPopup.Width = PopupWidth;
                 _targetedPopup.Height = PopupHeight;
                 //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LayoutDetailAndOverlay _targetedPopup.Size:[{_targetedPopup.Width},{_targetedPopup.Height}]");
-                _targetedPopup.PopupContent = Detail;
+                _targetedPopup.Content = Detail;
 
                 while (RowDefinitions.Count > 2)
                     RowDefinitions.RemoveAt(RowDefinitions.Count - 1);
