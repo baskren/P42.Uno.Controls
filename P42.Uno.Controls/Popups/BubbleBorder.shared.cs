@@ -275,7 +275,7 @@ namespace P42.Uno.Controls
         }
         #endregion ContentPresenterMargin Property
         */
-
+        /*
         #region PathGeometry Property
         internal static readonly DependencyProperty PathGeometryProperty = DependencyProperty.Register(
             nameof(PathGeometry),
@@ -296,7 +296,7 @@ namespace P42.Uno.Controls
             set => SetValue(PathGeometryProperty, value);
         }
         #endregion PathGeometry Property
-
+        */
 
         #region HasShadow Property
         public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
@@ -437,12 +437,18 @@ namespace P42.Uno.Controls
                 p.StrokeThickness = BorderThickness.Average();
             var path = GeneratePath(size);
             var data = path.ToSvgPathData();
+#if __WASM__
+            System.Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            var x = _path.GetFirstHtmlDescendent();
+            x.SetHtmlContent($"<path fill-rule=\"even-odd\" d=\"{data}\"></path>");
+#else
             System.Console.WriteLine($"BubbleBorder.RegeneratePath [{data}]");
-            PathGeometry = P42.Utils.Uno.StringToPathGeometryConverter.Current.Convert(data);
-            _path.Data = PathGeometry;
+            //PathGeometry = P42.Utils.Uno.StringToPathGeometryConverter.Current.Convert(data);
+            _path.Data = P42.Utils.Uno.StringToPathGeometryConverter.Current.Convert(data);
+#endif
         }
 
-        
+
         private void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
             //System.Diagnostics.Debug.WriteLine(GetType() + ".OnSizeChanged()");
@@ -576,9 +582,9 @@ namespace P42.Uno.Controls
             var pointerLength = PointerDirection == PointerDirection.None ? 0 : (float)PointerLength;
 
             var left = 0.0f + borderWidth / 2;
-            var right = (float)(width - Margin.Horizontal());// - borderWidth / 2);
+            var right = (float)(width - Margin.Horizontal() - borderWidth / 2);
             var top = 0.0f + borderWidth / 2;
-            var bottom = (float)(height - Margin.Vertical());// - borderWidth / 2);
+            var bottom = (float)(height - Margin.Vertical() - borderWidth / 2);
 
             width -= (PointerDirection.IsHorizontal() ? pointerLength : 0);
             height -= (PointerDirection.IsVertical() ? pointerLength : 0);
