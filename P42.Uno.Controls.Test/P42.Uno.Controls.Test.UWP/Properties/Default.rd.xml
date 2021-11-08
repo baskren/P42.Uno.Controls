@@ -22,12 +22,24 @@
       the application package. The asterisks are not wildcards.
     -->
     <Assembly Name="*Application*" Dynamic="Required All" />
-    <Assembly Name="P42.Uno.Controls" Dynamic="Required Public" />
-    <Type Name="System.EventHandler" Dynamic="Required All" />
+    <Namespace Name="P42.Uno.Controls.Test" Dynamic="Required Public" />
 
+    <Assembly Name="P42.Uno.Controls" Dynamic="Required Public" />
+    <Assembly Name="P42.Uno.AsyncNavigation" Dynamic="Required Public" />
+    <Type Name="System.EventHandler" Dynamic="Required All" />
+    <Assembly Dynamic="Required All" Name="Microsoft.Extensions.Logging"/>
+    <Assembly Dynamic="Required All" Name="Microsoft.Extensions.DependencyInjection"/>
+    <Assembly Dynamic="Required All" Name="Microsoft.Extensions.DependencyInjection.Abstractions"/>
+    <Assembly Dynamic="Required All" Name="Microsoft.Extensions.Logging.Abstractions"/>
+    <Assembly Dynamic="Required All" Name="Microsoft.Extensions.Options"/>
+
+    <Assembly Dynamic="Required All" Name="Microsoft.CodeAnalysis"/>
+    <Assembly Dynamic="Required All" Name="Microsoft.Extensions.Internal"/>
+    <Assembly Dynamic="Required All" Name="Microsoft.Extensions.Primatives"/>
 
     <!-- Add your application specific runtime directives here. -->
 
+    
 
   </Application>
 </Directives>

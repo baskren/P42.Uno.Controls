@@ -33,7 +33,8 @@ namespace P42.Uno.Controls.Test
 
         void Build()
         {
-            var itemTemplate = (DataTemplate)Application.Current.Resources ["TextCellTemplate"];
+            //var itemTemplate = (DataTemplate)Application.Current.Resources ["TextCellTemplate"];
+            var itemTemplate = P42.Utils.Uno.UIElementExtensions.AsDataTemplate(typeof(P42.Uno.Controls.Test.TextCell));
 
             listView = new SimpleListView
             {

@@ -49,7 +49,7 @@ namespace P42.Uno.Controls
                 //.Margin(0)
                 .ColumnSpacing(0)
                 .RowSpacing(0)
-                .AddSizeChanged(OnSizeChanged)
+                .AddOnSizeChanged(OnSizeChanged)
                 //.Background(Colors.Blue)
                 .Children
                 (

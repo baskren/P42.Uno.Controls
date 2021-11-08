@@ -118,13 +118,57 @@ namespace P42.Uno.Controls
 		public static TElement PointerCornerRadius<TElement>(this TElement element, double value) where TElement : ElementType
 		{ element.PointerCornerRadius = value; return element; }
 
-		public static TElement PreferredPointerDirection<TElement>(this TElement element, PointerDirection value) where TElement : ElementType
+        #region Pointer Direction
+        public static TElement PreferredPointerDirection<TElement>(this TElement element, PointerDirection value) where TElement : ElementType
 		{ element.PreferredPointerDirection = value; return element; }
 
 		public static TElement FallbackPointerDirection<TElement>(this TElement element, PointerDirection value) where TElement : ElementType
 		{ element.FallbackPointerDirection = value; return element; }
 
-		public static TElement PointerLength<TElement>(this TElement element, double value) where TElement : ElementType
+		public static TElement PreferredPointerDown<TElement>(this TElement element) where TElement : ElementType
+		{ element.PreferredPointerDirection = P42.Uno.Controls.PointerDirection.Down; return element; }
+
+		public static TElement PreferredPointerUp<TElement>(this TElement element) where TElement : ElementType
+		{ element.PreferredPointerDirection = P42.Uno.Controls.PointerDirection.Up; return element; }
+
+		public static TElement PreferredPointerLeft<TElement>(this TElement element) where TElement : ElementType
+		{ element.PreferredPointerDirection = P42.Uno.Controls.PointerDirection.Left; return element; }
+
+		public static TElement PreferredPointerRight<TElement>(this TElement element) where TElement : ElementType
+		{ element.PreferredPointerDirection = P42.Uno.Controls.PointerDirection.Right; return element; }
+
+		public static TElement PreferredPointerHorizontal<TElement>(this TElement element) where TElement : ElementType
+		{ element.PreferredPointerDirection = P42.Uno.Controls.PointerDirection.Horizontal; return element; }
+
+		public static TElement PreferredPointerVertical<TElement>(this TElement element) where TElement : ElementType
+		{ element.PreferredPointerDirection = P42.Uno.Controls.PointerDirection.Vertical; return element; }
+
+		public static TElement PreferredPointerAny<TElement>(this TElement element) where TElement : ElementType
+		{ element.PreferredPointerDirection = P42.Uno.Controls.PointerDirection.Any; return element; }
+
+		public static TElement FallbackPointerDown<TElement>(this TElement element) where TElement : ElementType
+		{ element.FallbackPointerDirection = P42.Uno.Controls.PointerDirection.Down; return element; }
+
+		public static TElement FallbackPointerUp<TElement>(this TElement element) where TElement : ElementType
+		{ element.FallbackPointerDirection = P42.Uno.Controls.PointerDirection.Up; return element; }
+
+		public static TElement FallbackPointerLeft<TElement>(this TElement element) where TElement : ElementType
+		{ element.FallbackPointerDirection = P42.Uno.Controls.PointerDirection.Left; return element; }
+
+		public static TElement FallbackPointerRight<TElement>(this TElement element) where TElement : ElementType
+		{ element.FallbackPointerDirection = P42.Uno.Controls.PointerDirection.Right; return element; }
+
+		public static TElement FallbackPointerHorizontal<TElement>(this TElement element) where TElement : ElementType
+		{ element.FallbackPointerDirection = P42.Uno.Controls.PointerDirection.Horizontal; return element; }
+
+		public static TElement FallbackPointerVertical<TElement>(this TElement element) where TElement : ElementType
+		{ element.FallbackPointerDirection = P42.Uno.Controls.PointerDirection.Vertical; return element; }
+
+		public static TElement FallbackPointerAny<TElement>(this TElement element) where TElement : ElementType
+		{ element.FallbackPointerDirection = P42.Uno.Controls.PointerDirection.Any; return element; }
+        #endregion
+
+        public static TElement PointerLength<TElement>(this TElement element, double value) where TElement : ElementType
 		{ element.PointerLength = value; return element; }
 
 		public static TElement PointerTipRadius<TElement>(this TElement element, double value) where TElement : ElementType

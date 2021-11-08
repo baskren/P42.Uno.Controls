@@ -22,7 +22,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using static P42.Uno.Controls.FlexPanel;
 
-namespace P42.Uno.Controls.FlexPanelExtensions
+namespace P42.Uno.Controls.InternalFlexPanelExtensions
 {
     internal static class FlexItemExtensions
     {

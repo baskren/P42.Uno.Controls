@@ -16,7 +16,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Toolkit.Diagnostics;
-using P42.Uno.Controls.FlexPanelExtensions;
+using P42.Uno.Controls.InternalFlexPanelExtensions;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 
 namespace P42.Uno.Controls.Test
 {
+    [Bindable]
     public partial class TextCell : Grid
     {
         TextBlock _valueLabel;
@@ -46,11 +48,23 @@ namespace P42.Uno.Controls.Test
                 _titleLabel.Text = value ?? string.Empty;
                 _valueLabel.Text = value ?? string.Empty;
             }
+            else if (DataContext is Type type)
+            {
+                _titleLabel.Text = type.FullName ?? string.Empty;
+                _valueLabel.Text = type.Name ?? string.Empty;
+            }
+            else
+            {
+                _titleLabel.Text = "Huh?";
+                _valueLabel.Text = "doh!";
+            }
         }
         
+        /*
         public void ChangeValue(string newValue)
         {
             _valueLabel.Text = newValue ?? string.Empty;
         }
+        */
     }
 }

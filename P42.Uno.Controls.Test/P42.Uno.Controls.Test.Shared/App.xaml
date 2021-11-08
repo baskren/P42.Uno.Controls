@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:P42.Uno.Controls.Test">
 
+    <!--
     <Application.Resources>
         <ResourceDictionary>
             <DataTemplate x:Key="TextCellTemplate" >
@@ -11,4 +12,5 @@
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
+    -->
 </Application>

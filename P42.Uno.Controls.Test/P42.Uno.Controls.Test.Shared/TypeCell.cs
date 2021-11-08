@@ -1,9 +1,11 @@
 using System;
 using P42.Uno.Markup;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 
 namespace P42.Uno.Controls.Test
 {
+    [Bindable]
     public partial class TypeCell : Grid
     {
         TextBlock _textBlock = new TextBlock

@@ -11,13 +11,13 @@ namespace P42.Uno.Controls
 {
     public static class ContentAndDetailPresenterMarkupExtensions
     {
-        public static ContentAndDetailPresenter Content(this ContentAndDetailPresenter presenter, FrameworkElement element)
+        public static ContentAndDetailPresenter Content(this ContentAndDetailPresenter presenter, FrameworkElement element = null)
         { presenter.Content = element; return presenter; }
 
-        public static ContentAndDetailPresenter Footer(this ContentAndDetailPresenter presenter, FrameworkElement element)
+        public static ContentAndDetailPresenter Footer(this ContentAndDetailPresenter presenter, FrameworkElement element = null)
         { presenter.Footer = element; return presenter; }
 
-        public static ContentAndDetailPresenter Detail(this ContentAndDetailPresenter presenter, FrameworkElement element)
+        public static ContentAndDetailPresenter Detail(this ContentAndDetailPresenter presenter, FrameworkElement element = null)
         { presenter.Detail = element; return presenter; }
 
         public static ContentAndDetailPresenter DetailBackground(this ContentAndDetailPresenter presenter, Brush brush)

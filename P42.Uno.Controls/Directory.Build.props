@@ -41,6 +41,13 @@
   <ItemGroup>
     <Compile Include="**\*.shared.cs" Exclude="bin\**\*.cs;obj\**\*.cs"/>
     <Compile Include="**\*.shared.*.cs" Exclude="bin\**\*.cs;obj\**\*.cs"/>
+    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="**\*.xaml.cs" Exclude="bin\**\*.xaml.cs;obj\**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
   </ItemGroup>
   
 </Project>

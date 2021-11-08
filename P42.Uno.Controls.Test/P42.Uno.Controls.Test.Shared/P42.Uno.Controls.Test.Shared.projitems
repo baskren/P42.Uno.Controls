@@ -8,69 +8,22 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>P42.Uno.Controls.Test</Import_RootNamespace>
   </PropertyGroup>
-  <!-- Original (working) -->
-  <!--
-  <ItemGroup>
-    <Page Include="$(MSBuildThisFileDirectory)StringButtonUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)SummaryDetailPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)StringButtonUserControl.xaml.cs">
-      <DependentUpon>StringButtonUserControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)SummaryDetailPage.xaml.cs">
-      <DependentUpon>SummaryDetailPage.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  -->
-  <!-- Me trying to be clever -->
-  <!-- Blanket XAML -->
-  <ItemGroup>
-    <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </ApplicationDefinition>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="$(MSBuildThisFileDirectory)**\*.xaml" Exclude="$(MSBuildThisFileDirectory)App.xaml;$(MSBuildThisFileDirectory)bin\**\*.xaml;$(MSBuildThisFileDirectory)obj\**\*.xaml;">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)**\*.cs" Exclude="$(MSBuildThisFileDirectory)**\*.xaml.cs;$(MSBuildThisFileDirectory)bin\**\*.cs;$(MSBuildThisFileDirectory)obj\**\*.cs;" />
-    <!--
-    <Compile Include="$(MSBuildThisFileDirectory)TextCell.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ListEditPage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ListEditPage.layout.cs" />
-    -->
-    <Compile Include="$(MSBuildThisFileDirectory)**\*.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)FlexPanelTest\" />
-  </ItemGroup>
+	<ItemGroup>
+		<ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml" Exclude="$(MSBuildThisFileDirectory)bin\**\*.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</ApplicationDefinition>
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
+			<DependentUpon>App.xaml</DependentUpon>
+		</Compile>
+		<Compile Include="$(MSBuildThisFileDirectory)**\*.cs" Exclude="$(MSBuildThisFileDirectory)bin\**\*.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
+	</ItemGroup>
+	<ItemGroup>
+		<PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
+	</ItemGroup>
 </Project>

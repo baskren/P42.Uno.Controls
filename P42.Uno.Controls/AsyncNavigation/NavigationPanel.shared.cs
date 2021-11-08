@@ -43,11 +43,13 @@ namespace P42.Uno.AsyncNavigation
             //SizeChanged += OnSizeChanged;
         }
 
+        /*
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             Clip = new RectangleGeometry { Rect = new Rect(Origin, e.NewSize) };
             ArrangePages(e.NewSize);
         }
+        */
 
         protected override Size MeasureOverride(Size availableSize)
         {
