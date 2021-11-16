@@ -470,7 +470,7 @@ namespace P42.Uno.Controls
         public TargetedPopup(UIElement target = null) : this()
         {
             if (target != null)
-                Target = null;
+                Target = target;
         }
 
 #if __ANDROID__

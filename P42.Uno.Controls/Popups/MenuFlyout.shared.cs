@@ -13,13 +13,13 @@ namespace P42.Uno.Controls
     [Windows.UI.Xaml.Data.Bindable]
     [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = "Items")]
-    public partial class FlyoutMenu : TargetedPopup
+    public partial class MenuFlyout : TargetedPopup
     {
         #region Items Property
         public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register(
             nameof(Items),
             typeof(IList<MenuFlyoutItemBase>),
-            typeof(FlyoutMenu),
+            typeof(MenuFlyout),
             new PropertyMetadata(new List<MenuFlyoutItemBase>())
         );
         public IList<MenuFlyoutItemBase> Items
@@ -29,9 +29,9 @@ namespace P42.Uno.Controls
         }
         #endregion Items Property
 
-        internal FlyoutMenu MenuParent = null;
+        internal MenuFlyout MenuParent = null;
 
-        public FlyoutMenu(UIElement target= null) : base(target)
+        public MenuFlyout(UIElement target= null) : base(target)
         {
             Build();
 
@@ -42,7 +42,7 @@ namespace P42.Uno.Controls
         {
             if (e.ClickedItem is MenuFlyoutSubItem subItem)
             {
-                var flyout = new FlyoutMenu(subItem);
+                var flyout = new MenuFlyout(subItem);
                 flyout.PreferredPointerDirection = PointerDirection.Horizontal;
                 flyout.MenuParent = this;
                 flyout.Items = Items;

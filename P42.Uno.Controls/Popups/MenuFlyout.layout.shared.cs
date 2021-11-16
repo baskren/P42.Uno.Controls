@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace P42.Uno.Controls
 {
-    public partial class FlyoutMenu : TargetedPopup
+    public partial class MenuFlyout : TargetedPopup
     {
         SimpleListView _listView;
 
