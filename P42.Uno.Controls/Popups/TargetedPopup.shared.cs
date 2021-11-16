@@ -42,7 +42,7 @@ namespace P42.Uno.Controls
 
         #region Properties
 
-        #region Content Property
+        #region XamlContent Property
         public static readonly DependencyProperty XamlContentProperty = DependencyProperty.Register(
             nameof(XamlContent),
             typeof(object),
