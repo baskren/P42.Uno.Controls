@@ -80,8 +80,8 @@ namespace P42.Uno.Controls
         { element.ItemsPanel = brush; return element; }
         */
 
-        public static TElement ItemTemplateSelector<TElement>(this TElement element, DataTemplateSelector brush) where TElement : ElementType
-        { element.ItemTemplateSelector = brush; return element; }
+        public static TElement ItemTemplateSetSelector<TElement>(this TElement element, P42.Utils.Uno.DataTemplateSetSelector selector) where TElement : ElementType
+        { element.ItemTemplateSelector = selector; return element; }
 
         public static TElement ItemTemplate<TElement>(this TElement element, DataTemplate brush) where TElement : ElementType
         { element.ItemTemplate = brush; return element; }

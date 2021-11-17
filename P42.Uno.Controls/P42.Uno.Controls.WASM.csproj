@@ -7,12 +7,11 @@
 
   <Import Project=".\P42.Uno.Controls.WASM.props" />
 
-  <!-- PACKAGE REFERENCES -->
-
-  <!-- REFERENCES -->
+  <!-- PLATFORM REFERENCES -->
   <ItemGroup>
+    <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.WASM.csproj" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.WASM.csproj" />
-    <ProjectReference Include="..\P42.Utils\P42.Utils\P42.Utils.csproj" />
   </ItemGroup>
+
   
 </Project>

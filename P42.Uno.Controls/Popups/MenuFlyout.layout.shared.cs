@@ -43,8 +43,8 @@ namespace P42.Uno.Controls
             var value = e.NewValue;
 #endif
             Children.Clear();
-            if (value is MenuFlyoutItemBase item)
-                Children.Add(item);
+            //if (value is MenuFlyoutItemBase item)
+            //    Children.Add(item);
         }
     }
 }

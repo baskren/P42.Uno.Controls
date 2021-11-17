@@ -14,7 +14,7 @@ using Windows.UI;
 
 namespace P42.Uno.Controls
 {
-    public partial class MenuFlyoutItemBase : Windows.UI.Xaml.Controls.UserControl
+    public partial class MenuFlyoutItemBase : DependencyObject 
     {
         #region Properties 
 
@@ -23,9 +23,9 @@ namespace P42.Uno.Controls
             nameof(Text),
             typeof(string),
             typeof(MenuFlyoutItemBase),
-            new PropertyMetadata(default(string), OnTextChanged)
+            new PropertyMetadata(default(string))
         );
-
+        /*
         private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is MenuFlyoutItemBase item)
@@ -54,7 +54,7 @@ namespace P42.Uno.Controls
                 }
             }
         }
-
+        */
         public string Text
         {
             get => (string)GetValue(TextProperty);
@@ -63,13 +63,13 @@ namespace P42.Uno.Controls
         #endregion Text Property
 
         #region Icon Property
-        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-            nameof(Icon),
-            typeof(IconElement),
+        public static readonly DependencyProperty IconSourceProperty = DependencyProperty.Register(
+            nameof(IconSource),
+            typeof(IconSource),
             typeof(MenuFlyoutItemBase),
-            new PropertyMetadata(default(IconElement), OnIconChanged)
+            new PropertyMetadata(default(IconElement))
         );
-
+        /*
         private static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is MenuFlyoutItemBase item)
@@ -88,11 +88,11 @@ namespace P42.Uno.Controls
                 }
             }
         }
-
-        public IconElement Icon
+        */
+        public IconSource IconSource
         {
-            get => (IconElement)GetValue(IconProperty);
-            set => SetValue(IconProperty, value);
+            get => (IconSource)GetValue(IconSourceProperty);
+            set => SetValue(IconSourceProperty, value);
         }
         #endregion Icon Property
 
@@ -146,14 +146,9 @@ namespace P42.Uno.Controls
 
         public MenuFlyoutItemBase()
         {
-            Content = new Grid()
-                .Assign(out _grid)
-                .Columns(0, 0, 20)
-                .Margin(10, 5)
-                .ColumnSpacing(0);
         }
 
-        internal void OnItemClicked()
+        public void OnItemClicked()
         {
             Click?.Invoke(this, new RoutedEventArgs());
             Command?.Execute(CommandParameter);

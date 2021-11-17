@@ -40,6 +40,7 @@ namespace P42.Uno.Controls
 
         async void _listView_ItemClick(object sender, ItemClickEventArgs e)
         {
+            /*
             if (e.ClickedItem is MenuFlyoutSubItem subItem)
             {
                 var flyout = new MenuFlyout(subItem);
@@ -48,6 +49,7 @@ namespace P42.Uno.Controls
                 flyout.Items = Items;
                 await flyout.PushAsync();
             }
+            */
         }
     }
 }

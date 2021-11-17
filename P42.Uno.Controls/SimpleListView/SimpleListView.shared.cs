@@ -185,14 +185,14 @@ namespace P42.Uno.Controls
         #region ItemTemplateSelector Property
         public static readonly DependencyProperty ItemTemplateSelectorProperty = DependencyProperty.Register(
             nameof(ItemTemplateSelector),
-            typeof(DataTemplateSelector),
+            typeof(P42.Utils.Uno.DataTemplateSetSelector),
             typeof(SimpleListView),
-            new PropertyMetadata(default(DataTemplateSelector), OnItemTemplateSelectorChanged)
+            new PropertyMetadata(default(P42.Utils.Uno.DataTemplateSetSelector), OnItemTemplateSelectorChanged)
         );
 
-        public DataTemplateSelector ItemTemplateSelector
+        public P42.Utils.Uno.DataTemplateSetSelector ItemTemplateSelector
         {
-            get => (DataTemplateSelector)GetValue(ItemTemplateSelectorProperty);
+            get => (P42.Utils.Uno.DataTemplateSetSelector)GetValue(ItemTemplateSelectorProperty);
             set => SetValue(ItemTemplateSelectorProperty, value);
         }
         #endregion ItemTemplateSelector Property

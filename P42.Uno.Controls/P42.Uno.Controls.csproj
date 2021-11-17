@@ -22,9 +22,8 @@
   <!-- MACOS -->
   <Import Project=".\P42.Uno.Controls.MacOS.props" Condition=" $(TargetFramework.StartsWith('Xamarin.Mac20')) " />
 
-  <!-- REFERENCES -->
+  <!-- PLATFORM REFERENCES -->
   <ItemGroup>
-    <ProjectReference Include="..\P42.Utils\P42.Utils\P42.Utils.csproj" />
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
   </ItemGroup>

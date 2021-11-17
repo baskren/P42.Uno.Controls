@@ -343,7 +343,7 @@ namespace P42.Uno.Controls
     {
         IEnumerable Items;
         DataTemplate ItemTemplate => SimpleListView.ItemTemplate;
-        DataTemplateSelector TemplateSelector => SimpleListView.ItemTemplateSelector;
+        P42.Utils.Uno.DataTemplateSetSelector TemplateSelector => SimpleListView.ItemTemplateSelector;
         SimpleListView SimpleListView;
         //List<DataTemplate> Templates = new List<DataTemplate>();
 

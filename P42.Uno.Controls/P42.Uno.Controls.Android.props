@@ -6,7 +6,6 @@
     <Compile Include="**\*.android.*.cs" />
 
     <AndroidResource Include="Resources\xml\*.xml" />
-    <ProjectReference Include="..\P42.Utils\P42.Utils.Droid\P42.Utils.Droid.csproj" />
   </ItemGroup>
 
   

@@ -34,6 +34,8 @@ namespace P42.Uno.Controls
 
         public MenuFlyoutSubItem()
         {
+            Items = new List<MenuFlyoutItemBase>();
+            /*
             Content = new Grid()
                 .Assign(out _grid)
                 .Columns(0, 0, 20, 20)
@@ -44,6 +46,7 @@ namespace P42.Uno.Controls
                 .Assign(out _chevron)
                 .FontFamily("Segoe MDL2 Assets")
                 .Glyph("\uE76C"));
+            */
         }
 
     }

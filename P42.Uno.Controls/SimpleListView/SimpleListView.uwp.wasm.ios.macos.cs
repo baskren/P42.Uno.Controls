@@ -8,6 +8,7 @@ using ScrollIntoViewAlignment = Windows.UI.Xaml.Controls.ScrollIntoViewAlignment
 using Windows.UI;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace P42.Uno.Controls
 {
@@ -32,6 +33,7 @@ namespace P42.Uno.Controls
                     new Setter(ListViewItem.VerticalContentAlignmentProperty, VerticalAlignment.Stretch),
                     new Setter(ListViewItem.MarginProperty, new Thickness(0)),
                     new Setter(ListViewItem.PaddingProperty, new Thickness(0)),
+                    //new Setter(ListViewItemPresenter.PointerOverBackgroundProperty, Colors.Transparent.ToBrush())
                 }
             };
             _listView.ItemContainerStyle = containerStyle;

@@ -5,6 +5,5 @@
     <Compile Include="**\*.wasm.cs" />
     <Compile Include="**\*.wasm.*.cs" />
   </ItemGroup>
-  
 
 </Project>

@@ -7,11 +7,8 @@
 
   <Import Project=".\P42.Uno.Controls.UWP.props" />
 
-  <!-- PACKAGE REFERENCES -->
-
-  <!-- REFERENCES -->
+  <!-- PLATFORM REFERENCES -->
   <ItemGroup>
-    <ProjectReference Include="..\P42.Utils\P42.Utils\P42.Utils.csproj" />
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.UWP.csproj" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.UWP.csproj" />
   </ItemGroup>

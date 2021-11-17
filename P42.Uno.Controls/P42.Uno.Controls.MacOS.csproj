@@ -7,10 +7,9 @@
 
   <Import Project=".\P42.Uno.Controls.MacOS.props" />
 
-  <!-- PACKAGE REFERENCES -->
-
-  <!-- REFERENCES -->
+  <!-- PLATFORM REFERENCES -->
   <ItemGroup>
+    <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.MacOS.csproj" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.MacOS.csproj" />
   </ItemGroup>
 
