@@ -10,14 +10,12 @@ namespace P42.Uno.Controls
 {
     public partial class MenuFlyout : TargetedPopup
     {
-        SimpleListView _listView;
+        Windows.UI.Xaml.Controls.MenuFlyout _flyout;
 
         void Build()
         {
-            XamlContent = new SimpleListView()
-                .Assign(out _listView)
-                .ItemTemplate(typeof(FlyoutMenuItemTemplate).AsDataTemplate())
-                .Bind(SimpleListView.ItemsSourceProperty, this, nameof(Items));
+            _flyout = new Windows.UI.Xaml.Controls.MenuFlyout();
+            host.Flyout
         }
     }
 

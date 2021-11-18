@@ -13,7 +13,7 @@ namespace P42.Uno.Controls
     [Windows.UI.Xaml.Data.Bindable]
     [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = "Items")]
-    public partial class MenuFlyout : TargetedPopup
+    public partial class MenuFlyout 
     {
         #region Items Property
         public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register(
@@ -30,9 +30,14 @@ namespace P42.Uno.Controls
         #endregion Items Property
 
         internal MenuFlyout MenuParent = null;
+        FrameworkElement host;
 
-        public MenuFlyout(UIElement target= null) : base(target)
+        public MenuFlyout(FrameworkElement target= null) 
+#if !WINDOWS_UWP
+        : base(target)
+#endif
         {
+            host = target;
             Build();
 
             _listView.ItemClick += _listView_ItemClick;
