@@ -181,22 +181,23 @@ namespace P42.Uno.Controls
                     Tag = itemBase
                 };
                 winItem.Click += OnItemClick;
+                return winItem;
             }
-            else if (itemBase is MenuGroup subItem)
+            else if (itemBase is MenuGroup group)
             {
-                var winSubItem = new Windows.UI.Xaml.Controls.MenuFlyoutSubItem
+                var winGroupItem = new Windows.UI.Xaml.Controls.MenuFlyoutSubItem
                 {
                     Text = itemBase.Text,
                     Icon = itemBase.IconSource.AsIconElement(),
                 };
-                var collectionChangedHandler = new ItemsCollectionChangeHandler(subItem.ObsvItems, winSubItem.Items);
-                winSubItem.Tag = collectionChangedHandler;
-                subItem.ObsvItems.CollectionChanged += collectionChangedHandler.OnItemsCollectionChanged;
+                var collectionChangedHandler = new ItemsCollectionChangeHandler(group.ObsvItems, winGroupItem.Items);
+                winGroupItem.Tag = collectionChangedHandler;
+                group.ObsvItems.CollectionChanged += collectionChangedHandler.OnItemsCollectionChanged;
 
-                foreach (var i in subItem.Items)
-                    winSubItem.Items.Add(i.AsMenuFlyoutItem());
+                foreach (var i in group.Items)
+                    winGroupItem.Items.Add(i.AsMenuFlyoutItem());
 
-                return winSubItem;
+                return winGroupItem;
             }
             return null;
         }
