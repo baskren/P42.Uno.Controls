@@ -126,22 +126,22 @@ namespace P42.Uno.Controls
         #region Event Handlers
         protected virtual async void OnOkButtonClicked(object sender, RoutedEventArgs e)
         {
-            await PopAsync(PopupPoppedCause.ButtonTapped, sender);
+            await PopAsync(PopupPoppedCause.ButtonTapped, true, sender);
         }
         #endregion
 
 
         #region Push / Pop
-        public override async Task PushAsync()
+        public override async Task PushAsync(bool animated = true)
         {
-            await base.PushAsync();
+            await base.PushAsync(animated);
             _okButton.Click += OnOkButtonClicked;
         }
 
-        public override async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, [CallerMemberName] object trigger = null)
+        public override async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = true, [CallerMemberName] object trigger = null)
         {
             _okButton.Click -= OnOkButtonClicked;
-            await base.PopAsync(cause, trigger);
+            await base.PopAsync(cause, animated, trigger);
         }
         #endregion
 

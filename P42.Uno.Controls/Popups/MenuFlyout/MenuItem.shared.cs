@@ -13,8 +13,7 @@ using System;
 
 namespace P42.Uno.Controls
 {
-    public partial class MenuFlyoutItem : MenuFlyoutItemBase
+    public partial class MenuItem : MenuItemBase
     {
-
     }
 }

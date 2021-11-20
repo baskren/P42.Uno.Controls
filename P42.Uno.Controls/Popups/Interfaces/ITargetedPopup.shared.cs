@@ -38,8 +38,8 @@ namespace P42.Uno.Controls
 
         event EventHandler<PopupPoppedEventArgs> Popped;
 
-        Task PushAsync();
+        Task PushAsync(bool animated = true);
 
-        Task PopAsync(PopupPoppedCause cause, object trigger = null);
+        Task PopAsync(PopupPoppedCause cause, bool animated = true, object trigger = null);
     }
 }

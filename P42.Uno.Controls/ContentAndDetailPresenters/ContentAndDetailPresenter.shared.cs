@@ -483,7 +483,7 @@ namespace P42.Uno.Controls
 
 
         #region Push / Pop
-        public async Task PushDetailAsync()
+        public async Task PushDetailAsync(bool animated = false)
         {
             if (DetailPushPopState == PushPopState.Pushing || DetailPushPopState == PushPopState.Pushed)
                 return;
@@ -503,7 +503,7 @@ namespace P42.Uno.Controls
 
             LayoutDetailAndOverlay(size, 0.11);
             if (!IsInDrawerMode(size))
-                await _targetedPopup.PushAsync();
+                await _targetedPopup.PushAsync(animated);
             if (IsAnimated)
             {
                 Action<double> action = percent => LayoutDetailAndOverlay(size, percent);
@@ -516,7 +516,7 @@ namespace P42.Uno.Controls
             _pushCompletionSource?.SetResult(true);
         }
 
-        public async Task PopDetailAsync()
+        public async Task PopDetailAsync(bool animated = false)
         {
 
             if (DetailPushPopState == PushPopState.Popping || DetailPushPopState == PushPopState.Popped)
@@ -543,7 +543,7 @@ namespace P42.Uno.Controls
             }
             LayoutDetailAndOverlay(size, 0);
             if (!IsInDrawerMode(size))
-                await _targetedPopup.PopAsync();
+                await _targetedPopup.PopAsync(PopupPoppedCause.MethodCalled, animated);
 
             DetailPushPopState = PushPopState.Popped;
             _popCompletionSource?.SetResult(true);

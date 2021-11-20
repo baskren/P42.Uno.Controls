@@ -2,6 +2,9 @@ using P42.Uno.Markup;
 using P42.Utils.Uno;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
 using Windows.UI;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
@@ -10,51 +13,67 @@ using Windows.UI.Xaml.Markup;
 
 namespace P42.Uno.Controls
 {
-    [Windows.UI.Xaml.Data.Bindable]
-    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
-    [ContentProperty(Name = "Items")]
-    public partial class MenuFlyout 
+    public partial class MenuFlyout : DependencyObject
     {
+        #region Properties
+
         #region Items Property
         public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register(
             nameof(Items),
-            typeof(IList<MenuFlyoutItemBase>),
+            typeof(IList<MenuItemBase>),
             typeof(MenuFlyout),
-            new PropertyMetadata(new List<MenuFlyoutItemBase>())
+            new PropertyMetadata(default(IList<MenuItemBase>))//, OnItemsChanged)
         );
-        public IList<MenuFlyoutItemBase> Items
+
+        public IList<MenuItemBase> Items
         {
-            get => (IList<MenuFlyoutItemBase>)GetValue(ItemsProperty);
-            set => SetValue(ItemsProperty, value);
+            get => (IList<MenuItemBase>)GetValue(ItemsProperty);
+            set
+            {
+                if (Items != null)
+                {
+                    Items.Clear();
+                    if (value?.Any() ?? false)
+                    {
+                        foreach (var item in value)
+                            Items.Add(item);
+                    }
+                }
+            }
         }
         #endregion Items Property
 
-        internal MenuFlyout MenuParent = null;
-        FrameworkElement host;
+        #region Target Property
+        public static readonly DependencyProperty TargetProperty = DependencyProperty.Register(
+            nameof(Target),
+            typeof(UIElement),
+            typeof(MenuFlyout),
+            new PropertyMetadata(default(UIElement), OnTargetChanged)
+        );
 
+        public UIElement Target
+        {
+            get => (UIElement)GetValue(TargetProperty);
+            set => SetValue(TargetProperty, value);
+        }
+        #endregion Target Property
+
+        #endregion
+
+
+        #region Fields
+        internal ObservableCollection<MenuItemBase> ObsvItems;
+        #endregion
+
+
+        #region Constructor
         public MenuFlyout(FrameworkElement target= null) 
-#if !WINDOWS_UWP
-        : base(target)
-#endif
         {
-            host = target;
+            ObsvItems = new ObservableCollection<MenuItemBase>();
+            SetValue(ItemsProperty, ObsvItems);
             Build();
-
-            _listView.ItemClick += _listView_ItemClick;
+            Target = target;
         }
-
-        async void _listView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            /*
-            if (e.ClickedItem is MenuFlyoutSubItem subItem)
-            {
-                var flyout = new MenuFlyout(subItem);
-                flyout.PreferredPointerDirection = PointerDirection.Horizontal;
-                flyout.MenuParent = this;
-                flyout.Items = Items;
-                await flyout.PushAsync();
-            }
-            */
-        }
+        #endregion
     }
 }

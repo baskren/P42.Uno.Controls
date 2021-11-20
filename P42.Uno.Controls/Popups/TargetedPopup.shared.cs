@@ -420,7 +420,7 @@ namespace P42.Uno.Controls
                 return contentPresenter?.Content is null;
             }
         }
-
+        /*
         #region IsAnimated Property
         public static readonly DependencyProperty IsAnimatedProperty = DependencyProperty.Register(
             nameof(IsAnimated),
@@ -434,7 +434,7 @@ namespace P42.Uno.Controls
             set => SetValue(IsAnimatedProperty, value);
         }
         #endregion IsAnimated Property
-
+        */
 
         #endregion
 
@@ -626,7 +626,7 @@ namespace P42.Uno.Controls
             _popupOpenedCompletionSource?.TrySetResult(true);
         }
 
-        public virtual async Task PushAsync()
+        public virtual async Task PushAsync(bool animated = true)
         {
             if (PushPopState == PushPopState.Pushed || PushPopState == PushPopState.Pushing)
                 return;
@@ -641,10 +641,10 @@ namespace P42.Uno.Controls
                     return;
             }
 
-            await InnerPushAsyc();
+            await InnerPushAsyc(animated);
         }
 
-        async Task InnerPushAsyc()
+        async Task InnerPushAsyc(bool animated)
         { 
             PushPopState = PushPopState.Pushing;
             _popCompletionSource = null;
@@ -669,7 +669,7 @@ namespace P42.Uno.Controls
             //UpdateMarginAndAlignment();
 
 
-            if (IsAnimated)
+            if (animated)
             {
                 Action<double> action = percent => _border.Opacity = Opacity * percent;
                 var animator = new P42.Utils.Uno.ActionAnimator(0.11, 0.95, TimeSpan.FromMilliseconds(300), action);
@@ -682,7 +682,7 @@ namespace P42.Uno.Controls
             {
                 P42.Utils.Timer.StartTimer(PopAfter, async () =>
                 {
-                    await PopAsync(PopupPoppedCause.Timeout, "Timeout");
+                    await PopAsync(PopupPoppedCause.Timeout, animated, "Timeout");
                     return false;
                 });
             }
@@ -694,7 +694,7 @@ namespace P42.Uno.Controls
             _pushCompletionSource?.TrySetResult(true);
         }
 
-        public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, [CallerMemberName] object trigger = null)
+        public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = true, [CallerMemberName] object trigger = null)
         {
             if (PushPopState == PushPopState.Popping || PushPopState == PushPopState.Popped)
                 return;
@@ -717,7 +717,7 @@ namespace P42.Uno.Controls
             PoppedTrigger = trigger;
             await OnPopBeginAsync();
 
-            if (IsAnimated)
+            if (animated)
             {
                 Action<double> action = percent => _border.Opacity = Opacity * percent;
                 var animator = new P42.Utils.Uno.ActionAnimator(0.95, 0.11, TimeSpan.FromMilliseconds(300), action);

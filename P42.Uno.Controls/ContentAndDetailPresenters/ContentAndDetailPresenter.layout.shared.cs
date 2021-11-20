@@ -42,7 +42,7 @@ namespace P42.Uno.Controls
             {
                 IsLightDismissEnabled = false,
                 LightDismissOverlayMode = LightDismissOverlayMode.Off,
-                IsAnimated = false,
+                //IsAnimated = false,
                 Padding = new Thickness(4),
                 Opacity = 0,
                 Margin = new Thickness(popupMargin),

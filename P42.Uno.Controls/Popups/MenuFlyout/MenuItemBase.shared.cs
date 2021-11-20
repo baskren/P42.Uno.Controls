@@ -14,7 +14,7 @@ using Windows.UI;
 
 namespace P42.Uno.Controls
 {
-    public partial class MenuFlyoutItemBase : DependencyObject 
+    public partial class MenuItemBase : DependencyObject 
     {
         #region Properties 
 
@@ -22,7 +22,7 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             nameof(Text),
             typeof(string),
-            typeof(MenuFlyoutItemBase),
+            typeof(MenuItemBase),
             new PropertyMetadata(default(string))
         );
         /*
@@ -66,7 +66,7 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty IconSourceProperty = DependencyProperty.Register(
             nameof(IconSource),
             typeof(IconSource),
-            typeof(MenuFlyoutItemBase),
+            typeof(MenuItemBase),
             new PropertyMetadata(default(IconElement))
         );
         /*
@@ -100,7 +100,7 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty CommandParameterProperty = DependencyProperty.Register(
             nameof(CommandParameter),
             typeof(object),
-            typeof(MenuFlyoutItemBase),
+            typeof(MenuItemBase),
             new PropertyMetadata(default(object))
         );
         public object CommandParameter
@@ -114,7 +114,7 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
             nameof(Command),
             typeof(ICommand),
-            typeof(MenuFlyoutItemBase),
+            typeof(MenuItemBase),
             new PropertyMetadata(default(ICommand))
         );
         public ICommand Command
@@ -124,29 +124,20 @@ namespace P42.Uno.Controls
         }
         #endregion Command Property
 
-
         #endregion
 
 
         #region Events
-
-#if __ANDROID__
-        public new event RoutedEventHandler Click;
-#else
         public event RoutedEventHandler Click;
-#endif
         #endregion
 
 
-        #region Fields
-        protected TextBlock _label;
-        protected Grid _grid;
-#endregion
+#if WINDOWS_UWP
+        internal WeakReference<MenuFlyout> MenuFlyoutWeakRef;
+        internal WeakReference<MenuFlyoutCell> MenuFlyoutCellWeakRef;
+#endif
 
-
-        public MenuFlyoutItemBase()
-        {
-        }
+        public MenuItemBase() { }
 
         public void OnItemClicked()
         {

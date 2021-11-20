@@ -156,21 +156,21 @@ namespace P42.Uno.Controls
         #region Event Handlers
         async void OnCancelButtonClicked(object sender, RoutedEventArgs e)
         {
-            await PopAsync(PopupPoppedCause.ButtonTapped, sender);
+            await PopAsync(PopupPoppedCause.ButtonTapped, true, sender);
         }
         #endregion
 
 
         #region Push / Pop
-        public override async Task PushAsync()
+        public override async Task PushAsync(bool animated = true)
         {
             PermissionState = PermissionState.Pending;
-            await base.PushAsync();
+            await base.PushAsync(animated);
             _cancelButton.Click += OnCancelButtonClicked;
         }
 
 
-        public override async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, [CallerMemberName] object trigger = null)
+        public override async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = true, [CallerMemberName] object trigger = null)
         {
             _cancelButton.Click -= OnCancelButtonClicked;
 
@@ -184,7 +184,7 @@ namespace P42.Uno.Controls
             if (PermissionState == PermissionState.Pending)
                 PermissionState = PermissionState.Cancelled;
 
-            await base.PopAsync(cause, trigger);
+            await base.PopAsync(cause, animated, trigger);
         }
         #endregion
 
