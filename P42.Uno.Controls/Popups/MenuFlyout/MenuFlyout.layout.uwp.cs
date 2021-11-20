@@ -46,7 +46,7 @@ namespace P42.Uno.Controls
 
         #region Fields
         internal TargetedPopup _popup;
-        private SimpleListView _listView;
+        private ListView _listView;
         private MenuFlyout _parentMenu = null;
         private MenuFlyout _childMenu = null;
         #endregion
@@ -62,12 +62,13 @@ namespace P42.Uno.Controls
                 IsLightDismissEnabled = false
             };
             _popup.Popped += OnPopup_Popped;
-            _listView = new SimpleListView
+            _listView = new ListView
             {
                 SelectionMode = ListViewSelectionMode.Single,
                 ItemTemplate = typeof(MenuFlyoutCell).AsDataTemplate(),
                 ItemsSource = ObsvItems
             };
+            //_listView.SelectionChanged += OnListView_SelectionChanged;
             _listView.SelectionChanged += OnListView_SelectionChanged;
             _popup.XamlContent = _listView;
             ObsvItems.CollectionChanged += OnObsvItems_CollectionChanged;
@@ -96,7 +97,8 @@ namespace P42.Uno.Controls
         }
         #endregion
 
-        private async void OnListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void OnListView_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
+        //private async void OnListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _childMenu = _childMenu ?? new MenuFlyout();
             _childMenu._parentMenu = this;
