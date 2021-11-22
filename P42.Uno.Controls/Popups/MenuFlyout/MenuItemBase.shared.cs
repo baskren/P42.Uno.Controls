@@ -132,12 +132,15 @@ namespace P42.Uno.Controls
         #endregion
 
 
+        public object Tag;
 #if WINDOWS_UWP
         internal WeakReference<MenuFlyout> MenuFlyoutWeakRef;
         internal WeakReference<MenuFlyoutCell> MenuFlyoutCellWeakRef;
 #endif
 
-        public MenuItemBase() { }
+        public MenuItemBase() 
+        {
+        }
 
         public void OnItemClicked()
         {
