@@ -66,12 +66,9 @@ namespace P42.Uno.Controls
             {
                 SelectionMode = ListViewSelectionMode.Single,
                 ItemTemplate = typeof(MenuFlyoutCell).AsDataTemplate(),
-                ItemsSource = ObsvItems
             };
-            //_listView.SelectionChanged += OnListView_SelectionChanged;
             _listView.SelectionChanged += OnListView_SelectionChanged;
             _popup.XamlContent = _listView;
-            ObsvItems.CollectionChanged += OnObsvItems_CollectionChanged;
         }
 
         private bool isDisposed;
@@ -84,7 +81,6 @@ namespace P42.Uno.Controls
                     _listView.SelectionChanged -= OnListView_SelectionChanged;
                     _popup.Popped -= OnPopup_Popped;
                     _childMenu?.Dispose();
-                    ObsvItems.CollectionChanged -= OnObsvItems_CollectionChanged;
                 }
                 isDisposed = true;
             }
@@ -98,7 +94,6 @@ namespace P42.Uno.Controls
         #endregion
 
         private async void OnListView_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
-        //private async void OnListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _childMenu = _childMenu ?? new MenuFlyout();
             _childMenu._parentMenu = this;
@@ -117,6 +112,12 @@ namespace P42.Uno.Controls
             }
         }
 
+        private static void OnItemsChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+        {
+            if (dependencyObject is MenuFlyout flyout)
+                flyout._listView.ItemsSource = flyout.Items;
+        }
+        /*
         private void OnObsvItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -163,6 +164,7 @@ namespace P42.Uno.Controls
                     break;
             }
         }
+        */
 
         private async void OnPopup_Popped(object sender, PopupPoppedEventArgs e)
         {

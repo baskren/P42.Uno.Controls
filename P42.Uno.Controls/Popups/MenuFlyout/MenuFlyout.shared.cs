@@ -22,13 +22,14 @@ namespace P42.Uno.Controls
             nameof(Items),
             typeof(IList<MenuItemBase>),
             typeof(MenuFlyout),
-            new PropertyMetadata(default(IList<MenuItemBase>))//, OnItemsChanged)
+            new PropertyMetadata(default(IList<MenuItemBase>), OnItemsChanged)
         );
 
         public IList<MenuItemBase> Items
         {
             get => (IList<MenuItemBase>)GetValue(ItemsProperty);
-            set
+            set => SetValue(ItemsProperty, value);
+            /*
             {
                 if (Items != null)
                 {
@@ -40,6 +41,7 @@ namespace P42.Uno.Controls
                     }
                 }
             }
+            */
         }
         #endregion Items Property
 
@@ -62,15 +64,15 @@ namespace P42.Uno.Controls
 
 
         #region Fields
-        internal ObservableCollection<MenuItemBase> ObsvItems;
+        //internal ObservableCollection<MenuItemBase> ObsvItems;
         #endregion
 
 
         #region Constructor
         public MenuFlyout(FrameworkElement target= null) 
         {
-            ObsvItems = new ObservableCollection<MenuItemBase>();
-            SetValue(ItemsProperty, ObsvItems);
+            //ObsvItems = new ObservableCollection<MenuItemBase>();
+            //SetValue(ItemsProperty, ObsvItems);
             Build();
             Target = target;
         }

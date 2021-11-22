@@ -15,14 +15,10 @@ namespace P42.Uno.Controls
     public partial class MenuFlyout : IDisposable
     {
         Windows.UI.Xaml.Controls.MenuFlyout _flyout;
-        ItemsCollectionChangeHandler _collectionChangedHandler;
-
 
         void Build()
         {
             _flyout = new Windows.UI.Xaml.Controls.MenuFlyout();
-            _collectionChangedHandler = new ItemsCollectionChangeHandler(ObsvItems, _flyout.Items);
-            ObsvItems.CollectionChanged += _collectionChangedHandler.OnItemsCollectionChanged;
         }
 
         private static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -41,6 +37,17 @@ namespace P42.Uno.Controls
             }
         }
 
+        private static void OnItemsChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+        {
+            
+            if (dependencyObject is MenuFlyout flyout)
+            {
+                flyout._flyout.Items.Clear();
+                foreach (var item in flyout.Items)
+                    flyout._flyout.Items.Add(item.AsMenuFlyoutItem());
+            }
+        }
+
         private bool disposedValue;
         protected virtual void Dispose(bool disposing)
         {
@@ -49,8 +56,6 @@ namespace P42.Uno.Controls
                 if (disposing)
                 {
                     _flyout.Items.Clear();
-                    ObsvItems.CollectionChanged -= _collectionChangedHandler.OnItemsCollectionChanged;
-                    _collectionChangedHandler = null;
                     if (_flyout is IDisposable disposable)
                         disposable.Dispose();
                 }
@@ -65,7 +70,7 @@ namespace P42.Uno.Controls
         }
     }
 
-
+    /*
     internal class ItemsCollectionChangeHandler
     {
         public IList<Windows.UI.Xaml.Controls.MenuFlyoutItemBase> WinItems;
@@ -125,10 +130,10 @@ namespace P42.Uno.Controls
         }
 
     }
-
+    */
     internal static class MenuItemExtensions
     {
-
+        /*
         public static void InsertItem(this IList<Windows.UI.Xaml.Controls.MenuFlyoutItemBase> winItems, int index, MenuItemBase item)
         {
             winItems.Insert(index, item.AsMenuFlyoutItem());
@@ -161,6 +166,7 @@ namespace P42.Uno.Controls
             }
             winItemBase.Tag = null;
         }
+        */
 
 
         static void OnItemClick(object sender, RoutedEventArgs e)
@@ -190,9 +196,9 @@ namespace P42.Uno.Controls
                     Text = itemBase.Text,
                     Icon = itemBase.IconSource.AsIconElement(),
                 };
-                var collectionChangedHandler = new ItemsCollectionChangeHandler(group.ObsvItems, winGroupItem.Items);
-                winGroupItem.Tag = collectionChangedHandler;
-                group.ObsvItems.CollectionChanged += collectionChangedHandler.OnItemsCollectionChanged;
+                //var collectionChangedHandler = new ItemsCollectionChangeHandler(group.ObsvItems, winGroupItem.Items);
+                //winGroupItem.Tag = collectionChangedHandler;
+                //group.ObsvItems.CollectionChanged += collectionChangedHandler.OnItemsCollectionChanged;
 
                 foreach (var i in group.Items)
                     winGroupItem.Items.Add(i.AsMenuFlyoutItem());
