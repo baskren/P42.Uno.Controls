@@ -38,55 +38,63 @@ namespace P42.Uno.Controls
             };
             _listView.ItemContainerStyle = containerStyle;
 
-            _listView.Bind(ListView.IsItemClickEnabledProperty, this, nameof(IsItemClickEnabled));
-            _listView.Bind(ListView.SelectionModeProperty, this, nameof(SelectionMode));
-            _listView.Bind(ListView.SelectedIndexProperty, this, nameof(SelectedIndex));
-            _listView.Bind(ListView.SelectedItemProperty, this, nameof(SelectedItem));
+            //_listView.Bind(ListView.IsItemClickEnabledProperty, this, nameof(IsItemClickEnabled));
+            //_listView.Bind(ListView.SelectionModeProperty, this, nameof(SelectionMode));
+            //_listView.Bind(ListView.SelectedIndexProperty, this, nameof(SelectedIndex));
+            //_listView.Bind(ListView.SelectedItemProperty, this, nameof(SelectedItem));
             _listView.ItemClick += OnListView_ItemClick;
             _listView.SelectionChanged += OnListView_SelectionChanged;
 
             Content = _listView;
         }
 
+        private static void OnIsItemClickEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SimpleListView listView)
+                listView._listView.IsItemClickEnabled = listView.IsItemClickEnabled;
+        }
+
         private static void OnFooterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is SimpleListView listView)
-            {
                 listView._listView.Footer = listView.Footer;
-            }
         }
 
         private static void OnFooterTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is SimpleListView listView)
-            {
                 listView._listView.FooterTemplate = listView.FooterTemplate;
-            }
         }
 
         private static void OnHeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is SimpleListView listView)
-            {
                 listView._listView.Header = listView.Header;
-            }
         }
 
         private static void OnHeaderTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is SimpleListView listView)
-            {
                 listView._listView.HeaderTemplate = listView.HeaderTemplate;
-            }
         }
 
+
+        private static void OnSelectionModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SimpleListView listView)
+                listView._listView.SelectionMode = listView.SelectionMode;
+        }
 
         private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is SimpleListView listView)
-            {
                 listView._listView.SelectedItem = listView.SelectedItem;
-            }
+        }
+
+        private static void OnSelectedIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SimpleListView listView)
+                listView._listView.SelectedIndex = listView.SelectedIndex;
         }
 
 

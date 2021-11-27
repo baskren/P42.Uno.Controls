@@ -438,7 +438,7 @@ namespace P42.Uno.Controls
             var path = GeneratePath(size);
             var data = path.ToSvgPathData();
 #if __WASM__
-            System.Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            //System.Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
             var x = _path.GetFirstHtmlDescendent();
             x.SetHtmlContent($"<path fill-rule=\"even-odd\" d=\"{data}\"></path>");
 #else

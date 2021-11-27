@@ -152,12 +152,24 @@ namespace P42.Uno.Controls
 
 
         #region Click / Selection Change Handlers
+        private static void OnIsItemClickEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
+        private static void OnSelectionModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
         private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is SimpleListView listView)
             {
                 listView.SelectItem(listView.SelectedItem);
             }
+        }
+
+        private static void OnSelectedIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
         }
 
         bool _repondingToSelectedItemsCollectionChanged;

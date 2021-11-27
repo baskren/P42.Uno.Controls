@@ -19,8 +19,9 @@ namespace P42.Uno.Controls
             nameof(IsItemClickEnabled),
             typeof(bool),
             typeof(SimpleListView),
-            new PropertyMetadata(default(bool))
+            new PropertyMetadata(default(bool), OnIsItemClickEnabledChanged)
         );
+
         public bool IsItemClickEnabled
         {
             get => (bool)GetValue(IsItemClickEnabledProperty);
@@ -109,8 +110,9 @@ namespace P42.Uno.Controls
             nameof(SelectionMode),
             typeof(ListViewSelectionMode),
             typeof(SimpleListView),
-            new PropertyMetadata(default(ListViewSelectionMode))
+            new PropertyMetadata(default(ListViewSelectionMode), OnSelectionModeChanged)
         );
+
         public ListViewSelectionMode SelectionMode
         {
             get => (ListViewSelectionMode)GetValue(SelectionModeProperty);
@@ -125,8 +127,9 @@ namespace P42.Uno.Controls
             nameof(SelectedIndex),
             typeof(int),
             typeof(SimpleListView),
-            new PropertyMetadata(-1)
+            new PropertyMetadata(-1, OnSelectedIndexChanged)
         );
+
         public int SelectedIndex
         {
             get => (int)GetValue(SelectedIndexProperty);
