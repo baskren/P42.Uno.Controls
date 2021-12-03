@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 namespace P42.Uno.Controls
 {
     [Windows.UI.Xaml.Data.Bindable]
-    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
+    //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class SegmentedControl : ContentControl
     {
         #region Properties

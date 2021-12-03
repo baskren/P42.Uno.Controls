@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Markup;
 namespace P42.Uno.Controls
 {
     [Windows.UI.Xaml.Data.Bindable]
-    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
+    //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = "Message")]
     public partial class Toast : TargetedPopup
     {

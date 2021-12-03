@@ -11,7 +11,8 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace P42.Uno.AsyncNavigation
 {
-    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
+    [Windows.UI.Xaml.Data.Bindable]
+    //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public static class NavigationExtensions
     {
         #region LoadedTaskCompletionSource Property

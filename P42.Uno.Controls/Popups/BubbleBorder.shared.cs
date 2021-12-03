@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Markup;
 namespace P42.Uno.Controls
 {
     [Windows.UI.Xaml.Data.Bindable]
-    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
+    //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = nameof(XamlContent))]
     public partial class BubbleBorder : UserControl
     {
@@ -442,7 +442,7 @@ namespace P42.Uno.Controls
             var x = _path.GetFirstHtmlDescendent();
             x.SetHtmlContent($"<path fill-rule=\"even-odd\" d=\"{data}\"></path>");
 #else
-            System.Console.WriteLine($"BubbleBorder.RegeneratePath [{data}]");
+            //System.Console.WriteLine($"BubbleBorder.RegeneratePath [{data}]");
             //PathGeometry = P42.Utils.Uno.StringToPathGeometryConverter.Current.Convert(data);
             _path.Data = P42.Utils.Uno.StringToPathGeometryConverter.Current.Convert(data);
 #endif

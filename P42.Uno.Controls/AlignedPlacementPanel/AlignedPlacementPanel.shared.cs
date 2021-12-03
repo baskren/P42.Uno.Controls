@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Media;
 namespace P42.Uno.Controls
 {
     [Windows.UI.Xaml.Data.Bindable]
-    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
+    //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class AlignedPlacementPanel : Panel
     {
         #region Spacing Property

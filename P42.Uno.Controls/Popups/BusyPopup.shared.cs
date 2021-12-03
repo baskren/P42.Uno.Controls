@@ -14,7 +14,7 @@ using ProgressRing = P42.Uno.Controls.Spinner;
 namespace P42.Uno.Controls
 {
     [Windows.UI.Xaml.Data.Bindable]
-    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
+    //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class BusyPopup : Toast
     {
         #region Properties
