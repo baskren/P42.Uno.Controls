@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace P42.Uno.Controls
 {
-    public partial class SimpleListView : ContentControl
+    public partial class SimpleListView : UserControl
     {
 
         #region Properties

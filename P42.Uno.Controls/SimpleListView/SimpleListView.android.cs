@@ -52,15 +52,29 @@ namespace P42.Uno.Controls
 
         public void PlatformBuild()
         {
+            P42.Utils.Profile.Enter();
             instance = instances++;
             SelectedItems = _selectedItems;
             _selectedItems.CollectionChanged += OnSelectedItems_CollectionChanged;
             NativeCellHeights.CollectionChanged += OnNativeCellHeights_CollectionChanged;
+
+            //Loaded += SimpleListView_Loaded;
+            InjectNativeListView();
+            P42.Utils.Profile.Exit();
+        }
+        /*
+        async void SimpleListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            //await Task.Delay(3000);
             InjectNativeListView();
         }
-
+        */
         void InjectNativeListView()
         {
+            if (ItemsSource is null)
+                return;
+
+            P42.Utils.Profile.Enter();
             if (_nativeListView != null)
             {
                 _adapter?.NotifyDataSetInvalidated();
@@ -68,16 +82,20 @@ namespace P42.Uno.Controls
                 _adapter?.Dispose();
                 _nativeListView.Dispose();
             }
+            P42.Utils.Profile.Mark("A");
 
             _adapter = new SimpleAdapter(this);
             _nativeListView = new Android.Widget.ListView(global::Uno.UI.ContextHelper.Current)
             {
                 LayoutParameters = new LayoutParams(LayoutParams.MatchParent, LayoutParams.WrapContent),
                 Divider = null,
-                Adapter = _adapter
+                Adapter = _adapter,
             };
+            P42.Utils.Profile.Mark("B");
+
             Content = VisualTreeHelper.AdaptNative(_nativeListView);
-            ((FrameworkElement)Content).InvalidateMeasure();
+            //((FrameworkElement)Content).InvalidateMeasure();
+            P42.Utils.Profile.Exit();
         }
 
         #region Header / Footer Change Handlers
@@ -235,7 +253,7 @@ namespace P42.Uno.Controls
         {
             if (dependencyObject is SimpleListView simpleListView)
             {
-                simpleListView._adapter.SetItems(simpleListView.ItemsSource);
+                //simpleListView._adapter.SetItems(simpleListView.ItemsSource);
                 simpleListView.InjectNativeListView();
             }
         }
@@ -361,12 +379,16 @@ namespace P42.Uno.Controls
 
         public SimpleAdapter(SimpleListView simpleListView)
         {
+            P42.Utils.Profile.Enter();
             SimpleListView = simpleListView;
             SetItems(SimpleListView.ItemsSource);
+            P42.Utils.Profile.Exit();
         }
 
         public void SetItems(IEnumerable items)
         {
+            P42.Utils.Profile.Enter();
+
             if (items != Items)
             {
                 if (Items is INotifyCollectionChanged oldCollection)
@@ -376,6 +398,7 @@ namespace P42.Uno.Controls
                     newCollection.CollectionChanged += OnCollectionChaged;
                 NotifyDataSetChanged();
             }
+            P42.Utils.Profile.Exit();
         }
 
         private void OnCollectionChaged(object sender, NotifyCollectionChangedEventArgs e)
@@ -412,50 +435,82 @@ namespace P42.Uno.Controls
 
         public override int GetItemViewType(int position)
         {
-            if (ItemTemplate != null || TemplateSelector is null)
-                return 0;
+            P42.Utils.Profile.Enter();
+
             if (TemplateSelector?.SelectTemplate(this[position]) is DataTemplate template)
+            {
+                P42.Utils.Profile.Exit("EXIT A");
                 return TemplateSelector.Templates.IndexOf(template) + 1;
+            }
+            P42.Utils.Profile.Exit();
             return 0;
         }
 
         // ALWAYS SET INDEX BEFORE DATACONTEXT
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
+            P42.Utils.Profile.Enter();
+
             if (convertView is CellWrapper wrapper)
             {
                 wrapper.Index = position;
                 wrapper.DataContext = this[position];
+                P42.Utils.Profile.Exit("A");
                 return convertView;
             }
+            P42.Utils.Profile.Mark("B");
 
             if (ItemTemplate?.LoadContent() is FrameworkElement newElement)
             {
-                return new CellWrapper(SimpleListView)
+                P42.Utils.Profile.Mark("B.1");
+
+                var cw = new CellWrapper(SimpleListView)
                 {
                     Child = newElement,
                     Index = position,
-                    DataContext = this[position]
                 };
+                P42.Utils.Profile.Mark("B.2");
+
+                cw.DataContext = this[position];
+
+                P42.Utils.Profile.Exit("EXIT B");
+                return cw;
             }
+            P42.Utils.Profile.Mark("C");
 
             if (TemplateSelector?.SelectTemplate(this[position]) is DataTemplate template)
             {
+                P42.Utils.Profile.Mark("C.1");
+
                 if (template.LoadContent() is FrameworkElement newSelectedElement)
-                    return new CellWrapper(SimpleListView)
+                {
+                    P42.Utils.Profile.Mark("C.2");
+
+                    var cw = new CellWrapper(SimpleListView)
                     {
                         Child = newSelectedElement,
                         Index = position,
-                        DataContext = this[position] 
                     };
-            }
+                    P42.Utils.Profile.Mark("C.3");
 
-            return new CellWrapper(SimpleListView)
+                    cw.DataContext = this[position];
+
+                    P42.Utils.Profile.Exit("EXIT C");
+                    return cw;
+                }
+            }
+            P42.Utils.Profile.Mark("D");
+
+            var w = new CellWrapper(SimpleListView)
             {
                 Child = new Cell(),
                 Index = position,
-                DataContext = this[position],
             };
+            P42.Utils.Profile.Mark("D.1");
+            w.DataContext = this[position];
+
+            P42.Utils.Profile.Exit("EXIT D");
+            return w;
         }
 
     }
@@ -484,12 +539,14 @@ namespace P42.Uno.Controls
 
         public CellWrapper(SimpleListView simpleListView)
         {
+            P42.Utils.Profile.Enter();
             SimpleListView = simpleListView;
             HorizontalAlignment = HorizontalAlignment.Stretch;
             VerticalAlignment = VerticalAlignment.Top;
             Tapped += OnCellWrapper_Tapped;
             SimpleListView._selectedItems.CollectionChanged += OnSelectedItems_CollectionChanged;
             SizeChanged += OnCellWrapper_SizeChanged;
+            P42.Utils.Profile.Exit();
         }
 
 
@@ -500,18 +557,21 @@ namespace P42.Uno.Controls
 
         void RecordCellHeight()
         {
-            if (ActualHeight >-1 && DataContext != null && SimpleListView is SimpleListView parent)
+            P42.Utils.Profile.Enter();
+            if (ActualHeight > -1 && DataContext != null && SimpleListView is SimpleListView parent)
             {
                 var height = (int)(ActualHeight * SimpleListView.DisplayScale + 0.5);
                 if (Index < parent.NativeCellHeights.Count)
                 {
                     parent.NativeCellHeights[Index] = height;
+                    P42.Utils.Profile.Exit("EXIT A");
                     return;
                 }
                 while (Index > parent.NativeCellHeights.Count)
                     parent.NativeCellHeights.Add(0);
                 parent.NativeCellHeights.Add(height);
             }
+            P42.Utils.Profile.Exit();
         }
 
         private void OnSelectedItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -521,16 +581,24 @@ namespace P42.Uno.Controls
 
         async void OnCellWrapper_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("CellWrapper.TAPPED");
             await SimpleListView.OnWrapperClicked(this);
         }
 
         protected override void OnDataContextChanged(DependencyPropertyChangedEventArgs e)
         {
+            P42.Utils.Profile.Enter();
+
             base.OnDataContextChanged(e);
+            P42.Utils.Profile.Mark("A");
+
             UpdateSelection();
+            P42.Utils.Profile.Mark("B");
+
             Child.DataContext = DataContext;
+            P42.Utils.Profile.Mark("C");
+
             RecordCellHeight();
+            P42.Utils.Profile.Exit();
         }
 
         private void UpdateSelection()
@@ -546,11 +614,11 @@ namespace P42.Uno.Controls
             if (_isArranging)
                 return finalSize;
 
+            P42.Utils.Profile.Enter();
             _isArranging = true;
-
             var result = base.ArrangeOverride(finalSize);
-
             _isArranging = false;
+            P42.Utils.Profile.Exit();
             return result;
         }
     }
@@ -568,8 +636,10 @@ namespace P42.Uno.Controls
 
         protected override void OnDataContextChanged(DependencyPropertyChangedEventArgs e)
         {
+            P42.Utils.Profile.Enter();
             base.OnDataContextChanged(e);
             Text = DataContext.ToString();
+            P42.Utils.Profile.Exit();
         }
     }
 
