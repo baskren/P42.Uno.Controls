@@ -388,7 +388,6 @@ namespace P42.Uno.Controls
         const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Top;
         ContentPresenter _contentPresenter;
         Windows.UI.Xaml.Shapes.Path _path;
-        ElevatedView _dropShadow;
         #endregion
 
 
