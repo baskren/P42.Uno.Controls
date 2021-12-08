@@ -429,7 +429,7 @@ namespace P42.Uno.Controls
             {
                 if (ItemTemplate != null || TemplateSelector is null)
                     return 1;
-                return TemplateSelector.Templates.Count() + 1;
+                return TemplateSelector.Count() + 1;
             }
         }
 
@@ -437,10 +437,10 @@ namespace P42.Uno.Controls
         {
             P42.Utils.Profile.Enter();
 
-            if (TemplateSelector?.SelectTemplate(this[position]) is DataTemplate template)
+            if (TemplateSelector?.SelectDataTemplateSet(this[position]) is DataTemplateSet set)
             {
                 P42.Utils.Profile.Exit("EXIT A");
-                return TemplateSelector.Templates.IndexOf(template) + 1;
+                return TemplateSelector.IndexOf(set) + 1;
             }
             P42.Utils.Profile.Exit();
             return 0;
@@ -478,11 +478,11 @@ namespace P42.Uno.Controls
             }
             P42.Utils.Profile.Mark("C");
 
-            if (TemplateSelector?.SelectTemplate(this[position]) is DataTemplate template)
+            if (TemplateSelector?.SelectDataTemplateSet(this[position]) is DataTemplateSet set)
             {
                 P42.Utils.Profile.Mark("C.1");
 
-                if (template.LoadContent() is FrameworkElement newSelectedElement)
+                if (set.Constructor.Invoke() is FrameworkElement newSelectedElement)
                 {
                     P42.Utils.Profile.Mark("C.2");
 
