@@ -93,6 +93,8 @@ namespace P42.Uno.Controls
             }
         }
 
+        public bool AllowUnselectLastSelected = false;
+
         #endregion
 
 
@@ -147,19 +149,22 @@ namespace P42.Uno.Controls
 
         public void UnselectIndex(int index)
         {
-            if (index < 0)
+            if (index < 0 || index >= (Collection?.Count ?? 0))
                 return;
 
-            if (_selectedIndexes.Contains(index))
+            if (AllowUnselectLastSelected || (_selectedIndexes?.Count ?? 0) > 1)
             {
-                var oldSelectedIndex = SelectedIndex;
-                var oldSelectedItem = SelectedItem;
-                var i = _selectedIndexes.IndexOf(index);
-                _selectedIndexes.Remove(index);
+                if (_selectedIndexes.Contains(index))
+                {
+                    var oldSelectedIndex = SelectedIndex;
+                    var oldSelectedItem = SelectedItem;
+                    var i = _selectedIndexes.IndexOf(index);
+                    _selectedIndexes.Remove(index);
 
-                if (oldSelectedIndex != SelectedIndex)
-                    SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, new List<int>(index), i));
+                    if (oldSelectedIndex != SelectedIndex)
+                        SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, new List<int>(index), i));
+                }
             }
         }
 
@@ -172,14 +177,18 @@ namespace P42.Uno.Controls
             var oldSelectedIndex = SelectedIndex;
             var oldSelectedItem = SelectedItem;
 
+
             for (int i = 0; i < _selectedIndexes.Count; i++)
             {
-                if (indexes.Contains(_selectedIndexes[i]))
+                if (AllowUnselectLastSelected || (_selectedIndexes?.Count ?? 0) > 1)
                 {
-                    if (!groups.Any() || groups.Last().Key + groups.Last().Value.Count < i)
-                        groups.Add(i, new List<int>());
-                    groups.Last().Value.Add(_selectedIndexes[i]);
-                    _selectedIndexes.Remove(_selectedIndexes[i]);
+                    if (indexes.Contains(_selectedIndexes[i]))
+                    {
+                        if (!groups.Any() || groups.Last().Key + groups.Last().Value.Count < i)
+                            groups.Add(i, new List<int>());
+                        groups.Last().Value.Add(_selectedIndexes[i]);
+                        _selectedIndexes.Remove(_selectedIndexes[i]);
+                    }
                 }
             }
 
@@ -225,14 +234,14 @@ namespace P42.Uno.Controls
                 if (newSelectedIndex >= collection.Count)
                     return;
 
-                if (newSelectedIndex == -1)
+                if (newSelectedIndex == SelectedIndex || newSelectedIndex >= (Collection?.Count ?? 0))
+                    return;
+
+                if (newSelectedIndex < 0)
                 {
                     Clear();
                     return;
                 }
-
-                if (newSelectedIndex == SelectedIndex)
-                    return;
 
                 var oldSelectedIndex = SelectedIndex;
                 var oldSelectedItem = SelectedItem;
@@ -263,14 +272,14 @@ namespace P42.Uno.Controls
                     return;
             }
 
-            if (newSelectedIndex == -1)
+            if (newSelectedIndex == SelectedIndex || newSelectedIndex >= (Collection?.Count ?? 0))
+                return;
+
+            if (newSelectedIndex < 0)
             {
                 Clear();
                 return;
             }
-
-            if (newSelectedIndex == SelectedIndex)
-                return;
 
             var oldSelectedIndex = SelectedIndex;
             var oldSelectedItem = SelectedItem;

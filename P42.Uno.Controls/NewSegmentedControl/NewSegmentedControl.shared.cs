@@ -144,6 +144,27 @@ namespace P42.Uno.Controls
         }
         #endregion
 
+        #region AllowUnselectLastSelected Property
+        public static readonly DependencyProperty AllowUnselectLastSelectedProperty = DependencyProperty.Register(
+            nameof(AllowUnselectLastSelected),
+            typeof(bool),
+            typeof(NewSegmentedControl),
+            new PropertyMetadata(false, OnAllowUnselectLastSelectedChanged)
+            );
+
+        private static void OnAllowUnselectLastSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        {
+            if (d is NewSegmentedControl control)
+                control.SelectionTracker.AllowUnselectLastSelected = (bool)args.NewValue;
+        }
+
+        public bool AllowUnselectLastSelected
+        {
+            get => (bool)GetValue(AllowUnselectLastSelectedProperty);
+            set => SetValue(AllowUnselectLastSelectedProperty, value);
+        }
+        #endregion
+
         public IList<int> SelectedIndexes => SelectionTracker.SelectedIndexes;
 
         public IList<string> SelectedItems => SelectionTracker.SelectedItems;
