@@ -91,7 +91,7 @@ namespace P42.Uno.Controls.Test
             OkButtonContent = "YUP",
             CancelButtonContent = "NOPE!",
             CancelButtonBackground = new SolidColorBrush(Colors.Red),
-            IsAnimated = true
+            //IsAnimated = true
         };
         
 

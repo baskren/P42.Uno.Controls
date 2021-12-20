@@ -98,10 +98,11 @@ namespace P42.Uno.Controls.Test
                     // parameter
                     //rootFrame.Navigate(typeof(ListEditPage), e.Arguments);
                     //rootFrame.Navigate(typeof(PageMenu), e.Arguments);
-                    rootFrame.Navigate(typeof(P42.Uno.AsyncNavigation.NavigationPage), new PageMenu());                    
+                    //rootFrame.Navigate(typeof(P42.Uno.AsyncNavigation.NavigationPage), new PageMenu());
                     //rootFrame.Navigate(typeof(MainPage), e.Arguments);
                     //rootFrame.Navigate(typeof(SummaryDetailPage), e.Arguments);
                     //rootFrame.Navigate(typeof(BubblePointerAdjust), e.Arguments);
+                    rootFrame.Navigate(typeof(SegmentedControlTestPage), e.Arguments);
                 }
                 // Ensure the current window is active
                 _window.Activate();

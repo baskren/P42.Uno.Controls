@@ -115,7 +115,7 @@
     <BundleResource Include="Resources\Fonts\uno-fluentui-assets.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="7.0.0"/>
+    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="7.0.0" />
     <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.3" />
     <PackageReference Include="Uno.UI" Version="3.11.6" />
     <PackageReference Include="Uno.UI.RemoteControl" Version="3.11.6" Condition="'$(Configuration)'=='Debug'" />
@@ -154,15 +154,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.iOS.csproj">
-      <Project>{e3fdbb63-bcd8-410f-a19d-d34e1abacbcd}</Project>
+      <Project>{51B840D1-A248-4450-96EC-44DDAA789EAB}</Project>
       <Name>P42.Uno.Controls.iOS</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.iOS.csproj">
-      <Project>{a3bcf630-7128-45f1-b4c3-3fb30a73dfa1}</Project>
+      <Project>{50F278C5-CE67-41E5-AA46-CB285EAB2B55}</Project>
       <Name>P42.Uno.Markup.iOS</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.iOS.csproj">
-      <Project>{f7eb2ae1-ad10-4f05-b5be-f352d060877d}</Project>
+      <Project>{684DFBE1-23E9-49D6-9492-9EF0B571B6AB}</Project>
       <Name>P42.Utils.Uno.iOS</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\P42.Utils\P42.Utils\P42.Utils.csproj">

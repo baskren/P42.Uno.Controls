@@ -102,7 +102,7 @@ namespace P42.Uno.Controls.Test
     }
 
     [Bindable]
-    public class MainPageButtonRowTemplate : Button
+    public partial class MainPageButtonRowTemplate : Button
     {
         public MainPageButtonRowTemplate()
         {

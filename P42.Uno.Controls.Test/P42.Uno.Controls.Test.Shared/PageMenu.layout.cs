@@ -40,7 +40,7 @@ namespace P42.Uno.Controls.Test
                         .Text("Test Pages")
                         .StretchHorizontal()
                         .CenterVertical()
-                        .TextAlignment(TextAlignment.Center),
+                        .CenterTextAlignment(),
                     new ListView()
                         .Row(1)
                         .Assign(out _listView)
@@ -52,7 +52,7 @@ namespace P42.Uno.Controls.Test
     }
 
     [Bindable]
-    public class PageMenuCellTemplate : UserControl
+    public partial class PageMenuCellTemplate : UserControl
     {
         TextBlock _textBlock;
 

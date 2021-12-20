@@ -50,7 +50,7 @@ namespace P42.Uno.Controls.Test
     }
 
     [Bindable]
-    public class SummaryDetailPageCellTemplate : Button
+    public partial class SummaryDetailPageCellTemplate : Button
     {
         public SummaryDetailPageCellTemplate()
         {
