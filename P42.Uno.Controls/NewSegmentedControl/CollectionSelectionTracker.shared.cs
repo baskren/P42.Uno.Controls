@@ -53,9 +53,27 @@ namespace P42.Uno.Controls
         }
 
         List<int> _selectedIndexes = new List<int>();
-        public IList<int> SelectedIndexes => _selectedIndexes;
+        public List<int> SelectedIndexes
+        {
+            get => _selectedIndexes;
+            set
+            {
+                switch (SelectionMode)
+                {
+                    case SelectionMode.Radio:
+                        var index = value?.Any() ?? false
+                            ? value.Last()
+                            : -1;
+                        UpdateToSelectedRadio(index);
+                        break;
+                    case SelectionMode.Multi:
+                        SetSelectedIndexesMulti(value);
+                        break;
+                }
+            }
+        }
 
-        public IList<T> SelectedItems
+        public List<T> SelectedItems
         {
             get
             {
@@ -66,6 +84,21 @@ namespace P42.Uno.Controls
                         result.Add(Collection[i]);
                 }
                 return result;
+            }
+            set
+            {
+                switch (SelectionMode)
+                {
+                    case SelectionMode.Radio:
+                        var index = value?.Any() ?? false
+                            ? Collection?.IndexOf(value.Last()) ?? -1
+                            : -1;
+                        UpdateToSelectedRadio(index);
+                        break;
+                    case SelectionMode.Multi:
+                        SetSelectedItemsMulti(value);
+                        break;
+                }
             }
         }
 
@@ -226,6 +259,83 @@ namespace P42.Uno.Controls
         #region Support Methods
         private void OnCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             => BoundSelections();
+
+        void SetSelectedItemsMulti(IList<T> newSelectedItems)
+        {
+            if (Collection is IList<T> collection)
+            {
+                var newSelectedIndexes = new List<int>();
+                if (newSelectedItems?.Any() ?? false)
+                {
+                    for (int i = newSelectedItems.Count - 1; i >= 0; i--)
+                    {
+                        if (collection.IndexOf(newSelectedItems[i]) is int index && index > -1)
+                            newSelectedIndexes.Add(index);
+                    }
+                }
+
+                SetSelectedIndexesMulti(newSelectedIndexes);
+            }
+        }
+
+        void SetSelectedIndexesMulti(IList<int> newSelectedIndexes)
+        {
+            if (Collection is IList<T> collection)
+            {
+                var newSelectedIndex = -1;
+                var newSelectedIndexSet = false;
+                if (newSelectedIndexes?.Any() ?? false)
+                {
+                    for (int i = newSelectedIndexes.Count-1; i >= 0; i--)
+                    {
+                        if (newSelectedIndexes[i] >= collection.Count)
+                        {
+                            newSelectedIndexes.Remove(newSelectedIndexes[i]);
+                        }
+                        else if (!newSelectedIndexSet)
+                        {
+                            newSelectedIndex = newSelectedIndexes[i];
+                            newSelectedIndexSet = true;
+                        }
+                    }
+                }
+
+                if (newSelectedIndex >= collection.Count)
+                    return;
+
+                if (newSelectedIndex < 0)
+                {
+                    Clear();
+                    return;
+                }
+
+                var oldSelectedIndex = SelectedIndex;
+                var oldSelectedItem = SelectedItem;
+
+                var changed = _selectedIndexes.Count != newSelectedIndexes.Count;
+                if (!changed)
+                {
+                    for (int i = 0; i < _selectedIndexes.Count; i++)
+                    {
+                        if (_selectedIndexes[i] != newSelectedIndexes[i])
+                        {
+                            changed = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (changed)
+                {
+                    _selectedIndexes.Clear();
+                    _selectedIndexes.AddRange(newSelectedIndexes);
+                    if (SelectedIndex != oldSelectedIndex)
+                        SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newSelectedIndexes, 0));
+                }
+            }
+        }
 
         void UpdateToSelectedMulti(int newSelectedIndex)
         {

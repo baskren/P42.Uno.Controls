@@ -52,12 +52,13 @@ namespace P42.Uno.Controls
         {
             if (dependencyObject is NewSegmentedControl control)
             {
-                if (args.NewValue is ObservableCollection<string> newCollection)
+                if (args.NewValue is IList<string> newList)
                 {
-                    control.SelectionTracker.Collection = newCollection;
                     if (args.OldValue is ObservableCollection<string> oldCollection)
                         oldCollection.CollectionChanged -= control.Labels_CollectionChanged;
-                    newCollection.CollectionChanged += control.Labels_CollectionChanged;
+                    control.SelectionTracker.Collection = newList;
+                    if (args.OldValue is ObservableCollection<string> newCollection)
+                        newCollection.CollectionChanged += control.Labels_CollectionChanged;
                     control.Labels_CollectionChanged(null, null);
                 }
                 else
@@ -108,7 +109,7 @@ namespace P42.Uno.Controls
 
         private static void OnSelectedIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            if (d is NewSegmentedControl control)
+            if (d is NewSegmentedControl control && control._tapProcessing == int.MinValue)
             {
                 control.SelectionTracker.SelectIndex((int)args.NewValue);
             }
@@ -131,7 +132,7 @@ namespace P42.Uno.Controls
 
         private static void OnSelectedLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            if (d is NewSegmentedControl control)
+            if (d is NewSegmentedControl control && control._tapProcessing == int.MinValue)
             {
                 control.SelectionTracker.SelectItem((string)args.NewValue);
             }
@@ -165,9 +166,21 @@ namespace P42.Uno.Controls
         }
         #endregion
 
-        public IList<int> SelectedIndexes => SelectionTracker.SelectedIndexes;
+        #region SelectedIndexes
+        public List<int> SelectedIndexes
+        {
+            get => SelectionTracker.SelectedIndexes;
+            set => SelectionTracker.SelectedIndexes = value;
+        }
+        #endregion
 
-        public IList<string> SelectedItems => SelectionTracker.SelectedItems;
+        #region SelectedItems
+        public List<string> SelectedItems
+        {
+            get => SelectionTracker.SelectedItems;
+            set => SelectionTracker.SelectedItems = value;
+        }
+        #endregion
 
         #region SelectionMode Property
         public static readonly DependencyProperty SelectionModeProperty = DependencyProperty.Register(
@@ -250,6 +263,11 @@ namespace P42.Uno.Controls
         #endregion
 
 
+        #region Helper methods
+
+        #endregion
+
+
         #region Gesture Handlers
         void OnSegmentTapped(object sender, TappedRoutedEventArgs e)
         {
@@ -284,7 +302,7 @@ namespace P42.Uno.Controls
 
         void SetDefaultElementColors(int index)
         {
-            if (index >= 0 && index < TextBlocks.Count)
+            if (index >= 0 && index < TextBlocks.Count && index < Backgrounds.Count)
             {
                 var selected = SelectedIndexes.Contains(index);
                 if (_tapProcessing == index)
@@ -292,7 +310,7 @@ namespace P42.Uno.Controls
                 //System.Diagnostics.Debug.WriteLine($"DEFAULT [{index}]");
                 var background = Backgrounds[index];
                 background.Fill = SelectedIndexes.Contains(index)
-                    ? SystemToggleButtonBrushes.CheckedBackground.AssureGesturable()
+                    ? BorderBrush.AssureGesturable() //SystemToggleButtonBrushes.CheckedBackground.AssureGesturable()
                     : SystemToggleButtonBrushes.Background.AssureGesturable();
                 var textBlock = TextBlocks[index];
                 textBlock.Foreground = selected
@@ -350,24 +368,26 @@ namespace P42.Uno.Controls
 
         #region Change Handlers
         int _tapProcessing = int.MinValue;
-        async void OnSelectionTracker_SelectionChanged(object sender, CollectionSelectionTrackerSelectionChangedArguments<string> e)
+        void OnSelectionTracker_SelectionChanged(object sender, CollectionSelectionTrackerSelectionChangedArguments<string> e)
         {
             // show processing position
             SetTappedProcessingColors(e.NewIndex);
+            //await Task.Delay(50);
 
             // fire events
+            _tapProcessing = SelectionTracker.SelectedIndex;
             SetValue(SelectedIndexProperty, e.NewIndex);
             SetValue(SelectedLabelProperty, e.NewItem);
             SelectionChanged?.Invoke(this, (e.NewIndex, e.NewItem));
+            //await Task.Delay(50);
 
             // or fake it
-            _tapProcessing = SelectionTracker.SelectedIndex;
-            await Task.Delay(10);
+            /*
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             while (stopwatch.ElapsedMilliseconds < 1000)
                 await Task.Delay(100);
+            */
             _tapProcessing = int.MinValue;
-
             DisplaySelections();
         }
 
@@ -474,6 +494,9 @@ namespace P42.Uno.Controls
         Size big = new Size(5000, 5000);
         bool CalculateOverflow(double availableWidth)
         {
+            if (!Labels.Any())
+                return true;
+
             var columns = Labels.Count;
             double cellWidth = Padding.Left + Padding.Right + availableWidth/(Math.Max(1, columns)) + BorderWidth;
 
