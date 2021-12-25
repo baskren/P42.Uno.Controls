@@ -41,25 +41,25 @@ namespace P42.Uno.Controls
                         .Row(0)
                         .Column(1)
                         .TextWrapping(Windows.UI.Xaml.TextWrapping.WrapWholeWords)
-                        //.FontFamily("ms-appx:///Assets/Fonts/Ubuntu-Bold.ttf#Ubuntu-Bold")
                         .BindFont(this, except: nameof(FontWeight))
                         .FontWeight(FontWeights.Bold)
                         .BindNullCollapse(),
 
-                    //new ScrollViewer()
-                    //    .RowCol(1,1)
-                    //    .Content(
+                    new ScrollViewer()
+                        .RowCol(1,1)
+                        .Content(
                         new ContentPresenter()
                             .Assign(out _messageBlock)
                             .RowCol(1,1)
                             .TextWrapping(Windows.UI.Xaml.TextWrapping.WrapWholeWords)
                             .BindFont(this)
                             .BindNullCollapse()
-                    //    )
+                        )
                 );
             Padding = new Windows.UI.Xaml.Thickness(5);
 
             this.RegisterPropertyChangedCallback(PaddingProperty, OnPaddingPropertyChanged);
+
         }
 
         private void OnPaddingPropertyChanged(DependencyObject sender, DependencyProperty dp)

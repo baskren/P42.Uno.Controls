@@ -91,7 +91,13 @@ namespace P42.Uno.Controls
             _popup.Closed += OnPopupClosed;
 
             LightDismissOverlayMode = LightDismissOverlayMode.On;
-
+            /*
+#if __IOS__
+            var uiFont = UIKit.UIFont.SystemFontOfSize(12f);
+            var family = uiFont.FamilyName;
+            this.FontFamily(family);
+#endif
+            */
         }
 
     }
