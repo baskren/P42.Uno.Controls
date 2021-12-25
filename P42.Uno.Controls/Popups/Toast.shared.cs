@@ -26,13 +26,23 @@ namespace P42.Uno.Controls
             new PropertyMetadata(null, OnTitleChanged)
         );
 
-        private static void OnTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        private static void OnTitleChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            if (d is Toast toast)
-            {
-                toast._titleBlock.Content = args.NewValue;
-                //toast._titleBlock.FontWeight = FontWeights.Bold;
-            }
+            if (dependencyObject is Toast t)
+                t.OnTitleChanged(args);
+        }
+
+        protected virtual void OnTitleChanged(DependencyPropertyChangedEventArgs args)
+        {
+            _titleBlock.Content = args.NewValue;
+            if (args.NewValue is TextBlock tb)
+                _titleBlock.Collapsed(string.IsNullOrWhiteSpace(tb.Text));
+            else if (args.NewValue is string text)
+                _titleBlock.Collapsed(string.IsNullOrWhiteSpace(text));
+            else
+                _titleBlock.Visible();
+
+            //_bubbleContentGrid.RowDefinitions[0] = new RowDefinition { Height = _titleBlock.IsVisible() ? GridLength.Auto : 0 };
         }
 
         public object TitleContent
@@ -51,10 +61,23 @@ namespace P42.Uno.Controls
             new PropertyMetadata(default(object), OnMessageChanged)
         );
 
-        private static void OnMessageChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        private static void OnMessageChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            if (d is Toast toast)
-                toast._messageBlock.Content = args.NewValue;
+            if (dependencyObject is Toast t)
+                t.OnMessageChanged(args);
+        }
+
+        protected virtual void OnMessageChanged(DependencyPropertyChangedEventArgs args)
+        {
+                _messageBlock.Content = args.NewValue;
+                if (args.NewValue is TextBlock tb)
+                    _messageBlock.Collapsed(string.IsNullOrWhiteSpace(tb.Text));
+                else if (args.NewValue is string text)
+                    _messageBlock.Collapsed(string.IsNullOrWhiteSpace(text));
+                else
+                    _messageBlock.Visible();
+
+                //_bubbleContentGrid.RowDefinitions[1] = new RowDefinition { Height = _messageBlock.IsVisible() ? GridLength.Auto : 0 };
         }
 
         public object Message

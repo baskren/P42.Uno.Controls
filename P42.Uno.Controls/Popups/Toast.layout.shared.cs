@@ -5,6 +5,7 @@ using Windows.UI;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Shapes;
 
 namespace P42.Uno.Controls
 {
@@ -22,10 +23,7 @@ namespace P42.Uno.Controls
                 .ColumnSpacing(0)
                 .Margin(0)
                 .Padding(0)
-                .Rows(
-                    GridRowsColumns.Auto,
-                    GridRowsColumns.Star
-                )
+                .Rows(GridRowsColumns.Auto, GridRowsColumns.Auto)
                 .Columns(GridRowsColumns.Auto, GridRowsColumns.Star)
                 .Children(
                     new ContentPresenter()
@@ -38,12 +36,14 @@ namespace P42.Uno.Controls
 
                     new ContentPresenter()
                         .Assign(out _titleBlock)
-                        .Row(0)
-                        .Column(1)
+                        .RowCol(0,1)
+                        .CenterVertical()
+                        .VerticalContentAlignment(VerticalAlignment.Center)
                         .TextWrapping(Windows.UI.Xaml.TextWrapping.WrapWholeWords)
                         .BindFont(this, except: nameof(FontWeight))
                         .FontWeight(FontWeights.Bold)
-                        .BindNullCollapse(),
+                        .BindNullCollapse()
+                        ,
 
                     new ScrollViewer()
                         .RowCol(1,1)
@@ -51,6 +51,8 @@ namespace P42.Uno.Controls
                         new ContentPresenter()
                             .Assign(out _messageBlock)
                             .RowCol(1,1)
+                            .CenterVertical()
+                            .VerticalContentAlignment(VerticalAlignment.Center)
                             .TextWrapping(Windows.UI.Xaml.TextWrapping.WrapWholeWords)
                             .BindFont(this)
                             .BindNullCollapse()

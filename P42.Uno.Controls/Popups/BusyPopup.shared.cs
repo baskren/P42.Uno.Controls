@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using P42.Uno.Markup;
+using P42.Utils.Uno;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -90,6 +92,38 @@ namespace P42.Uno.Controls
         {
             base.OnPushPopStateChanged(e);
             _progressRing.IsActive = PushPopState == PushPopState.Pushed;
+        }
+
+        protected override void OnTitleChanged(DependencyPropertyChangedEventArgs args)
+        {
+            base.OnTitleChanged(args);
+            UpdateProgressRingLocation();
+        }
+
+        protected override void OnMessageChanged(DependencyPropertyChangedEventArgs args)
+        {
+            base.OnMessageChanged(args);
+            UpdateProgressRingLocation();
+        }
+
+        protected virtual void UpdateProgressRingLocation()
+        {
+            if (_titleBlock.IsVisible())
+            {
+                _progressRing.RowCol(0, 0);
+                _progressRing.RowSpan(_messageBlock.IsVisible() ? 2 : 1);
+            }
+            else if (_messageBlock.IsVisible())
+            {
+                _progressRing.RowCol(1, 0);
+                _progressRing.RowSpan(1);
+            }
+            else
+            {
+                _progressRing.RowCol(0, 0);
+                _progressRing.RowSpan(1);
+            }
+
         }
     }
 }
