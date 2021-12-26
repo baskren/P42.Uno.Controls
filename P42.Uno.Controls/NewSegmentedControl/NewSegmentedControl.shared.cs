@@ -238,12 +238,18 @@ namespace P42.Uno.Controls
         List<Rectangle> Separators = new List<Rectangle>();
         List<Rectangle> Backgrounds = new List<Rectangle>();
         CollectionSelectionTracker<string> SelectionTracker = new CollectionSelectionTracker<string>();
+
+        TextBlock _testTextBlock = new TextBlock();
         #endregion
 
 
         #region Constructor
         public NewSegmentedControl()
         {
+            _testTextBlock
+                //.BindFont(this)
+                .Bind(TextBlock.MarginProperty, this, nameof(Padding));
+
             Padding = new Thickness(2, 4);
 
             SizeChanged += NewSegmentedControl_SizeChanged;
@@ -442,6 +448,7 @@ namespace P42.Uno.Controls
         void AddNewLabel()
             => TextBlocks.Add(new TextBlock()
                 //.Margin(Padding)
+                //.BindFont(this)
                 .Bind(TextBlock.MarginProperty, this, nameof(Padding))
                 .Foreground(SystemToggleButtonBrushes.Foreground)
                 .Center()
@@ -493,24 +500,12 @@ namespace P42.Uno.Controls
                 return true;
 
             var columns = Labels.Count;
-            double cellWidth = Padding.Left + Padding.Right + availableWidth/(Math.Max(1, columns)) + BorderWidth;
-
-            while (TextBlocks.Count < columns)
-                AddNewLabel();
-
-            if (!IsOverflowed)
-            {
-                while (Separators.Count < columns - 1)
-                    AddNewSeparator();
-                while (Backgrounds.Count < columns)
-                    AddNewBackground();
-            }
+            double cellWidth = (availableWidth - 2 * BorderWidth - Margin.Horizontal())/(Math.Max(1, columns)) - BorderWidth - Padding.Horizontal();
 
             for (int i=0; i<columns;i++)
             {
-                //TODO: Add IsSizeValid attached property to TextBlock as a way to eliminate unnecessary measures
-                TextBlocks[i].Text(Labels[i]).Measure(big);
-                if (TextBlocks[i].DesiredSize.Width >= cellWidth)
+                _testTextBlock.Text(Labels[i]).Measure(big);
+                if (_testTextBlock.DesiredSize.Width >= cellWidth)
                     return true;
             }
             return false;
