@@ -57,7 +57,7 @@ namespace P42.Uno.Controls
                     if (args.OldValue is ObservableCollection<string> oldCollection)
                         oldCollection.CollectionChanged -= control.Labels_CollectionChanged;
                     control.SelectionTracker.Collection = newList;
-                    if (args.OldValue is ObservableCollection<string> newCollection)
+                    if (args.NewValue is ObservableCollection<string> newCollection)
                         newCollection.CollectionChanged += control.Labels_CollectionChanged;
                     control.Labels_CollectionChanged(null, null);
                 }
@@ -259,11 +259,6 @@ namespace P42.Uno.Controls
             SelectionTracker.CollectionChanged += OnSelectionTracker_CollectionChanged;
             SelectionTracker.SelectionChanged += OnSelectionTracker_SelectionChanged;
         }
-
-        #endregion
-
-
-        #region Helper methods
 
         #endregion
 

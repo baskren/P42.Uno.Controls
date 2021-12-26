@@ -44,6 +44,8 @@ namespace P42.Uno.Controls.Test
 
         void Build()
         {
+            this.Background(Windows.UI.Colors.LightBlue);
+
             Content = new Grid()
                 .Rows(40, 40, 40, "*")
                 .Margin(10,50,10,50)
@@ -73,8 +75,14 @@ namespace P42.Uno.Controls.Test
             _segmentedControl.Labels = labels;
             _segmentedControl.SelectionChanged += _segmentedControl_SelectionChanged;
             _slider.ValueChanged += _slider_ValueChanged;
+            _segmentedControl.IsOverflowedChanged += _segmentedControl_IsOverflowedChanged;
 
             _slider_ValueChanged(null, null);
+        }
+
+        private void _segmentedControl_IsOverflowedChanged(object sender, bool e)
+        {
+            Console.WriteLine($"_segmentedControl_IsOverflowedChanged [{e}]");
         }
 
         private void _segmentedControl_SelectionChanged(object sender, (int SelectedIndex, string SelectedItem) e)
@@ -89,6 +97,8 @@ namespace P42.Uno.Controls.Test
 
             while (_slider.Value > labels.Count)
                 labels.Add(numbers[labels.Count]);
+
+            Console.WriteLine($"TestPage._slider_ValueChanged label[{string.Join(", ", labels)}]");
         }
         #endregion
     }
