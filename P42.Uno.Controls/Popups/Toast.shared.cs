@@ -36,13 +36,16 @@ namespace P42.Uno.Controls
         {
             _titleBlock.Content = args.NewValue;
             if (args.NewValue is TextBlock tb)
-                _titleBlock.Collapsed(string.IsNullOrWhiteSpace(tb.Text));
+            {
+                var t = tb.Text;
+                if (string.IsNullOrWhiteSpace(t))
+                    t = tb.GetHtml();
+                _titleBlock.Collapsed(string.IsNullOrWhiteSpace(t));
+            }
             else if (args.NewValue is string text)
                 _titleBlock.Collapsed(string.IsNullOrWhiteSpace(text));
             else
                 _titleBlock.Visible();
-
-            //_bubbleContentGrid.RowDefinitions[0] = new RowDefinition { Height = _titleBlock.IsVisible() ? GridLength.Auto : 0 };
         }
 
         public object TitleContent
@@ -69,15 +72,18 @@ namespace P42.Uno.Controls
 
         protected virtual void OnMessageChanged(DependencyPropertyChangedEventArgs args)
         {
-                _messageBlock.Content = args.NewValue;
-                if (args.NewValue is TextBlock tb)
-                    _messageBlock.Collapsed(string.IsNullOrWhiteSpace(tb.Text));
-                else if (args.NewValue is string text)
-                    _messageBlock.Collapsed(string.IsNullOrWhiteSpace(text));
-                else
-                    _messageBlock.Visible();
-
-                //_bubbleContentGrid.RowDefinitions[1] = new RowDefinition { Height = _messageBlock.IsVisible() ? GridLength.Auto : 0 };
+            _messageBlock.Content = args.NewValue;
+            if (args.NewValue is TextBlock tb)
+            {
+                var t = tb.Text;
+                if (string.IsNullOrWhiteSpace(t))
+                    t = tb.GetHtml();
+                _messageBlock.Collapsed(string.IsNullOrWhiteSpace(t));
+            }
+            else if (args.NewValue is string text)
+                _messageBlock.Collapsed(string.IsNullOrWhiteSpace(text));
+            else
+                _messageBlock.Visible();
         }
 
         public object Message
