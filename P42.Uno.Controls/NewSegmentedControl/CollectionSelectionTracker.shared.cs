@@ -24,7 +24,7 @@ namespace P42.Uno.Controls
             }
         }
 
-        public Func<T> SelectedItemWhenNoneSelected;
+        public Func<T> SelectedItemWhenNoneSelected { get; set; }
 
         public int SelectedIndex
         {
