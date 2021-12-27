@@ -250,7 +250,7 @@ namespace P42.Uno.Controls
                 //.BindFont(this)
                 .Bind(TextBlock.MarginProperty, this, nameof(Padding));
 
-            Padding = new Thickness(2, 4);
+            Padding = new Thickness(2, 4, 2, 4);
 
             SizeChanged += NewSegmentedControl_SizeChanged;
             BorderBrush = SystemToggleButtonBrushes.Border;
@@ -264,8 +264,11 @@ namespace P42.Uno.Controls
             //SelectionTracker.SelectionChanged += OnSelectionTrackerSelectionChanged;
             SelectionTracker.CollectionChanged += OnSelectionTracker_CollectionChanged;
             SelectionTracker.SelectionChanged += OnSelectionTracker_SelectionChanged;
-        }
 
+#if WINDOWS_UWP
+            RegisterPropertyChangedCallback(Grid.BorderThicknessProperty, OnBorderThicknessChanged);
+#endif
+        }
         #endregion
 
 
@@ -452,7 +455,7 @@ namespace P42.Uno.Controls
                 .Bind(TextBlock.MarginProperty, this, nameof(Padding))
                 .Foreground(SystemToggleButtonBrushes.Foreground)
                 .Center()
-                .GridColumn(TextBlocks.Count)
+                .Column(TextBlocks.Count)
                 .AddOnTapped(OnSegmentTapped)
                 .AddOnPointerEntered(OnSegmentPointerEntered)
                 .AddOnPointerExited(OnSegmentPointerExited)
@@ -466,7 +469,7 @@ namespace P42.Uno.Controls
                 .Opacity(0.5)
                 .Width(1)
                 .StretchVertical().CenterHorizontal()
-                .ColumnSpan(2).GridColumn(Separators.Count)
+                .ColumnSpan(2).Column(Separators.Count)
                 .Bind(Rectangle.FillProperty, this, nameof(BorderBrush))
                 );
 
@@ -475,7 +478,7 @@ namespace P42.Uno.Controls
                 .Fill(SystemToggleButtonBrushes.Background)
                 .Margin(-0.25, 0)
                 .Stretch()
-                .GridColumn(Backgrounds.Count)
+                .Column(Backgrounds.Count)
                 .AddOnTapped(OnSegmentTapped)
                 .AddOnPointerEntered(OnSegmentPointerEntered)
                 .AddOnPointerExited(OnSegmentPointerExited)
@@ -555,6 +558,16 @@ namespace P42.Uno.Controls
             UpdateBorder();
         }
 
+#if WINDOWS_UWP
+        private void OnBorderThicknessChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            if (!_hidingBorder)
+                _hiddenBorderThickness = BorderThickness;
+            if (IsLoaded && ActualWidth > 50)
+                CalculateOverflow(ActualWidth);
+        }
+
+#else
         protected override void OnBorderThicknessChanged(Thickness oldValue, Thickness newValue)
         {
             if (!_hidingBorder)
@@ -563,6 +576,8 @@ namespace P42.Uno.Controls
             if (IsLoaded && ActualWidth > 50)
                 CalculateOverflow(ActualWidth);
         }
+#endif
+
         #endregion
     }
 
