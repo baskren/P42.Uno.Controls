@@ -107,7 +107,7 @@ namespace P42.Uno.Controls
         {
             get
             {
-                if (_weakCollectionRef?.TryGetTarget(out var target) ?? false)
+                if (_weakCollectionRef != null && _weakCollectionRef.TryGetTarget(out IList<T> target))
                     return target;
                 return null;
             }
