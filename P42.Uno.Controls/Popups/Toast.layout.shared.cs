@@ -15,6 +15,9 @@ namespace P42.Uno.Controls
         protected Grid _bubbleContentGrid;
         protected ContentPresenter _iconPresenter;
         protected ContentPresenter _messageBlock;
+        protected ScrollViewer scrollViewer;
+        protected RowDefinition _contentRowDefinition;
+        protected RowDefinition _titleRowDefinition;
 
         void Build()
         {
@@ -23,7 +26,10 @@ namespace P42.Uno.Controls
                 .ColumnSpacing(0)
                 .Margin(0)
                 .Padding(0)
-                .Rows(GridRowsColumns.Auto, GridRowsColumns.Auto)
+                .Rows(
+                    new RowDefinition { Height = GridLength.Auto }.Assign(out _titleRowDefinition),
+                    new RowDefinition { Height = GridLength.Auto }.Assign(out _contentRowDefinition)
+                    )
                 .Columns(GridRowsColumns.Auto, GridRowsColumns.Star)
                 .Children(
                     new ContentPresenter()
@@ -47,6 +53,8 @@ namespace P42.Uno.Controls
 
                     new ScrollViewer()
                         .RowCol(1,1)
+                        .Assign(out scrollViewer)
+                        .MaxHeight(300)
                         .Content(
                         new ContentPresenter()
                             .Assign(out _messageBlock)
@@ -57,12 +65,14 @@ namespace P42.Uno.Controls
                             .BindFont(this)
                             .BindNullCollapse()
                         )
+                        //.Bind(ScrollViewer.MaxHeightProperty, _contentRowDefinition, nameof(ActualHeight))
                 );
             Padding = new Windows.UI.Xaml.Thickness(5);
 
             this.RegisterPropertyChangedCallback(PaddingProperty, OnPaddingPropertyChanged);
 
         }
+
 
         private void OnPaddingPropertyChanged(DependencyObject sender, DependencyProperty dp)
         {

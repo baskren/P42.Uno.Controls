@@ -16,7 +16,7 @@ namespace P42.Uno.Controls
     [Windows.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = "Message")]
-    public partial class Toast : TargetedPopup
+    public partial class Toast : TargetedPopup, IDisposable
     {
         #region Title Property
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -189,6 +189,21 @@ namespace P42.Uno.Controls
         public Toast()
         {
             Build();
+
+            Loaded += OnLoaded;
+        }
+
+        protected override Task OnPushBeginAsync()
+        {
+            UpdateScrollMaxHeight();
+            Windows.UI.Xaml.Window.Current.SizeChanged += OnCurrentWindow_SizeChanged;
+            return base.OnPushBeginAsync();
+        }
+
+        protected override Task OnPopBeginAsync()
+        {
+            Windows.UI.Xaml.Window.Current.SizeChanged -= OnCurrentWindow_SizeChanged;
+            return base.OnPopBeginAsync();
         }
         #endregion
 
@@ -202,6 +217,21 @@ namespace P42.Uno.Controls
 
             IsMessageScrollable = desiredSize.Height > size.Height;
             System.Diagnostics.Debug.WriteLine($"Toast.OnBorderSizeChanged height[{size.Height}] desiredHeight[{desiredSize.Height}]");
+        }
+
+
+        private void OnCurrentWindow_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        {
+            UpdateScrollMaxHeight();
+        }
+
+        protected void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            UpdateScrollMaxHeight();
+        }
+        void UpdateScrollMaxHeight()
+        {
+            //scrollViewer.MaxHeight = AppWindow.Size(this).Height - Margin.Vertical() - Padding.Vertical() - _titleRowDefinition.ActualHeight - 200;
         }
     }
 }
