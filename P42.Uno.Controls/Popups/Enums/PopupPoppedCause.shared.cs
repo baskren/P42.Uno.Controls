@@ -57,5 +57,10 @@ namespace P42.Uno.Controls
         /// User moved pointer outside of Target
         /// </summary>
         PointerMoved,
+
+        /// <summary>
+        /// Exception was thrown
+        /// </summary>
+        Exception,
     }
 }

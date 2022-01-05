@@ -659,39 +659,48 @@ namespace P42.Uno.Controls
             _popupOpenedCompletionSource = new TaskCompletionSource<bool>();
 
             // WHAT IF WE PUT _popup.IsOpen AFTER UpdateMarginAndAlignment?
-            _popup.IsOpen = true;
-            await Task.Delay(5);
-            UpdateMarginAndAlignment();
 
-            // IS THIS NECESSARY?!?!
-            //_popup.InvalidateMeasure();
-            //_popup.InvalidateArrange();
-            //UpdateMarginAndAlignment();
-
-
-            if (animated)
+            try
             {
-                Action<double> action = percent => _border.Opacity = Opacity * percent;
-                var animator = new P42.Utils.Uno.ActionAnimator(0.11, 0.95, TimeSpan.FromMilliseconds(300), action);
-                await animator.RunAsync();
-            }
+                _popup.IsOpen = true;
+                await Task.Delay(5);
+                UpdateMarginAndAlignment();
 
-            _border.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
+                // IS THIS NECESSARY?!?!
+                //_popup.InvalidateMeasure();
+                //_popup.InvalidateArrange();
+                //UpdateMarginAndAlignment();
 
-            if (PopAfter > default(TimeSpan))
-            {
-                P42.Utils.Timer.StartTimer(PopAfter, async () =>
+
+                if (animated)
                 {
-                    await PopAsync(PopupPoppedCause.Timeout, animated, "Timeout");
-                    return false;
-                });
+                    Action<double> action = percent => _border.Opacity = Opacity * percent;
+                    var animator = new P42.Utils.Uno.ActionAnimator(0.11, 0.95, TimeSpan.FromMilliseconds(300), action);
+                    await animator.RunAsync();
+                }
+
+                _border.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
+
+                if (PopAfter > default(TimeSpan))
+                {
+                    P42.Utils.Timer.StartTimer(PopAfter, async () =>
+                    {
+                        await PopAsync(PopupPoppedCause.Timeout, animated, "Timeout");
+                        return false;
+                    });
+                }
+
+                await OnPushEndAsync();
+
+                PushPopState = PushPopState.Pushed;
+                Pushed?.Invoke(this, EventArgs.Empty);
+                _pushCompletionSource?.TrySetResult(true);
             }
-
-            await OnPushEndAsync();
-
-            PushPopState = PushPopState.Pushed;
-            Pushed?.Invoke(this, EventArgs.Empty);
-            _pushCompletionSource?.TrySetResult(true);
+            catch (Exception e)
+            {
+                PushPopState = PushPopState.Popped;
+                await InnerPop(PopupPoppedCause.Exception, animated);
+            }
         }
 
         public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = true, [CallerMemberName] object trigger = null)
@@ -706,6 +715,12 @@ namespace P42.Uno.Controls
                 else
                     return;
             }
+
+            await InnerPop(cause, animated, trigger);
+        }
+
+        async Task InnerPop(PopupPoppedCause cause, bool animated = true, [CallerMemberName] object trigger = null)
+        {
             _pushCompletionSource = null;
 
             PushPopState = PushPopState.Popping;
@@ -724,7 +739,14 @@ namespace P42.Uno.Controls
                 await animator.RunAsync();
             }
 
-            _popup.IsOpen = false;
+            try
+            {
+                _popup.IsOpen = false;
+            }
+            catch (Exception e)
+            {
+
+            }
 
             CompletePop(PoppedCause, PoppedTrigger);
         }
