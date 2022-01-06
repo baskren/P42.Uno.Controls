@@ -111,19 +111,7 @@ namespace P42.Uno.Controls
                     return target;
                 return null;
             }
-            set
-            {
-                if (Collection != value)
-                {
-                    if (Collection is INotifyCollectionChanged oldCollection)
-                        oldCollection.CollectionChanged -= OnCollection_CollectionChanged;
-                    _selectedIndexes.Clear();
-                    _weakCollectionRef = new WeakReference<IList<T>>(value);
-                    if (Collection is INotifyCollectionChanged newCollection)
-                        newCollection.CollectionChanged += OnCollection_CollectionChanged;
-                    BoundSelections();
-                }
-            }
+            set => _weakCollectionRef = new WeakReference<IList<T>>(value);
         }
 
         public bool AllowUnselectLastSelected = false;
@@ -132,7 +120,6 @@ namespace P42.Uno.Controls
 
 
         #region Events
-        //public event EventHandler<(int OldIndex, int NewIndex)> SelectedIndexChanged;
         public event EventHandler<CollectionSelectionTrackerSelectionChangedArguments<T>> SelectionChanged;
         public event NotifyCollectionChangedEventHandler CollectionChanged;
         #endregion
@@ -257,9 +244,6 @@ namespace P42.Uno.Controls
 
 
         #region Support Methods
-        private void OnCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-            => BoundSelections();
-
         void SetSelectedItemsMulti(IList<T> newSelectedItems)
         {
             if (Collection is IList<T> collection)
@@ -437,30 +421,6 @@ namespace P42.Uno.Controls
         void UpdateToSelectNone()
             => Clear();
 
-        void BoundSelections()
-        {
-            if (Collection is IList<T> collection)
-            {
-                var oldSelectedIndex = SelectedIndex;
-                var oldSelectedItem = SelectedItem;
-
-                var removed = new List<int>();
-                foreach (var index in _selectedIndexes.ToArray())
-                {
-                    if (index >= collection.Count)
-                    {
-                        _selectedIndexes.Remove(index);
-                        removed.Add(index);
-                    }
-                }
-                if (removed.Any())
-                {
-                    if (SelectedIndex != oldSelectedIndex)
-                        SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed, collection.Count));
-                }
-            }
-        }
         #endregion
     }
 

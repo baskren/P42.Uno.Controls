@@ -21,7 +21,6 @@ using Windows.UI.Xaml.Shapes;
 namespace P42.Uno.Controls
 {
     [Windows.UI.Xaml.Data.Bindable]
-    //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class NewSegmentedControl : Grid
     {
         #region Properties
@@ -117,7 +116,7 @@ namespace P42.Uno.Controls
 
         public int SelectedIndex
         {
-            get => (int)GetValue(SelectedIndexProperty);
+            get => Math.Min((int)GetValue(SelectedIndexProperty), Labels.Count-1);
             set => SetValue(SelectedIndexProperty, value);
         }
         #endregion
@@ -169,7 +168,7 @@ namespace P42.Uno.Controls
         #region SelectedIndexes
         public List<int> SelectedIndexes
         {
-            get => SelectionTracker.SelectedIndexes;
+            get => SelectionTracker.SelectedIndexes.Where(i => i < Labels.Count).ToList();
             set => SelectionTracker.SelectedIndexes = value;
         }
         #endregion
@@ -232,14 +231,11 @@ namespace P42.Uno.Controls
 
 
         #region Fields
-        Thickness _hiddenBorderThickness;
-        bool _hidingBorder;
-        List<TextBlock> TextBlocks = new List<TextBlock>();
-        List<Rectangle> Separators = new List<Rectangle>();
-        List<Rectangle> Backgrounds = new List<Rectangle>();
-        CollectionSelectionTracker<string> SelectionTracker = new CollectionSelectionTracker<string>();
-
-        TextBlock _testTextBlock = new TextBlock();
+        readonly List<TextBlock> TextBlocks = new List<TextBlock>();
+        readonly List<Rectangle> Separators = new List<Rectangle>();
+        readonly List<Rectangle> Backgrounds = new List<Rectangle>();
+        readonly CollectionSelectionTracker<string> SelectionTracker = new CollectionSelectionTracker<string>();
+        readonly TextBlock _testTextBlock = new TextBlock();
         #endregion
 
 
@@ -247,7 +243,6 @@ namespace P42.Uno.Controls
         public NewSegmentedControl()
         {
             _testTextBlock
-                //.BindFont(this)
                 .Bind(TextBlock.MarginProperty, this, nameof(Padding));
 
             Padding = new Thickness(2, 4, 2, 4);
@@ -261,7 +256,6 @@ namespace P42.Uno.Controls
 
             Labels = new ObservableCollection<string>();
 
-            //SelectionTracker.SelectionChanged += OnSelectionTrackerSelectionChanged;
             SelectionTracker.CollectionChanged += OnSelectionTracker_CollectionChanged;
             SelectionTracker.SelectionChanged += OnSelectionTracker_SelectionChanged;
 
@@ -306,15 +300,16 @@ namespace P42.Uno.Controls
 
         void SetDefaultElementColors(int index)
         {
-            if (index >= 0 && index < TextBlocks.Count && index < Backgrounds.Count)
+            if (index >= 0 && index < Labels.Count && index < TextBlocks.Count && index < Backgrounds.Count)
             {
                 var selected = SelectedIndexes.Contains(index);
+
                 if (_tapProcessing == index)
                     return;
-                //System.Diagnostics.Debug.WriteLine($"DEFAULT [{index}]");
+
                 var background = Backgrounds[index];
                 background.Fill = SelectedIndexes.Contains(index)
-                    ? BorderBrush.AssureGesturable() //SystemToggleButtonBrushes.CheckedBackground.AssureGesturable()
+                    ? BorderBrush.AssureGesturable() 
                     : SystemToggleButtonBrushes.Background.AssureGesturable();
                 var textBlock = TextBlocks[index];
                 textBlock.Foreground = selected
@@ -328,11 +323,6 @@ namespace P42.Uno.Controls
                     separator.Fill = selected
                         ? SystemToggleButtonBrushes.CheckedForeground
                         : BorderBrush;
-                    /*
-                    separator.Margin = selectedPair
-                        ? new Thickness(0, 3)
-                        : new Thickness(0);
-                    */
                 }
             }
         }
@@ -341,7 +331,6 @@ namespace P42.Uno.Controls
         {
             if (index >= 0 && index < TextBlocks.Count)
             {
-                //System.Diagnostics.Debug.WriteLine($"TAPPED [{index}]");
                 var background = Backgrounds[index];
                 background.Fill = SystemToggleButtonBrushes.BackgroundCheckedPressed;
                 var textBlock = TextBlocks[index];
@@ -356,7 +345,6 @@ namespace P42.Uno.Controls
                 var selected = SelectedIndexes.Contains(index);
                 if (_tapProcessing == index)
                     return;
-                //System.Diagnostics.Debug.WriteLine($"HOVER [{index}]");
                 var background = Backgrounds[index];
                 background.Fill = selected
                     ? SystemToggleButtonBrushes.CheckedPointerOverBackground.AssureGesturable()
@@ -376,21 +364,13 @@ namespace P42.Uno.Controls
         {
             // show processing position
             SetTappedProcessingColors(e.NewIndex);
-            //await Task.Delay(50);
 
             // fire events
             _tapProcessing = SelectionTracker.SelectedIndex;
             SetValue(SelectedIndexProperty, e.NewIndex);
             SetValue(SelectedLabelProperty, e.NewItem);
             SelectionChanged?.Invoke(this, (e.NewIndex, e.NewItem));
-            //await Task.Delay(50);
 
-            // or fake it
-            /*
-            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            while (stopwatch.ElapsedMilliseconds < 1000)
-                await Task.Delay(100);
-            */
             _tapProcessing = int.MinValue;
             DisplaySelections();
         }
@@ -450,8 +430,6 @@ namespace P42.Uno.Controls
 
         void AddNewLabel()
             => TextBlocks.Add(new TextBlock()
-                //.Margin(Padding)
-                //.BindFont(this)
                 .Bind(TextBlock.MarginProperty, this, nameof(Padding))
                 .Foreground(SystemToggleButtonBrushes.Foreground)
                 .Center()
@@ -476,7 +454,7 @@ namespace P42.Uno.Controls
         void AddNewBackground()
             => Backgrounds.Add(new Rectangle()
                 .Fill(SystemToggleButtonBrushes.Background)
-                .Margin(-0.25, 0)
+                .Margin(-1)
                 .Stretch()
                 .Column(Backgrounds.Count)
                 .AddOnTapped(OnSegmentTapped)
@@ -561,8 +539,6 @@ namespace P42.Uno.Controls
 #if WINDOWS_UWP
         private void OnBorderThicknessChanged(DependencyObject sender, DependencyProperty dp)
         {
-            if (!_hidingBorder)
-                _hiddenBorderThickness = BorderThickness;
             if (IsLoaded && ActualWidth > 50)
                 CalculateOverflow(ActualWidth);
         }
@@ -570,8 +546,6 @@ namespace P42.Uno.Controls
 #else
         protected override void OnBorderThicknessChanged(Thickness oldValue, Thickness newValue)
         {
-            if (!_hidingBorder)
-                _hiddenBorderThickness = newValue;
             base.OnBorderThicknessChanged(oldValue, newValue);
             if (IsLoaded && ActualWidth > 50)
                 CalculateOverflow(ActualWidth);

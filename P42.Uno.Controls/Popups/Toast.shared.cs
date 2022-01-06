@@ -16,7 +16,7 @@ namespace P42.Uno.Controls
     [Windows.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = "Message")]
-    public partial class Toast : TargetedPopup, IDisposable
+    public partial class Toast : TargetedPopup
     {
         #region Title Property
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
