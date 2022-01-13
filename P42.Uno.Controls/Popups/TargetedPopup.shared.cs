@@ -666,11 +666,6 @@ namespace P42.Uno.Controls
                 await Task.Delay(5);
                 UpdateMarginAndAlignment();
 
-                // IS THIS NECESSARY?!?!
-                //_popup.InvalidateMeasure();
-                //_popup.InvalidateArrange();
-                //UpdateMarginAndAlignment();
-
 
                 if (animated)
                 {
@@ -1349,16 +1344,12 @@ namespace P42.Uno.Controls
                 result.Width += Padding.Horizontal() + border;
                 result.Height += Padding.Vertical() + border;
 
-
-
                 var resultSize = new Size(
                     this.HasPrescribedWidth()
                         ? width : result.Width,
                     this.HasPrescribedHeight()
                         ? height : result.Height
                     );
-
-                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder resultSize: {resultSize}");
 
                 _lastSizeAvailable = available;
                 _lastResultSize = resultSize;
