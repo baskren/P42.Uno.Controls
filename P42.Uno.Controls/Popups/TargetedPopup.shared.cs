@@ -626,7 +626,7 @@ namespace P42.Uno.Controls
             _popupOpenedCompletionSource?.TrySetResult(true);
         }
 
-        public virtual async Task PushAsync(bool animated = true)
+        public virtual async Task PushAsync(bool animated = false)
         {
             if (PushPopState == PushPopState.Pushed || PushPopState == PushPopState.Pushing)
                 return;
@@ -698,7 +698,7 @@ namespace P42.Uno.Controls
             }
         }
 
-        public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = true, [CallerMemberName] object trigger = null)
+        public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = false, [CallerMemberName] object trigger = null)
         {
             if (PushPopState == PushPopState.Popping || PushPopState == PushPopState.Popped)
                 return;
@@ -714,7 +714,7 @@ namespace P42.Uno.Controls
             await InnerPop(cause, animated, trigger);
         }
 
-        async Task InnerPop(PopupPoppedCause cause, bool animated = true, [CallerMemberName] object trigger = null)
+        async Task InnerPop(PopupPoppedCause cause, bool animated = false, [CallerMemberName] object trigger = null)
         {
             _pushCompletionSource = null;
 
