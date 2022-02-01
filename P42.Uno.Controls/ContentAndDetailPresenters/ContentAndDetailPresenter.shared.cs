@@ -67,7 +67,7 @@ namespace P42.Uno.Controls
             //    view._footerContentPresenter.Content = e.NewValue;
 
         }
-        public object Footer
+        public FrameworkElement Footer
         {
             get => (FrameworkElement)GetValue(FooterProperty);
             set => SetValue(FooterProperty, value);
@@ -163,7 +163,7 @@ namespace P42.Uno.Controls
             nameof(PopupWidth),
             typeof(double),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(double.NaN)
+            new PropertyMetadata(300)
         );
         public double PopupWidth
         {
@@ -217,7 +217,7 @@ namespace P42.Uno.Controls
 
         #endregion
 
-        public bool IsDrawer => IsInDrawerMode(ViewEstimatedSize);
+        public bool IsInDrawerMode => LocalIsInDrawerMode(ViewEstimatedSize);
 
         Size ViewEstimatedSize
         {
@@ -245,6 +245,25 @@ namespace P42.Uno.Controls
                 return new Size(width, height);
             }
         }
+
+        public Size DrawerSize
+        {
+            get
+            {
+                var size = new Size(ActualWidth, ActualHeight);
+                if (size.Width / size.Height > 1)
+                    size.Width = size.Height / DetailAspectRatio;
+                else
+                    size.Height = size.Width * DetailAspectRatio;
+
+                return size;
+            }
+        }
+
+        public Orientation DrawerOrientation
+            => ActualWidth > ActualHeight ? Orientation.Horizontal : Orientation.Vertical;
+
+
 
         public PushPopState DetailPushPopState { get; private set; } = PushPopState.Popped;
 
@@ -371,7 +390,6 @@ namespace P42.Uno.Controls
             LayoutDetailAndOverlay(e.NewSize, DetailPushPopState == PushPopState.Pushed ? 1 : 0);
         }
 
-
         void LayoutDetailAndOverlay(Size size, double percentOpen)
         {
             if (size.IsZero())
@@ -381,32 +399,21 @@ namespace P42.Uno.Controls
             if (double.IsNaN(size.Height))
                 return;
 
-            if (IsInDrawerMode(size))
+            if (LocalIsInDrawerMode(size))
             {
                 _targetedPopup.Content = null;
                 _detailDrawer.Child = Detail;
                 _detailDrawer.Opacity = percentOpen;
-                var aspect = size.Width / size.Height;
-                if (aspect > 1)
+                if (DrawerOrientation == Orientation.Horizontal)
                 {
-                    var drawerWidth = percentOpen * size.Height / DetailAspectRatio;
-                    _drawerColumnDefinition.Width = new GridLength(drawerWidth);
-                    while (RowDefinitions.Count > 2)
-                        RowDefinitions.RemoveAt(RowDefinitions.Count - 1);
-                    if (ColumnDefinitions.Count == 1)
-                        ColumnDefinitions.Add(_drawerColumnDefinition);
+                    _drawerColumnDefinition.Width = new GridLength(percentOpen * DrawerSize.Width);
                     Grid.SetRow(_detailDrawer, 0);
                     Grid.SetRowSpan(_detailDrawer, 2);
                     Grid.SetColumn(_detailDrawer, 1);
                 }
                 else
                 {
-                    var drawerHeight = percentOpen * size.Width * DetailAspectRatio;
-                    _drawerRowDefinition.Height = new GridLength(drawerHeight);
-                    while (ColumnDefinitions.Count > 1)
-                        ColumnDefinitions.RemoveAt(ColumnDefinitions.Count - 1);
-                    if (RowDefinitions.Count == 2)
-                        RowDefinitions.Add(_drawerRowDefinition);
+                    _drawerRowDefinition.Height = new GridLength(percentOpen * DrawerSize.Height);
                     Grid.SetRow(_detailDrawer, 2);
                     Grid.SetRowSpan(_detailDrawer, 1);
                     Grid.SetColumn(_detailDrawer, 0);
@@ -422,10 +429,10 @@ namespace P42.Uno.Controls
                 //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LayoutDetailAndOverlay _targetedPopup.Size:[{_targetedPopup.Width},{_targetedPopup.Height}]");
                 _targetedPopup.Content = Detail;
 
-                while (RowDefinitions.Count > 2)
-                    RowDefinitions.RemoveAt(RowDefinitions.Count - 1);
-                while (ColumnDefinitions.Count > 1)
-                    ColumnDefinitions.RemoveAt(ColumnDefinitions.Count - 1);
+                //while (RowDefinitions.Count > 2)
+                //    RowDefinitions.RemoveAt(RowDefinitions.Count - 1);
+                //while (ColumnDefinitions.Count > 1)
+                //    ColumnDefinitions.RemoveAt(ColumnDefinitions.Count - 1);
             }
 
             if (percentOpen > 0)
@@ -433,17 +440,25 @@ namespace P42.Uno.Controls
                 _overlay.Opacity = percentOpen;
                 if (!Children.Contains(_overlay))
                     Children.Add(_overlay);
+                if (!Children.Contains(_detailDrawer))
+                    Children.Add(_detailDrawer);
             }
             else
             {
+                _drawerColumnDefinition.Width = GridLength.Auto;
+                _drawerRowDefinition.Height = GridLength.Auto;
+
+                if (Children.Contains(_detailDrawer))
+                    Children.Remove(_detailDrawer);
                 if (Children.Contains(_overlay))
                     Children.Remove(_overlay);
+
             }
 
             //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.LayoutDetailAndOverlay percentOpen: " + percentOpen);
         }
 
-        public bool IsInDrawerMode(Size size)
+        bool LocalIsInDrawerMode(Size size)
         {
             // until Uno.Android.ListView issue are addressed, we're not going here!
             /*
@@ -469,6 +484,29 @@ namespace P42.Uno.Controls
                 }
             }
             */
+
+            var footerHeight = Footer?.ActualHeight ?? 0;
+            var targetHeight = Target?.ActualSize.Y ?? 100;
+
+            // is there enough room vertically to show the popup?
+            if (PopupHeight > 0 && size.Height - footerHeight - popupMargin > PopupHeight * 2 + targetHeight)
+                return false;
+
+
+            if (size.Width > size.Height)
+            {
+                if (PopupWidth > 0 && size.Width - popupMargin > PopupWidth * 2)
+                    return true;
+            }
+            else
+            {
+                if (PopupWidth > 0 && size.Width > PopupWidth * 2)
+                    return false;
+
+                return true;
+            }
+
+
             return false;
         }
 
@@ -502,7 +540,7 @@ namespace P42.Uno.Controls
             var size = new Size(ActualWidth, ActualHeight);
 
             LayoutDetailAndOverlay(size, 0.11);
-            if (!IsInDrawerMode(size))
+            if (!LocalIsInDrawerMode(size))
                 await _targetedPopup.PushAsync(animated);
             if (IsAnimated)
             {
@@ -542,7 +580,7 @@ namespace P42.Uno.Controls
                 await animator.RunAsync();
             }
             LayoutDetailAndOverlay(size, 0);
-            if (!IsInDrawerMode(size))
+            if (!LocalIsInDrawerMode(size))
                 await _targetedPopup.PopAsync(PopupPoppedCause.MethodCalled, animated);
 
             DetailPushPopState = PushPopState.Popped;

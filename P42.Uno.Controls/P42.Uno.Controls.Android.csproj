@@ -6,12 +6,27 @@
     
   </PropertyGroup>
 
-  <Import Project=".\P42.Uno.Controls.Android.props" />
+  <ItemGroup>
+    <Compile Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)"/>
+    <Compile Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)"/>
+    <Compile Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)"/>
+    <Compile Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)"/>
+    <UpToDateCheckInput Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <AndroidResource Include="Resources\xml\*.xml" />
+  </ItemGroup>
 
   <!-- PLATFORM REFERENCES -->
   <ItemGroup>
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.Android.csproj" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.Android.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="**\*.cs" Exclude="$(DefaultItemExcludes)"/>
+    <UpToDateCheckInput Include="**\*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
 </Project>

@@ -1,12 +1,4 @@
 <Project ToolsVersion="15.0">
 
 
-  <ItemGroup>
-    <Compile Include="**\*.android.cs" />
-    <Compile Include="**\*.android.*.cs" />
-
-    <AndroidResource Include="Resources\xml\*.xml" />
-  </ItemGroup>
-
-  
 </Project>

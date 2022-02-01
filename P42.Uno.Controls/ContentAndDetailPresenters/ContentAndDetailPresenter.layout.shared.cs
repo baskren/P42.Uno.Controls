@@ -17,8 +17,8 @@ namespace P42.Uno.Controls
         Border _detailDrawer;
         Rectangle _overlay;
 
-        ColumnDefinition _drawerColumnDefinition = new ColumnDefinition { Width = new GridLength(0) };
-        RowDefinition _drawerRowDefinition = new RowDefinition { Height = new GridLength(0) };
+        ColumnDefinition _drawerColumnDefinition = new ColumnDefinition { Width = GridLength.Auto };
+        RowDefinition _drawerRowDefinition = new RowDefinition { Height = GridLength.Auto };
 
         const double popupMargin = 30;
 
@@ -26,8 +26,8 @@ namespace P42.Uno.Controls
         {
             // r0,c0 : Content
             // r1,c0 : Footer
-            this.Rows("*", "auto");
-            this.Columns("*");
+            this.Rows("*", _drawerRowDefinition);
+            this.Columns("*", _drawerColumnDefinition);
             _detailDrawer = new Border()
                 .BorderBrush(SystemColors.BaseMediumHigh)
                 .Background(SystemColors.AltHigh)

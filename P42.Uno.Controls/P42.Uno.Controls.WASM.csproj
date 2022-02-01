@@ -5,7 +5,17 @@
     <TargetFrameworks>netstandard2.0;</TargetFrameworks>
   </PropertyGroup>
 
-  <Import Project=".\P42.Uno.Controls.WASM.props" />
+  <ItemGroup>
+    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="3.11.6" />
+    <Compile Include="**\*.wasm.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.wasm.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.shared.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.shared.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.wasm.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.wasm.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
+  </ItemGroup>
 
   <!-- PLATFORM REFERENCES -->
   <ItemGroup>

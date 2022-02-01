@@ -5,7 +5,16 @@
     <TargetFrameworks>uap10.0.18362;</TargetFrameworks>
   </PropertyGroup>
 
-  <Import Project=".\P42.Uno.Controls.UWP.props" />
+  <ItemGroup>
+    <Compile Include="**\*.uwp.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.uwp.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.shared.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.shared.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.uwp.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.uwp.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
+  </ItemGroup>
 
   <!-- PLATFORM REFERENCES -->
   <ItemGroup>

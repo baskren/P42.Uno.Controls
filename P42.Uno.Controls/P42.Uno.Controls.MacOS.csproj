@@ -5,7 +5,16 @@
     <TargetFrameworks>Xamarin.Mac20;</TargetFrameworks>
   </PropertyGroup>
 
-  <Import Project=".\P42.Uno.Controls.MacOS.props" />
+  <ItemGroup>
+    <Compile Include="**\*.macos.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.macos.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.shared.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.shared.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.macos.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.macos.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
+  </ItemGroup>
 
   <!-- PLATFORM REFERENCES -->
   <ItemGroup>

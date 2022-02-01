@@ -7,20 +7,54 @@
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' AND '$(USERNAME)' == 'ben' ">uap10.0.18362;$(TargetFrameworks);</TargetFrameworks>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Include="**\*.shared.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.shared.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
+  </ItemGroup>
+
   <!-- WASM -->
-  <Import Project=".\P42.Uno.Controls.WASM.props" Condition=" $(TargetFramework.StartsWith('net'))" />
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('net'))" >
+    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="3.11.6" />
+    <Compile Include="**\*.wasm.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.wasm.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.wasm.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.wasm.*.cs" Exclude="$(DefaultItemExcludes)" />
+  </ItemGroup>
 
   <!-- UWP -->
-  <Import Project=".\P42.Uno.Controls.UWP.props" Condition=" $(TargetFramework.StartsWith('uap10.0')) " />
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) " >
+    <Compile Include="**\*.uwp.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.uwp.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.uwp.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.uwp.*.cs" Exclude="$(DefaultItemExcludes)" />
+  </ItemGroup>
 
   <!-- ANDROID -->
-  <Import Project=".\P42.Uno.Controls.Android.props" Condition=" $(TargetFramework.StartsWith('MonoAndroid')) " />
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) " >
+    <Compile Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)"/>
+    <Compile Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)"/>
+    <UpToDateCheckInput Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <AndroidResource Include="Resources\xml\*.xml" />
+  </ItemGroup>
 
   <!-- IOS -->
-  <Import Project=".\P42.Uno.Controls.iOS.props" Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) " />
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) " >
+    <Compile Include="**\*.ios.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.ios.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.ios.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.ios.*.cs" Exclude="$(DefaultItemExcludes)" />
+  </ItemGroup>
 
   <!-- MACOS -->
-  <Import Project=".\P42.Uno.Controls.MacOS.props" Condition=" $(TargetFramework.StartsWith('Xamarin.Mac20')) " />
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.Mac20')) " >
+    <Compile Include="**\*.macos.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.macos.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.macos.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.macos.*.cs" Exclude="$(DefaultItemExcludes)" />
+  </ItemGroup>
 
   <!-- PLATFORM REFERENCES -->
   <ItemGroup>

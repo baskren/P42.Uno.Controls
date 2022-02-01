@@ -5,7 +5,16 @@
     <TargetFrameworks>Xamarin.iOS10;</TargetFrameworks>
   </PropertyGroup>
 
-  <Import Project=".\P42.Uno.Controls.iOS.props" />
+  <ItemGroup>
+    <Compile Include="**\*.ios.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.ios.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.shared.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.shared.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.ios.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.ios.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
+  </ItemGroup>
 
   <!-- PLATFORM REFERENCES -->
   <ItemGroup>
