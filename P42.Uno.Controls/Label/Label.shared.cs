@@ -6,7 +6,6 @@ using Uno.Disposables;
 using Uno.Extensions;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml;
-using Uno.UI.DataBinding;
 using System;
 using Uno.UI;
 using System.Collections;
@@ -25,7 +24,7 @@ using Windows.UI.Xaml.Controls;
 namespace P42.Uno.Controls
 {
 	[ContentProperty(Name = "Text")]
-	public partial class AutoTextBlock : UserControl
+	public partial class Label : UserControl
 	{
 
 		#region Properties
@@ -62,8 +61,8 @@ namespace P42.Uno.Controls
 			DependencyProperty.Register(
 				nameof(TextWrapping),
 				typeof(TextWrapping),
-				typeof(AutoTextBlock),
-				new PropertyMetadata(TextWrapping.NoWrap, (s, e) => ((AutoTextBlock)s).OnTextWrappingChanged())
+				typeof(Label),
+				new PropertyMetadata(TextWrapping.NoWrap, (s, e) => ((Label)s).OnTextWrappingChanged())
 			);
 		void OnTextWrappingChanged()
 		{
@@ -83,8 +82,8 @@ namespace P42.Uno.Controls
 			DependencyProperty.Register(
 				nameof(Text),
 				typeof(string),
-				typeof(AutoTextBlock),
-				new PropertyMetadata(string.Empty, (s, e) => ((AutoTextBlock)s).OnTextChanged())
+				typeof(Label),
+				new PropertyMetadata(string.Empty, (s, e) => ((Label)s).OnTextChanged())
 			);
 		protected virtual void OnTextChanged()
 		{
@@ -104,8 +103,8 @@ namespace P42.Uno.Controls
 			DependencyProperty.Register(
 				"MaxLines",
 				typeof(int),
-				typeof(AutoTextBlock),
-				new PropertyMetadata(0, (s, e) => ((AutoTextBlock)s).OnMaxLinesChanged())
+				typeof(Label),
+				new PropertyMetadata(0, (s, e) => ((Label)s).OnMaxLinesChanged())
 			);
 		private void OnMaxLinesChanged()
 		{
@@ -125,30 +124,26 @@ namespace P42.Uno.Controls
 			DependencyProperty.Register(
 				"TextTrimming",
 				typeof(TextTrimming),
-				typeof(AutoTextBlock),
-				new PropertyMetadata(TextTrimming.None, (s, e) => ((AutoTextBlock)s).OnTextTrimmingChanged())
+				typeof(Label),
+				new PropertyMetadata(TextTrimming.None, OnTextTrimmingChanged)
 			);
-		private void OnTextTrimmingChanged() => _textBlock.TextTrimming = TextTrimming;
+
+        static async void OnTextTrimmingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			if (d is Label label && label._textBlock is TextBlock _textBlock)
+			{
+				if (_textBlock.TextTrimming != TextTrimming.Clip && label.TextTrimming == TextTrimming.None)
+				{
+					_textBlock.TextTrimming = TextTrimming.Clip;
+					await System.Threading.Tasks.Task.Delay(10);
+				}
+				_textBlock.TextTrimming = label.TextTrimming;
+			}
+		}
 		public TextTrimming TextTrimming
 		{
 			get => (TextTrimming)GetValue(TextTrimmingProperty);
 			set => SetValue(TextTrimmingProperty, value);
-		}
-		#endregion
-
-		#region HorizontalTextAlignment Dependency Property
-		public static DependencyProperty HorizontalTextAlignmentProperty =
-			DependencyProperty.Register(
-				"HorizontalTextAlignment",
-				typeof(TextAlignment),
-				typeof(AutoTextBlock),
-				new PropertyMetadata(TextAlignment.Left, (s, e) => ((AutoTextBlock)s).OnHorizontalTextAlignmentChanged())
-			);
-		void OnHorizontalTextAlignmentChanged() => _textBlock.HorizontalTextAlignment = HorizontalTextAlignment;
-		public TextAlignment HorizontalTextAlignment
-		{
-			get => (TextAlignment)GetValue(HorizontalTextAlignmentProperty);
-			set => SetValue(HorizontalTextAlignmentProperty, value);
 		}
 		#endregion
 
@@ -157,8 +152,8 @@ namespace P42.Uno.Controls
 			DependencyProperty.Register(
 				"LineHeight",
 				typeof(double),
-				typeof(AutoTextBlock),
-				new PropertyMetadata(0d, (s, e) => ((AutoTextBlock)s).OnLineHeightChanged()));
+				typeof(Label),
+				new PropertyMetadata(0d, (s, e) => ((Label)s).OnLineHeightChanged()));
 		private void OnLineHeightChanged()
 		{
 			_textBlock.LineHeight = LineHeight;
@@ -177,8 +172,8 @@ namespace P42.Uno.Controls
 			DependencyProperty.Register(
 				"LineStackingStrategy",
 				typeof(LineStackingStrategy),
-				typeof(AutoTextBlock),
-				new PropertyMetadata(LineStackingStrategy.MaxHeight, (s, e) => ((AutoTextBlock)s).OnLineStackingStrategyChanged()));
+				typeof(Label),
+				new PropertyMetadata(LineStackingStrategy.MaxHeight, (s, e) => ((Label)s).OnLineStackingStrategyChanged()));
 		private void OnLineStackingStrategyChanged()
 		{
 			_textBlock.LineStackingStrategy = LineStackingStrategy;
@@ -192,14 +187,13 @@ namespace P42.Uno.Controls
 		}
         #endregion
 
-
         #region TextAlignment Property
         public static readonly DependencyProperty TextAlignmentProperty =
             DependencyProperty.Register(
                 nameof(TextAlignment),
                 typeof(TextAlignment),
-                typeof(AutoTextBlock),
-                new PropertyMetadata(default(HorizontalAlignment), (s, e) => ((AutoTextBlock)s).OnTextAlignmentChanged(e)));
+                typeof(Label),
+                new PropertyMetadata(default(HorizontalAlignment), (s, e) => ((Label)s).OnTextAlignmentChanged(e)));
         protected virtual void OnTextAlignmentChanged(DependencyPropertyChangedEventArgs e)
 			=>_textBlock.TextAlignment = TextAlignment;
         public TextAlignment TextAlignment
@@ -209,14 +203,13 @@ namespace P42.Uno.Controls
         }
         #endregion TextAlignment Property
 
-
         #region TextDecorations
         public static DependencyProperty TextDecorationsProperty =
 			DependencyProperty.Register(
 				"TextDecorations",
 				typeof(uint),
-				typeof(AutoTextBlock),
-				new PropertyMetadata(TextDecorations.None, (s, e) => ((AutoTextBlock)s).OnTextDecorationsChanged()));
+				typeof(Label),
+				new PropertyMetadata(TextDecorations.None, (s, e) => ((Label)s).OnTextDecorationsChanged()));
 		void OnTextDecorationsChanged() => _textBlock.TextDecorations = TextDecorations;
 		public TextDecorations TextDecorations
 		{
@@ -226,13 +219,12 @@ namespace P42.Uno.Controls
 		#endregion
 
 
-
 		#region Lines property
 		/// <summary>
 		/// The backing store for the lines property.
 		/// </summary>
 		public static readonly DependencyProperty LinesProperty =
-			DependencyProperty.Register(nameof(Lines), typeof(int), typeof(AutoTextBlock), new PropertyMetadata(0, (s,e) => ((AutoTextBlock)s).OnLinesChanged()));
+			DependencyProperty.Register(nameof(Lines), typeof(int), typeof(Label), new PropertyMetadata(0, (s,e) => ((Label)s).OnLinesChanged()));
         private void OnLinesChanged()
         {
 			if (LabelAutoFit != LabelAutoFit.None)
@@ -254,8 +246,8 @@ namespace P42.Uno.Controls
 			DependencyProperty.Register(
 				nameof(LabelAutoFit),
 				typeof(LabelAutoFit),
-				typeof(AutoTextBlock),
-				new PropertyMetadata(LabelAutoFit.None, (s, e) => ((AutoTextBlock)s).OnLabelAutoFitChanged()));
+				typeof(Label),
+				new PropertyMetadata(LabelAutoFit.None, (s, e) => ((Label)s).OnLabelAutoFitChanged()));
 		void OnLabelAutoFitChanged() { InvalidateMeasure(); }
 		public LabelAutoFit LabelAutoFit
         {
@@ -269,12 +261,20 @@ namespace P42.Uno.Controls
 			DependencyProperty.Register(
 				nameof(MinFontSize),
 				typeof(double),
-				typeof(AutoTextBlock),
-				new PropertyMetadata(6, (s, e) => ((AutoTextBlock)s).OnMinFontSizeChanged()));
+				typeof(Label),
+				new PropertyMetadata(6.0, (s, e) => ((Label)s).OnMinFontSizeChanged()));
 		void OnMinFontSizeChanged()
 		{
-			if (LabelAutoFit != LabelAutoFit && FittedFontSize < MinFontSize)
+			if (double.IsNaN(MinFontSize) || MinFontSize < 0)
+			{
+				var meta = MinFontSizeProperty.GetMetadata(typeof(Label));
+				MinFontSize = (double)meta.DefaultValue;
+			}
+			else if (LabelAutoFit != LabelAutoFit && FittedFontSize < MinFontSize)
+			{
 				InvalidateMeasure();
+			}
+
 		}
 		public double MinFontSize
 		{
@@ -282,15 +282,18 @@ namespace P42.Uno.Controls
 			set => SetValue(MinFontSizeProperty, value);
 		}
 		#endregion
-
+		
 		#region VerticalTextAlignment Property
 		public static DependencyProperty VerticalTextAlignmentProperty =
 			DependencyProperty.Register(
 				nameof(VerticalTextAlignment),
 				typeof(VerticalAlignment),
-				typeof(AutoTextBlock),
-				new PropertyMetadata(VerticalAlignment.Top, (s, e) => ((AutoTextBlock)s).OnVerticalTextAlignmentChanged()));
-		void OnVerticalTextAlignmentChanged() => _textBlock.VerticalAlignment = VerticalAlignment;
+				typeof(Label),
+				new PropertyMetadata(VerticalAlignment.Top, (s, e) => ((Label)s).OnVerticalTextAlignmentChanged()));
+		void OnVerticalTextAlignmentChanged()
+		{
+			_textBlock.VerticalAlignment = VerticalTextAlignment;
+		}
 		public VerticalAlignment VerticalTextAlignment
         {
 			get => (VerticalAlignment)GetValue(VerticalTextAlignmentProperty);
@@ -303,8 +306,8 @@ namespace P42.Uno.Controls
 			DependencyProperty.Register(
 				nameof(FittedFontSize),
 				typeof(double),
-				typeof(AutoTextBlock),
-				new PropertyMetadata(-1.0, (s,e) => ((AutoTextBlock)s).OnFontSizeChanged(s,FittedFontSizeProperty))
+				typeof(Label),
+				new PropertyMetadata(-1.0, (s,e) => ((Label)s).OnFontSizeChanged(s,FittedFontSizeProperty))
 			);
 		public double FittedFontSize
         {
@@ -318,8 +321,8 @@ namespace P42.Uno.Controls
 			DependencyProperty.Register(
 				nameof(SynchronizedFontSize),
 				typeof(double),
-				typeof(AutoTextBlock),
-				new PropertyMetadata(double.NaN, (s,e) => ((AutoTextBlock)s).OnFontSizeChanged(s, SynchronizedFontSizeProperty))
+				typeof(Label),
+				new PropertyMetadata(double.NaN, (s,e) => ((Label)s).OnFontSizeChanged(s, SynchronizedFontSizeProperty))
 			);
         private void OnSynchronizedFontSizeChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
 			=>_textBlock.FontSize = SynchronizedFontSize;
@@ -332,20 +335,25 @@ namespace P42.Uno.Controls
 
         #endregion
 
-        public override string GetAccessibilityInnerText() => _textBlock.Text;
-
 
 		#region Fields
 		const double Precision = 0.05f;
 		TextBlock _textBlock = new TextBlock();
 		TextBlock _testTextBlock = new TextBlock();
 		Grid _grid = new Grid();
-		bool _initializing;
+		bool _loading;
+
+		Dictionary<DependencyProperty, long> PropertyChangedCallbackTokens = new Dictionary<DependencyProperty, long>();
+
 		#endregion
 
 
-		#region Construction / Destruction
-		public AutoTextBlock()
+		#region Events
+		public event EventHandler<double> FittedFontSizeChanged;
+        #endregion
+
+        #region Construction / Destruction
+        public Label()
 		{
 			InitializeProperties();
 		}
@@ -358,18 +366,49 @@ namespace P42.Uno.Controls
 			HorizontalContentAlignment = HorizontalAlignment.Stretch;
 			VerticalContentAlignment = VerticalAlignment.Stretch;
 
+			_grid.Children.Add(_textBlock);
+			Content = _grid;
+
+#if NETSTANDARD
+			Loading += OnLoading;
+#else
+			Loading += OnLoading;
+#endif
+
+			Unloaded += OnUnloaded;
+		}
+
+
+        void Register(DependencyProperty property, DependencyPropertyChangedCallback callback)
+			=> PropertyChangedCallbackTokens.Add(property, RegisterPropertyChangedCallback(property, callback));
+        
+		void Unregister(DependencyProperty property)
+			=> UnregisterPropertyChangedCallback(property, PropertyChangedCallbackTokens[property]);
+
+#if WINDOWS_UWP
+		private void OnLoading(FrameworkElement sender, object args)
+#elif NETSTANDARD
+		private void OnLoading(object sender, RoutedEventArgs e)
+#else
+		private void OnLoading(DependencyObject sender, object args)
+#endif
+		{
+			// TODO: Is this called on all platforms?
+
+			_loading = true;
+
 			// TextBlock Property Implementations
 			// BaselineOffset : Not implemented in Uno
-			RegisterPropertyChangedCallback(UserControl.CharacterSpacingProperty, OnCharacterSpacingChanged);
+			Register(UserControl.CharacterSpacingProperty, OnCharacterSpacingChanged);
 			// ContentStart : Not implemented in Uno
 			// ContentEnd : Not implemented in Uno
-			RegisterPropertyChangedCallback(UserControl.FontFamilyProperty, OnFontFamilyChanged);
-			RegisterPropertyChangedCallback(UserControl.FontSizeProperty, OnFontSizeChanged);
+			Register(UserControl.FontFamilyProperty, OnFontFamilyChanged);
+			Register(UserControl.FontSizeProperty, OnFontSizeChanged);
 			// FontStretch : Not implemented in Uno
-			RegisterPropertyChangedCallback(UserControl.FontStyleProperty, OnFontStyleChanged);
-			RegisterPropertyChangedCallback(UserControl.FontWeightProperty, OnFontWeightChanged);
+			Register(UserControl.FontStyleProperty, OnFontStyleChanged);
+			Register(UserControl.FontWeightProperty, OnFontWeightChanged);
 			_textBlock.Bind(TextBlock.ForegroundProperty, this, nameof(Foreground));
-			_textBlock.Bind(TextBlock.HorizontalTextAlignmentProperty, this, nameof(HorizontalTextAlignment));
+			// HorizontalTextAlignment : Not implmented because redundant with TextAlignment
 			// InLines : local
 			// IsColorFontEnabled : Not implemented in Uno
 			// IsTextScaleFactorEnabled : Not implemented in Uno
@@ -412,7 +451,7 @@ namespace P42.Uno.Controls
 			// FontStyle : above
 			// FontWeight : above
 			// Foreground : above
-			RegisterPropertyChangedCallback(UserControl.HorizontalContentAlignmentProperty, OnHorizontalContentAlignmentChanged);
+			Register(UserControl.HorizontalContentAlignmentProperty, OnHorizontalContentAlignmentChanged);
 			// IsEnabled : not implmented
 			// IsFocusEngaged : not implmented
 			// IsFocusEngagementEnabled : not implmented
@@ -424,7 +463,7 @@ namespace P42.Uno.Controls
 			// TabNavigation : not implemented
 			// Template : not implemented
 			// UseSystemFocusVisuals : not implemented
-			RegisterPropertyChangedCallback(UserControl.VerticalContentAlignmentProperty, OnVerticalContentAlignmentChanged);
+			Register(UserControl.VerticalContentAlignmentProperty, OnVerticalContentAlignmentChanged);
 			// XYFocusDown : not implemented
 			// XYFocusLeft : not implemented
 			// XYFocusRight : not implemented
@@ -433,32 +472,32 @@ namespace P42.Uno.Controls
 			// FrameworkElement
 			_textBlock.Bind(TextBlock.DataContextProperty, this, nameof(DataContext));
 
-			_initializing = true;
 			OnTextWrappingChanged();
 			OnTextChanged();
 			OnMaxLinesChanged();
-			OnTextTrimmingChanged();
-			OnHorizontalTextAlignmentChanged();
+			OnTextTrimmingChanged(this, null);
 			OnLineHeightChanged();
 			OnLineStackingStrategyChanged();
-			//OnPaddingChanged();
 			OnTextDecorationsChanged();
 			OnLinesChanged();
 			OnLabelAutoFitChanged();
 			OnMinFontSizeChanged();
-			OnVerticalTextAlignmentChanged();
-			_initializing = false;
+			//OnVerticalTextAlignmentChanged();
 
-			_grid.Children.Add(_textBlock);
-			Content = _grid;
-
-            Unloaded += OnUnloaded;
-		}
-
-        private void OnUnloaded(object sender, RoutedEventArgs e)
-        {
 			if (_inlines is ObservableCollection<Inline> inlines)
 				inlines.CollectionChanged += OnInlinesCollectionChanged;
+
+			_loading = false;
+
+		}
+
+		private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+			if (_inlines is ObservableCollection<Inline> inlines)
+				inlines.CollectionChanged -= OnInlinesCollectionChanged;
+
+			foreach (var property in PropertyChangedCallbackTokens.Keys)
+				Unregister(property);
 		}
 
 		#endregion
@@ -481,6 +520,16 @@ namespace P42.Uno.Controls
 
 		private void OnFontSizeChanged(DependencyObject sender, DependencyProperty dp)
 		{
+			if (dp == FontSizeProperty)
+			{
+				if (double.IsNaN(FontSize))
+					FontSize = LabelExtensions.DefaultFontSize;
+				
+				if (FontSize < MinFontSize)
+					MinFontSize = FontSize;
+
+			}
+			
 			if (double.IsNaN(SynchronizedFontSize) || SynchronizedFontSize < 0)
 			{
 				if (double.IsNaN(FittedFontSize) || FittedFontSize < 0)
@@ -496,6 +545,9 @@ namespace P42.Uno.Controls
 			{
 				_textBlock.FontSize = SynchronizedFontSize;
 			}
+
+			if (dp == FittedFontSizeProperty)
+				FittedFontSizeChanged?.Invoke(this, FittedFontSize);
 		}
 
 		private void OnFontStyleChanged(DependencyObject sender, DependencyProperty dp)
@@ -554,9 +606,23 @@ namespace P42.Uno.Controls
 
 
         #region Layout
+        protected override Size MeasureOverride(Size availableSize)
+        {
+			//if (LabelAutoFit != LabelAutoFit.None)
+            {
+				var size = InternalMeasure(availableSize);
+				base.MeasureOverride(availableSize);
+
+				return size;
+			}
+			_textBlock.FontSize = FontSize;
+			return base.MeasureOverride(availableSize);
+
+        }
+
         protected Size InternalMeasure(Size availableSize)
         {
-			if (_initializing || double.IsNaN(availableSize.Width) || double.IsNaN(availableSize.Height) || availableSize.Width <= 0 || availableSize.Height <= 0)
+			if (_loading || double.IsNaN(availableSize.Width) || double.IsNaN(availableSize.Height) || availableSize.Width <= 0 || availableSize.Height <= 0)
 				return Size.Empty;
 
 			var control = _textBlock;
@@ -568,30 +634,23 @@ namespace P42.Uno.Controls
 			if (control is null)
 				return result;
 
-			var tmpFontSize = FontSize;
-
-			if (!double.IsNaN(SynchronizedFontSize) && SynchronizedFontSize > MinFontSize)
-				tmpFontSize = SynchronizedFontSize;
-
-			var minFontSize = MinFontSize;
-
+			control.Height = double.NaN;
 			control.MaxLines = 0; // int.MaxValue / 3;
 			control.MaxWidth = double.PositiveInfinity;
 			control.MaxHeight = double.PositiveInfinity;
 			control.MinHeight = 0;
 			control.MinWidth = 0;
 
-			control.FontSize = tmpFontSize;
-			control.Measure(new Size(width, double.PositiveInfinity));
+			var tmpFontSize = control.FontSize = FontSize;
 			var tmpHt = control.DesiredSize.Height;
 
 			if (Lines == 0)
             {
+				control.Measure(new Size(width, double.PositiveInfinity));
 				// do our best job to fit the existing space.
 				if (control.DesiredSize.Width - width > -Precision || control.DesiredSize.Height - height > -Precision)
 				{
-					tmpFontSize = ZeroLinesFit(control, minFontSize, tmpFontSize, width, height);
-					control.FontSize = tmpFontSize;
+					control.FontSize = tmpFontSize = ZeroLinesFit(control, MinFontSize, tmpFontSize, width, height); ;
 					control.Measure(new Size(width, double.PositiveInfinity));
 					tmpHt = control.DesiredSize.Height;
 				}
@@ -603,13 +662,21 @@ namespace P42.Uno.Controls
 				{
 					//tmpHt = height = _fontMetrics.HeightForLinesAtFontSize(element.Lines, tmpFontSize);
 					tmpHt = height = _textBlock.HeightForLinesAtFontSize(Lines, tmpFontSize);
+					/*
+					control.FontSize = tmpFontSize;
+					control.MaxLines = Lines;
+					control.Measure(availableSize);
+					tmpHt = height = Math.Max(tmpHt, control.DesiredSize.Height);
+					*/
 				}
 				else
 				{
 					// set the font size to fit Label.Lines into the available height
 					var constrainedSize = control.DesiredSize;
 
-					tmpFontSize = _textBlock.FontSizeFromLinesInHeight(Lines, tmpHt);
+					tmpFontSize = _textBlock.FontSizeFromLinesInHeight(Lines, tmpHt-2);
+
+					/*
 					tmpFontSize = Math.Max(MinFontSize, tmpFontSize);
 
 					control.FontSize = tmpFontSize;
@@ -623,40 +690,38 @@ namespace P42.Uno.Controls
 							control.Measure(new Size(width, double.PositiveInfinity));
 						}
 					}
+					*/
 				}
 			}
 			else if (LabelAutoFit == LabelAutoFit.Width)
 			{
-				if (control.ActualWidth > control.DesiredSize.Width || control.DesiredSize.Height / control.LineHeight > Lines)
+				control.Measure(new Size(width, double.PositiveInfinity));
+				var linesHeight = control.HeightForLinesAtFontSize(Lines, tmpFontSize);
+				if (control.ActualWidth > control.DesiredSize.Width || control.DesiredSize.Height > linesHeight)
 				{
-					tmpFontSize = WidthAndLinesFit(control, Lines + 1, minFontSize, tmpFontSize, width);
-					control.FontSize = tmpFontSize;
+					control.FontSize = tmpFontSize = WidthAndLinesFit(control, Lines + 1, MinFontSize, tmpFontSize, width);
 					control.Measure(new Size(width, double.PositiveInfinity));
-					tmpHt = control.DesiredSize.Height;
 				}
+				tmpHt = control.DesiredSize.Height;
+				System.Diagnostics.Debug.WriteLine($"tmpHt: {tmpHt} linesHeight: {linesHeight}");
 			}
 
-			// none of these should happen so let's keep an eye out for it to be sure everything upstream is working
-			if (tmpFontSize > FontSize)
-				throw new Exception("fitting somehow returned a tmpFontSize > label.FontSize");
-			if (tmpFontSize < MinFontSize)
-				throw new Exception("fitting somehow returned a tmpFontSize < label.MinFontSize");
 			// the following doesn't apply when where growing 
 			//if (tmpFontSize > label.DecipheredMinFontSize() && (control.DesiredSize.Width > Math.Ceiling(w) || control.DesiredSize.Height > Math.Ceiling(Math.Max(availableSize.Height, label.Height))) )
 			//    throw new Exception("We should never exceed the available bounds if the FontSize is greater than label.MinFontSize");
 
 			// we needed the following in Android as well.  Xamarin layout really doesn't like this to be changed in real time.
-			if (tmpFontSize == FontSize || ((FontSize == -1 || double.IsNaN(FontSize)) && tmpFontSize == AutoTextBlockExtensions.DefaultFontSize))
+			if (tmpFontSize == FontSize || ((FontSize == -1 || double.IsNaN(FontSize)) && tmpFontSize == LabelExtensions.DefaultFontSize))
 				FittedFontSize = -1;
 			else if (Math.Abs(FittedFontSize - tmpFontSize) > 1)
 				FittedFontSize = tmpFontSize;
 
-			if (!double.IsNaN(SynchronizedFontSize))
-				_textBlock.FontSize = SynchronizedFontSize;
+			control.FontSize = BoundFontSize(tmpFontSize);
 
 			result = new Size(Math.Ceiling(control.DesiredSize.Width), Math.Ceiling(tmpHt));
 
-			control.MaxLines = MaxLines; // int.MaxValue / 3;
+			control.MaxLines = Lines > 0 ? Lines : MaxLines; // int.MaxValue / 3;
+			System.Diagnostics.Debug.WriteLine($"control.MaxLines: {control.MaxLines}");
 			control.MaxWidth = MaxWidth;
 			control.MaxHeight = MaxHeight;
 			control.MinHeight = MinHeight;
@@ -665,23 +730,31 @@ namespace P42.Uno.Controls
 			return result;
 		}
 
-		static double ZeroLinesFit(TextBlock control, double min, double max, double availWidth, double availHeight)
+		double BoundFontSize(double fontSize)
+        {
+			if (double.IsNaN(SynchronizedFontSize) || SynchronizedFontSize < MinFontSize)
+				return Math.Min(Math.Max(fontSize, MinFontSize), FontSize);
+
+			return SynchronizedFontSize;
+		}
+
+		double ZeroLinesFit(TextBlock control, double min, double max, double availWidth, double availHeight)
 		{
 			if (control is null)
-				return max;
+				return Math.Min(max, FontSize);
 
 			if (availHeight > int.MaxValue / 3)
-				return max;
+				return Math.Max(min, MinFontSize);
 			if (availWidth > int.MaxValue / 3)
-				return max;
+				return Math.Min(max, FontSize);
 
 			if (control.FontSize == max && availHeight >= control.DesiredSize.Height)
 				return max;
 			if (control.FontSize == min && availHeight <= control.DesiredSize.Height)
-				return min;
+				return Math.Max(min, MinFontSize);
 
 			if (max - min < Precision)
-				return min;
+				return Math.Max(min, MinFontSize);
 
 			var mid = (max + min) / 2.0;
 			control.FontSize = mid;
@@ -697,8 +770,9 @@ namespace P42.Uno.Controls
 
 		double WidthAndLinesFit(TextBlock control, int lines, double min, double max, double availWidth)
 		{
+			/*
 			if (control is null)
-				return max;
+				return Math.Min(max, FontSize);
 
 			if (max - min < Precision)
 			{
@@ -707,7 +781,7 @@ namespace P42.Uno.Controls
 					control.FontSize = min;
 					control?.Measure(new Size(availWidth - 4, double.PositiveInfinity));
 				}
-				return min;
+				return Math.Max(min, MinFontSize);
 			}
 			var mid = (max + min) / 2.0;
 			control.FontSize = mid;
@@ -716,15 +790,44 @@ namespace P42.Uno.Controls
 			if (control.DesiredSize.Height > midHeight || control.DesiredSize.Width > availWidth)
 				return WidthAndLinesFit(control, lines, min, mid, availWidth);
 			return WidthAndLinesFit(control, lines, mid, max, availWidth);
+			*/
+
+			if (control is null)
+				return Math.Min(max, FontSize);
+
+			if (max - min < Precision)
+			{
+				if (control.FontSize != min)
+				{
+					control.FontSize = min;
+					control?.Measure(new Size(availWidth - 4, double.PositiveInfinity));
+				}
+				return Math.Max(min, MinFontSize);
+			}
+
+			var mid = (max + min) / 2.0;
+			control.FontSize = mid;
+			control.Measure(new Size(availWidth-1, double.PositiveInfinity));
+			var linesHeight = control.HeightForLinesAtFontSize(lines, mid);
+			System.Diagnostics.Debug.WriteLine($"mid: {mid} midHeight: {linesHeight} desiredHeight: {control.DesiredSize.Height}");
+			if (control.DesiredSize.Width <= availWidth)
+            {
+				//if (control.DesiredSize.Height == linesHeight)
+				//	return mid;
+				if (control.DesiredSize.Height >= linesHeight)
+					return WidthAndLinesFit(control, lines, min, mid, availWidth);
+				return WidthAndLinesFit(control, lines, mid, max, availWidth);
+			}
+			throw new Exception("should not happen!");
 		}
 
 		double FindBestWidthForLineFit(TextBlock control, double fontSize, double heightTarget, double min, double max)
 		{
 			if (control is null)
-				return max;
+				return Math.Min(max, FontSize);
 
 			if (max - min < Precision)
-				return min;
+				return Math.Max(min, MinFontSize);
 			var mid = (max + min) / 2.0;
 			control.FontSize= fontSize;
 			control.Measure(new Size(mid, double.PositiveInfinity));
@@ -734,7 +837,7 @@ namespace P42.Uno.Controls
 			else
 				return FindBestWidthForLineFit(control, fontSize, heightTarget, mid, max);
 		}
-        #endregion
+		#endregion
     }
 
 }

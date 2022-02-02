@@ -114,7 +114,7 @@ namespace P42.Uno.Controls
             set => _weakCollectionRef = new WeakReference<IList<T>>(value);
         }
 
-        public bool AllowUnselectLastSelected = false;
+        public bool AllowUnselectAll = false;
 
         #endregion
 
@@ -172,7 +172,7 @@ namespace P42.Uno.Controls
             if (index < 0 || index >= (Collection?.Count ?? 0))
                 return;
 
-            if (AllowUnselectLastSelected || (_selectedIndexes?.Count ?? 0) > 1)
+            if (AllowUnselectAll || (_selectedIndexes?.Count ?? 0) > 1)
             {
                 if (_selectedIndexes.Contains(index))
                 {
@@ -200,7 +200,7 @@ namespace P42.Uno.Controls
 
             for (int i = 0; i < _selectedIndexes.Count; i++)
             {
-                if (AllowUnselectLastSelected || (_selectedIndexes?.Count ?? 0) > 1)
+                if (AllowUnselectAll || (_selectedIndexes?.Count ?? 0) > 1)
                 {
                     if (indexes.Contains(_selectedIndexes[i]))
                     {

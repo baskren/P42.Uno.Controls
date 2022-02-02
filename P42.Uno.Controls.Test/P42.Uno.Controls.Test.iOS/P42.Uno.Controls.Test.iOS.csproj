@@ -153,13 +153,25 @@
     </ImageAsset>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.csproj">
+      <Project>{e7acab8a-9e14-496f-b18d-a76d4f87d1be}</Project>
+      <Name>P42.Uno.Controls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.iOS.csproj">
       <Project>{51B840D1-A248-4450-96EC-44DDAA789EAB}</Project>
       <Name>P42.Uno.Controls.iOS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj">
+      <Project>{44962bbf-bd41-48e5-9a5d-2ac4a3a66397}</Project>
+      <Name>P42.Uno.Markup</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.iOS.csproj">
       <Project>{50F278C5-CE67-41E5-AA46-CB285EAB2B55}</Project>
       <Name>P42.Uno.Markup.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj">
+      <Project>{478923a9-5bbe-4245-812a-e6e75ba30ca6}</Project>
+      <Name>P42.Utils.Uno</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.iOS.csproj">
       <Project>{684DFBE1-23E9-49D6-9492-9EF0B571B6AB}</Project>

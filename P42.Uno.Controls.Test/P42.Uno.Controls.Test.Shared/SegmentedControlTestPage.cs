@@ -64,7 +64,6 @@ namespace P42.Uno.Controls.Test
                         .Assign(out _comboBox)
                         .Row(2)
                         .ItemsSource(Enum.GetValues(typeof(P42.Uno.Controls.SelectionMode)))
-                        .SelectionMode(ListViewSelectionMode.Single)
                         .SelectedIndex(1),
                     new NewSegmentedControl()
                         .Assign(out _segmentedControl)

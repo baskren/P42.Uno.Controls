@@ -46,7 +46,6 @@ namespace P42.Uno.Controls
             typeof(NewSegmentedControl),
             new PropertyMetadata(default(IList<string>), OnLabelsChanged)
         );
-
         private static void OnLabelsChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
             if (dependencyObject is NewSegmentedControl control)
@@ -121,7 +120,7 @@ namespace P42.Uno.Controls
         }
         #endregion
 
-        #region Selected Item Property
+        #region Selected Label Property
         public static readonly DependencyProperty SelectedLabelProperty = DependencyProperty.Register(
             nameof(SelectedLabel),
             typeof(string),
@@ -144,24 +143,24 @@ namespace P42.Uno.Controls
         }
         #endregion
 
-        #region AllowUnselectLastSelected Property
-        public static readonly DependencyProperty AllowUnselectLastSelectedProperty = DependencyProperty.Register(
-            nameof(AllowUnselectLastSelected),
+        #region AllowUnselectAll Property
+        public static readonly DependencyProperty AllowUnselectAllProperty = DependencyProperty.Register(
+            nameof(AllowUnselectAll),
             typeof(bool),
             typeof(NewSegmentedControl),
-            new PropertyMetadata(false, OnAllowUnselectLastSelectedChanged)
+            new PropertyMetadata(false, OnAllowUnselectAllChanged)
             );
 
-        private static void OnAllowUnselectLastSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        private static void OnAllowUnselectAllChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             if (d is NewSegmentedControl control)
-                control.SelectionTracker.AllowUnselectLastSelected = (bool)args.NewValue;
+                control.SelectionTracker.AllowUnselectAll = (bool)args.NewValue;
         }
 
-        public bool AllowUnselectLastSelected
+        public bool AllowUnselectAll
         {
-            get => (bool)GetValue(AllowUnselectLastSelectedProperty);
-            set => SetValue(AllowUnselectLastSelectedProperty, value);
+            get => (bool)GetValue(AllowUnselectAllProperty);
+            set => SetValue(AllowUnselectAllProperty, value);
         }
         #endregion
 
@@ -209,7 +208,7 @@ namespace P42.Uno.Controls
         public bool IsOverflowed
         {
             get => _isOverflowed;
-            set
+            private set
             {
                 if (_isOverflowed != value)
                 {
@@ -226,7 +225,7 @@ namespace P42.Uno.Controls
 
         #region Events
         public event EventHandler<bool> IsOverflowedChanged;
-        public event EventHandler<(int SelectedIndex, string SelectedItem)> SelectionChanged;
+        public event EventHandler<(int SelectedIndex, string SelectedLabel)> SelectionChanged;
         #endregion
 
 

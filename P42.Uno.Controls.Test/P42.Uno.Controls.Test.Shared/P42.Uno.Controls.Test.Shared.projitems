@@ -20,6 +20,8 @@
 		</Compile>
 		<Compile Include="$(MSBuildThisFileDirectory)BubblePointerAdjust.cs" />
 		<Compile Include="$(MSBuildThisFileDirectory)BubblePointerAdjust.layout.cs" />
+		<Compile Include="$(MSBuildThisFileDirectory)LabelTestPage.cs" />
+		<Compile Include="$(MSBuildThisFileDirectory)LabelTestPage.layout.cs" />
 		<Compile Include="$(MSBuildThisFileDirectory)ListEditPage.cs" />
 		<Compile Include="$(MSBuildThisFileDirectory)ListEditPage.layout.cs" />
 		<Compile Include="$(MSBuildThisFileDirectory)MainPage.cs" />

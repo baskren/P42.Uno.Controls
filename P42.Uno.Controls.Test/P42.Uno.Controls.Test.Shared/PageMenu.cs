@@ -13,7 +13,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using P42.Uno.AsyncNavigation;
 using System.Threading.Tasks;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -41,19 +40,20 @@ namespace P42.Uno.Controls.Test
             _listView.IsItemClickEnabled = true;
         }
 
-        async void OnListView_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
+        void OnListView_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
         {
-            await ItemClickProcess(e.ClickedItem);
+            ItemClickProcess(e.ClickedItem);
         }
 
-        public async Task ItemClickProcess(object item)
+        public void ItemClickProcess(object item)
         {
             if (item is string text)
                 item = Type.GetType(text);
             if (item is Type type)
             {
-                var page = (Page)Activator.CreateInstance(type);
-                await this.PushAsync(page);
+                //var page = (Page)Activator.CreateInstance(type);
+                //await this.PushAsync(page);
+                Frame.Navigate(type);
             }
         }
 

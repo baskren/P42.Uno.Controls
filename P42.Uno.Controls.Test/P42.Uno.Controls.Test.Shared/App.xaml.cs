@@ -102,7 +102,8 @@ namespace P42.Uno.Controls.Test
                     //rootFrame.Navigate(typeof(MainPage), e.Arguments);
                     //rootFrame.Navigate(typeof(SummaryDetailPage), e.Arguments);
                     //rootFrame.Navigate(typeof(BubblePointerAdjust), e.Arguments);
-                    rootFrame.Navigate(typeof(SegmentedControlTestPage), e.Arguments);
+                    //rootFrame.Navigate(typeof(SegmentedControlTestPage), e.Arguments);
+                    rootFrame.Navigate(typeof(LabelTestPage), e.Arguments);
                 }
                 // Ensure the current window is active
                 _window.Activate();

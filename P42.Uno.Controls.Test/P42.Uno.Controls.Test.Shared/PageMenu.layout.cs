@@ -13,7 +13,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using P42.Uno.AsyncNavigation;
 using P42.Uno.Markup;
 using P42.Utils.Uno;
 

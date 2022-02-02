@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using P42.Utils.Uno;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -26,7 +27,7 @@ namespace P42.Uno.Controls.Test
     public partial class ListEditPage : Page
     {
         Grid grid;
-        SimpleListView listView;
+        ListView listView;
         ContentAndDetailPresenter cdPresenter;
 
         bool IsUsingCdPresenter = true;
@@ -36,7 +37,7 @@ namespace P42.Uno.Controls.Test
             //var itemTemplate = (DataTemplate)Application.Current.Resources ["TextCellTemplate"];
             var itemTemplate = P42.Utils.Uno.UIElementExtensions.AsDataTemplate(typeof(P42.Uno.Controls.Test.TextCell));
 
-            listView = new SimpleListView
+            listView = new ListView
             {
                 SelectionMode = ListViewSelectionMode.Single,
                 IsItemClickEnabled = true,
@@ -49,14 +50,14 @@ namespace P42.Uno.Controls.Test
             {
                 Content = "TOP",
                 Background = new SolidColorBrush(Colors.White),
-                Tag = P42.Uno.Controls.ScrollIntoViewAlignment.Leading
+                Tag = P42.Utils.Uno.ScrollToPosition.Start //P42.Uno.Controls.ScrollIntoViewAlignment.Leading
             };
             button1.Click += OnButtonClick;
             var button2 = new Button
             {
                 Content = "CENTER",
                 Background = new SolidColorBrush(Colors.White),
-                Tag = P42.Uno.Controls.ScrollIntoViewAlignment.Center
+                Tag = P42.Utils.Uno.ScrollToPosition.Center //P42.Uno.Controls.ScrollIntoViewAlignment.Center
             };
             button2.Click += OnButtonClick;
             Grid.SetColumn(button2, 1);
@@ -64,7 +65,7 @@ namespace P42.Uno.Controls.Test
             {
                 Content = "BOTTOM",
                 Background = new SolidColorBrush(Colors.White),
-                Tag = P42.Uno.Controls.ScrollIntoViewAlignment.Trailing
+                Tag = P42.Utils.Uno.ScrollToPosition.End //P42.Uno.Controls.ScrollIntoViewAlignment.Trailing
             };
             button3.Click += OnButtonClick;
             Grid.SetColumn(button3, 2);
@@ -117,21 +118,14 @@ namespace P42.Uno.Controls.Test
             //Content = listView;
         }
 
-        private void OnButtonClick(object sender, RoutedEventArgs e)
+        async void OnButtonClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Content is string value)
             {
                 if (listView.SelectedIndex > -1 && listView.SelectedIndex < items.Count)
-                {
-                    listView.ScrollIntoView(listView.SelectedIndex, (P42.Uno.Controls.ScrollIntoViewAlignment)button.Tag);
-                    /*
-                    var container = (ListViewItem)listView.ContainerFromIndex(listView.SelectedIndex);
-                    var cell = container.ContentTemplateRoot as TextCell;
-                    cell.ChangeValue(value);
-                    */
-                }
+                    await listView.ScrollToAsync(listView.SelectedIndex, (P42.Utils.Uno.ScrollToPosition)button.Tag);
                 else
-                    listView.ScrollIntoView(items[25], (P42.Uno.Controls.ScrollIntoViewAlignment)button.Tag);
+                    await listView.ScrollToAsync(items[25], (P42.Utils.Uno.ScrollToPosition)button.Tag);
             }
         }
     }

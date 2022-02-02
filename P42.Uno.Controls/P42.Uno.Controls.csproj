@@ -8,50 +8,51 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="**\*.shared.cs"  Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.shared.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
   <!-- WASM -->
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('net'))" >
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('net'))">
     <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="3.11.6" />
-    <Compile Include="**\*.wasm.cs"  Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.wasm.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.wasm.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.wasm.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.wasm.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.wasm.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
   <!-- UWP -->
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) " >
-    <Compile Include="**\*.uwp.cs"  Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.uwp.*.cs"  Exclude="$(DefaultItemExcludes)" />
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
+    <Compile Include="**\*.uwp.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.uwp.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.uwp.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.uwp.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <PackageReference Include="Win2D.uwp" Version="1.26.0" />
   </ItemGroup>
 
   <!-- ANDROID -->
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) " >
-    <Compile Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)"/>
-    <Compile Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)"/>
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+    <Compile Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)" />
     <AndroidResource Include="Resources\xml\*.xml" />
   </ItemGroup>
 
   <!-- IOS -->
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) " >
-    <Compile Include="**\*.ios.cs"  Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.ios.*.cs"  Exclude="$(DefaultItemExcludes)" />
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+    <Compile Include="**\*.ios.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.ios.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.ios.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.ios.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
   <!-- MACOS -->
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.Mac20')) " >
-    <Compile Include="**\*.macos.cs"  Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.macos.*.cs"  Exclude="$(DefaultItemExcludes)" />
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.Mac20')) ">
+    <Compile Include="**\*.macos.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.macos.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.macos.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.macos.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
@@ -60,6 +61,9 @@
   <ItemGroup>
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SegmentedControl\" />
   </ItemGroup>
 
 </Project>

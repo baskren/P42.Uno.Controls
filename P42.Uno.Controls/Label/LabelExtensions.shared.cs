@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace P42.Uno.Controls
 {
-    public static class AutoTextBlockExtensions
+    public static class LabelExtensions
     {
         static TextBlock SizingTextBlock = new TextBlock();
 

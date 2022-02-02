@@ -100,7 +100,7 @@ namespace P42.Uno.Controls.Test
 #endif
             */
 
-            var listView = new P42.Uno.Controls.SimpleListView
+            var listView = new ListView
             {
                 SelectionMode = ListViewSelectionMode.Multiple,
                 IsItemClickEnabled = true,
