@@ -14,12 +14,14 @@
     Force all projects of this folder to use a different output
     path to avoid intermediate output collisions
     -->
-	<BaseOutputPath>bin\$(MSBuildProjectName)</BaseOutputPath>
-	<BaseIntermediateOutputPath>obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+	  <BaseOutputPath>bin\$(MSBuildProjectName)</BaseOutputPath>
+	  <BaseIntermediateOutputPath>obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
 
+    <!-- NO NEED FOR THIS ANYMORE !
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-	<DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
+    -->
+  	<DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
 
     <DebugType>portable</DebugType>
 
@@ -31,28 +33,23 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="3.11.6" />
-    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.3" />
-    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
-  </ItemGroup>
-
   <!-- BLANKET PAGE AND COMPILE -->
   <ItemGroup>
-    <!--
-    <Compile Include="**\*.shared.cs" Exclude="bin\**\*.cs;obj\**\*.cs"/>
-    <Compile Include="**\*.shared.*.cs" Exclude="bin\**\*.cs;obj\**\*.cs"/>
-    -->
-    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="**\*.xaml.cs" Exclude="bin\**\*.xaml.cs;obj\**\*.xaml.cs">
+    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    <Compile Update="**\*.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+  </ItemGroup>
   
   <!-- COMMON REFERENCES -->
+  <ItemGroup>
+    <PackageReference Include="Uno.UI" Version="4.0.13" />
+    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.3" />
+    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\P42.Utils\P42.Utils\P42.Utils.csproj" />
   </ItemGroup>

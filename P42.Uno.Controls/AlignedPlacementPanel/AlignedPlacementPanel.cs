@@ -31,8 +31,6 @@ namespace P42.Uno.Controls
         }
         #endregion Spacing Property
 
-#if NETFX_CORE
-
         #region Padding Property
         public static readonly DependencyProperty PaddingProperty = DependencyProperty.Register(
             nameof(Padding),
@@ -46,8 +44,6 @@ namespace P42.Uno.Controls
             set => SetValue(PaddingProperty, value);
         }
         #endregion Padding Property
-
-#endif
 
         Button _moreButton = new Button
         {

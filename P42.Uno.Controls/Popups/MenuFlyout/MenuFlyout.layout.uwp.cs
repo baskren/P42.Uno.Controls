@@ -1,3 +1,4 @@
+#if WINDOWS_UWP
 using P42.Uno.Markup;
 using P42.Utils.Uno;
 using System;
@@ -230,3 +231,4 @@ namespace P42.Uno.Controls
     }
 
 }
+#endif

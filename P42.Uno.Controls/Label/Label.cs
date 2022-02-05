@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using Uno.Disposables;
-using Uno.Extensions;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml;
 using System;
@@ -196,9 +194,14 @@ namespace P42.Uno.Controls
                 new PropertyMetadata(default(HorizontalAlignment), (s, e) => ((Label)s).OnTextAlignmentChanged(e)));
         protected virtual void OnTextAlignmentChanged(DependencyPropertyChangedEventArgs e)
 			=>_textBlock.TextAlignment = TextAlignment;
-        public TextAlignment TextAlignment
-        {
-            get => (TextAlignment)GetValue(TextAlignmentProperty);
+
+#if __ANDROID__
+		public new TextAlignment TextAlignment
+#else
+		public TextAlignment TextAlignment
+#endif
+		{
+			get => (TextAlignment)GetValue(TextAlignmentProperty);
             set => SetValue(TextAlignmentProperty, value);
         }
         #endregion TextAlignment Property
@@ -369,12 +372,7 @@ namespace P42.Uno.Controls
 			_grid.Children.Add(_textBlock);
 			Content = _grid;
 
-#if NETSTANDARD
 			Loading += OnLoading;
-#else
-			Loading += OnLoading;
-#endif
-
 			Unloaded += OnUnloaded;
 		}
 
@@ -385,13 +383,7 @@ namespace P42.Uno.Controls
 		void Unregister(DependencyProperty property)
 			=> UnregisterPropertyChangedCallback(property, PropertyChangedCallbackTokens[property]);
 
-#if WINDOWS_UWP
 		private void OnLoading(FrameworkElement sender, object args)
-#elif NETSTANDARD
-		private void OnLoading(object sender, RoutedEventArgs e)
-#else
-		private void OnLoading(DependencyObject sender, object args)
-#endif
 		{
 			// TODO: Is this called on all platforms?
 
