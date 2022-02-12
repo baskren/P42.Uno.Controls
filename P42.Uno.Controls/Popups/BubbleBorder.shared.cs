@@ -426,7 +426,6 @@ namespace P42.Uno.Controls
                 default:
                     break;
             }
-            //ContentPresenterMargin = result;
             _contentPresenter.Margin = result;
         }
 
@@ -450,8 +449,6 @@ namespace P42.Uno.Controls
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".OnSizeChanged()");
-            //RegeneratePath(DesiredSize);
             Size = args.NewSize;
         }
         
@@ -461,96 +458,29 @@ namespace P42.Uno.Controls
                 return new Size(50 + Padding.Horizontal(), 50 + Padding.Vertical());
 
             UpdateContentPresenterMargin();
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride(" + availableSize + ") ======= hzAlign: " + HorizontalAlignment + " ======= margin: " + Margin + " ======= padding: " + Padding + " ====== WindowSize: " + AppWindow.Size(this));
 
             var windowSize = AppWindow.Size(this);
             var windowWidth = windowSize.Width;
             var windowHeight = windowSize.Height;
-
-            //System.Diagnostics.Debug.WriteLine("\t ContentPresenterMargin: " + _contentPresenter.Margin);
-            this.DebugLogProperties();
-
 
             if (!this.HasPrescribedWidth())
                 availableSize.Width = windowWidth;
             if (!this.HasPrescribedHeight())
                 availableSize.Height = windowHeight;
 
-            availableSize.Width -= Margin.Horizontal();
-            availableSize.Height -= Margin.Vertical();
-
             base.MeasureOverride(availableSize);
-            //_innerContent.Measure(availableSize);
 
             Size result = Size.Empty;
             if (_contentPresenter is FrameworkElement element)
-            {
-                if (availableSize.Width > 0 && availableSize.Height > 0)
-                    element.Measure(availableSize);
                 result = element.DesiredSize;
 
-                //if( _contentPresenter.Content is FrameworkElement content)
-                //{
-                //    System.Diagnostics.Debug.WriteLine($"BubbleBorder.MeasureOverride _contentPresent.Content.DesiredSize [{content.DesiredSize}]");
-                //}
-                /*
-                var scale = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().ResolutionScale;
-                System.Diagnostics.Debug.WriteLine($"BubbleBorder.MeasureOverride scale=[{scale}]");
-                System.Diagnostics.Debug.WriteLine(GetType() + ".MeasureOverride _contentPresent.DesiredSize:" + result);
-                */
-            }
-
-            //System.Diagnostics.Debug.WriteLine("\t HorizontalAlignment: " + HorizontalAlignment);
             if (HorizontalAlignment == HorizontalAlignment.Stretch || this.HasPrescribedWidth())
                 result.Width = availableSize.Width;
             if (VerticalAlignment == VerticalAlignment.Stretch || this.HasPrescribedHeight())
                 result.Height = availableSize.Height;
 
-
-            result.Width = Math.Max(0,Math.Min(windowWidth - Margin.Horizontal(), result.Width));
-            result.Height = Math.Max(0,Math.Min(windowHeight - Margin.Vertical(), result.Height));
-
-
-            var borderSize = result;
-            borderSize.Width += Margin.Horizontal();
-            borderSize.Height += Margin.Vertical();
-
-            RegeneratePath(borderSize);
-
-            //System.Diagnostics.Debug.WriteLine("\t RESULT: " + result);
+            RegeneratePath(result);
             return result;
-        }
-
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".ArrangeOverride(" + finalSize + ")");
-
-            if (_contentPresenter.Content != null)
-            {
-                /*
-                System.Diagnostics.Debug.WriteLine($"BubbleBorder.ArrangeOverride Background[{Background.AsColor()}] _path.Fill[{_path.Fill.AsColor()}]");
-                System.Diagnostics.Debug.WriteLine($"BubbleBorder.ArrangeOverride hzAlign[{HorizontalAlignment}] hzContentAlign[{HorizontalContentAlignment}] Margin[{Margin}] Padding[{Padding}]");
-                System.Diagnostics.Debug.WriteLine($"BubbleBorder.ArrangeOverride _innerContent.HzAlign[{_innerContent.HorizontalAlignment}] _innerContent.Margin[{_innerContent.Margin}] _innerContent.Padding[{_innerContent.Padding}]");
-                */
-                // base.ArrangeOverride(finalSize) doesn't work on Android (clips the border)
-                //return base.ArrangeOverride(finalSize);
-                _innerContent.Arrange(new Rect(0, 0, finalSize.Width, finalSize.Height));
-                /*
-                foreach (var child in _innerContent.Children)
-                {
-                    if (child is ContentPresenter cp)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"BubbleBorder.ArrangeOverride [{child}] cp.DesiredSize.Width [{cp.DesiredSize.Width}] [{cp.HorizontalAlignment}] [{cp.HorizontalContentAlignment}]");
-                    }
-                    else if (child is FrameworkElement fe)
-                        System.Diagnostics.Debug.WriteLine($"BubbleBorder.ArrangeOverride [{child}] fe.DesiredSize.Width [{fe.DesiredSize.Width}] [{fe.HorizontalAlignment}]");
-                    else
-                        System.Diagnostics.Debug.WriteLine($"BubbleBorder.ArrangeOverride [{child}] child.DesiredSize.Width [{child.DesiredSize.Width}]");
-                }
-                */
-            }
-            //else
-            return finalSize;
         }
 
         SKPath GeneratePath(Size measuredSize = default)

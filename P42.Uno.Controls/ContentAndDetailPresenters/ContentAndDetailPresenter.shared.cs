@@ -163,7 +163,7 @@ namespace P42.Uno.Controls
             nameof(PopupWidth),
             typeof(double),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(300)
+            new PropertyMetadata(300.0)
         );
         public double PopupWidth
         {
@@ -438,9 +438,10 @@ namespace P42.Uno.Controls
             if (percentOpen > 0)
             {
                 _overlay.Opacity = percentOpen;
+
                 if (!Children.Contains(_overlay))
                     Children.Add(_overlay);
-                if (!Children.Contains(_detailDrawer))
+                if (LocalIsInDrawerMode(size) && !Children.Contains(_detailDrawer))
                     Children.Add(_detailDrawer);
             }
             else
@@ -458,8 +459,10 @@ namespace P42.Uno.Controls
             //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.LayoutDetailAndOverlay percentOpen: " + percentOpen);
         }
 
+
         bool LocalIsInDrawerMode(Size size)
         {
+            return false;
             // until Uno.Android.ListView issue are addressed, we're not going here!
             /*
             var popupSize = new Size(PopupWidth, PopupHeight);

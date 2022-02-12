@@ -1,4 +1,5 @@
-﻿using P42.Utils.Uno;
+﻿using P42.Uno.Markup;
+using P42.Utils.Uno;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -986,8 +987,8 @@ namespace P42.Uno.Controls
                 borderSize.Width = Width;
             if (this.HasPrescribedHeight())
                 borderSize.Height = Height;
-            var right = Math.Min(left + borderSize.Width + hzPointer, windowSize.Width - margin.Right);
-            var bottom = Math.Min(top + borderSize.Height + vtPointer, windowSize.Height - margin.Bottom);
+            var right = Math.Min(left + borderSize.Width, windowSize.Width - margin.Right);
+            var bottom = Math.Min(top + borderSize.Height, windowSize.Height - margin.Bottom);
 
             if (hzAlign == HorizontalAlignment.Center)
             {

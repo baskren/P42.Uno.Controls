@@ -134,7 +134,7 @@ namespace P42.Uno.Controls
 
         public object Tag;
 #if WINDOWS_UWP
-        internal WeakReference<MenuFlyout> MenuFlyoutWeakRef;
+        //internal WeakReference<MenuFlyout> MenuFlyoutWeakRef;
         internal WeakReference<MenuFlyoutCell> MenuFlyoutCellWeakRef;
 #endif
 

@@ -16,15 +16,13 @@ namespace P42.Uno.Controls
 {
     public partial class BubbleBorder
     {
-        Grid _innerContent;
+        //Grid _innerContent;
 
         void Build()
         {
             this
                 .Left()
                 .Top()
-                //.Margin(0)
-                //.Padding(0)
                 .Background(SystemColors.ChromeMedium)
                 .BorderBrush(SystemColors.BaseLow)
                 .BorderThickness(2)
@@ -40,13 +38,11 @@ namespace P42.Uno.Controls
                 TextWrapping = TextWrapping.WrapWholeWords
             }
                 //.Bind(ContentPresenter.MarginProperty, ContentPresenterMargin)
-                .Bind(ContentPresenter.HorizontalContentAlignmentProperty, this, nameof(HorizontalAlignment))
+                .Bind(ContentPresenter.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
                 .Bind(ContentPresenter.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
                 .BindFont(this);
 
-            base.Content = _innerContent = new Grid()
-                //.Padding(0)
-                //.Margin(0)
+            base.Content = new Grid()
                 .ColumnSpacing(0)
                 .RowSpacing(0)
                 .AddOnSizeChanged(OnSizeChanged)

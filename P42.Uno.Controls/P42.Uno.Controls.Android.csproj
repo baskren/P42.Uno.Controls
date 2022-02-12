@@ -1,20 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="MSBuild.Sdk.Extras/3.0.22">
+<Project Sdk="MSbuild.Sdk.Extras/3.0.23">
 
   <PropertyGroup>
-    <TargetFrameworks>MonoAndroid10.0;</TargetFrameworks>
+    <TargetFrameworks>MonoAndroid11.0;</TargetFrameworks>
     
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)"/>
     <Compile Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)"/>
-    <Compile Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)"/>
-    <Compile Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)"/>
     <UpToDateCheckInput Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
     <AndroidResource Include="Resources\xml\*.xml" />
   </ItemGroup>
 
@@ -22,11 +18,6 @@
   <ItemGroup>
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.Android.csproj" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.Android.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="**\*.cs" Exclude="$(DefaultItemExcludes)"/>
-    <UpToDateCheckInput Include="**\*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
 </Project>

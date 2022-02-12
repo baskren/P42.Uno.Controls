@@ -13,14 +13,12 @@
     <!--
     Force all projects of this folder to use a different output
     path to avoid intermediate output collisions
-    -->
 	  <BaseOutputPath>bin\$(MSBuildProjectName)</BaseOutputPath>
 	  <BaseIntermediateOutputPath>obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+    -->
 
-    <!-- NO NEED FOR THIS ANYMORE !
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    -->
   	<DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
 
     <DebugType>portable</DebugType>
@@ -35,12 +33,16 @@
 
   <!-- BLANKET PAGE AND COMPILE -->
   <ItemGroup>
+    <Compile Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)"/>
+    <Compile Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)"/>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     <Compile Update="**\*.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <UpToDateCheckInput Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   

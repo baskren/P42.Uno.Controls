@@ -601,14 +601,14 @@ namespace P42.Uno.Controls
         protected override Size MeasureOverride(Size availableSize)
         {
 			//if (LabelAutoFit != LabelAutoFit.None)
-            {
+            //{
 				var size = InternalMeasure(availableSize);
 				base.MeasureOverride(availableSize);
 
 				return size;
-			}
-			_textBlock.FontSize = FontSize;
-			return base.MeasureOverride(availableSize);
+			//}
+			//_textBlock.FontSize = FontSize;
+			//return base.MeasureOverride(availableSize);
 
         }
 

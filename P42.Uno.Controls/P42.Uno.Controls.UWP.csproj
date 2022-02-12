@@ -1,19 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="MSBuild.Sdk.Extras/3.0.22">
+<Project Sdk="MSbuild.Sdk.Extras/3.0.23">
 
   <PropertyGroup>
     <TargetFrameworks>uap10.0.18362;</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="**\*.uwp.cs"  Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.uwp.*.cs"  Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.shared.cs"  Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.shared.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.uwp.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.uwp.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.uwp.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.uwp.*.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
   <!-- PLATFORM REFERENCES -->
