@@ -462,7 +462,11 @@ namespace P42.Uno.Controls
 
         bool LocalIsInDrawerMode(Size size)
         {
-            return false;
+            return true;
+
+            if (Detail is null)
+                return false;
+            //return false;
             // until Uno.Android.ListView issue are addressed, we're not going here!
             /*
             var popupSize = new Size(PopupWidth, PopupHeight);
@@ -491,19 +495,36 @@ namespace P42.Uno.Controls
             var footerHeight = Footer?.ActualHeight ?? 0;
             var targetHeight = Target?.ActualSize.Y ?? 100;
 
-            // is there enough room vertically to show the popup?
-            if (PopupHeight > 0 && size.Height - footerHeight - popupMargin > PopupHeight * 2 + targetHeight)
-                return false;
+            var popHt = PopupHeight;
+            var popWt = PopupWidth;
+            if (double.IsNaN(popHt))
+            {
+                if (double.IsNaN(popWt))
+                {
+                    Detail.Measure(size);
+                    popHt = Detail.DesiredSize.Width * DetailAspectRatio;
+                }
+                else
+                {
+                    popHt = DetailAspectRatio * popWt;
+                }
+            }
 
+            if (double.IsNaN(popWt))
+                popWt = popHt / DetailAspectRatio;
+
+            // is popHt enough room vertically to show the popup?
+            if (popHt > 0 && size.Height - footerHeight - popupMargin > popHt * 2 + targetHeight)
+                return false;
 
             if (size.Width > size.Height)
             {
-                if (PopupWidth > 0 && size.Width - popupMargin > PopupWidth * 2)
+                if (popWt > 0 && size.Width - popupMargin > popWt * 2)
                     return true;
             }
             else
             {
-                if (PopupWidth > 0 && size.Width > PopupWidth * 2)
+                if (popWt > 0 && size.Width > popWt * 2)
                     return false;
 
                 return true;
