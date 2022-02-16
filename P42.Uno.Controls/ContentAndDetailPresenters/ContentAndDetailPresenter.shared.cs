@@ -246,20 +246,6 @@ namespace P42.Uno.Controls
             }
         }
 
-        public Size DrawerSize
-        {
-            get
-            {
-                var size = new Size(ActualWidth, ActualHeight);
-                if (size.Width / size.Height > 1)
-                    size.Width = size.Height / DetailAspectRatio;
-                else
-                    size.Height = size.Width * DetailAspectRatio;
-
-                return size;
-            }
-        }
-
         public Orientation DrawerOrientation
             => ActualWidth > ActualHeight ? Orientation.Horizontal : Orientation.Vertical;
 
@@ -459,39 +445,8 @@ namespace P42.Uno.Controls
             //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.LayoutDetailAndOverlay percentOpen: " + percentOpen);
         }
 
-
-        bool LocalIsInDrawerMode(Size size)
+        public Size PopupSize(Size availableSize)
         {
-            return true;
-
-            if (Detail is null)
-                return false;
-            //return false;
-            // until Uno.Android.ListView issue are addressed, we're not going here!
-            /*
-            var popupSize = new Size(PopupWidth, PopupHeight);
-            var aspect = AspectRatio(size);
-            // landscape
-            if (aspect > DetailAspectRatio * 1.5 && popupSize.Width <= ActualWidth)
-            {
-                var drawerSize = new Size(ActualHeight * DetailAspectRatio, ActualHeight);
-                if (drawerSize.Width <= ActualWidth * 0.5 && drawerSize.Height < popupSize.Height + popupMargin * 2 && drawerSize.Width < popupSize.Width + popupMargin * 2)
-                {
-                    return true;
-                }
-            }
-
-            // portrait
-            if (aspect < (DetailAspectRatio * 0.66) && popupSize.Width <= ActualWidth * 1.5)
-            {
-                var drawerSize = new Size(ActualWidth, ActualWidth / DetailAspectRatio);
-                if (drawerSize.Height <= ActualHeight * 0.5 && drawerSize.Height < popupSize.Height + popupMargin * 2 && drawerSize.Width < popupSize.Width + popupMargin * 2)
-                {
-                    return true;
-                }
-            }
-            */
-
             var footerHeight = Footer?.ActualHeight ?? 0;
             var targetHeight = Target?.ActualSize.Y ?? 100;
 
@@ -501,7 +456,7 @@ namespace P42.Uno.Controls
             {
                 if (double.IsNaN(popWt))
                 {
-                    Detail.Measure(size);
+                    Detail.Measure(availableSize);
                     popHt = Detail.DesiredSize.Width * DetailAspectRatio;
                 }
                 else
@@ -513,23 +468,53 @@ namespace P42.Uno.Controls
             if (double.IsNaN(popWt))
                 popWt = popHt / DetailAspectRatio;
 
-            // is popHt enough room vertically to show the popup?
-            if (popHt > 0 && size.Height - footerHeight - popupMargin > popHt * 2 + targetHeight)
+            return new Size(popHt, popWt);
+        }
+
+        public Size DrawerSize
+        {
+            get
+            {
+                var size = new Size(ActualWidth, ActualHeight);
+                if (size.Width / size.Height > 1)
+                    size.Width = size.Height / DetailAspectRatio;
+                else
+                    size.Height = size.Width * DetailAspectRatio;
+
+                return size;
+            }
+        }
+
+
+        bool LocalIsInDrawerMode(Size availableSize)
+        {
+            return true;
+
+            if (Detail is null)
                 return false;
 
-            if (size.Width > size.Height)
+            var footerHeight = Footer?.ActualHeight ?? 0;
+            var targetHeight = Target?.ActualSize.Y ?? 100;
+
+
+            var popupSize = PopupSize(availableSize);
+
+            // is popHt enough room vertically to show the popup?
+            if (popupSize.Height > 0 && availableSize.Height - footerHeight - popupMargin > popupSize.Height * 2 + targetHeight)
+                return false;
+
+            if (availableSize.Width > availableSize.Height)
             {
-                if (popWt > 0 && size.Width - popupMargin > popWt * 2)
+                if (popupSize.Width > 0 && availableSize.Width - popupMargin > popupSize.Width * 2)
                     return true;
             }
             else
             {
-                if (popWt > 0 && size.Width > popWt * 2)
+                if (popupSize.Width > 0 && availableSize.Width > popupSize.Width * 2)
                     return false;
 
                 return true;
             }
-
 
             return false;
         }

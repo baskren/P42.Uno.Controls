@@ -30,7 +30,7 @@ namespace P42.Uno.Controls
             nameof(Padding),
             typeof(Thickness),
             typeof(NewSegmentedControl),
-            new PropertyMetadata(default)
+            new PropertyMetadata(new Thickness(4))
         );
         public new Thickness Padding
         {
@@ -234,7 +234,7 @@ namespace P42.Uno.Controls
         readonly List<Rectangle> Separators = new List<Rectangle>();
         readonly List<Rectangle> Backgrounds = new List<Rectangle>();
         readonly CollectionSelectionTracker<string> SelectionTracker = new CollectionSelectionTracker<string>();
-        readonly TextBlock _testTextBlock = new TextBlock();
+        readonly TextBlock _testTextBlock = new TextBlock().FontSize(16);
         #endregion
 
 
@@ -243,8 +243,6 @@ namespace P42.Uno.Controls
         {
             _testTextBlock
                 .Bind(TextBlock.MarginProperty, this, nameof(Padding));
-
-            Padding = new Thickness(2, 4, 2, 4);
 
             SizeChanged += NewSegmentedControl_SizeChanged;
             BorderBrush = SystemToggleButtonBrushes.Border;
@@ -432,6 +430,7 @@ namespace P42.Uno.Controls
                 .Bind(TextBlock.MarginProperty, this, nameof(Padding))
                 .Foreground(SystemToggleButtonBrushes.Foreground)
                 .Center()
+                .FontSize(16)
                 .Column(TextBlocks.Count)
                 .AddOnTapped(OnSegmentTapped)
                 .AddOnPointerEntered(OnSegmentPointerEntered)
@@ -485,6 +484,9 @@ namespace P42.Uno.Controls
             for (int i=0; i<columns;i++)
             {
                 _testTextBlock.Text(Labels[i]).Measure(big);
+
+                System.Diagnostics.Debug.WriteLine($"cellWidth:{cellWidth} desiredWidth:{_testTextBlock.DesiredSize.Width} Padding.Hz:{Padding.Horizontal()}");
+
                 if (_testTextBlock.DesiredSize.Width >= cellWidth)
                     return true;
             }
