@@ -488,7 +488,7 @@ namespace P42.Uno.Controls
 
         bool LocalIsInDrawerMode(Size availableSize)
         {
-            return true;
+            //return true;
 
             if (Detail is null)
                 return false;
