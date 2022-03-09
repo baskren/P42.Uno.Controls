@@ -21,7 +21,7 @@ using Windows.UI.Xaml.Shapes;
 namespace P42.Uno.Controls
 {
     [Windows.UI.Xaml.Data.Bindable]
-    public partial class NewSegmentedControl : Grid
+    public partial class SegmentedControl : Grid
     {
         #region Properties
 
@@ -29,7 +29,7 @@ namespace P42.Uno.Controls
         public static new readonly DependencyProperty PaddingProperty = DependencyProperty.Register(
             nameof(Padding),
             typeof(Thickness),
-            typeof(NewSegmentedControl),
+            typeof(SegmentedControl),
             new PropertyMetadata(new Thickness(4))
         );
         public new Thickness Padding
@@ -43,12 +43,12 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty LabelsProperty = DependencyProperty.Register(
             nameof(Labels),
             typeof(IList<string>),
-            typeof(NewSegmentedControl),
+            typeof(SegmentedControl),
             new PropertyMetadata(default(IList<string>), OnLabelsChanged)
         );
         private static void OnLabelsChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            if (dependencyObject is NewSegmentedControl control)
+            if (dependencyObject is SegmentedControl control)
             {
                 if (args.NewValue is IList<string> newList)
                 {
@@ -80,13 +80,13 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty BorderWidthProperty = DependencyProperty.Register(
             nameof(BorderWidth),
             typeof(double),
-            typeof(NewSegmentedControl),
+            typeof(SegmentedControl),
             new PropertyMetadata(1.0, OnBorderWidthPropertyChanged)
         );
 
         private static void OnBorderWidthPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            if (dependencyObject is NewSegmentedControl sc)
+            if (dependencyObject is SegmentedControl sc)
                 sc.UpdateBorder();
         }
 
@@ -101,13 +101,13 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register(
             nameof(SelectedIndex),
             typeof(int),
-            typeof(NewSegmentedControl),
+            typeof(SegmentedControl),
             new PropertyMetadata(-1, OnSelectedIndexChanged)
             );
 
         private static void OnSelectedIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            if (d is NewSegmentedControl control && control._tapProcessing == int.MinValue)
+            if (d is SegmentedControl control && control._tapProcessing == int.MinValue)
             {
                 control.SelectionTracker.SelectIndex((int)args.NewValue);
             }
@@ -124,13 +124,13 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty SelectedLabelProperty = DependencyProperty.Register(
             nameof(SelectedLabel),
             typeof(string),
-            typeof(NewSegmentedControl),
+            typeof(SegmentedControl),
             new PropertyMetadata(null, OnSelectedLabelChanged)
             );
 
         private static void OnSelectedLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            if (d is NewSegmentedControl control && control._tapProcessing == int.MinValue)
+            if (d is SegmentedControl control && control._tapProcessing == int.MinValue)
             {
                 control.SelectionTracker.SelectItem((string)args.NewValue);
             }
@@ -147,13 +147,13 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty AllowUnselectAllProperty = DependencyProperty.Register(
             nameof(AllowUnselectAll),
             typeof(bool),
-            typeof(NewSegmentedControl),
+            typeof(SegmentedControl),
             new PropertyMetadata(false, OnAllowUnselectAllChanged)
             );
 
         private static void OnAllowUnselectAllChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            if (d is NewSegmentedControl control)
+            if (d is SegmentedControl control)
                 control.SelectionTracker.AllowUnselectAll = (bool)args.NewValue;
         }
 
@@ -184,13 +184,13 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty SelectionModeProperty = DependencyProperty.Register(
             nameof(SelectionMode),
             typeof(SelectionMode),
-            typeof(NewSegmentedControl),
+            typeof(SegmentedControl),
             new PropertyMetadata(default, OnSelectionModelChanged)
             );
 
         private static void OnSelectionModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            if (d is NewSegmentedControl control)
+            if (d is SegmentedControl control)
             {
                 control.SelectionTracker.SelectionMode = (SelectionMode)args.NewValue;
             }
@@ -239,7 +239,7 @@ namespace P42.Uno.Controls
 
 
         #region Constructor
-        public NewSegmentedControl()
+        public SegmentedControl()
         {
             _testTextBlock
                 .Bind(TextBlock.MarginProperty, this, nameof(Padding));

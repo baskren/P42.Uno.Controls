@@ -17,11 +17,11 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
-using Element = P42.Uno.Controls.NewSegmentedControl;
+using Element = P42.Uno.Controls.SegmentedControl;
 
 namespace P42.Uno.Controls
 {
-    public static class NewSegmentedControlExtensions
+    public static class SegmentedControlExtensions
     {
         public static Element Padding(this Element element, Thickness padding)
         { element.Padding = padding; return element;}
