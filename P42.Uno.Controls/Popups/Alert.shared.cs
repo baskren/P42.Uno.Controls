@@ -23,14 +23,8 @@ namespace P42.Uno.Controls
             nameof(OkButtonContent),
             typeof(object),
             typeof(Alert),
-            new PropertyMetadata(default(string), OnOkButtonContentChanged)
+            new PropertyMetadata("OK")
         );
-
-        private static void OnOkButtonContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
-        {
-            if (d is PermissionPopup popup)
-                popup._okButton.Content = args.NewValue;
-        }
 
         public object OkButtonContent
         {

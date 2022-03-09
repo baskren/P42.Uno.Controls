@@ -12,6 +12,8 @@ namespace P42.Uno.Controls
 
         void Build()
         {
+            Width = 300;
+
             new Button()
                 .Assign(out _okButton)
                 .Row(2)
@@ -19,9 +21,10 @@ namespace P42.Uno.Controls
                 .Margin(0)
                 .StretchHorizontal()
                 .CornerRadius(2)
-                .Bind(BackgroundProperty, this, nameof(OkButtonBackground))
-                .Bind(ForegroundProperty, this, nameof(OkButtonForeground));
-                //.Bind(Button.ContentProperty, this, nameof(OkButtonContent));
+                .Height(40)
+                .Bind(Button.ContentProperty, this, nameof(OkButtonContent))
+                .Bind(Button.BackgroundProperty, this, nameof(OkButtonBackground))
+                .Bind(Button.ForegroundProperty, this, nameof(OkButtonForeground));
 
             _bubbleContentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             _bubbleContentGrid.Children.Add(_okButton);

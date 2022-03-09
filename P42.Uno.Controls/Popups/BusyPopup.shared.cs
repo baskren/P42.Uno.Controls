@@ -9,9 +9,6 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-#if __WASM__
-using ProgressRing = P42.Uno.Controls.Spinner;
-#endif
 
 namespace P42.Uno.Controls
 {

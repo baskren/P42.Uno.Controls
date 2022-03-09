@@ -685,7 +685,7 @@ namespace P42.Uno.Controls
                 Pushed?.Invoke(this, EventArgs.Empty);
                 _pushCompletionSource?.TrySetResult(true);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 PushPopState = PushPopState.Popped;
                 await InnerPop(PopupPoppedCause.Exception, animated);
@@ -732,7 +732,7 @@ namespace P42.Uno.Controls
             {
                 _popup.IsOpen = false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }

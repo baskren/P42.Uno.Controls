@@ -1,9 +1,6 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using P42.Uno.Markup;
-#if __WASM__
-using ProgressRing = P42.Uno.Controls.Spinner;
-#endif
 
 namespace P42.Uno.Controls
 {
