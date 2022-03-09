@@ -483,6 +483,7 @@ namespace P42.Uno.Controls
             return result;
         }
 
+        float scale = -1;
         SKPath GeneratePath(Size measuredSize = default)
         {
             var windowSize = AppWindow.Size(this);
@@ -511,9 +512,20 @@ namespace P42.Uno.Controls
             var pointerLength = PointerDirection == PointerDirection.None ? 0 : (float)PointerLength;
 
             var left = 0.0f + borderWidth / 2;
-            var right = (float)(width - Margin.Horizontal() - borderWidth / 2);
             var top = 0.0f + borderWidth / 2;
+
+#if __ANDROID__
+            
+            if (scale < 0)
+                scale = (float)AppWindow.DisplayScale(this);
+
+            var right = (float)(width - Margin.Horizontal() - borderWidth * scale);
+            var bottom = (float)(height - Margin.Vertical() - borderWidth * scale);
+#else
+            var right = (float)(width - Margin.Horizontal() - borderWidth / 2);
             var bottom = (float)(height - Margin.Vertical() - borderWidth / 2);
+
+#endif
 
             width -= (PointerDirection.IsHorizontal() ? pointerLength : 0);
             height -= (PointerDirection.IsVertical() ? pointerLength : 0);

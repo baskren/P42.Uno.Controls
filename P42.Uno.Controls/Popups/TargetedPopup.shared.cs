@@ -833,8 +833,9 @@ namespace P42.Uno.Controls
 
             var windowWidth = windowSize.Width - Margin.Horizontal() - safeMargin.Horizontal();
             var windowHeight = windowSize.Height - Margin.Vertical() - safeMargin.Vertical();
+
             var cleanSize = MeasureBorder(new Size(windowWidth, windowHeight));
-            //System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment: cleanSize: " + cleanSize);
+
             if (PreferredPointerDirection == PointerDirection.None || Target is null)
             {
                 //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateMarginAndAlignment PreferredPointerDirection == PointerDirection.None");
