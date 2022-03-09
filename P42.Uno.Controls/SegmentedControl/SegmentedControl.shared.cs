@@ -485,7 +485,7 @@ namespace P42.Uno.Controls
             {
                 _testTextBlock.Text(Labels[i]).Measure(big);
 
-                System.Diagnostics.Debug.WriteLine($"cellWidth:{cellWidth} desiredWidth:{_testTextBlock.DesiredSize.Width} Padding.Hz:{Padding.Horizontal()}");
+                //System.Diagnostics.Debug.WriteLine($"cellWidth:{cellWidth} desiredWidth:{_testTextBlock.DesiredSize.Width} Padding.Hz:{Padding.Horizontal()}");
 
                 if (_testTextBlock.DesiredSize.Width >= cellWidth)
                     return true;
