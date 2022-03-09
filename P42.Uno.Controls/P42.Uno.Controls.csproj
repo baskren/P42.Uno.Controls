@@ -49,7 +49,7 @@
   
   <!-- PROJECT REFERENCES -->
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="4.0.13" />
+    <PackageReference Include="Uno.UI" Version="4.1.8" />
     <PackageReference Include="SkiaSharp.Views.Uno" Version="2.88.0-preview.187" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
   </ItemGroup>
@@ -96,9 +96,9 @@
 
   <!-- WASM -->
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net'))">
-    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="4.0.13" />
-    <PackageReference Include="Uno.UI.Lottie" Version="4.0.13" />
-    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="4.0.13" />
+    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="4.1.8" />
+    <PackageReference Include="Uno.UI.Lottie" Version="4.1.8" />
+    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="4.1.8" />
     <Compile Include="**\*.wasm.cs" Exclude="$(DefaultItemExcludes)" />
     <Compile Include="**\*.wasm.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.wasm.cs" Exclude="$(DefaultItemExcludes)" />
