@@ -514,18 +514,18 @@ namespace P42.Uno.Controls
             var left = 0.0f + borderWidth / 2;
             var top = 0.0f + borderWidth / 2;
 
-#if __ANDROID__
+//#if __ANDROID__
             
             if (scale < 0)
                 scale = (float)AppWindow.DisplayScale(this);
 
             var right = (float)(width - Margin.Horizontal() - borderWidth * scale);
             var bottom = (float)(height - Margin.Vertical() - borderWidth * scale);
-#else
-            var right = (float)(width - Margin.Horizontal() - borderWidth / 2);
-            var bottom = (float)(height - Margin.Vertical() - borderWidth / 2);
-
-#endif
+//#else
+//            var right = (float)(width - Margin.Horizontal() - borderWidth / 2);
+//            var bottom = (float)(height - Margin.Vertical() - borderWidth / 2);
+//
+//#endif
 
             width -= (PointerDirection.IsHorizontal() ? pointerLength : 0);
             height -= (PointerDirection.IsVertical() ? pointerLength : 0);
