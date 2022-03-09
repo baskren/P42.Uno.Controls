@@ -2,38 +2,107 @@
 <Project Sdk="MSbuild.Sdk.Extras/3.0.23">
 
   <PropertyGroup>
-    <NoWarn>Uno0001</NoWarn>
-    <TargetFrameworks>netstandard2.0;Xamarin.iOS10;Xamarin.Mac20;MonoAndroid11.0;</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' AND '$(USERNAME)' == 'ben' ">uap10.0.18362;$(TargetFrameworks);</TargetFrameworks>
+
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>P42.Uno.Controls</AssemblyName>
+    <RootNamespace>P42.Uno.Controls</RootNamespace>
+    <NoWarn>Uno0001;1701;1702;VSX1000</NoWarn>
+
+	  <TargetFrameworks>uap10.0.18362;netstandard2.0;Xamarin.iOS10;Xamarin.Mac20;MonoAndroid11.0;</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.vsmac')) ">netstandard2.0;Xamarin.iOS10;Xamarin.Mac20;MonoAndroid11.0;</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.Droid')) ">MonoAndroid11.0</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.iOS')) ">Xamarin.iOS10</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.macOS')) ">Xamarin.Mac20</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.GtK')) ">netstandard2.0</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.Tizen')) ">Tizen50</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.WPF')) ">netstandard2.0</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.UWP')) ">uap10.0.18362</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.Wasm')) ">netstandard2.0</TargetFrameworks>
+
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  	<DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
+    <DebugType>portable</DebugType>
+    <LangVersion>8.0</LangVersion>
+
   </PropertyGroup>
 
-  <!-- WASM -->
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('net'))">
-    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="4.0.13" />
-  </ItemGroup>
+  <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
 
-  <!-- UWP -->
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
-    <PackageReference Include="Win2D.uwp" Version="1.26.0" />
+  <!-- BLANKET PAGE AND COMPILE -->
+  <ItemGroup>
+    <Compile Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)"/>
+    <Compile Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)"/>
+    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+  </ItemGroup>
+  
+  <!-- PROJECT REFERENCES -->
+  <ItemGroup>
+    <PackageReference Include="Uno.UI" Version="4.0.13" />
+    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.88.0-preview.187" />
+    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\P42.Utils\P42.Utils\P42.Utils.csproj" />
+    <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
+    <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
+  </ItemGroup>
+	
 
   <!-- ANDROID -->
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+    <Compile Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)"/>
+    <Compile Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)"/>
+    <UpToDateCheckInput Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)" />
     <AndroidResource Include="Resources\xml\*.xml" />
   </ItemGroup>
 
   <!-- IOS -->
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+    <Compile Include="**\*.ios.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.ios.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.ios.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.ios.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
   <!-- MACOS -->
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.Mac20')) ">
+    <Compile Include="**\*.macos.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.macos.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.macos.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.macos.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
-  <!-- PLATFORM REFERENCES -->
-  <ItemGroup>
-    <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
-    <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
+  <!-- UWP -->
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
+    <PackageReference Include="Win2D.uwp" Version="1.26.0" />
+    <Compile Include="**\*.uwp.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.uwp.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.uwp.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.uwp.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
-	
+
+  <!-- WASM -->
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('net'))">
+    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="4.0.13" />
+    <PackageReference Include="Uno.UI.Lottie" Version="4.0.13" />
+    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="4.0.13" />
+    <Compile Include="**\*.wasm.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.wasm.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.wasm.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.wasm.*.cs" Exclude="$(DefaultItemExcludes)" />
+  </ItemGroup>
+
 </Project>
