@@ -34,8 +34,8 @@
 
   <!-- BLANKET PAGE AND COMPILE -->
   <ItemGroup>
-    <Compile Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)"/>
-    <Compile Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)"/>
+    <Compile Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     <Compile Update="**\*.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
@@ -62,8 +62,8 @@
 
   <!-- ANDROID -->
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
-    <Compile Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)"/>
-    <Compile Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)"/>
+    <Compile Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)" />
     <AndroidResource Include="Resources\xml\*.xml" />
@@ -71,16 +71,16 @@
 
   <!-- IOS -->
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
-    <Compile Include="**\*.ios.cs"  Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.ios.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.ios.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.ios.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.ios.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.ios.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
   <!-- MACOS -->
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.Mac20')) ">
-    <Compile Include="**\*.macos.cs"  Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.macos.*.cs"  Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.macos.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.macos.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.macos.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.macos.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>

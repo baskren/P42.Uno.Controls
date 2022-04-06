@@ -244,7 +244,7 @@ namespace P42.Uno.Controls
             _testTextBlock
                 .Bind(TextBlock.MarginProperty, this, nameof(Padding));
 
-            SizeChanged += NewSegmentedControl_SizeChanged;
+            SizeChanged += SegmentedControl_SizeChanged;
             BorderBrush = SystemToggleButtonBrushes.Border;
             CornerRadius = new CornerRadius(4);
             VerticalAlignment = VerticalAlignment.Center;
@@ -396,7 +396,7 @@ namespace P42.Uno.Controls
             }
         }
 
-        private void NewSegmentedControl_SizeChanged(object sender, SizeChangedEventArgs args)
+        private void SegmentedControl_SizeChanged(object sender, SizeChangedEventArgs args)
         {
             if (IsLoaded)
             {

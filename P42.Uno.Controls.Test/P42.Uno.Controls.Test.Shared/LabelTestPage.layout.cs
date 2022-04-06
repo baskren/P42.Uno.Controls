@@ -13,7 +13,7 @@ namespace P42.Uno.Controls.Test
     {
         static string text1 = "Żyłę;^`g <b><em>Lorem</em></b> ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Odio ut enim blandit volutpat maecenas. Diam volutpat commodo sed egestas egestas fringilla phasellus. Odio eu feugiat pretium nibh ipsum consequat. Urna condimentum mattis pellentesque id nibh tortor. Ut lectus arcu bibendum at varius vel pharetra. Dui nunc mattis enim ut tellus. Nullam vehicula ipsum a arcu cursus vitae congue mauris. Libero nunc consequat interdum varius sit amet mattis vulputate. Pharetra pharetra massa massa ultricies. Lorem sed risus ultricies tristique nulla aliquet enim tortor at. Aliquam sem et tortor consequat id porta. Ultrices in iaculis nunc sed augue. Tincidunt vitae semper quis lectus nulla at volutpat diam. Vitae elementum curabitur vitae nunc sed velit.";
 
-        NewSegmentedControl hzAlignmentSelector, vtAlignmentSelector, fitSelector, textWrappingSelector, textTrimmingSelector;
+        SegmentedControl hzAlignmentSelector, vtAlignmentSelector, fitSelector, textWrappingSelector, textTrimmingSelector;
         Label label;
         TextBlock vtAlignmentSelectorLabel, unoLabel, fontSizeLabel, fittedFontSizeLabel, pageWidthLabel, labelSizeLabel, lineHeightLabel, heightRequestLabel, linesLabel, textTrimmingLabel, textWrappingLabel, textAlignmentLabel;
         Slider fontSizeSlider, linesSlider, lineHeightSlider, heightRequestSlider;
@@ -125,7 +125,7 @@ namespace P42.Uno.Controls.Test
                                 .Text($"FittedFontSize: {label.FittedFontSize}"),
                             new TextBlock()
                                 .Text("AutoFit:"),
-                            new NewSegmentedControl()
+                            new SegmentedControl()
                                 .Assign(out fitSelector)
                                 .Labels(Enum.GetNames(typeof(LabelAutoFit)))
                                 .RadioSelect()
@@ -167,7 +167,7 @@ namespace P42.Uno.Controls.Test
                             new TextBlock()
                                 .Assign(out vtAlignmentSelectorLabel)
                                 .Text($"VerticalAlignment: {label.VerticalAlignment}"),
-                            new NewSegmentedControl()
+                            new SegmentedControl()
                                 .Assign(out vtAlignmentSelector)
                                 .Labels(Enum.GetNames(typeof(VerticalAlignment)))
                                 .RadioSelect().AllowUnselectAll(false)
@@ -176,7 +176,7 @@ namespace P42.Uno.Controls.Test
                             new TextBlock()
                                 .Assign(out textAlignmentLabel)
                                 .Text($"TextAlignment: {label.TextAlignment}"),
-                            new NewSegmentedControl()
+                            new SegmentedControl()
                                 .Assign(out hzAlignmentSelector)
                                 .Labels(Enum.GetNames(typeof(TextAlignment)))
                                 .RadioSelect().AllowUnselectAll(false)
@@ -185,7 +185,7 @@ namespace P42.Uno.Controls.Test
                             new TextBlock()
                                 .Assign(out textWrappingLabel)
                                 .Text($"TextWrapping: {label.TextWrapping}"),
-                            new NewSegmentedControl()
+                            new SegmentedControl()
                                 .Assign(out textWrappingSelector)
                                 .Labels(Enum.GetNames(typeof(TextWrapping)))
                                 .RadioSelect().AllowUnselectAll(false)
@@ -194,7 +194,7 @@ namespace P42.Uno.Controls.Test
                             new TextBlock()
                                 .Assign(out textTrimmingLabel)
                                 .Text($"TextTrimming: {label.TextTrimming}"),
-                            new NewSegmentedControl()
+                            new SegmentedControl()
                                 .Assign(out textTrimmingSelector)
                                 .Labels(Enum.GetNames(typeof(TextTrimming)))
                                 .RadioSelect().AllowUnselectAll(false)

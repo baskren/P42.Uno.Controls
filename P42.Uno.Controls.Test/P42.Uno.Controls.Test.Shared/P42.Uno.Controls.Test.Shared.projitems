@@ -8,39 +8,41 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>P42.Uno.Controls.Test</Import_RootNamespace>
   </PropertyGroup>
-	<ItemGroup>
-		<ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml" Exclude="$(MSBuildThisFileDirectory)bin\**\*.xaml">
-			<SubType>Designer</SubType>
-			<Generator>MSBuild:Compile</Generator>
-		</ApplicationDefinition>
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
-			<DependentUpon>App.xaml</DependentUpon>
-		</Compile>
-		<Compile Include="$(MSBuildThisFileDirectory)BubblePointerAdjust.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)BubblePointerAdjust.layout.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)LabelTestPage.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)LabelTestPage.layout.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)ListEditPage.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)ListEditPage.layout.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)MainPage.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)MainPage.layout.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)PageMenu.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)PageMenu.layout.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)SegmentedControlTestPage.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)SimplePage.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)StringButtonUserControl.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)StringButtonUserControl.layout.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)SummaryDetailPage.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)SummaryDetailPage.layout.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)TextCell.cs" />
-		<Compile Include="$(MSBuildThisFileDirectory)TypeCell.cs" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
-	</ItemGroup>
-	<ItemGroup>
-		<PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
-	</ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml" Exclude="$(MSBuildThisFileDirectory)bin\**\*.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)BubblePointerAdjust.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BubblePointerAdjust.layout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LabelTestPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LabelTestPage.layout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ListEditPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ListEditPage.layout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LoopingFlipViewTestPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LoopingFlipViewTestPage.layout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MainPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MainPage.layout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PageMenu.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PageMenu.layout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SegmentedControlTestPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SimplePage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringButtonUserControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringButtonUserControl.layout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SummaryDetailPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SummaryDetailPage.layout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TextCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TypeCell.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
+  </ItemGroup>
 </Project>

@@ -103,7 +103,8 @@ namespace P42.Uno.Controls.Test
                     //rootFrame.Navigate(typeof(SummaryDetailPage), e.Arguments);
                     //rootFrame.Navigate(typeof(BubblePointerAdjust), e.Arguments);
                     //rootFrame.Navigate(typeof(SegmentedControlTestPage), e.Arguments);
-                    rootFrame.Navigate(typeof(LabelTestPage), e.Arguments);
+                    //rootFrame.Navigate(typeof(LabelTestPage), e.Arguments);
+                    rootFrame.Navigate(typeof(LoopingFlipViewTestPage));
                 }
                 // Ensure the current window is active
                 _window.Activate();
@@ -189,6 +190,7 @@ namespace P42.Uno.Controls.Test
             });
 
             global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory = factory;
+
         }
     }
 }

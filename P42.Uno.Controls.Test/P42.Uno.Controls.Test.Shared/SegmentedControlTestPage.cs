@@ -39,7 +39,7 @@ namespace P42.Uno.Controls.Test
 
         #region Layout
         Slider _slider;
-        NewSegmentedControl _segmentedControl;
+        SegmentedControl _segmentedControl;
         ComboBox _comboBox;
 
         void Build()
@@ -65,10 +65,10 @@ namespace P42.Uno.Controls.Test
                         .Row(2)
                         .ItemsSource(Enum.GetValues(typeof(P42.Uno.Controls.SelectionMode)))
                         .SelectedIndex(1),
-                    new NewSegmentedControl()
+                    new SegmentedControl()
                         .Assign(out _segmentedControl)
                         .Row(3)
-                        .Bind(NewSegmentedControl.SelectionModeProperty, _comboBox, nameof(ComboBox.SelectedItem))
+                        .Bind(SegmentedControl.SelectionModeProperty, _comboBox, nameof(ComboBox.SelectedItem))
                 );
 
             _segmentedControl.Labels = labels;
