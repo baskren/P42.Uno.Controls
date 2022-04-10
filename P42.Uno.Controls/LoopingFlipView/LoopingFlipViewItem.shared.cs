@@ -14,19 +14,9 @@ namespace P42.Uno.Controls
     {
         internal UIElement Child;
 
-        AnimateBar.Left LeftBar = new AnimateBar.Left
-        {
-            Height = 30,
-            Margin = new Thickness(0, 5, 0, 5),
-            HorizontalAlignment = HorizontalAlignment.Left
-        };
+        AnimateBar.Left LeftBar = new AnimateBar.Left();
 
-        AnimateBar.Right RightBar = new AnimateBar.Right
-        {
-            Height = 30,
-            Margin = new Thickness(0, 5, 0, 5),
-            HorizontalAlignment = HorizontalAlignment.Right
-        };
+        AnimateBar.Right RightBar = new AnimateBar.Right();
 
         public LoopingFlipViewItem(UIElement child)
         {

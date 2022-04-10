@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
 namespace P42.Uno.Controls.AnimateBar
@@ -11,6 +12,10 @@ namespace P42.Uno.Controls.AnimateBar
     {
         public Left()
         {
+            Height = 30;
+            Margin = new Thickness(0, 5, 0, 5);
+            HorizontalAlignment = HorizontalAlignment.Left;
+
             Width = 11;
             dir = 1;
             //StaticRect.Width =

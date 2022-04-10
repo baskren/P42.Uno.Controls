@@ -128,9 +128,14 @@ namespace P42.Uno.Controls
 
             SizeChanged += (s,e) => LayoutChildren();
         }
+        #endregion
 
+
+        #region Pointer Gesture Handling
         async void PointerEnd(object sender, PointerRoutedEventArgs e)
         {
+            if (!_isDown)
+                return;
             _isDown = false;
 
             if (_cancellationTokenSource != null)
