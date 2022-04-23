@@ -25,6 +25,17 @@
   	<DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
     <DebugType>portable</DebugType>
     <LangVersion>8.0</LangVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Ben Askren</Authors>
+    <Company>42nd Parallel, LLC</Company>
+    <Description>Widgets for UNO Platform Applications</Description>
+    <Copyright>2022, 4nd Parallel</Copyright>
+    <PackageProjectUrl>https://github.com/baskren/P42.Uno.Controls</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/baskren/P42.Uno.Controls</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>Inital Public Release</PackageReleaseNotes>
+    <Version>0.1.0</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
 
   </PropertyGroup>
 
@@ -104,5 +115,14 @@
     <UpToDateCheckInput Include="**\*.wasm.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.wasm.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+
 
 </Project>
