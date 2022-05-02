@@ -34,7 +34,7 @@
     <RepositoryUrl>https://github.com/baskren/P42.Uno.Controls</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>Inital Public Release</PackageReleaseNotes>
-    <Version>0.1.0</Version>
+    <Version>0.1.0-dev.8</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
 
   </PropertyGroup>

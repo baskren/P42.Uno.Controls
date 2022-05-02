@@ -23,14 +23,8 @@ namespace P42.Uno.Controls
             nameof(CancelButtonContent),
             typeof(object),
             typeof(PermissionPopup),
-            new PropertyMetadata("Cancel", OnCancelButtonContentChanged)
+            new PropertyMetadata("Cancel")
         );
-
-        private static void OnCancelButtonContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
-        {
-            if (d is PermissionPopup popup)
-                popup._cancelButton.Content = args.NewValue;
-        }
 
         public object CancelButtonContent
         {
@@ -45,8 +39,15 @@ namespace P42.Uno.Controls
             nameof(CancelButtonForeground),
             typeof(Brush),
             typeof(PermissionPopup),
-            new PropertyMetadata(((Color)Application.Current.Resources["SystemColorButtonTextColor"]).ToBrush())
+            new PropertyMetadata(default(Brush), OnCancelButtonForegroundChanged)
         );
+
+        private static void OnCancelButtonForegroundChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+        {
+            if (dependencyObject is PermissionPopup p)
+                p._cancelButton.Foreground = args.NewValue as Brush;
+        }
+
         public Brush CancelButtonForeground
         {
             get => (Brush)GetValue(CancelButtonForegroundProperty);
@@ -60,8 +61,15 @@ namespace P42.Uno.Controls
             nameof(CancelButtonBackground),
             typeof(Brush),
             typeof(PermissionPopup),
-            new PropertyMetadata(((Color)Application.Current.Resources["SystemColorButtonFaceColor"]).ToBrush())
+            new PropertyMetadata(null, OnCancelButtonBackgroundChanged)
         );
+
+        private static void OnCancelButtonBackgroundChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+        {
+            if (dependencyObject is PermissionPopup p)
+                p._cancelButton.Background = args.NewValue as Brush;
+        }
+
         public Brush CancelButtonBackground
         {
             get => (Brush)GetValue(CancelButtonBackgroundProperty);

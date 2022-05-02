@@ -19,7 +19,7 @@ namespace P42.Uno.Controls
                 .Row(2)
                 .Column(1)
                 .Margin(0)
-                .StretchHorizontal()
+                .Stretch()
                 .CornerRadius(2)
                 .Height(40)
                 .Bind(Button.ContentProperty, this, nameof(OkButtonContent))

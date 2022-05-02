@@ -18,6 +18,9 @@ using Windows.UI.Xaml.Shapes;
 
 namespace P42.Uno.Controls
 {
+    /// <summary>
+    /// Simplified Popup for UWP / UNO PLATFORM
+    /// </summary>
     [Windows.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = nameof(XamlContent))]
@@ -37,6 +40,9 @@ namespace P42.Uno.Controls
         #region Properties
 
         #region XamlContent Property
+        /// <summary>
+        /// Backing Property for Popup's Content
+        /// </summary>
         public static readonly DependencyProperty XamlContentProperty = DependencyProperty.Register(
             nameof(XamlContent),
             typeof(object),
@@ -50,12 +56,18 @@ namespace P42.Uno.Controls
                 popup._contentPresenter.Content = args.NewValue;
         }
 
+        /// <summary>
+        /// Content for Popup
+        /// </summary>
         public object XamlContent
         {
             get => GetValue(XamlContentProperty);
             set => SetValue(XamlContentProperty, value);
         }
 
+        /// <summary>
+        /// Content for Popup
+        /// </summary>
         public new object Content
         {
             get => XamlContent;
@@ -64,6 +76,9 @@ namespace P42.Uno.Controls
         #endregion 
 
         #region HasShadow Property
+        /// <summary>
+        /// Backing store for Popup's HasShadow Property
+        /// </summary>
         public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
             nameof(HasShadow),
             typeof(bool),
@@ -77,6 +92,9 @@ namespace P42.Uno.Controls
                 popup._border.HasShadow = (bool)args.NewValue;
         }
 
+        /// <summary>
+        /// NOT YET IMPLEMENTED
+        /// </summary>
         public bool HasShadow
         {
             get => (bool)GetValue(HasShadowProperty);
@@ -92,6 +110,10 @@ namespace P42.Uno.Controls
             typeof(TargetedPopup),
             new PropertyMetadata(default(TimeSpan))
         );
+
+        /// <summary>
+        /// If greater than default TimeSpan, this is the amount of time the popup will display before automatically being popped.`
+        /// </summary>
         public TimeSpan PopAfter
         {
             get => (TimeSpan)GetValue(PopAfterProperty);
@@ -113,6 +135,10 @@ namespace P42.Uno.Controls
             if (_border != null)
                 UpdateMarginAndAlignment();
         }
+
+        /// <summary>
+        /// The UIElement the popup will point at (no pointer if Target is null or not found)
+        /// </summary>
         public UIElement Target
         {
             get => (UIElement)GetValue(TargetProperty);
@@ -132,6 +158,10 @@ namespace P42.Uno.Controls
             if (_border != null)
                 UpdateMarginAndAlignment();
         }
+
+        /// <summary>
+        /// The Point to which the popup will point to
+        /// </summary>
         public Point TargetPoint
         {
             get => (Point)GetValue(TargetPointProperty);
@@ -172,6 +202,10 @@ namespace P42.Uno.Controls
             typeof(TargetedPopup),
             new PropertyMetadata(default(double))
         );
+
+        /// <summary>
+        /// For those who want a lot of control!
+        /// </summary>
         public double PointerCornerRadius
         {
             get => (double)GetValue(PointerCornerRadiusProperty);
@@ -181,6 +215,9 @@ namespace P42.Uno.Controls
 
         #region Pointer Directions
 
+        /// <summary>
+        /// No, really, what direction is the pointer pointing?
+        /// </summary>
         public PointerDirection ActualPointerDirection { get; private set; }
 
         #region PreferredPointerDirection Property
@@ -278,6 +315,10 @@ namespace P42.Uno.Controls
         protected virtual void OnPointToOffScreenElementsChanged(DependencyPropertyChangedEventArgs e)
         {
         }
+
+        /// <summary>
+        /// If Target is off screen (but known), should the popup still point at it?
+        /// </summary>
         public bool PointToOffScreenElements
         {
             get => (bool)GetValue(PointToOffScreenElementsProperty);
@@ -292,6 +333,10 @@ namespace P42.Uno.Controls
             typeof(TargetedPopup),
             new PropertyMetadata(3.0)
         );
+
+        /// <summary>
+        /// How much space between popup pointer and Target?
+        /// </summary>
         public double PointerMargin
         {
             get => (double)GetValue(PointerMarginProperty);
@@ -334,6 +379,10 @@ namespace P42.Uno.Controls
                 popup._popup.IsLightDismissEnabled = popup.IsLightDismissEnabled;
             }
         }
+
+        /// <summary>
+        /// Light Dismiss overlay enabled?
+        /// </summary>
         public bool IsLightDismissEnabled
         {
             get => (bool)GetValue(IsLightDismissEnabledProperty);
@@ -355,6 +404,10 @@ namespace P42.Uno.Controls
                 popup._popup.LightDismissOverlayMode = popup.LightDismissOverlayMode;
             }
         }
+
+        /// <summary>
+        /// Light Dismiss On/Off?
+        /// </summary>
         public LightDismissOverlayMode LightDismissOverlayMode
         {
             get => (LightDismissOverlayMode)GetValue(LightDismissOverlayModeProperty);
@@ -369,6 +422,10 @@ namespace P42.Uno.Controls
             typeof(TargetedPopup),
             new PropertyMetadata(200)
         );
+
+        /// <summary>
+        /// How long to animate the dismissal of the popup?
+        /// </summary>
         public int AnimationDuration
         {
             get => (int)GetValue(AnimationDurationProperty);
@@ -378,8 +435,14 @@ namespace P42.Uno.Controls
 
         #endregion
 
+        /// <summary>
+        /// Why did the popup pop?
+        /// </summary>
         public PopupPoppedCause PoppedCause { get; private set; }
 
+        /// <summary>
+        /// What triggered the popup to pop?
+        /// </summary>
         public object PoppedTrigger { get; private set; }
 
         #region PushPopState Property
@@ -395,6 +458,9 @@ namespace P42.Uno.Controls
             
         }
 
+        /// <summary>
+        /// Is the popup Pushing, Pushed, Popping, or Popped?
+        /// </summary>
         public PushPopState PushPopState
         {
             get => (PushPopState)GetValue(PushPopStateProperty);
@@ -402,7 +468,9 @@ namespace P42.Uno.Controls
         }
         #endregion PushPopState Property
 
-
+        /// <summary>
+        /// Is there no content for the popup?
+        /// </summary>
         public bool IsEmpty
         {
             get
@@ -445,6 +513,13 @@ namespace P42.Uno.Controls
 
 
         #region Construction / Initialization
+
+        /// <summary>
+        /// Create new TargetedPopup
+        /// </summary>
+        /// <param name="target">UI Element popup points to</param>
+        /// <param name="bubbleContent">What's the popup's content?</param>
+        /// <returns></returns>
         public static async Task<TargetedPopup> CreateAsync(UIElement target, UIElement bubbleContent)
         {
             var result = new TargetedPopup
@@ -456,11 +531,18 @@ namespace P42.Uno.Controls
             return result;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public TargetedPopup()
         {
             Build();
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="target">UI Element popup points to</param>
         public TargetedPopup(UIElement target = null) : this()
         {
             if (target != null)
@@ -606,6 +688,7 @@ namespace P42.Uno.Controls
 
 
         #region Push / Pop
+
         private void OnPopupClosed(object sender, object e)
         {
             if (PushPopState == PushPopState.Pushed || PushPopState == PushPopState.Popping)
@@ -620,6 +703,11 @@ namespace P42.Uno.Controls
             _popupOpenedCompletionSource?.TrySetResult(true);
         }
 
+        /// <summary>
+        /// Push (display) the popup
+        /// </summary>
+        /// <param name="animated"></param>
+        /// <returns></returns>
         public virtual async Task PushAsync(bool animated = false)
         {
             if (PushPopState == PushPopState.Pushed || PushPopState == PushPopState.Pushing)
@@ -670,7 +758,7 @@ namespace P42.Uno.Controls
 
                 _border.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
 
-                if (PopAfter > default(TimeSpan))
+                if (PopAfter != null && PopAfter > default(TimeSpan))
                 {
                     P42.Utils.Timer.StartTimer(PopAfter, async () =>
                     {
@@ -692,6 +780,13 @@ namespace P42.Uno.Controls
             }
         }
 
+        /// <summary>
+        /// Pop (un-display) popup
+        /// </summary>
+        /// <param name="cause"></param>
+        /// <param name="animated"></param>
+        /// <param name="trigger"></param>
+        /// <returns></returns>
         public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = false, [CallerMemberName] object trigger = null)
         {
             if (PushPopState == PushPopState.Popping || PushPopState == PushPopState.Popped)
@@ -751,6 +846,10 @@ namespace P42.Uno.Controls
         }
 
         TaskCompletionSource<PopupPoppedEventArgs> _popCompletionSource;
+        /// <summary>
+        /// Wait for popup to be popped
+        /// </summary>
+        /// <returns></returns>
         public async Task<PopupPoppedEventArgs> WaitForPoppedAsync()
         {
             _popCompletionSource = _popCompletionSource ?? new TaskCompletionSource<PopupPoppedEventArgs>();
@@ -758,6 +857,10 @@ namespace P42.Uno.Controls
         }
 
         TaskCompletionSource<bool> _pushCompletionSource;
+        /// <summary>
+        /// Wait for popup to be pushed
+        /// </summary>
+        /// <returns></returns>
         async Task<bool> WaitForPush()
         {
             _pushCompletionSource = _pushCompletionSource ?? new TaskCompletionSource<bool>();
