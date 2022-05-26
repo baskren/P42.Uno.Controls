@@ -9,12 +9,12 @@
 			This is not an issue when libraries are referenced through nuget packages. See https://github.com/unoplatform/uno/issues/446 for more details.
 			-->
     <PackageReference Include="Microsoft.UI.Xaml" Version="2.6.2" />
-    <PackageReference Include="Uno.UI" Version="4.1.8" />
+    <PackageReference Include="Uno.UI" Version="4.3.6" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
     <PackageReference Include="Uno.Core.Extensions.Logging.Singleton" Version="4.0.1" />
 
-    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.88.0-preview.187" />
+    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.88.0" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations" Version="7.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI" Version="7.0.0" />
     <PackageReference Include="Win2D.uwp">
