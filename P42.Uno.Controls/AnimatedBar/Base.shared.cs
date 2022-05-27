@@ -166,7 +166,9 @@ namespace P42.Uno.Controls.AnimateBar
         }
 
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         protected virtual async Task Loop(int dir)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             throw new NotImplementedException();
         }

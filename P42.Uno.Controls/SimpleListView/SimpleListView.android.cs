@@ -200,7 +200,7 @@ namespace P42.Uno.Controls
                 case NotifyCollectionChangedAction.Remove:
                 case NotifyCollectionChangedAction.Replace:
                 case NotifyCollectionChangedAction.Reset:
-                    if (e.NewItems?.Any() ?? false)
+                    if (e.NewItems?.Cast<object>().Any() ?? false)
                         SelectedItem = e.NewItems[0];
                     else if (SelectedItem != null && (e.OldItems?.Contains(SelectedItem) ?? false))
                         SelectedItem = null;
@@ -278,7 +278,7 @@ namespace P42.Uno.Controls
         ScrollIntoViewAlignment _waitingAlignment = ScrollIntoViewAlignment.Default;
         public async Task ScrollIntoView(object item, P42.Uno.Controls.ScrollIntoViewAlignment alignment)
         {
-            if (ItemsSource.IndexOf(item) is int index && index > -1)
+            if (ItemsSource.Cast<object>().ToList().IndexOf(item) is int index && index > -1)
             {
                 if (alignment == ScrollIntoViewAlignment.Default)
                 {
@@ -355,7 +355,7 @@ namespace P42.Uno.Controls
 
         public void SelectAll()
         {
-            var items = ItemsSource.ToObjectArray();
+            var items = ItemsSource.Cast<object>().ToArray();
             foreach (var item in items)
             {
                 if (!SelectedItems.Contains(item))
@@ -371,7 +371,7 @@ namespace P42.Uno.Controls
 
     class SimpleAdapter : Android.Widget.BaseAdapter<object>
     {
-        IEnumerable Items;
+        IEnumerable<object> Items;
         DataTemplate ItemTemplate => SimpleListView.ItemTemplate;
         P42.Utils.Uno.DataTemplateSetSelector TemplateSelector => SimpleListView.ItemTemplateSelector;
         SimpleListView SimpleListView;
@@ -381,11 +381,11 @@ namespace P42.Uno.Controls
         {
             P42.Utils.Profile.Enter();
             SimpleListView = simpleListView;
-            SetItems(SimpleListView.ItemsSource);
+            SetItems(SimpleListView.ItemsSource.Cast<object>());
             P42.Utils.Profile.Exit();
         }
 
-        public void SetItems(IEnumerable items)
+        public void SetItems(IEnumerable<object> items)
         {
             P42.Utils.Profile.Enter();
 
@@ -599,6 +599,9 @@ namespace P42.Uno.Controls
 
             RecordCellHeight();
             P42.Utils.Profile.Exit();
+
+            //InvalidateMeasure();
+            //ForceLayout();
         }
 
         private void UpdateSelection()
