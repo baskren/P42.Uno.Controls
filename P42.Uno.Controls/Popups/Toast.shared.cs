@@ -13,6 +13,9 @@ using Windows.UI.Xaml.Markup;
 
 namespace P42.Uno.Controls
 {
+    /// <summary>
+    /// A simple toast
+    /// </summary>
     [Windows.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = "Message")]
@@ -31,7 +34,10 @@ namespace P42.Uno.Controls
             if (dependencyObject is Toast t)
                 t.OnTitleChanged(args);
         }
-
+        /// <summary>
+        /// the title's string or UIElement
+        /// </summary>
+        /// <param name="args"></param>
         protected virtual void OnTitleChanged(DependencyPropertyChangedEventArgs args)
         {
             _titleBlock.Content = args.NewValue;
@@ -69,7 +75,10 @@ namespace P42.Uno.Controls
             if (dependencyObject is Toast t)
                 t.OnMessageChanged(args);
         }
-
+        /// <summary>
+        /// The message's string or UIElement
+        /// </summary>
+        /// <param name="args"></param>
         protected virtual void OnMessageChanged(DependencyPropertyChangedEventArgs args)
         {
             _messageBlock.Content = args.NewValue;
@@ -107,7 +116,9 @@ namespace P42.Uno.Controls
             if (d is Toast toast)
                 toast._iconPresenter.Content = args.NewValue;
         }
-
+        /// <summary>
+        /// The icon
+        /// </summary>
         public IconElement IconElement
         {
             get => (IconElement)GetValue(IconElementProperty);
@@ -145,7 +156,9 @@ namespace P42.Uno.Controls
                 }
             }
         }
-
+        /// <summary>
+        /// Can we scroll if the message exceeds the available space?
+        /// </summary>
         public bool IsMessageScrollable
         {
             get => (bool)GetValue(IsMessageScrollableProperty);
@@ -155,6 +168,12 @@ namespace P42.Uno.Controls
 
 
         #region Factory
+        /// <summary>
+        /// Create and present the Toast
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="popAfter"></param>
+        /// <returns></returns>
         public static async Task<Toast> CreateAsync(object message, TimeSpan popAfter = default)
         {
             var result = new Toast { Message = message, PopAfter = popAfter, };
@@ -176,6 +195,14 @@ namespace P42.Uno.Controls
             return result;
         }
 
+        /// <summary>
+        /// Create and present the Toast
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="titleContent"></param>
+        /// <param name="message"></param>
+        /// <param name="popAfter"></param>
+        /// <returns></returns>
         public static async Task<Toast> CreateAsync(UIElement target, object titleContent, object message, TimeSpan popAfter = default)
         {
             var result = new Toast { Target = target, TitleContent = titleContent, Message = message, PopAfter = popAfter, };
@@ -186,6 +213,9 @@ namespace P42.Uno.Controls
 
 
         #region Construction / Initialization
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public Toast()
         {
             Build();

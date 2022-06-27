@@ -19,7 +19,7 @@ using Windows.UI.Xaml.Shapes;
 namespace P42.Uno.Controls
 {
     /// <summary>
-    /// Simplified Popup for UWP / UNO PLATFORM
+    /// Base Popup for UWP / UNO PLATFORM
     /// </summary>
     [Windows.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]

@@ -12,6 +12,9 @@ using Windows.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
+    /// <summary>
+    /// Permission Popup
+    /// </summary>
     [Windows.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class PermissionPopup : Alert
@@ -26,6 +29,9 @@ namespace P42.Uno.Controls
             new PropertyMetadata("Cancel")
         );
 
+        /// <summary>
+        /// Content for Cancel button
+        /// </summary>
         public object CancelButtonContent
         {
             get => (object)GetValue(CancelButtonContentProperty);
@@ -48,6 +54,9 @@ namespace P42.Uno.Controls
                 p._cancelButton.Foreground = args.NewValue as Brush;
         }
 
+        /// <summary>
+        /// Foreground Brush for Cancel button
+        /// </summary>
         public Brush CancelButtonForeground
         {
             get => (Brush)GetValue(CancelButtonForegroundProperty);
@@ -69,7 +78,9 @@ namespace P42.Uno.Controls
             if (dependencyObject is PermissionPopup p)
                 p._cancelButton.Background = args.NewValue as Brush;
         }
-
+        /// <summary>
+        /// Background Brush for Cancel button
+        /// </summary>
         public Brush CancelButtonBackground
         {
             get => (Brush)GetValue(CancelButtonBackgroundProperty);
@@ -85,6 +96,9 @@ namespace P42.Uno.Controls
             typeof(PermissionPopup),
             new PropertyMetadata(default(PermissionState))
         );
+        /// <summary>
+        /// Resulting PermissionState after PermissionPopup has been popped
+        /// </summary>
         public PermissionState PermissionState
         {
             get => (PermissionState)GetValue(PermissionStateProperty);
@@ -97,6 +111,9 @@ namespace P42.Uno.Controls
 
 
         #region Construction / Initialization
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public PermissionPopup()
         {
             Build();
@@ -170,6 +187,11 @@ namespace P42.Uno.Controls
 
 
         #region Push / Pop
+        /// <summary>
+        /// Push the PermissionPopup
+        /// </summary>
+        /// <param name="animated"></param>
+        /// <returns></returns>
         public override async Task PushAsync(bool animated = true)
         {
             PermissionState = PermissionState.Pending;
@@ -177,7 +199,13 @@ namespace P42.Uno.Controls
             _cancelButton.Click += OnCancelButtonClicked;
         }
 
-
+        /// <summary>
+        /// Pop the PermissionPopup 
+        /// </summary>
+        /// <param name="cause"></param>
+        /// <param name="animated"></param>
+        /// <param name="trigger"></param>
+        /// <returns></returns>
         public override async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = true, [CallerMemberName] object trigger = null)
         {
             _cancelButton.Click -= OnCancelButtonClicked;

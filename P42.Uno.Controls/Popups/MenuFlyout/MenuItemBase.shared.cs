@@ -14,6 +14,9 @@ using Windows.UI;
 
 namespace P42.Uno.Controls
 {
+    /// <summary>
+    /// Item for Popup Menu
+    /// </summary>
     public partial class MenuItemBase : DependencyObject 
     {
         #region Properties 

@@ -7,6 +7,9 @@ using Windows.UI;
 
 namespace P42.Uno.Controls
 {
+    /// <summary>
+    /// Alert with "Do not notify me again" check box
+    /// </summary>
     public partial class CheckedToast : Alert
     {
         #region Properties
@@ -16,6 +19,9 @@ namespace P42.Uno.Controls
             typeof(CheckedToast),
             new PropertyMetadata(default(bool))
             );
+        /// <summary>
+        /// Is the "Do not alert me again" check box checked?
+        /// </summary>
         public bool IsChecked
         {
             get => (bool)GetValue(IsCheckedProperty);
@@ -28,6 +34,9 @@ namespace P42.Uno.Controls
             typeof(CheckedToast),
             new PropertyMetadata("Got it.  Do not alert me again.")
             );
+        /// <summary>
+        /// Alternative content for "Do not alert me again" check box
+        /// </summary>
         public object CheckContent
         {
             get => (object)GetValue(CheckContentProperty);
@@ -77,7 +86,9 @@ namespace P42.Uno.Controls
             return popup;
         }
 
-
+        /// <summary>
+        /// Construction
+        /// </summary>
         public CheckedToast() : base()
         {
             Build();

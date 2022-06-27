@@ -12,6 +12,9 @@ using Windows.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
+    /// <summary>
+    /// Alert popup: A Toast with an "OK" button
+    /// </summary>
     [Windows.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class Alert : Toast
@@ -26,6 +29,9 @@ namespace P42.Uno.Controls
             new PropertyMetadata("OK")
         );
 
+        /// <summary>
+        /// Text or UIElement for "OK" button content
+        /// </summary>
         public object OkButtonContent
         {
             get => (object)GetValue(OkButtonContentProperty);
@@ -41,6 +47,9 @@ namespace P42.Uno.Controls
             typeof(Alert),
             new PropertyMetadata(((Color)Application.Current.Resources["SystemColorHighlightTextColor"]).ToBrush())
         );
+        /// <summary>
+        /// Foreground for OK Button
+        /// </summary>
         public Brush OkButtonForeground
         {
             get => (Brush)GetValue(OkButtonForegroundProperty);
@@ -56,6 +65,9 @@ namespace P42.Uno.Controls
             typeof(Alert),
             new PropertyMetadata(((Color)Application.Current.Resources["SystemColorHighlightColor"]).ToBrush())
         );
+        /// <summary>
+        /// Background for OK button
+        /// </summary>
         public Brush OkButtonBackground
         {
             get => (Brush)GetValue(OkButtonBackgroundProperty);
@@ -108,7 +120,9 @@ namespace P42.Uno.Controls
             return popup;
         }
 
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public Alert() : base()
         {
             Build();
@@ -126,12 +140,24 @@ namespace P42.Uno.Controls
 
 
         #region Push / Pop
+        /// <summary>
+        /// Push Alert
+        /// </summary>
+        /// <param name="animated"></param>
+        /// <returns></returns>
         public override async Task PushAsync(bool animated = true)
         {
             await base.PushAsync(animated);
             _okButton.Click += OnOkButtonClicked;
         }
 
+        /// <summary>
+        /// Pop alert
+        /// </summary>
+        /// <param name="cause"></param>
+        /// <param name="animated"></param>
+        /// <param name="trigger"></param>
+        /// <returns></returns>
         public override async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = true, [CallerMemberName] object trigger = null)
         {
             _okButton.Click -= OnOkButtonClicked;

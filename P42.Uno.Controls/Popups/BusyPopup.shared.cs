@@ -12,6 +12,9 @@ using Windows.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
+    /// <summary>
+    /// BusyPopup: popup with spinner, title and message
+    /// </summary>
     [Windows.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class BusyPopup : Toast
@@ -35,6 +38,9 @@ namespace P42.Uno.Controls
                     ring.Foreground = (Brush)e.NewValue;
             }
         }
+        /// <summary>
+        /// Brush for Spinner
+        /// </summary>
         internal Brush SpinnerBrush
         {
             get => (Brush)GetValue(SpinnerBrushProperty);
@@ -46,6 +52,12 @@ namespace P42.Uno.Controls
 
 
         #region Factory
+        /// <summary>
+        /// Create and present with message
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="popAfter"></param>
+        /// <returns></returns>
         public static new async Task<BusyPopup> CreateAsync(object message, TimeSpan popAfter = default)
         {
             var result = new BusyPopup {Message = message, PopAfter = popAfter, };
@@ -67,6 +79,14 @@ namespace P42.Uno.Controls
             return result;
         }
 
+        /// <summary>
+        /// Create and present, pointing towards target, with title and message
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="title"></param>
+        /// <param name="message"></param>
+        /// <param name="popAfter"></param>
+        /// <returns></returns>
         public static new async Task<BusyPopup> CreateAsync(UIElement target, object title,  object message, TimeSpan popAfter = default)
         {
             var result = new BusyPopup { Target = target, TitleContent = title, Message = message, PopAfter = popAfter, };
@@ -77,6 +97,9 @@ namespace P42.Uno.Controls
 
 
         #region Construction / Initialization
+        /// <summary>
+        /// Construction
+        /// </summary>
         public BusyPopup()
         {
             Build();

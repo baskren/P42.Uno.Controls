@@ -21,6 +21,9 @@ using Element = P42.Uno.Controls.SegmentedControl;
 
 namespace P42.Uno.Controls
 {
+    /// <summary>
+    /// C# markup extensions for SegmentedControl
+    /// </summary>
     public static class SegmentedControlExtensions
     {
         public static Element Padding(this Element element, Thickness padding)
@@ -51,7 +54,7 @@ namespace P42.Uno.Controls
         { element.SelectedIndexes = indexes.ToList(); return element; }
 
         public static Element SelectedItems(this Element element, params string[] items)
-        { element.SelectedItems = items.ToList(); return element; }
+        { element.SelectedLabels = items.ToList(); return element; }
 
         public static Element SelectionMode(this Element element, SelectionMode mode)
         { element.SelectionMode = mode; return element; }

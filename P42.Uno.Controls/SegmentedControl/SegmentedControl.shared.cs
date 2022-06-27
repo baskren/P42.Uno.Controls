@@ -32,6 +32,9 @@ namespace P42.Uno.Controls
             typeof(SegmentedControl),
             new PropertyMetadata(new Thickness(4))
         );
+        /// <summary>
+        /// How much padding to apply between segment and it's label?
+        /// </summary>
         public new Thickness Padding
         {
             get => (Thickness)GetValue(PaddingProperty);
@@ -68,7 +71,9 @@ namespace P42.Uno.Controls
                 control.UpdateChildren();
             }
         }
-
+        /// <summary>
+        /// Segment labels
+        /// </summary>
         public IList<string> Labels
         {
             get => (IList<string>)GetValue(LabelsProperty);
@@ -89,7 +94,9 @@ namespace P42.Uno.Controls
             if (dependencyObject is SegmentedControl sc)
                 sc.UpdateBorder();
         }
-
+        /// <summary>
+        /// Width of border
+        /// </summary>
         public double BorderWidth
         {
             get => (double)GetValue(BorderWidthProperty);
@@ -112,7 +119,9 @@ namespace P42.Uno.Controls
                 control.SelectionTracker.SelectIndex((int)args.NewValue);
             }
         }
-
+        /// <summary>
+        /// Index of selected segment
+        /// </summary>
         public int SelectedIndex
         {
             get => Math.Min((int)GetValue(SelectedIndexProperty), Labels.Count-1);
@@ -135,7 +144,9 @@ namespace P42.Uno.Controls
                 control.SelectionTracker.SelectItem((string)args.NewValue);
             }
         }
-
+        /// <summary>
+        /// Label text of selected segment
+        /// </summary>
         public string SelectedLabel
         {
             get => (string)GetValue(SelectedLabelProperty);
@@ -156,7 +167,9 @@ namespace P42.Uno.Controls
             if (d is SegmentedControl control)
                 control.SelectionTracker.AllowUnselectAll = (bool)args.NewValue;
         }
-
+        /// <summary>
+        /// Can we unselect all or not?
+        /// </summary>
         public bool AllowUnselectAll
         {
             get => (bool)GetValue(AllowUnselectAllProperty);
@@ -165,6 +178,9 @@ namespace P42.Uno.Controls
         #endregion
 
         #region SelectedIndexes
+        /// <summary>
+        /// List of selected indexes
+        /// </summary>
         public List<int> SelectedIndexes
         {
             get => SelectionTracker.SelectedIndexes.Where(i => i < Labels.Count).ToList();
@@ -173,7 +189,10 @@ namespace P42.Uno.Controls
         #endregion
 
         #region SelectedItems
-        public List<string> SelectedItems
+        /// <summary>
+        /// List of selected labels
+        /// </summary>
+        public List<string> SelectedLabels
         {
             get => SelectionTracker.SelectedItems;
             set => SelectionTracker.SelectedItems = value;
@@ -195,7 +214,9 @@ namespace P42.Uno.Controls
                 control.SelectionTracker.SelectionMode = (SelectionMode)args.NewValue;
             }
         }
-
+        /// <summary>
+        /// Selection Mode?
+        /// </summary>
         public SelectionMode SelectionMode
         {
             get => (SelectionMode)GetValue(SelectionModeProperty);
@@ -205,6 +226,9 @@ namespace P42.Uno.Controls
 
         #region IsOverflowed
         bool _isOverflowed;
+        /// <summary>
+        /// Does the segment's label exceed the available space?
+        /// </summary>
         public bool IsOverflowed
         {
             get => _isOverflowed;
@@ -224,7 +248,13 @@ namespace P42.Uno.Controls
 
 
         #region Events
+        /// <summary>
+        /// Has there been a change to if there is any labels greater than the available space?
+        /// </summary>
         public event EventHandler<bool> IsOverflowedChanged;
+        /// <summary>
+        /// Has there been a selection change?
+        /// </summary>
         public event EventHandler<(int SelectedIndex, string SelectedLabel)> SelectionChanged;
         #endregion
 
@@ -239,6 +269,9 @@ namespace P42.Uno.Controls
 
 
         #region Constructor
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public SegmentedControl()
         {
             _testTextBlock

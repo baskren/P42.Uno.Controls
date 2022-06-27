@@ -15,14 +15,15 @@ using Windows.UI.Xaml.Markup;
 
 namespace P42.Uno.Controls
 {
+    /// <summary>
+    /// Border used by Popups
+    /// </summary>
     [Windows.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = nameof(XamlContent))]
-    public partial class BubbleBorder : UserControl
+    partial class BubbleBorder : UserControl
     {
         #region Properties
-
-
 
         #region Override Properties
 

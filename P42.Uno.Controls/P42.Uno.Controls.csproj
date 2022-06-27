@@ -1,17 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="MSbuild.Sdk.Extras/3.0.23">
-
+﻿<Project Sdk="MSbuild.Sdk.Extras/3.0.23">
   <PropertyGroup>
 
-    <GenerateLibraryLayout>true</GenerateLibraryLayout>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>P42.Uno.Controls</AssemblyName>
-    <RootNamespace>P42.Uno.Controls</RootNamespace>
-    <NoWarn>Uno0001;1701;1702;VSX1000</NoWarn>
 
-    <TargetFrameworks>netstandard2.0;Xamarin.iOS10;Xamarin.Mac20;MonoAndroid11.0;</TargetFrameworks>
-	  <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">uap10.0.18362;netstandard2.0;Xamarin.iOS10;Xamarin.Mac20;MonoAndroid11.0;</TargetFrameworks>
-    <TargetFrameworks Condition=" $(SolutionName.Contains('.vsmac')) ">netstandard2.0;Xamarin.iOS10;Xamarin.Mac20;MonoAndroid11.0;</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0;Xamarin.iOS10;Xamarin.Mac20;MonoAndroid11.0;net6.0-android;net6.0-ios;net6.0-maccatalyst;net6.0-macos;</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">uap10.0.18362;net6.0;netstandard2.0;Xamarin.iOS10;Xamarin.Mac20;MonoAndroid11.0;net6.0-android;net6.0-ios;net6.0-maccatalyst;net6.0-macos;</TargetFrameworks>
     <TargetFrameworks Condition=" $(SolutionName.Contains('.Droid')) ">MonoAndroid11.0</TargetFrameworks>
     <TargetFrameworks Condition=" $(SolutionName.Contains('.iOS')) ">Xamarin.iOS10</TargetFrameworks>
     <TargetFrameworks Condition=" $(SolutionName.Contains('.macOS')) ">Xamarin.Mac20</TargetFrameworks>
@@ -19,61 +12,15 @@
     <TargetFrameworks Condition=" $(SolutionName.Contains('.Tizen')) ">Tizen50</TargetFrameworks>
     <TargetFrameworks Condition=" $(SolutionName.Contains('.WPF')) ">netstandard2.0</TargetFrameworks>
     <TargetFrameworks Condition=" $(SolutionName.Contains('.UWP')) ">uap10.0.18362</TargetFrameworks>
-    <TargetFrameworks Condition=" $(SolutionName.Contains('.Wasm')) ">netstandard2.0</TargetFrameworks>
-
-    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-  	<DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
-    <DebugType>portable</DebugType>
-    <LangVersion>8.0</LangVersion>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Authors>Ben Askren</Authors>
-    <Company>42nd Parallel, LLC</Company>
-    <Description>Widgets for UNO Platform Applications</Description>
-    <Copyright>2022, 4nd Parallel</Copyright>
-    <PackageProjectUrl>https://github.com/baskren/P42.Uno.Controls</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/baskren/P42.Uno.Controls</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>Inital Public Release</PackageReleaseNotes>
-    <Version>0.1.0-dev.8</Version>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
 
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-
-  <!-- BLANKET PAGE AND COMPILE -->
   <ItemGroup>
-    <Compile Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
-    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-    <Compile Update="**\*.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <UpToDateCheckInput Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-  </ItemGroup>
-  
-  <!-- PROJECT REFERENCES -->
-  <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="4.3.6" />
-    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.88.0" />
-    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\P42.Utils\P42.Utils\P42.Utils.csproj" />
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
-    <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
   </ItemGroup>
-	
 
   <!-- ANDROID -->
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+  <ItemGroup Condition=" $(TargetFramework.ToLower().Contains('android')) ">
     <Compile Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)" />
     <Compile Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)" />
@@ -82,7 +29,7 @@
   </ItemGroup>
 
   <!-- IOS -->
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+  <ItemGroup Condition=" $(TargetFramework.ToLower().Contains('ios')) OR $(TargetFramework.ToLower().Contains('maccatalyst'))">
     <Compile Include="**\*.ios.cs" Exclude="$(DefaultItemExcludes)" />
     <Compile Include="**\*.ios.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.ios.cs" Exclude="$(DefaultItemExcludes)" />
@@ -90,11 +37,24 @@
   </ItemGroup>
 
   <!-- MACOS -->
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.Mac20')) ">
+  <ItemGroup Condition=" $(TargetFramework.ToLower().Contains('macos')) OR $(TargetFramework.ToLower().Contains('xamarin.mac'))">
     <Compile Include="**\*.macos.cs" Exclude="$(DefaultItemExcludes)" />
     <Compile Include="**\*.macos.*.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.macos.cs" Exclude="$(DefaultItemExcludes)" />
     <UpToDateCheckInput Include="**\*.macos.*.cs" Exclude="$(DefaultItemExcludes)" />
+  </ItemGroup>
+
+  <!-- MacCatylst -->
+  <ItemGroup Condition=" $(TargetFramework.ToLower().Contains('maccatalyst')) ">
+    <Compile Include="**\*.maccatylst.cs" />
+    <Compile Include="**\*.maccatylst.*.cs" />
+  </ItemGroup>  
+
+  <!-- TIZEN -->
+  <ItemGroup Condition=" $(TargetFramework.ToLower().Contains('tizen')) ">
+    <PackageReference Include="Uno.UI.Runtime.Skia.Tizen" Version="4.3.8" />
+    <Compile Include="**\*.tizen.cs" />
+    <Compile Include="**\*.tizen.*.cs" />
   </ItemGroup>
 
   <!-- UWP -->
@@ -106,24 +66,11 @@
     <UpToDateCheckInput Include="**\*.uwp.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
-  <!-- WASM -->
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('net'))">
-    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="4.3.6" />
-    <PackageReference Include="Uno.UI.Lottie" Version="4.3.6" />
-    <PackageReference Include="Uno.UI.Runtime.WebAssembly" Version="4.3.6" />
-    <Compile Include="**\*.wasm.cs" Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.wasm.*.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.wasm.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.wasm.*.cs" Exclude="$(DefaultItemExcludes)" />
+  <!-- NetStandard bait -->
+  <ItemGroup Condition="  $(TargetFramework.ToLower().StartsWith('netstandard')) OR $(TargetFramework.ToLower().Equals('net6.0')) ">
+    <Compile Include="**\*.netstandard.cs" />
+    <Compile Include="**\*.netstandard.*.cs" />
   </ItemGroup>
-
-	<ItemGroup>
-		<None Include="..\LICENSE">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
-
 
 
 </Project>

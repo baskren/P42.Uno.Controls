@@ -1,0 +1,33 @@
+﻿<Project Sdk="MSbuild.Sdk.Extras/3.0.23">
+  <PropertyGroup>
+
+    <AssemblyName>P42.Uno.Controls.Wasm</AssemblyName>
+
+    <TargetFrameworks>netstandard2.0;net6.0;</TargetFrameworks>
+
+
+
+
+
+
+
+    <DefineConstants>__WASM__;$(DefineConstants);</DefineConstants>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.Wasm.csproj" />
+  </ItemGroup>
+	
+
+  <!-- WASM -->
+  <ItemGroup>
+    <PackageReference Include="Uno.UI.Lottie" Version="4.3.6" />
+    <PackageReference Include="Uno.UI.WebAssembly" Version="4.3.8" />
+    <Compile Include="**\*.wasm.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.wasm.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.wasm.cs" Exclude="$(DefaultItemExcludes)" />
+    <UpToDateCheckInput Include="**\*.wasm.*.cs" Exclude="$(DefaultItemExcludes)" />
+  </ItemGroup>
+
+</Project>

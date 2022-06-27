@@ -300,7 +300,6 @@ namespace Microsoft.Toolkit.Diagnostics
             throw new TimeoutException(message, innerException);
         }
 
-        /// <summary>
         public static void ThrowUnauthorizedAccessException(string message)
         {
             throw new UnauthorizedAccessException(message);
