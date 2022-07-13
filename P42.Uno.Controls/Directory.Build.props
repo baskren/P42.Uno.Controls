@@ -3,7 +3,7 @@
   <PropertyGroup>
 
     <RootNamespace>P42.Uno.Controls</RootNamespace>
-    <Version>0.1.0-dev.10</Version>
+    <Version>0.1.1</Version>
     <NoWarn>Uno0001;1701;1702;VSX1000;CA1416</NoWarn>
 
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
