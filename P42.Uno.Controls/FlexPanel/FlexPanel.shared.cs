@@ -18,9 +18,9 @@ using System.Linq;
 using Microsoft.Toolkit.Diagnostics;
 using P42.Uno.Controls.InternalFlexPanelExtensions;
 using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 
 namespace P42.Uno.Controls
 {
@@ -32,7 +32,7 @@ namespace P42.Uno.Controls
     /// if there are too many to fit in a single row or column, and also has many options for orientation, alignment,
     /// and adapting to various screen sizes.
     /// </summary>
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class FlexPanel : Panel
     {

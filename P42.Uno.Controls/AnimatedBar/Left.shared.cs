@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 
 namespace P42.Uno.Controls.AnimateBar
 {
@@ -21,9 +21,9 @@ namespace P42.Uno.Controls.AnimateBar
             //StaticRect.Width =
             DynamicRect.Width = 1;
             //StaticRect.VerticalAlignment = 
-            DynamicRect.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Stretch;
+            DynamicRect.VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Stretch;
             //StaticRect.HorizontalAlignment = 
-            DynamicRect.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Left;
+            DynamicRect.HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Left;
         }
 
         protected override async Task Loop(int dir)
@@ -38,7 +38,7 @@ namespace P42.Uno.Controls.AnimateBar
                         DynamicRect.RenderTransform = new TranslateTransform { X = dir * (ActualWidth - 1) * x };
                     }
 
-                }); //, new Windows.UI.Xaml.Media.Animation.ExponentialEase());
+                }); //, new Microsoft.UI.Xaml.Media.Animation.ExponentialEase());
                 await animator.RunAsync();
                 await Task.Delay(LullTime);
             } while (!_disposed);

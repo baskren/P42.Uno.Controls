@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 //using P42.Uno.Markup;
 using System.Threading.Tasks;
 using P42.Utils.Uno;
 using P42.Utils;
 using Windows.UI;
+using Microsoft.UI;
 using System.Linq;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
 using System.Threading;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 
 namespace P42.Uno.Controls.AnimateBar
 {
@@ -50,12 +51,12 @@ namespace P42.Uno.Controls.AnimateBar
 
 
         #region Fields
-        protected Windows.UI.Xaml.Shapes.Rectangle DynamicRect = new Windows.UI.Xaml.Shapes.Rectangle
+        protected Microsoft.UI.Xaml.Shapes.Rectangle DynamicRect = new Microsoft.UI.Xaml.Shapes.Rectangle
         {
             StrokeThickness = 0,
         };
         /*
-        protected Windows.UI.Xaml.Shapes.Rectangle StaticRect = new Windows.UI.Xaml.Shapes.Rectangle
+        protected Microsoft.UI.Xaml.Shapes.Rectangle StaticRect = new Microsoft.UI.Xaml.Shapes.Rectangle
         {
             StrokeThickness = 0,
         };

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
@@ -31,14 +31,17 @@ namespace P42.Uno.Controls
 
 
 
-        private void OnBarTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private void OnBarTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             if (Parent is Grid _grid && _grid.Parent is LoopingFlipView flipView)
             {
-                if (sender == LeftBar)
-                    flipView.SelectedIndex--;
-                else if (sender == RightBar)
-                    flipView.SelectedIndex++;
+                if (sender is P42.Uno.Controls.AnimateBar.Base bar)
+                {
+                    if (bar == LeftBar)
+                        flipView.SelectedIndex--;
+                    else if (bar == RightBar)
+                        flipView.SelectedIndex++;
+                }
             }
         }
     }

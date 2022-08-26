@@ -6,13 +6,13 @@ using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 using System.Threading.Tasks;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -40,7 +40,7 @@ namespace P42.Uno.Controls.Test
             _listView.IsItemClickEnabled = true;
         }
 
-        void OnListView_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
+        void OnListView_ItemClick(object sender, Microsoft.UI.Xaml.Controls.ItemClickEventArgs e)
         {
             ItemClickProcess(e.ClickedItem);
         }

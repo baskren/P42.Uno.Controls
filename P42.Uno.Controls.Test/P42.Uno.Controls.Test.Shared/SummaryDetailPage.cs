@@ -6,14 +6,14 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Windows.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Shapes;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -79,7 +79,7 @@ namespace P42.Uno.Controls.Test
             System.Diagnostics.Debug.WriteLine("SummaryDetailPage._listView_ChoosingItemContainer itemContainer:" + itemContainer + " index:" + index);
         }
 
-        async void OnItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
+        async void OnItemClick(object sender, Microsoft.UI.Xaml.Controls.ItemClickEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(GetType() + ".OnItemClick: sender:" + sender + "  e.ClickedItem:" + e.ClickedItem + " e.OriginalSource:" + e.OriginalSource);
 

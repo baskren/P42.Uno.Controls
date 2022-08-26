@@ -7,13 +7,13 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Markup;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Markup;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Shapes;
 
 
 namespace P42.Uno.Controls
@@ -21,10 +21,13 @@ namespace P42.Uno.Controls
     /// <summary>
     /// Base Popup for UWP / UNO PLATFORM
     /// </summary>
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = nameof(XamlContent))]
     public partial class TargetedPopup : UserControl, ITargetedPopup
+#if NET6_0_WINDOWS10_0_19041_0
+        , IDisposable
+#endif
     {
         static int _pushingCount = 0;
         public static bool IsPushing
@@ -559,12 +562,44 @@ namespace P42.Uno.Controls
         }
 #endif
 
+#if NET6_0_WINDOWS10_0_19041_0
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~TargetedPopup()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            System.GC.SuppressFinalize(this);
+        }
+
+#endif
+
         #endregion
 
 
         #region Event Handlers
         /*
-        async void OnDismissPointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        async void OnDismissPointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             if (IsLightDismissEnabled)
             {
@@ -577,17 +612,17 @@ namespace P42.Uno.Controls
         */
 
         Point _enteredPoint = new Point(-1,-1);
-        private void OnPointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void OnPointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            _enteredPoint = e.GetCurrentPoint(Windows.UI.Xaml.Window.Current.Content).Position;
+            _enteredPoint = e.GetCurrentPoint(P42.Utils.Uno.Platform.Window.Content).Position;
             //System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPointerEntered e: [" + _enteredPoint.X + ", " + _enteredPoint.Y + "]");
         }
 
-        async void OnPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        async void OnPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             if (DismissOnPointerMove)
             {
-                var position = e.GetCurrentPoint(Windows.UI.Xaml.Window.Current.Content).Position;
+                var position = e.GetCurrentPoint(P42.Utils.Uno.Platform.Window.Content).Position;
                 System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPointerMoved e: [" + position.X + ", " + position.Y + "]");
 
                 if (Target != null)
@@ -598,7 +633,7 @@ namespace P42.Uno.Controls
                     var targetBounts = Target.GetBounds();
                     var borderBounds = _border.GetBounds();
 
-                    if (Windows.UI.Xaml.RectHelper.Intersect(targetBounts, zone) is Rect intersect0
+                    if (Microsoft.UI.Xaml.RectHelper.Intersect(targetBounts, zone) is Rect intersect0
                         && intersect0.Width > 0
                         && intersect0.Height > 0)
                     {
@@ -606,7 +641,7 @@ namespace P42.Uno.Controls
                         System.Diagnostics.Debug.WriteLine("\t\t in Target ["+ targetBounts + "]");
                         return;
                     }
-                    else if (Windows.UI.Xaml.RectHelper.Intersect(borderBounds, zone) is Rect intersect1
+                    else if (Microsoft.UI.Xaml.RectHelper.Intersect(borderBounds, zone) is Rect intersect1
                         && intersect1.Width > 0
                         && intersect1.Height > 0)
                     {
@@ -614,7 +649,7 @@ namespace P42.Uno.Controls
                         System.Diagnostics.Debug.WriteLine("\t\t in Border");
                         return;
                     }
-                    else if (Windows.UI.Xaml.RectHelper.Intersect(borderBounds, targetBounts) is Rect intersect2
+                    else if (Microsoft.UI.Xaml.RectHelper.Intersect(borderBounds, targetBounts) is Rect intersect2
                         && intersect2.Width <= 0
                         && intersect2.Height <= 0)
                     {
@@ -658,7 +693,7 @@ namespace P42.Uno.Controls
                         bridge.Width += 10;
                         bridge.Height += 10;
 
-                        if (Windows.UI.Xaml.RectHelper.Intersect(bridge, zone) is Rect intersect3
+                        if (Microsoft.UI.Xaml.RectHelper.Intersect(bridge, zone) is Rect intersect3
                             && intersect3.Width > 0
                             && intersect3.Height > 0)
                         {
@@ -674,7 +709,7 @@ namespace P42.Uno.Controls
                 else
                 {
                     if (_enteredPoint.X == -1 && _enteredPoint.Y == -1)
-                        _enteredPoint = e.GetCurrentPoint(Windows.UI.Xaml.Window.Current.Content).Position;
+                        _enteredPoint = e.GetCurrentPoint(P42.Utils.Uno.Platform.Window.Content).Position;
 
                     var dx = position.X - _enteredPoint.X;
                     var dy = position.Y - _enteredPoint.Y;
@@ -744,6 +779,7 @@ namespace P42.Uno.Controls
 
             try
             {
+                _popup.XamlRoot = P42.Utils.Uno.Platform.Window.Content.XamlRoot;
                 _popup.IsOpen = true;
                 await Task.Delay(5);
                 UpdateMarginAndAlignment();
@@ -758,7 +794,7 @@ namespace P42.Uno.Controls
 
                 _border.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
 
-                if (PopAfter != null && PopAfter > default(TimeSpan))
+                if (PopAfter > default(TimeSpan))
                 {
                     P42.Utils.Timer.StartTimer(PopAfter, async () =>
                     {
@@ -1384,6 +1420,8 @@ namespace P42.Uno.Controls
         Size _lastSizeAvailable = Size.Empty;
         Size _lastResultSize = Size.Empty;
         bool _lastWasFixedWidth;
+        private bool disposedValue;
+
         Size MeasureBorder(Size available, Size failSize = default)
         {
             //System.Diagnostics.Debug.WriteLine("\n");
@@ -1461,6 +1499,7 @@ namespace P42.Uno.Controls
             _lastWasFixedWidth = false;
             return failSize;
         }
+
 
         #endregion
 

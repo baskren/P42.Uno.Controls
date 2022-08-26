@@ -4,15 +4,16 @@ using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Markup;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Markup;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Shapes;
 
 namespace P42.Uno.Controls
 {
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = "Content")]
     public partial class ContentAndDetailPresenter : Grid
@@ -331,7 +332,7 @@ namespace P42.Uno.Controls
         }
 
         bool _disposed;
-#if NETFX_CORE
+#if NET6_0_WINDOWS10_0_19041_0
         public void Dispose()
         {
             Dispose(true);
@@ -618,7 +619,7 @@ namespace P42.Uno.Controls
                 e.CancelDismiss = true;
         }
 
-        async void OnDismissPointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        async void OnDismissPointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             if (IsLightDismissEnabled)
             {

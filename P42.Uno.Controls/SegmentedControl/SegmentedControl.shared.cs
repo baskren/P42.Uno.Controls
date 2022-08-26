@@ -12,15 +12,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Shapes;
 
 namespace P42.Uno.Controls
 {
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
     public partial class SegmentedControl : Grid
     {
         #region Properties
@@ -289,7 +289,8 @@ namespace P42.Uno.Controls
             SelectionTracker.CollectionChanged += OnSelectionTracker_CollectionChanged;
             SelectionTracker.SelectionChanged += OnSelectionTracker_SelectionChanged;
 
-#if WINDOWS_UWP
+#if NET6_0_WINDOWS10_0_19041_0
+
             RegisterPropertyChangedCallback(Grid.BorderThicknessProperty, OnBorderThicknessChanged);
 #endif
         }
@@ -570,21 +571,12 @@ namespace P42.Uno.Controls
             UpdateBorder();
         }
 
-#if WINDOWS_UWP
         private void OnBorderThicknessChanged(DependencyObject sender, DependencyProperty dp)
         {
             if (IsLoaded && ActualWidth > 50)
                 CalculateOverflow(ActualWidth);
         }
 
-#else
-        protected override void OnBorderThicknessChanged(Thickness oldValue, Thickness newValue)
-        {
-            base.OnBorderThicknessChanged(oldValue, newValue);
-            if (IsLoaded && ActualWidth > 50)
-                CalculateOverflow(ActualWidth);
-        }
-#endif
 
         #endregion
     }

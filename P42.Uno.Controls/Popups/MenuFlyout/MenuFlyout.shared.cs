@@ -7,9 +7,11 @@ using System.Collections.Specialized;
 using System.Linq;
 using Windows.UI;
 using Windows.UI.Text;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Markup;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Markup;
+
+
 
 namespace P42.Uno.Controls
 {
@@ -24,6 +26,7 @@ namespace P42.Uno.Controls
             typeof(MenuFlyout),
             new PropertyMetadata(default(IList<MenuItemBase>), OnItemsChanged)
         );
+
 
         public IList<MenuItemBase> Items
         {

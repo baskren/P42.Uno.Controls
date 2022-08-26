@@ -3,9 +3,10 @@ using P42.Utils.Uno;
 using System;
 using Windows.UI;
 using Windows.UI.Text;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Shapes;
+using Microsoft.UI.Text;
 
 namespace P42.Uno.Controls
 {
@@ -45,7 +46,7 @@ namespace P42.Uno.Controls
                         .RowCol(0,1)
                         .CenterVertical()
                         .VerticalContentAlignment(VerticalAlignment.Center)
-                        .TextWrapping(Windows.UI.Xaml.TextWrapping.WrapWholeWords)
+                        .TextWrapping(Microsoft.UI.Xaml.TextWrapping.WrapWholeWords)
                         .BindFont(this, except: nameof(FontWeight))
                         .FontWeight(FontWeights.Bold)
                         .BindNullCollapse()
@@ -61,13 +62,13 @@ namespace P42.Uno.Controls
                             .RowCol(1,1)
                             .CenterVertical()
                             .VerticalContentAlignment(VerticalAlignment.Center)
-                            .TextWrapping(Windows.UI.Xaml.TextWrapping.WrapWholeWords)
+                            .TextWrapping(Microsoft.UI.Xaml.TextWrapping.WrapWholeWords)
                             .BindFont(this)
                             .BindNullCollapse()
                         )
                         //.Bind(ScrollViewer.MaxHeightProperty, _contentRowDefinition, nameof(ActualHeight))
                 );
-            Padding = new Windows.UI.Xaml.Thickness(5);
+            Padding = new Microsoft.UI.Xaml.Thickness(5);
 
             this.RegisterPropertyChangedCallback(PaddingProperty, OnPaddingPropertyChanged);
 

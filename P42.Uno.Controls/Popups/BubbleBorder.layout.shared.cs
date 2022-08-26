@@ -1,13 +1,12 @@
 using System;
 using System.IO;
 using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using SkiaSharp;
 using Windows.UI;
 using P42.Utils.Uno;
-using Uno.UI.Toolkit;
 using P42.Uno.Markup;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -29,9 +28,9 @@ namespace P42.Uno.Controls
                 .FontSize(16)
                 .Foreground(SystemColors.BaseHigh);
 
-            _path = new Windows.UI.Xaml.Shapes.Path();
-            _path.Bind(Windows.UI.Xaml.Shapes.Path.FillProperty, this, nameof(Background));
-            _path.Bind(Windows.UI.Xaml.Shapes.Path.StrokeProperty, this, nameof(BorderBrush));
+            _path = new Microsoft.UI.Xaml.Shapes.Path();
+            _path.Bind(Microsoft.UI.Xaml.Shapes.Path.FillProperty, this, nameof(Background));
+            _path.Bind(Microsoft.UI.Xaml.Shapes.Path.StrokeProperty, this, nameof(BorderBrush));
 
             _contentPresenter = new ContentPresenter
             {
@@ -55,7 +54,7 @@ namespace P42.Uno.Controls
                     //    Elevation = 10
                     //}
                     //    .Assign(out _dropShadow),
-                    //new Windows.UI.Xaml.Shapes.Rectangle { Fill=Colors.Pink.ToBrush()}.Stretch(),
+                    //new Microsoft.UI.Xaml.Shapes.Rectangle { Fill=Colors.Pink.ToBrush()}.Stretch(),
                     _path,
                     _contentPresenter
                 )

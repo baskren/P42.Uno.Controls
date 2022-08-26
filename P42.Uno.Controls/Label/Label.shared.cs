@@ -2,22 +2,22 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml;
 using System;
 using Uno.UI;
 using System.Collections;
-using Windows.UI.Xaml.Markup;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Markup;
+using Microsoft.UI.Xaml.Media;
 using Windows.UI.Text;
 using Windows.Foundation;
 using Windows.UI.Input;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Automation.Peers;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Automation.Peers;
 using Uno;
 using P42.Uno.Markup;
 using P42.Utils.Uno;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 namespace P42.Uno.Controls
 {

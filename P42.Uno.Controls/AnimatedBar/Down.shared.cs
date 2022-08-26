@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
 
 namespace P42.Uno.Controls.AnimateBar
 {
@@ -12,17 +12,17 @@ namespace P42.Uno.Controls.AnimateBar
         public Down()
         {
             Width = 30;
-            Margin = new Windows.UI.Xaml.Thickness(5, 0, 5, 0);
-            VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Top;
+            Margin = new Microsoft.UI.Xaml.Thickness(5, 0, 5, 0);
+            VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Top;
 
             dir = 1;
             Height = 11;
             //StaticRect.Height = 
             DynamicRect.Height = 1;
             // StaticRect.VerticalAlignment = 
-            DynamicRect.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Top;
+            DynamicRect.VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Top;
             //StaticRect.HorizontalAlignment = 
-            DynamicRect.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch;
+            DynamicRect.HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Stretch;
         }
 
         protected override async Task Loop(int dir)
@@ -37,7 +37,7 @@ namespace P42.Uno.Controls.AnimateBar
                         DynamicRect.RenderTransform = new TranslateTransform { Y = dir * (ActualHeight - 1) * x };
                     }
 
-                }); //, new Windows.UI.Xaml.Media.Animation.ExponentialEase());
+                }); //, new Microsoft.UI.Xaml.Media.Animation.ExponentialEase());
                 await animator.RunAsync();
                 await Task.Delay(LullTime);
             } while (!_disposed);

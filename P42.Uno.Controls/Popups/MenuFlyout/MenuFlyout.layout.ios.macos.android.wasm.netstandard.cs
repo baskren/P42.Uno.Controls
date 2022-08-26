@@ -1,4 +1,4 @@
-#if !WINDOWS_UWP
+#if !NET6_0_WINDOWS10_0_19041_0
 using P42.Uno.Markup;
 using P42.Utils.Uno;
 using System;
@@ -7,19 +7,19 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Windows.UI;
 using Windows.UI.Text;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Markup;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Markup;
 
 namespace P42.Uno.Controls
 {
     public partial class MenuFlyout : IDisposable
     {
-        Windows.UI.Xaml.Controls.MenuFlyout _flyout;
+        Microsoft.UI.Xaml.Controls.MenuFlyout _flyout;
 
         void Build()
         {
-            _flyout = new Windows.UI.Xaml.Controls.MenuFlyout();
+            _flyout = new Microsoft.UI.Xaml.Controls.MenuFlyout();
         }
 
         private static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -74,10 +74,10 @@ namespace P42.Uno.Controls
     /*
     internal class ItemsCollectionChangeHandler
     {
-        public IList<Windows.UI.Xaml.Controls.MenuFlyoutItemBase> WinItems;
+        public IList<Microsoft.UI.Xaml.Controls.MenuFlyoutItemBase> WinItems;
         public ObservableCollection<MenuItemBase> Items;
 
-        public ItemsCollectionChangeHandler(ObservableCollection<MenuItemBase> items, IList<Windows.UI.Xaml.Controls.MenuFlyoutItemBase> winItems)
+        public ItemsCollectionChangeHandler(ObservableCollection<MenuItemBase> items, IList<Microsoft.UI.Xaml.Controls.MenuFlyoutItemBase> winItems)
         {
             Items = items;
             WinItems = winItems;
@@ -135,12 +135,12 @@ namespace P42.Uno.Controls
     internal static class MenuItemExtensions
     {
         /*
-        public static void InsertItem(this IList<Windows.UI.Xaml.Controls.MenuFlyoutItemBase> winItems, int index, MenuItemBase item)
+        public static void InsertItem(this IList<Microsoft.UI.Xaml.Controls.MenuFlyoutItemBase> winItems, int index, MenuItemBase item)
         {
             winItems.Insert(index, item.AsMenuFlyoutItem());
         }
 
-        public static void DeleteItem(this IList<Windows.UI.Xaml.Controls.MenuFlyoutItemBase> winItems, int index, MenuItemBase item)
+        public static void DeleteItem(this IList<Microsoft.UI.Xaml.Controls.MenuFlyoutItemBase> winItems, int index, MenuItemBase item)
         {
             if (index < 0 || index > winItems.Count)
                 return;
@@ -150,11 +150,11 @@ namespace P42.Uno.Controls
             winItem.DeleteItem();
         }
 
-        public static void DeleteItem(this Windows.UI.Xaml.Controls.MenuFlyoutItemBase winItemBase)
+        public static void DeleteItem(this Microsoft.UI.Xaml.Controls.MenuFlyoutItemBase winItemBase)
         {
-            if (winItemBase is Windows.UI.Xaml.Controls.MenuFlyoutItem winItem)
+            if (winItemBase is Microsoft.UI.Xaml.Controls.MenuFlyoutItem winItem)
                 winItem.Click -= OnItemClick;
-            if (winItemBase is Windows.UI.Xaml.Controls.MenuFlyoutSubItem winSubItem)
+            if (winItemBase is Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem winSubItem)
             {
                 if (winSubItem.Tag is ItemsCollectionChangeHandler collectionChangedHandler)
                 {
@@ -172,16 +172,16 @@ namespace P42.Uno.Controls
 
         static void OnItemClick(object sender, RoutedEventArgs e)
         {
-            if (sender is Windows.UI.Xaml.Controls.MenuFlyoutItem winItem && winItem.Tag is MenuItemBase item)
+            if (sender is Microsoft.UI.Xaml.Controls.MenuFlyoutItem winItem && winItem.Tag is MenuItemBase item)
                 item.OnItemClicked();
         }
 
 
-        public static Windows.UI.Xaml.Controls.MenuFlyoutItemBase AsMenuFlyoutItem(this MenuItemBase itemBase)
+        public static Microsoft.UI.Xaml.Controls.MenuFlyoutItemBase AsMenuFlyoutItem(this MenuItemBase itemBase)
         {
             if (itemBase is MenuItem)
             {
-                var winItem = new Windows.UI.Xaml.Controls.MenuFlyoutItem
+                var winItem = new Microsoft.UI.Xaml.Controls.MenuFlyoutItem
                 {
                     Text = itemBase.Text,
                     Icon = itemBase.IconSource.AsIconElement(),
@@ -192,7 +192,7 @@ namespace P42.Uno.Controls
             }
             else if (itemBase is MenuGroup group)
             {
-                var winGroupItem = new Windows.UI.Xaml.Controls.MenuFlyoutSubItem
+                var winGroupItem = new Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem
                 {
                     Text = itemBase.Text,
                     Icon = itemBase.IconSource.AsIconElement(),

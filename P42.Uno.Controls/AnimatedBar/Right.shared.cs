@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 
 namespace P42.Uno.Controls.AnimateBar
 {
@@ -15,7 +15,7 @@ namespace P42.Uno.Controls.AnimateBar
 
             dir = -1;
             //StaticRect.HorizontalAlignment = 
-            DynamicRect.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Right;
+            DynamicRect.HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Right;
 
         }
     }

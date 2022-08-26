@@ -6,16 +6,16 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
     /// <summary>
     /// Permission Popup
     /// </summary>
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class PermissionPopup : Alert
     {
@@ -212,10 +212,13 @@ namespace P42.Uno.Controls
 
             if (cause == PopupPoppedCause.ButtonTapped)
             {
-                if (trigger == _cancelButton)
-                    PermissionState = PermissionState.Rejected;
-                else if (trigger == _okButton)
-                    PermissionState = PermissionState.Ok;
+                if (trigger is Button button)
+                {
+                    if (button == _cancelButton)
+                        PermissionState = PermissionState.Rejected;
+                    else if (button == _okButton)
+                        PermissionState = PermissionState.Ok;
+                }
             }
             if (PermissionState == PermissionState.Pending)
                 PermissionState = PermissionState.Cancelled;

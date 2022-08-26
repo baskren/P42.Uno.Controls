@@ -1,6 +1,5 @@
 ﻿using P42.Utils.Uno;
 using SkiaSharp;
-using SkiaSharp.Views.UWP;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,13 +8,16 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using SkiaSharp.Views.Windows;
+
 
 namespace P42.Uno.Controls
 {
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class EmbeddedSvgImage : SKXamlCanvas
     {
@@ -26,7 +28,7 @@ namespace P42.Uno.Controls
             nameof(Stretch),
             typeof(Stretch),
             typeof(EmbeddedSvgImage),
-            new PropertyMetadata(Windows.UI.Xaml.Media.Stretch.Uniform)
+            new PropertyMetadata(Microsoft.UI.Xaml.Media.Stretch.Uniform)
         );
         public Stretch Stretch
         {

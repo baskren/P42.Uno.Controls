@@ -6,13 +6,13 @@ using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 using P42.Uno.Markup;
 using P42.Utils.Uno;
 
@@ -60,13 +60,15 @@ namespace P42.Uno.Controls.Test
             Content = new TextBlock()
                 .Assign(out _textBlock);
 
-#if WINDOWS_UWP
+#if NET6_0_WINDOWS10_0_19041_0
+
             DataContextChanged += CellTemplate_DataContextChanged;
 #endif
         }
 
 
-#if WINDOWS_UWP
+#if NET6_0_WINDOWS10_0_19041_0
+
         private void CellTemplate_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
 #else
             protected override void OnDataContextChanged(DependencyPropertyChangedEventArgs e)

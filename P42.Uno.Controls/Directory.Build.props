@@ -3,7 +3,7 @@
   <PropertyGroup>
 
     <RootNamespace>P42.Uno.Controls</RootNamespace>
-    <Version>0.1.1</Version>
+    <Version>4.4.13-winui.0.1</Version>
     <NoWarn>Uno0001;1701;1702;VSX1000;CA1416</NoWarn>
 
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
@@ -69,8 +69,7 @@
   <!-- PROJECT REFERENCES -->
   <ItemGroup>
   	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
-    <PackageReference Include="Uno.UI" Version="4.3.8" />
-    <PackageReference Include="SkiaSharp.Views.Uno" Version="2.88.0" />
+    <PackageReference Include="Uno.WinUI" Version="4.4.13" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
   </ItemGroup>
   <ItemGroup>

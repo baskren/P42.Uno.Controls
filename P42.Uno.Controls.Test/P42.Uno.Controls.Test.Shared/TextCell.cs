@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 
 namespace P42.Uno.Controls.Test
 {
@@ -31,12 +31,12 @@ namespace P42.Uno.Controls.Test
             Tapped += TextCell_Tapped;
         }
 
-        async void TextCell_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        async void TextCell_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             await ListEditPage.Current.OnCellClicked(_valueLabel);
         }
 
-#if NETFX_CORE
+#if NET6_0_WINDOWS10_0_19041_0
         private void TextCell_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
 #else
         private void TextCell_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)

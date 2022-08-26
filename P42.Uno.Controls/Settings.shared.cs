@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 
 namespace P42.Uno.Controls
 {
-    public static class Settings
+    public static class Platform
     {
-        public static List<Assembly> AssembliesToInclude => P42.Utils.Uno.Settings.AssembliesToInclude;
+        public static List<Assembly> AssembliesToInclude => P42.Utils.Uno.Platform.AssembliesToInclude;
 
-        public static void Init(Windows.UI.Xaml.Application application)
+        public static void Init(Microsoft.UI.Xaml.Application application, Microsoft.UI.Xaml.Window window)
         {
-            P42.Utils.Uno.Settings.Init(application);
-            AssembliesToInclude.Add(typeof(Settings).Assembly);
+            P42.Utils.Uno.Platform.Init(application, window);
+            AssembliesToInclude.Add(typeof(Platform).Assembly);
+
         }
     }
 }

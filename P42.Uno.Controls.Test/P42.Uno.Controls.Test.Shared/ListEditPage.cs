@@ -15,18 +15,18 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 
-#if NETFX_CORE
-using Popup = Windows.UI.Xaml.Controls.Primitives.Popup;
+#if NET6_0_WINDOWS10_0_19041_0
+using Popup = Microsoft.UI.Xaml.Controls.Primitives.Popup;
 #else
-using Popup = Windows.UI.Xaml.Controls.Popup;
+using Popup = Microsoft.UI.Xaml.Controls.Popup;
 #endif
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238

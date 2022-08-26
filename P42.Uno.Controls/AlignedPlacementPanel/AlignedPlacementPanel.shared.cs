@@ -7,13 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class AlignedPlacementPanel : Panel
     {
@@ -61,6 +62,7 @@ namespace P42.Uno.Controls
             Children.Add(_moreButton);
             _moreButton.Click += OnMoreButtonClicked;
         }
+
 
         async void OnMoreButtonClicked(object sender, RoutedEventArgs e)
         {

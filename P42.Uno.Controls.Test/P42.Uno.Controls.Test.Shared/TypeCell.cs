@@ -1,7 +1,7 @@
 using System;
 using P42.Uno.Markup;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 
 namespace P42.Uno.Controls.Test
 {
@@ -10,9 +10,9 @@ namespace P42.Uno.Controls.Test
     {
         TextBlock _textBlock = new TextBlock
         {
-            HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch,
-            HorizontalTextAlignment = Windows.UI.Xaml.TextAlignment.Left,
-            VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Stretch
+            HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Stretch,
+            HorizontalTextAlignment = Microsoft.UI.Xaml.TextAlignment.Left,
+            VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Stretch
         };
 
         public TypeCell()
@@ -21,10 +21,11 @@ namespace P42.Uno.Controls.Test
             DataContextChanged += OnDataContextChanged;
         }
 
-#if WINDOWS_UWP
-        private void OnDataContextChanged(Windows.UI.Xaml.FrameworkElement sender, Windows.UI.Xaml.DataContextChangedEventArgs args)
+#if NET6_0_WINDOWS10_0_19041_0
+
+        private void OnDataContextChanged(Microsoft.UI.Xaml.FrameworkElement sender, Microsoft.UI.Xaml.DataContextChangedEventArgs args)
 #else
-        private void OnDataContextChanged(Windows.UI.Xaml.DependencyObject sender, Windows.UI.Xaml.DataContextChangedEventArgs args)
+        private void OnDataContextChanged(Microsoft.UI.Xaml.DependencyObject sender, Microsoft.UI.Xaml.DataContextChangedEventArgs args)
 #endif
         {
             if (DataContext is Type type)

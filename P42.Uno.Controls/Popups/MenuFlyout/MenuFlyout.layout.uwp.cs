@@ -1,4 +1,4 @@
-#if WINDOWS_UWP
+#if NET6_0_WINDOWS10_0_19041_0
 using P42.Uno.Markup;
 using P42.Utils.Uno;
 using System;
@@ -7,16 +7,16 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Windows.UI;
 using Windows.UI.Text;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Markup;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Markup;
+using Microsoft.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
     [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = "Items")]
     public partial class MenuFlyout : IDisposable
@@ -94,7 +94,7 @@ namespace P42.Uno.Controls
         }
         #endregion
 
-        private async void OnListView_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
+        private async void OnListView_SelectionChanged(object sender, Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)
         {
             _childMenu = _childMenu ?? new MenuFlyout();
             _childMenu._parentMenu = this;

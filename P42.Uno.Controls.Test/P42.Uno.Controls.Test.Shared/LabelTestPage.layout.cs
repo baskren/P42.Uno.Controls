@@ -1,11 +1,11 @@
 ﻿using System;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using P42.Uno.Controls;
 using P42.Uno.Markup;
-using Uno.UI.Toolkit;
-using Windows.UI.Xaml.Controls.Primitives;
+using Uno.Toolkit.WinUI;
+using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace P42.Uno.Controls.Test
 {
@@ -51,7 +51,7 @@ namespace P42.Uno.Controls.Test
                                         .AddOnToggled(OnModeSwitchToggled)
                                 ),
                             new TextBlock()
-                                .Text("Windows.UI.Xaml.Controls.TextBlock:"),
+                                .Text("Microsoft.UI.Xaml.Controls.TextBlock:"),
                             new Border()
                                 .Assign(out borderForUnoLabel)
                                 .Height(100)

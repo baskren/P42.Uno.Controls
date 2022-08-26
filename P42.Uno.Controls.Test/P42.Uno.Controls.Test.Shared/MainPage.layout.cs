@@ -6,22 +6,22 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Serialization.Formatters;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 using Windows.UI;
 using System.Threading.Tasks;
 using P42.Utils.Uno;
 using P42.Uno.Markup;
 using P42.Uno.Controls;
 using System.Reflection.Emit;
-using Windows.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml.Shapes;
 
-#if NETFX_CORE
+#if NET6_0_WINDOWS10_0_19041_0
 #else
 using Uno.Foundation;
 #endif
@@ -115,12 +115,14 @@ namespace P42.Uno.Controls.Test
                 .CornerRadius(5)
                 //.AddOnTap(BorderTapped)
                 .Content(new TextBlock { Text = "ZAP" });
-#if WINDOWS_UWP
+#if NET6_0_WINDOWS10_0_19041_0
+
             DataContextChanged += CellTemplate_DataContextChanged;
 #endif
         }
 
-#if WINDOWS_UWP
+#if NET6_0_WINDOWS10_0_19041_0
+
         private void CellTemplate_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
 #else
             protected override void OnDataContextChanged(DependencyPropertyChangedEventArgs e)

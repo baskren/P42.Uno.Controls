@@ -1,8 +1,8 @@
 ﻿using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Shapes;
 using P42.Uno.Markup;
 using P42.Utils.Uno;
 
@@ -20,7 +20,7 @@ namespace P42.Uno.Controls
         #region Visual Elements
         internal BubbleBorder _border;
         protected ContentPresenter _contentPresenter;
-        protected Windows.UI.Xaml.Controls.Primitives.Popup _popup;
+        protected Microsoft.UI.Xaml.Controls.Primitives.Popup _popup;
         #endregion
 
         void Build()
@@ -40,7 +40,7 @@ namespace P42.Uno.Controls
             CornerRadius = new CornerRadius(DefaultCornerRadius);
             FontSize = 16;
 
-            Content = new Windows.UI.Xaml.Controls.Primitives.Popup
+            Content = new Microsoft.UI.Xaml.Controls.Primitives.Popup
             {
                 Child =
                     new BubbleBorder()
@@ -76,8 +76,8 @@ namespace P42.Uno.Controls
                 .Margin(0)
                 //.Padding(0)
                 .Stretch()
-                .Bind(Windows.UI.Xaml.Controls.Primitives.Popup.IsLightDismissEnabledProperty, this, nameof(IsLightDismissEnabled))
-                .Bind(Windows.UI.Xaml.Controls.Primitives.Popup.LightDismissOverlayModeProperty, this, nameof(LightDismissOverlayMode))
+                .Bind(Microsoft.UI.Xaml.Controls.Primitives.Popup.IsLightDismissEnabledProperty, this, nameof(IsLightDismissEnabled))
+                .Bind(Microsoft.UI.Xaml.Controls.Primitives.Popup.LightDismissOverlayModeProperty, this, nameof(LightDismissOverlayMode))
                 ;
 
             //this.PointerMoved += OnPointerMoved;

@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 using P42.Uno.Markup;
 using P42.Utils.Uno;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
     /// <summary>
     /// BusyPopup: popup with spinner, title and message
     /// </summary>
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class BusyPopup : Toast
     {

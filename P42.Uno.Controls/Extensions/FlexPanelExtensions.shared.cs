@@ -1,6 +1,6 @@
 using System;
-using Windows.UI.Xaml;
-using EType = Windows.UI.Xaml.UIElement;
+using Microsoft.UI.Xaml;
+using EType = Microsoft.UI.Xaml.UIElement;
 
 namespace P42.Uno.Controls
 {

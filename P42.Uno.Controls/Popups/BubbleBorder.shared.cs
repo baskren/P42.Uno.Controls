@@ -1,15 +1,14 @@
 ﻿using System;
 using System.IO;
 using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using SkiaSharp;
 using Windows.UI;
 using P42.Utils.Uno;
-using Uno.UI.Toolkit;
 using P42.Uno.Markup;
-using Windows.UI.Xaml.Markup;
+using Microsoft.UI.Xaml.Markup;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -18,7 +17,7 @@ namespace P42.Uno.Controls
     /// <summary>
     /// Border used by Popups
     /// </summary>
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = nameof(XamlContent))]
     partial class BubbleBorder : UserControl
@@ -388,7 +387,7 @@ namespace P42.Uno.Controls
         const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Left;
         const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Top;
         ContentPresenter _contentPresenter;
-        Windows.UI.Xaml.Shapes.Path _path;
+        Microsoft.UI.Xaml.Shapes.Path _path;
         #endregion
 
 
@@ -432,7 +431,7 @@ namespace P42.Uno.Controls
 
         void RegeneratePath(Size size = default)
         { 
-            if (_path is Windows.UI.Xaml.Shapes.Path p)
+            if (_path is Microsoft.UI.Xaml.Shapes.Path p)
                 p.StrokeThickness = BorderThickness.Average();
             var path = GeneratePath(size);
             var data = path.ToSvgPathData();

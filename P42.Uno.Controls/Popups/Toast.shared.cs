@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 using P42.Uno.Markup;
 using P42.Utils.Uno;
 using Windows.UI.Text;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Markup;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Markup;
 
 namespace P42.Uno.Controls
 {
     /// <summary>
     /// A simple toast
     /// </summary>
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = "Message")]
     public partial class Toast : TargetedPopup
@@ -226,13 +226,13 @@ namespace P42.Uno.Controls
         protected override Task OnPushBeginAsync()
         {
             UpdateScrollMaxHeight();
-            Windows.UI.Xaml.Window.Current.SizeChanged += OnCurrentWindow_SizeChanged;
+            P42.Utils.Uno.Platform.Window.SizeChanged += OnCurrentWindow_SizeChanged;
             return base.OnPushBeginAsync();
         }
 
         protected override Task OnPopBeginAsync()
         {
-            Windows.UI.Xaml.Window.Current.SizeChanged -= OnCurrentWindow_SizeChanged;
+            P42.Utils.Uno.Platform.Window.SizeChanged -= OnCurrentWindow_SizeChanged;
             return base.OnPopBeginAsync();
         }
         #endregion
@@ -250,7 +250,7 @@ namespace P42.Uno.Controls
         }
 
 
-        private void OnCurrentWindow_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        private void OnCurrentWindow_SizeChanged(object sender, Microsoft.UI.Xaml.WindowSizeChangedEventArgs e)
         {
             UpdateScrollMaxHeight();
         }

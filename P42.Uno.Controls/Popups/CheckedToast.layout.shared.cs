@@ -1,7 +1,7 @@
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using P42.Uno.Markup;
 using P42.Utils.Uno;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using System;
 
 namespace P42.Uno.Controls
@@ -19,7 +19,7 @@ namespace P42.Uno.Controls
                 .Row(2).Column(1).Margin(0)
                 .StretchHorizontal()
                 .HorizontalContentAlignment(HorizontalAlignment.Left)
-                .Bind(CheckBox.IsCheckedProperty, this, nameof(IsChecked), Windows.UI.Xaml.Data.BindingMode.TwoWay)
+                .Bind(CheckBox.IsCheckedProperty, this, nameof(IsChecked), Microsoft.UI.Xaml.Data.BindingMode.TwoWay)
                 .Bind(CheckBox.ContentProperty, this, nameof(CheckContent));
 
             _bubbleContentGrid.Children.Add(_checkBox);
