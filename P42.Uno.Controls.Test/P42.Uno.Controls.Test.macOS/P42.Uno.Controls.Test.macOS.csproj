@@ -71,8 +71,8 @@
   <ItemGroup>
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="7.0.0" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.0.0" />
-    <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.0" />
-    <PackageReference Include="Uno.WinUI" Version="4.3.8" />
+    <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.1" />
+    <PackageReference Include="Uno.WinUI" Version="4.4.13" />
     <PackageReference Include="Uno.WinUI.RemoteControl" Version="4.3.8" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
