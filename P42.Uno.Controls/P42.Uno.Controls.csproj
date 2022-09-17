@@ -65,7 +65,7 @@
 
   <!-- WinUI Windows -->
   <ItemGroup Condition=" $(TargetFramework.Contains('windows')) ">
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.4" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
     <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.2" />
     <Compile Include="**\*.uwp.cs" Exclude="$(DefaultItemExcludes)" />
     <Compile Include="**\*.uwp.*.cs" Exclude="$(DefaultItemExcludes)" />
