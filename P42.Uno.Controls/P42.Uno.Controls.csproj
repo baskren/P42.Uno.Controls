@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
+    <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
   </ItemGroup>
 
   <!-- ANDROID -->
