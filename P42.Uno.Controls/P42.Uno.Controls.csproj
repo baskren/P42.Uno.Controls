@@ -59,14 +59,14 @@
   <!-- TIZEN -->
   <ItemGroup Condition=" $(TargetFramework.ToLower().Contains('tizen')) ">
     <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
-    <PackageReference Include="Uno.WinUI.Runtime.Skia.Tizen" Version="4.5.14" />
+    <PackageReference Include="Uno.WinUI.Runtime.Skia.Tizen" Version="4.6.19" />
     <Compile Include="**\*.tizen.cs" />
     <Compile Include="**\*.tizen.*.cs" />
   </ItemGroup>
 
   <!-- WinUI Windows -->
   <ItemGroup Condition=" $(TargetFramework.Contains('windows')) ">
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.3" />
     <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.3" />
     <Compile Include="**\*.uwp.cs" Exclude="$(DefaultItemExcludes)" />
     <Compile Include="**\*.uwp.*.cs" Exclude="$(DefaultItemExcludes)" />
