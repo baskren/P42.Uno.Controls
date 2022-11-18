@@ -102,9 +102,7 @@
     <Compile Include="Main.cs" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\Fonts\uno-fluentui-assets.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </BundleResource>
+    <BundleResource Include="Resources\Fonts\uno-fluentui-assets.ttf" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\P42.Uno.Controls\P42.Uno.Controls.csproj">
