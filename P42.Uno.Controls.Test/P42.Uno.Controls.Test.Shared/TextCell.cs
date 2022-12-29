@@ -36,7 +36,7 @@ namespace P42.Uno.Controls.Test
             await ListEditPage.Current.OnCellClicked(_valueLabel);
         }
 
-#if NET6_0_WINDOWS10_0_19041_0
+#if NET7_0_WINDOWS10_0_19041_0
         private void TextCell_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
 #else
         private void TextCell_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)

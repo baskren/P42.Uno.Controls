@@ -96,8 +96,8 @@ namespace FlexPanelTest
         {
             var image = new BitmapImage();
 
-#if NET6_0_WINDOWS10_0_19041_0
- || NET6_0_WINDOWS10_0_19041_0
+#if NET7_0_WINDOWS10_0_19041_0
+ || NET7_0_WINDOWS10_0_19041_0
             using (var stream = new InMemoryRandomAccessStream())
             {
                 /*

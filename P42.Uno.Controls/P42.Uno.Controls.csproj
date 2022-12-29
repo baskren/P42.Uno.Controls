@@ -7,13 +7,13 @@
     Another example of how Micrsoft just doesn't care about those who don't use only their stuff
     <TargetFrameworks>netstandard2.0;Xamarin.iOS10;Xamarin.Mac20;MonoAndroid11.0;</TargetFrameworks>
     -->
-	  <TargetFrameworks>net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst;net6.0-macos;</TargetFrameworks>
-	  <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">net6.0-windows10.0.19041.0;net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst;net6.0-macos;</TargetFrameworks>
-    <TargetFrameworks Condition=" $(SolutionName.Contains('.iOS')) ">net6.0-ios</TargetFrameworks>
-    <TargetFrameworks Condition=" $(SolutionName.Contains('.macOS')) ">net6.0-macos</TargetFrameworks>
-    <TargetFrameworks Condition=" $(SolutionName.Contains('.GtK')) ">net6.0</TargetFrameworks>
-    <TargetFrameworks Condition=" $(SolutionName.Contains('.WPF')) ">net6.0</TargetFrameworks>
-    <TargetFrameworks Condition=" $(SolutionName.Contains('.Windows')) ">net6.0-windows10.0.19041.0</TargetFrameworks>
+	  <TargetFrameworks>net7.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;net7.0-macos;</TargetFrameworks>
+	  <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">net7.0-windows10.0.19041.0;net7.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;net7.0-macos;</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.iOS')) ">net7.0-ios</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.macOS')) ">net7.0-macos</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.GtK')) ">net7.0</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.WPF')) ">net7.0</TargetFrameworks>
+    <TargetFrameworks Condition=" $(SolutionName.Contains('.Windows')) ">net7.0-windows10.0.19041.0</TargetFrameworks>
 
   </PropertyGroup>
 
@@ -59,7 +59,7 @@
   <!-- TIZEN -->
   <ItemGroup Condition=" $(TargetFramework.ToLower().Contains('tizen')) ">
     <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
-    <PackageReference Include="Uno.WinUI.Runtime.Skia.Tizen" Version="4.6.19" />
+    <PackageReference Include="Uno.WinUI.Runtime.Skia.Tizen" Version="4.6.39" />
     <Compile Include="**\*.tizen.cs" />
     <Compile Include="**\*.tizen.*.cs" />
   </ItemGroup>
@@ -75,7 +75,7 @@
   </ItemGroup>
 
   <!-- NetStandard bait -->
-  <ItemGroup Condition="  $(TargetFramework.ToLower().StartsWith('netstandard')) OR $(TargetFramework.ToLower().Equals('net6.0')) ">
+  <ItemGroup Condition="  $(TargetFramework.ToLower().StartsWith('netstandard')) OR $(TargetFramework.ToLower().Equals('net7.0')) ">
     <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
     <Compile Include="**\*.netstandard.cs" />
     <Compile Include="**\*.netstandard.*.cs" />

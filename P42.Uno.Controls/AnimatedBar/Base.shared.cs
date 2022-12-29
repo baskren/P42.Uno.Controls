@@ -110,7 +110,7 @@ namespace P42.Uno.Controls.AnimateBar
             System.GC.SuppressFinalize(this);
         }
 
-#elif NETSTANDARD || NET6_0
+#elif NETSTANDARD || NET7_0
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)

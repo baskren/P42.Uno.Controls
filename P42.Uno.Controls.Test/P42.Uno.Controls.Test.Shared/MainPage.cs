@@ -20,7 +20,7 @@ using P42.Uno.Markup;
 using P42.Uno.Controls;
 using System.Reflection.Emit;
 
-#if NET6_0_WINDOWS10_0_19041_0
+#if NET7_0_WINDOWS10_0_19041_0
 #else
 using Uno.Foundation;
 #endif

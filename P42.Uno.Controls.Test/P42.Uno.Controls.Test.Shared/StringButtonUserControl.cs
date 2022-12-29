@@ -57,7 +57,7 @@ namespace P42.Uno.Controls.Test
             //System.Diagnostics.Debug.WriteLine(GetType() + ".OnContentChanged sender:" + sender + " dp:" + dp);
         }
 
-#if !NET6_0_WINDOWS10_0_19041_0
+#if !NET7_0_WINDOWS10_0_19041_0
         protected override void OnContentChanged(object oldValue, object newValue)
         {
             base.OnContentChanged(oldValue, newValue);

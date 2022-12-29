@@ -332,7 +332,7 @@ namespace P42.Uno.Controls
         }
 
         bool _disposed;
-#if NET6_0_WINDOWS10_0_19041_0
+#if NET7_0_WINDOWS10_0_19041_0
         public void Dispose()
         {
             Dispose(true);
