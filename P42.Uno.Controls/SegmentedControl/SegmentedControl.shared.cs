@@ -466,11 +466,11 @@ namespace P42.Uno.Controls
                 .Center()
                 .FontSize(16)
                 .Column(TextBlocks.Count)
-                .AddOnTapped(OnSegmentTapped)
-                .AddOnPointerEntered(OnSegmentPointerEntered)
-                .AddOnPointerExited(OnSegmentPointerExited)
-                .AddOnPointerCanceled(OnSegmentPointerExited)
-                .AddOnPointerCaptureLost(OnSegmentPointerExited)
+                .AddTappedHandler(OnSegmentTapped)
+                .AddPointerEnteredHandler(OnSegmentPointerEntered)
+                .AddPointerExitedHandler(OnSegmentPointerExited)
+                .AddPointerCanceledHandler(OnSegmentPointerExited)
+                .AddPointerCaptureLostHandler(OnSegmentPointerExited)
                 );
 
         void AddNewSeparator()
@@ -489,11 +489,11 @@ namespace P42.Uno.Controls
                 .Margin(-1)
                 .Stretch()
                 .Column(Backgrounds.Count)
-                .AddOnTapped(OnSegmentTapped)
-                .AddOnPointerEntered(OnSegmentPointerEntered)
-                .AddOnPointerExited(OnSegmentPointerExited)
-                .AddOnPointerCanceled(OnSegmentPointerExited)
-                .AddOnPointerCaptureLost(OnSegmentPointerExited)
+                .AddTappedHandler(OnSegmentTapped)
+                .AddPointerEnteredHandler(OnSegmentPointerEntered)
+                .AddPointerExitedHandler(OnSegmentPointerExited)
+                .AddPointerCanceledHandler(OnSegmentPointerExited)
+                .AddPointerCaptureLostHandler(OnSegmentPointerExited)
                 // TODO: Add Tap Handler
                 );
 

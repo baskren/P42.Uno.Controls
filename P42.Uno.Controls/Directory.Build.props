@@ -69,7 +69,6 @@
   <!-- PROJECT REFERENCES -->
   <ItemGroup>
   	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
-    <PackageReference Include="Uno.WinUI" Version="4.6.39" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
   </ItemGroup>
   <ItemGroup>

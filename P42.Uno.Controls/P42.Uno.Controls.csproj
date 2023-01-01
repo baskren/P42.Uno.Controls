@@ -24,30 +24,21 @@
 
   <!-- ANDROID -->
   <ItemGroup Condition=" $(TargetFramework.ToLower().Contains('android')) ">
-    <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
     <Compile Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)" />
     <Compile Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.android.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.android.*.cs" Exclude="$(DefaultItemExcludes)" />
     <AndroidResource Include="Resources\xml\*.xml" />
   </ItemGroup>
 
   <!-- IOS -->
   <ItemGroup Condition=" $(TargetFramework.ToLower().Contains('ios')) OR $(TargetFramework.ToLower().Contains('maccatalyst'))">
-    <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
     <Compile Include="**\*.ios.cs" Exclude="$(DefaultItemExcludes)" />
     <Compile Include="**\*.ios.*.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.ios.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.ios.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
   <!-- MACOS -->
   <ItemGroup Condition=" $(TargetFramework.ToLower().Contains('macos')) OR $(TargetFramework.ToLower().Contains('xamarin.mac'))">
-    <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
-    <Compile Include="**\*.macos.cs" Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.macos.*.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.macos.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.macos.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.mac.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.mac.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
   <!-- MacCatylst -->
@@ -58,27 +49,31 @@
 
   <!-- TIZEN -->
   <ItemGroup Condition=" $(TargetFramework.ToLower().Contains('tizen')) ">
-    <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
     <PackageReference Include="Uno.WinUI.Runtime.Skia.Tizen" Version="4.6.39" />
     <Compile Include="**\*.tizen.cs" />
     <Compile Include="**\*.tizen.*.cs" />
+  </ItemGroup>
+
+  <!-- NetStandard bait -->
+  <ItemGroup Condition=" $(TargetFramework.ToLower().Equals('net7.0')) ">
+    <Compile Include="**\*.net.cs" />
+    <Compile Include="**\*.net.*.cs" />
   </ItemGroup>
 
   <!-- WinUI Windows -->
   <ItemGroup Condition=" $(TargetFramework.Contains('windows')) ">
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.3" />
     <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.3" />
-    <Compile Include="**\*.uwp.cs" Exclude="$(DefaultItemExcludes)" />
-    <Compile Include="**\*.uwp.*.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.uwp.cs" Exclude="$(DefaultItemExcludes)" />
-    <UpToDateCheckInput Include="**\*.uwp.*.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.win.cs" Exclude="$(DefaultItemExcludes)" />
+    <Compile Include="**\*.win.*.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
-  <!-- NetStandard bait -->
-  <ItemGroup Condition="  $(TargetFramework.ToLower().StartsWith('netstandard')) OR $(TargetFramework.ToLower().Equals('net7.0')) ">
-    <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
-    <Compile Include="**\*.netstandard.cs" />
-    <Compile Include="**\*.netstandard.*.cs" />
+  <!-- NOT Windows -->
+  <ItemGroup Condition=" !$(TargetFramework.Contains('windows')) ">
+	  <PackageReference Include="Uno.WinUI" Version="4.6.39" />
+    <PackageReference Include="Uno.WinUI.Lottie" Version="4.6.39" />
+	  <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
+    <Compile Include="**\*.uno.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
 
 

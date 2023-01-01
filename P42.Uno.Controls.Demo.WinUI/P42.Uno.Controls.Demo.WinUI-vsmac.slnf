@@ -1,0 +1,14 @@
+{
+  "solution": {
+    "path": "P42.Uno.Controls.Demo.WinUI.sln",
+    "projects": [
+		"P42.Uno.Controls.Demo.WinUI.Shared\\P42.Uno.Controls.Demo.WinUI.Shared.shproj",
+
+		"P42.Uno.Controls.Demo.WinUI.Mobile\\P42.Uno.Controls.Demo.WinUI.Mobile.csproj",
+
+		"P42.Uno.Controls.Demo.WinUI.Wasm\\P42.Uno.Controls.Demo.WinUI.Wasm.csproj",
+
+		"P42.Uno.Controls.Demo.WinUI.Skia.Gtk\\P42.Uno.Controls.Demo.WinUI.Skia.Gtk.csproj",
+    ]
+  }
+}

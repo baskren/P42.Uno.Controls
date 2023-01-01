@@ -44,7 +44,7 @@ namespace P42.Uno.Controls
             base.Content = new Grid()
                 .ColumnSpacing(0)
                 .RowSpacing(0)
-                .AddOnSizeChanged(OnSizeChanged)
+                .AddSizeChangedHandler(OnSizeChanged)
                 //.Background(Colors.Blue)
                 .Children
                 (
