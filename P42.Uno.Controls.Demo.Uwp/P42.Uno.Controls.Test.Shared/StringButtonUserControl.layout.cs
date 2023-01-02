@@ -50,7 +50,7 @@ namespace P42.Uno.Controls.Test
                                 .BorderThickness(1)
                                 .CornerRadius(5)
                                 .Opacity(0)
-                                .AddOnTap(BorderTapped)
+                                .AddTapHandler(BorderTapped)
                                 .Bind(Button.ContentProperty, this, nameof(Content))
                         );
         }

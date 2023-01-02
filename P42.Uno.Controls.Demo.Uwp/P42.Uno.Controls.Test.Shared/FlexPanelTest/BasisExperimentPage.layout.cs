@@ -73,7 +73,7 @@ namespace FlexPanelTest
                                     new ToggleSwitch()
                                         .Assign(out autoSwitch2)
                                         .On()
-                                        .AddOnToggled(OnLabel2AutoSwitchToggled)
+                                        .AddToggledHandler(OnLabel2AutoSwitchToggled)
                                 ),
                             new StackPanel()
                                 .RowCol(0, 2)
@@ -83,12 +83,12 @@ namespace FlexPanelTest
                                     new ToggleSwitch()
                                         .Assign(out relativeSwitch2)
                                         .On()
-                                        .AddOnToggled(OnLabel2IsRelativeSwitchToggled)
+                                        .AddToggledHandler(OnLabel2IsRelativeSwitchToggled)
                                         .Bind(ToggleSwitch.IsEnabledProperty, autoSwitch2, nameof(ToggleSwitch.IsOn), BindingMode.TwoWay, BooleanInverseConverter)
                                 ),
                             new Slider()
                                 .Assign(out slider2)
-                                .AddOnValueChanged(OnLabel2SliderValueChanged)
+                                .AddValueChangedHandler(OnLabel2SliderValueChanged)
                                 .RowCol(1, 1).ColumnSpan(2)
                                 .MinMaxStep(0, 1, 0.01)
                                 .Bind(Slider.IsEnabledProperty, autoSwitch2, nameof(ToggleSwitch.IsOn), BindingMode.TwoWay, BooleanInverseConverter),
@@ -110,7 +110,7 @@ namespace FlexPanelTest
                                     new ToggleSwitch()
                                         .Assign(out autoSwitch4)
                                         .On()
-                                        .AddOnToggled(OnLabel4AutoSwitchToggled)
+                                        .AddToggledHandler(OnLabel4AutoSwitchToggled)
                                 ),
                             new StackPanel()
                                 .RowCol(0, 2)
@@ -120,12 +120,12 @@ namespace FlexPanelTest
                                     new ToggleSwitch()
                                         .Assign(out relativeSwitch4)
                                         .On()
-                                        .AddOnToggled(OnLabel4IsRelativeSwitchToggled)
+                                        .AddToggledHandler(OnLabel4IsRelativeSwitchToggled)
                                         .Bind(ToggleSwitch.IsEnabledProperty, autoSwitch4, nameof(ToggleSwitch.IsOn), BindingMode.TwoWay, BooleanInverseConverter)
                                 ),
                             new Slider()
                                 .Assign(out slider4)
-                                .AddOnValueChanged(OnLabel2SliderValueChanged)
+                                .AddValueChangedHandler(OnLabel2SliderValueChanged)
                                 .RowCol(4, 1).ColumnSpan(2)
                                 .MinMaxStep(0, 1, 0.01)
                                 .Bind(Slider.IsEnabledProperty, autoSwitch4, nameof(ToggleSwitch.IsOn), BindingMode.TwoWay, BooleanInverseConverter),

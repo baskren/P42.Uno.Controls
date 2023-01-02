@@ -113,7 +113,7 @@ namespace P42.Uno.Controls.Demo
                 .BorderBrush(Colors.Green)
                 .BorderThickness(1)
                 .CornerRadius(5)
-                //.AddOnTap(BorderTapped)
+                //.AddTapHandler(BorderTapped)
                 .Content(new TextBlock { Text = "ZAP" });
 
             DataContextChanged += CellTemplate_DataContextChanged;

@@ -51,12 +51,12 @@ namespace P42.Uno.Controls.Test
                         .Row(1)
                         .MinMaxStep(0, 1, 0.001)
                         .Value(0.5)
-                        .AddOnValueChanged(_slider_ValueChanged),
+                        .AddValueChangedHandler(_slider_ValueChanged),
                     new Slider()
                         .Assign(out _borderThicknessSlider)
                         .Row(2)
                         .MinMaxStep(0, 20, 1)
-                        .AddOnValueChanged(_borderThicknessSliderChanged)
+                        .AddValueChangedHandler(_borderThicknessSliderChanged)
                         .Value(1)
                 );
         }

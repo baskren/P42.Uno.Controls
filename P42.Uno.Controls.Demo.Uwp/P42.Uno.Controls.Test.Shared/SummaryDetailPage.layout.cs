@@ -60,7 +60,7 @@ namespace P42.Uno.Controls.Test
                 .Background(Colors.Beige)
                 .BorderBrush(Colors.Green)
                 .BorderThickness(1)
-                //.AddOnTapped(BorderTapped)
+                //.AddTapHandler(BorderTapped)
                 .CornerRadius(5);
 #if NET7_0_WINDOWS10_0_19041_0
 

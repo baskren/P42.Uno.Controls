@@ -49,9 +49,9 @@ namespace FlexPanelTest
                             new NavigationViewItem { Content = "Grow Experiment Page", Icon = new SymbolIcon(Symbol.Page), Tag = "growExperiment" },
                             new NavigationViewItem { Content = "Shrink Experiment Page", Icon = new SymbolIcon(Symbol.Page), Tag = "shrinkExperiment" }
                         )
-                        .AddOnBackRequested(NavView_BackRequested)
-                        .AddOnLoaded(NavView_Loaded)
-                        .AddOnSelectionChanged(NavView_SelectionChanged)
+                        .AddBackRequestedHandler(NavView_BackRequested)
+                        .AddLoadedHandler(NavView_Loaded)
+                        .AddSelectionChangedHandler(NavView_SelectionChanged)
                         .Content
                         (
                             new ScrollViewer()
@@ -63,7 +63,7 @@ namespace FlexPanelTest
                                         .Assign(out ContentFrame)
                                         .Padding(0,30,0,0)
                                         .TabStop()
-                                        .AddOnNavigationFailed(ContentFrame_NavigationFailed)
+                                        .AddNavigationFailedHandler(ContentFrame_NavigationFailed)
                                 )
                         )
                 );

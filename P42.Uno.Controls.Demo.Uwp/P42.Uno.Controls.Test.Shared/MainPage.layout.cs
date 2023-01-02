@@ -63,7 +63,7 @@ namespace P42.Uno.Controls.Test
                         .Size(50, 50)
                         .CenterHorizontal()
                         .Background(Colors.Pink)
-                        .AddOnTap(OnAltBorderTapped),
+                        .AddTapHandler(OnAltBorderTapped),
                     new StackPanel()
                         .Row(1)
                         .Horizontal()
@@ -83,7 +83,7 @@ namespace P42.Uno.Controls.Test
                             new ToggleSwitch().Assign(out _indexOthogonal),
                             new Button().Assign(out _button)
                                 .Content("Show Popup")
-                                .AddOnTap(_button_Click)
+                                .AddTapHandler(_button_Click)
                         ),
                     new ListView()
                         .Assign(out _listView)
@@ -113,7 +113,7 @@ namespace P42.Uno.Controls.Test
                 .BorderBrush(Colors.Green)
                 .BorderThickness(1)
                 .CornerRadius(5)
-                //.AddOnTap(BorderTapped)
+                //.AddTapHandler(BorderTapped)
                 .Content(new TextBlock { Text = "ZAP" });
 #if NET7_0_WINDOWS10_0_19041_0
 

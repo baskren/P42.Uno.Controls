@@ -130,7 +130,7 @@ namespace P42.Uno.Controls.Demo
                                 .RadioSelect()
                                 .AllowUnselectAll(false)
                                 .SelectedLabel(label.LabelAutoFit.ToString())
-                                .AddOnSelectionChanged(OnAutoFitChanged),
+                                .AddSelectionChangedHandler(OnAutoFitChanged),
                             new TextBlock()
                                 .Assign(out linesLabel)
                                 .Text($"Lines: {label.Lines}"),
@@ -171,7 +171,7 @@ namespace P42.Uno.Controls.Demo
                                 .Labels(Enum.GetNames(typeof(VerticalAlignment)))
                                 .RadioSelect().AllowUnselectAll(false)
                                 .SelectedLabel(label.VerticalTextAlignment.ToString())
-                                .AddOnSelectionChanged(OnVerticalAlignmentChanged),
+                                .AddSelectionChangedHandler(OnVerticalAlignmentChanged),
                             new TextBlock()
                                 .Assign(out textAlignmentLabel)
                                 .Text($"TextAlignment: {label.TextAlignment}"),
@@ -180,7 +180,7 @@ namespace P42.Uno.Controls.Demo
                                 .Labels(Enum.GetNames(typeof(TextAlignment)))
                                 .RadioSelect().AllowUnselectAll(false)
                                 .SelectedLabel(label.TextAlignment.ToString())
-                                .AddOnSelectionChanged(OnHorizontalAlignmentChanged),
+                                .AddSelectionChangedHandler(OnHorizontalAlignmentChanged),
                             new TextBlock()
                                 .Assign(out textWrappingLabel)
                                 .Text($"TextWrapping: {label.TextWrapping}"),
@@ -189,7 +189,7 @@ namespace P42.Uno.Controls.Demo
                                 .Labels(Enum.GetNames(typeof(TextWrapping)))
                                 .RadioSelect().AllowUnselectAll(false)
                                 .SelectedLabel(label.TextWrapping.ToString())
-                                .AddOnSelectionChanged(OnTextWrappingChanged),
+                                .AddSelectionChangedHandler(OnTextWrappingChanged),
                             new TextBlock()
                                 .Assign(out textTrimmingLabel)
                                 .Text($"TextTrimming: {label.TextTrimming}"),
@@ -198,7 +198,7 @@ namespace P42.Uno.Controls.Demo
                                 .Labels(Enum.GetNames(typeof(TextTrimming)))
                                 .RadioSelect().AllowUnselectAll(false)
                                 .SelectedLabel(label.TextTrimming.ToString())   
-                                .AddOnSelectionChanged(OnTextTrimmingChanged)
+                                .AddSelectionChangedHandler(OnTextTrimmingChanged)
                         )
                 );
 

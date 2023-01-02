@@ -68,10 +68,10 @@ namespace P42.Uno.Controls
         public static Element NoneSelect(this Element element)
         { element.SelectionMode= Controls.SelectionMode.None; return element; }
 
-        public static Element AddOnIsOverflowedChanged(this Element element, EventHandler<bool> handler)
+        public static Element AddIsOverflowedChangedHandler(this Element element, EventHandler<bool> handler)
         { element.IsOverflowedChanged += handler; return element; }
 
-        public static Element AddOnSelectionChanged(this Element element, EventHandler<(int SelectedIndex, string SelectedLabel)> handler)
+        public static Element AddSelectionChangedHandler(this Element element, EventHandler<(int SelectedIndex, string SelectedLabel)> handler)
         { element.SelectionChanged += handler; return element; }
     }
 }

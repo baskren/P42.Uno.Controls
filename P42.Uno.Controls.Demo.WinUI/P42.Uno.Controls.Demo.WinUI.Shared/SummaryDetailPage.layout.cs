@@ -60,7 +60,7 @@ namespace P42.Uno.Controls.Demo
                 .Background(Colors.Beige)
                 .BorderBrush(Colors.Green)
                 .BorderThickness(1)
-                //.AddOnTapped(BorderTapped)
+                //.AddTapHandler(BorderTapped)
                 .CornerRadius(5);
 
             DataContextChanged += CellTemplate_DataContextChanged;

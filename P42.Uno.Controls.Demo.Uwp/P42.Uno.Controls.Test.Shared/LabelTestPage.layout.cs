@@ -48,7 +48,7 @@ namespace P42.Uno.Controls.Test
                                         .Assign(out modeSwitch)
                                         .Off()
                                         .Right()
-                                        .AddOnToggled(OnModeSwitchToggled)
+                                        .AddToggledHandler(OnModeSwitchToggled)
                                 ),
                             new TextBlock()
                                 .Text("Microsoft.UI.Xaml.Controls.TextBlock:"),
@@ -102,7 +102,7 @@ namespace P42.Uno.Controls.Test
                                         .PlaceholderText("Default")
                                         .StretchHorizontal()
                                         .ItemsSource(P42.Utils.Uno.AvailableFonts.Names)
-                                        .AddOnSelectionChanged(OnSelectedFontChanged)
+                                        .AddSelectionChangedHandler(OnSelectedFontChanged)
                                 ),
                             new TextBlock()
                                 .Assign(out fontSizeLabel)
@@ -111,7 +111,7 @@ namespace P42.Uno.Controls.Test
                                 .Assign(out fontSizeSlider)
                                 .MinMaxStep(4,104,1)
                                 .Value(label.FontSize)
-                                .AddOnValueChanged(OnFontSizeChanged),
+                                .AddValueChangedHandler(OnFontSizeChanged),
                             new TextBlock()
                                 .Assign(out lineHeightLabel)
                                 .Text($"Line Ht: {label.LineHeight}"), 
@@ -119,7 +119,7 @@ namespace P42.Uno.Controls.Test
                                 .Assign(out lineHeightSlider)
                                 .MinMax(0.01, 8)
                                 .Value(label.LineHeight)
-                                .AddOnValueChanged(OnLineHeightValueChanged),
+                                .AddValueChangedHandler(OnLineHeightValueChanged),
                             new TextBlock()
                                 .Assign(out fittedFontSizeLabel)
                                 .Text($"FittedFontSize: {label.FittedFontSize}"),
@@ -131,7 +131,7 @@ namespace P42.Uno.Controls.Test
                                 .RadioSelect()
                                 .AllowUnselectAll(false)
                                 .SelectedLabel(label.LabelAutoFit.ToString())
-                                .AddOnSelectionChanged(OnAutoFitChanged),
+                                .AddSelectionChangedHandler(OnAutoFitChanged),
                             new TextBlock()
                                 .Assign(out linesLabel)
                                 .Text($"Lines: {label.Lines}"),
@@ -139,7 +139,7 @@ namespace P42.Uno.Controls.Test
                                 .Assign(out linesSlider)
                                 .MinMaxStep(0, 8,1)
                                 .Value(label.Lines)
-                                .AddOnValueChanged(OnLinesChanged),
+                                .AddValueChangedHandler(OnLinesChanged),
                             new Grid()
                                 .Assign(out imposedHeightGrid)
                                 .Rows("*","*")
@@ -156,13 +156,13 @@ namespace P42.Uno.Controls.Test
                                         .Assign(out imposeHeightSwitch)
                                         .RowCol(0, 1)
                                         .On()
-                                        .AddOnToggled(OnImposeHeightChanged),
+                                        .AddToggledHandler(OnImposeHeightChanged),
                                     new Slider()
                                         .Assign(out heightRequestSlider)
                                         .RowCol(1,1)
                                         .MinMaxStep(10,800,1)
                                         .Value(label.Height)
-                                        .AddOnValueChanged(OnHeightRequestValueChanged)
+                                        .AddValueChangedHandler(OnHeightRequestValueChanged)
                                 ),
                             new TextBlock()
                                 .Assign(out vtAlignmentSelectorLabel)
@@ -172,7 +172,7 @@ namespace P42.Uno.Controls.Test
                                 .Labels(Enum.GetNames(typeof(VerticalAlignment)))
                                 .RadioSelect().AllowUnselectAll(false)
                                 .SelectedLabel(label.VerticalTextAlignment.ToString())
-                                .AddOnSelectionChanged(OnVerticalAlignmentChanged),
+                                .AddSelectionChangedHandler(OnVerticalAlignmentChanged),
                             new TextBlock()
                                 .Assign(out textAlignmentLabel)
                                 .Text($"TextAlignment: {label.TextAlignment}"),
@@ -181,7 +181,7 @@ namespace P42.Uno.Controls.Test
                                 .Labels(Enum.GetNames(typeof(TextAlignment)))
                                 .RadioSelect().AllowUnselectAll(false)
                                 .SelectedLabel(label.TextAlignment.ToString())
-                                .AddOnSelectionChanged(OnHorizontalAlignmentChanged),
+                                .AddSelectionChangedHandler(OnHorizontalAlignmentChanged),
                             new TextBlock()
                                 .Assign(out textWrappingLabel)
                                 .Text($"TextWrapping: {label.TextWrapping}"),
@@ -190,7 +190,7 @@ namespace P42.Uno.Controls.Test
                                 .Labels(Enum.GetNames(typeof(TextWrapping)))
                                 .RadioSelect().AllowUnselectAll(false)
                                 .SelectedLabel(label.TextWrapping.ToString())
-                                .AddOnSelectionChanged(OnTextWrappingChanged),
+                                .AddSelectionChangedHandler(OnTextWrappingChanged),
                             new TextBlock()
                                 .Assign(out textTrimmingLabel)
                                 .Text($"TextTrimming: {label.TextTrimming}"),
@@ -199,7 +199,7 @@ namespace P42.Uno.Controls.Test
                                 .Labels(Enum.GetNames(typeof(TextTrimming)))
                                 .RadioSelect().AllowUnselectAll(false)
                                 .SelectedLabel(label.TextTrimming.ToString())   
-                                .AddOnSelectionChanged(OnTextTrimmingChanged)
+                                .AddSelectionChangedHandler(OnTextTrimmingChanged)
                         )
                 );
 
