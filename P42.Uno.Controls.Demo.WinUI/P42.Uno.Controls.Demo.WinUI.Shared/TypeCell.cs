@@ -21,7 +21,7 @@ namespace P42.Uno.Controls.Demo
             DataContextChanged += OnDataContextChanged;
         }
 
-#if NET7_0_WINDOWS10_0_19041_0
+#if !HAS_UNO
 
         private void OnDataContextChanged(Microsoft.UI.Xaml.FrameworkElement sender, Microsoft.UI.Xaml.DataContextChangedEventArgs args)
 #else

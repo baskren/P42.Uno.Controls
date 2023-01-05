@@ -289,7 +289,7 @@ namespace P42.Uno.Controls
             SelectionTracker.CollectionChanged += OnSelectionTracker_CollectionChanged;
             SelectionTracker.SelectionChanged += OnSelectionTracker_SelectionChanged;
 
-#if NET7_0_WINDOWS10_0_19041_0
+#if !HAS_UNO
 
             RegisterPropertyChangedCallback(Grid.BorderThicknessProperty, OnBorderThicknessChanged);
 #endif

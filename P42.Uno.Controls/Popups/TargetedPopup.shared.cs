@@ -25,7 +25,7 @@ namespace P42.Uno.Controls
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = nameof(XamlContent))]
     public partial class TargetedPopup : UserControl, ITargetedPopup
-#if NET7_0_WINDOWS10_0_19041_0
+#if !HAS_UNO
         , IDisposable
 #endif
     {
@@ -562,7 +562,7 @@ namespace P42.Uno.Controls
         }
 #endif
 
-#if NET7_0_WINDOWS10_0_19041_0
+#if !HAS_UNO
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

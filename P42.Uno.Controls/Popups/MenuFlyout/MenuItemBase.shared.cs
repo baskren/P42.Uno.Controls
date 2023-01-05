@@ -136,7 +136,7 @@ namespace P42.Uno.Controls
 
 
         public object Tag;
-#if NET7_0_WINDOWS10_0_19041_0
+#if !HAS_UNO
         //internal WeakReference<MenuFlyout> MenuFlyoutWeakRef;
         internal WeakReference<MenuFlyoutCell> MenuFlyoutCellWeakRef;
 #endif

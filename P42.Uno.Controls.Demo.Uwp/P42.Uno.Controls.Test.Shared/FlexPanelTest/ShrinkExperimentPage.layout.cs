@@ -71,7 +71,7 @@ namespace FlexPanelTest
                     new FlexPanel()
                         .Row(1)
                         .Background(Colors.AliceBlue)
-#if NET7_0_WINDOWS10_0_19041_0
+#if !HAS_UNO
 
                         .AddStyle(typeof(TextBlock),(TextBlock.FontSizeProperty, 40))
 #else

@@ -62,13 +62,13 @@ namespace P42.Uno.Controls.Test
                 .BorderThickness(1)
                 //.AddTapHandler(BorderTapped)
                 .CornerRadius(5);
-#if NET7_0_WINDOWS10_0_19041_0
+#if !HAS_UNO
 
             DataContextChanged += CellTemplate_DataContextChanged;
 #endif
         }
 
-#if NET7_0_WINDOWS10_0_19041_0
+#if !HAS_UNO
 
         private void CellTemplate_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
 #else

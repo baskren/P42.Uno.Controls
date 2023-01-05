@@ -21,7 +21,7 @@ using P42.Uno.Controls;
 using System.Reflection.Emit;
 using Microsoft.UI.Xaml.Shapes;
 
-#if NET7_0_WINDOWS10_0_19041_0
+#if !HAS_UNO
 #else
 using Uno.Foundation;
 #endif
@@ -115,13 +115,13 @@ namespace P42.Uno.Controls.Test
                 .CornerRadius(5)
                 //.AddTapHandler(BorderTapped)
                 .Content(new TextBlock { Text = "ZAP" });
-#if NET7_0_WINDOWS10_0_19041_0
+#if !HAS_UNO
 
             DataContextChanged += CellTemplate_DataContextChanged;
 #endif
         }
 
-#if NET7_0_WINDOWS10_0_19041_0
+#if !HAS_UNO
 
         private void CellTemplate_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
 #else
