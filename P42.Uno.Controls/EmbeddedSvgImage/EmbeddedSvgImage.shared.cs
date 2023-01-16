@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using SkiaSharp.Views.Windows;
-
+using P42.Uno.Markup;
 
 namespace P42.Uno.Controls
 {

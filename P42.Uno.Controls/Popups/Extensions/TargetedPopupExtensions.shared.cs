@@ -188,8 +188,8 @@ namespace P42.Uno.Controls
 		public static TElement LightDismissOverlayBrush<TElement>(this TElement element, Color value) where TElement : ElementType
 		{ element.LightDismissOverlayBrush = new SolidColorBrush(value); return element; }
 
-		public static TElement LightDismissOverlayBrush<TElement>(this TElement element, string value) where TElement : ElementType
-		{ element.LightDismissOverlayBrush = new SolidColorBrush(P42.Utils.Uno.ColorExtensions.ColorFromString(value)); return element; }
+		public static TElement LightDismissOverlayBrush<TElement>(this TElement element, string color) where TElement : ElementType
+		{ element.LightDismissOverlayBrush = new SolidColorBrush(P42.Uno.Markup.ColorExtensions.ColorFromString(color)); return element; }
 		*/
         #endregion
 

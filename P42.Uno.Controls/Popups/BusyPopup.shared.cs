@@ -26,14 +26,14 @@ namespace P42.Uno.Controls
             nameof(SpinnerBrush),
             typeof(Brush),
             typeof(BusyPopup),
-            new PropertyMetadata(new SolidColorBrush(Utils.Uno.SystemColors.Accent), new PropertyChangedCallback(OnSpinnerBrushChanged))
+            new PropertyMetadata(new SolidColorBrush(P42.Uno.Markup.SystemColors.Accent), new PropertyChangedCallback(OnSpinnerBrushChanged))
         );
         private static void OnSpinnerBrushChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is BusyPopup popup && popup._progressRing is ProgressRing ring)
             {
                 if (e.NewValue is null)
-                    ring.Foreground = new SolidColorBrush(Utils.Uno.SystemColors.Accent);
+                    ring.Foreground = new SolidColorBrush(P42.Uno.Markup.SystemColors.Accent);
                 else
                     ring.Foreground = (Brush)e.NewValue;
             }
