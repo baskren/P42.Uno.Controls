@@ -72,6 +72,7 @@
   <ItemGroup Condition=" !$(TargetFramework.Contains('windows')) ">
 	  <PackageReference Include="Uno.WinUI" Version="4.6.39" />
     <PackageReference Include="Uno.WinUI.Lottie" Version="4.6.39" />
+    <PackageReference Include="Uno.WinUI.Svg" Version="4.6.39" />
 	  <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
     <Compile Include="**\*.uno.cs" Exclude="$(DefaultItemExcludes)" />
   </ItemGroup>
