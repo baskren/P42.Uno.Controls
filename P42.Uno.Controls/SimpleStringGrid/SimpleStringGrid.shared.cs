@@ -23,7 +23,7 @@ using Microsoft.UI.Xaml.Documents;
 namespace P42.Uno.Controls
 {
     [Microsoft.UI.Xaml.Data.Bindable]
-    public partial class SimpleDataGrid : UserControl
+    public partial class SimpleStringGrid : UserControl
     {
         #region Properties
 
@@ -31,8 +31,8 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty AlternatingRowBackgroundProperty = DependencyProperty.Register(
             nameof(AlternatingRowBackground),
             typeof(Brush),
-            typeof(SimpleDataGrid),
-            new PropertyMetadata(P42.Uno.Markup.SystemBrushes.ControlFillSecondary, (d, e) => ((SimpleDataGrid)d).OnSourceChanged())
+            typeof(SimpleStringGrid),
+            new PropertyMetadata(P42.Uno.Markup.SystemBrushes.ControlFillSecondary, (d, e) => ((SimpleStringGrid)d).OnSourceChanged())
         );
         public Brush AlternatingRowBackground
         {
@@ -45,8 +45,8 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty AlternatingRowForegroundProperty = DependencyProperty.Register(
             nameof(AlternatingRowForeground),
             typeof(Brush),
-            typeof(SimpleDataGrid),
-            new PropertyMetadata(P42.Uno.Markup.SystemBrushes.TextFillPrimary, (d, e) => ((SimpleDataGrid)d).OnSourceChanged())
+            typeof(SimpleStringGrid),
+            new PropertyMetadata(P42.Uno.Markup.SystemBrushes.TextFillPrimary, (d, e) => ((SimpleStringGrid)d).OnSourceChanged())
         );
         public Brush AlternatingRowForeground
         {
@@ -59,8 +59,8 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
             nameof(ItemsSource),
             typeof(IList<IList<string>>),
-            typeof(SimpleDataGrid),
-            new PropertyMetadata(default(IList<IList<string>>), (d,e) =>  ((SimpleDataGrid)d).OnSourceChanged())
+            typeof(SimpleStringGrid),
+            new PropertyMetadata(default(IList<IList<string>>), (d,e) =>  ((SimpleStringGrid)d).OnSourceChanged())
         );
         public IList<IList<string>> ItemsSource
         {
@@ -73,8 +73,8 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty RowBackgroundProperty = DependencyProperty.Register(
             nameof(RowBackground),
             typeof(Brush),
-            typeof(SimpleDataGrid),
-            new PropertyMetadata(new SolidColorBrush(Colors.Transparent), (d, e) => ((SimpleDataGrid)d).OnSourceChanged())
+            typeof(SimpleStringGrid),
+            new PropertyMetadata(new SolidColorBrush(Colors.Transparent), (d, e) => ((SimpleStringGrid)d).OnSourceChanged())
         );
         public Brush RowBackground
         {
@@ -87,8 +87,8 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty RowForegroundProperty = DependencyProperty.Register(
             nameof(RowForeground),
             typeof(Brush),
-            typeof(SimpleDataGrid),
-            new PropertyMetadata(P42.Uno.Markup.SystemBrushes.TextFillSecondary, (d, e) => ((SimpleDataGrid)d).OnSourceChanged())
+            typeof(SimpleStringGrid),
+            new PropertyMetadata(P42.Uno.Markup.SystemBrushes.TextFillSecondary, (d, e) => ((SimpleStringGrid)d).OnSourceChanged())
         );
         public Brush RowForeground
         {
@@ -101,7 +101,7 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty RowHeightProperty = DependencyProperty.Register(
             nameof(RowHeight),
             typeof(double),
-            typeof(SimpleDataGrid),
+            typeof(SimpleStringGrid),
             new PropertyMetadata(default(double))
         );
         public double RowHeight
@@ -115,8 +115,8 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty GridLinesVisibilityProperty = DependencyProperty.Register(
             nameof(GridLinesVisibility),
             typeof(DataGridGridLinesVisibility),
-            typeof(SimpleDataGrid),
-            new PropertyMetadata(default(DataGridGridLinesVisibility),(d,e) => ((SimpleDataGrid)d).OnSourceChanged())
+            typeof(SimpleStringGrid),
+            new PropertyMetadata(default(DataGridGridLinesVisibility),(d,e) => ((SimpleStringGrid)d).OnSourceChanged())
         );
         public DataGridGridLinesVisibility GridLinesVisibility
         {
@@ -129,7 +129,7 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty HorizontalGridLinesBrushProperty = DependencyProperty.Register(
             nameof(HorizontalGridLinesBrush),
             typeof(Brush),
-            typeof(SimpleDataGrid),
+            typeof(SimpleStringGrid),
             new PropertyMetadata(SystemBrushes.ControlStrokeDefault)
         );
         public Brush HorizontalGridLinesBrush
@@ -143,8 +143,8 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(
             nameof(HorizontalScrollBarVisibility),
             typeof(ScrollBarVisibility),
-            typeof(SimpleDataGrid),
-            new PropertyMetadata(default(ScrollBarVisibility), (d,e) => ((SimpleDataGrid)d)._scrollViewer.HorizontalScrollBarVisibility = (ScrollBarVisibility)e.NewValue)
+            typeof(SimpleStringGrid),
+            new PropertyMetadata(default(ScrollBarVisibility), (d,e) => ((SimpleStringGrid)d)._scrollViewer.HorizontalScrollBarVisibility = (ScrollBarVisibility)e.NewValue)
         );
         public ScrollBarVisibility HorizontalScrollBarVisibility
         {
@@ -157,8 +157,8 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty VerticalGridLinesBrushProperty = DependencyProperty.Register(
             nameof(VerticalGridLinesBrush),
             typeof(Brush),
-            typeof(SimpleDataGrid),
-            new PropertyMetadata(default(Brush), (d, e) => ((SimpleDataGrid)d).OnSourceChanged())
+            typeof(SimpleStringGrid),
+            new PropertyMetadata(default(Brush), (d, e) => ((SimpleStringGrid)d).OnSourceChanged())
         );
         public Brush VerticalGridLinesBrush
         {
@@ -171,8 +171,8 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(
             nameof(VerticalScrollBarVisibility),
             typeof(ScrollBarVisibility),
-            typeof(SimpleDataGrid),
-            new PropertyMetadata(default(ScrollBarVisibility), (d, e) => ((SimpleDataGrid)d)._scrollViewer.VerticalScrollBarVisibility = (ScrollBarVisibility)e.NewValue)
+            typeof(SimpleStringGrid),
+            new PropertyMetadata(default(ScrollBarVisibility), (d, e) => ((SimpleStringGrid)d)._scrollViewer.VerticalScrollBarVisibility = (ScrollBarVisibility)e.NewValue)
         );
         public ScrollBarVisibility VerticalScrollBarVisibility
         {
@@ -206,7 +206,7 @@ namespace P42.Uno.Controls
 
 
         #region Construction
-        public SimpleDataGrid()
+        public SimpleStringGrid()
         {
             HorizontalAlignment = HorizontalAlignment.Stretch;
             VerticalAlignment = VerticalAlignment.Stretch;
