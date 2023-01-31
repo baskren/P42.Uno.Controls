@@ -116,7 +116,16 @@ namespace P42.Uno.Controls
             nameof(GridLinesVisibility),
             typeof(DataGridGridLinesVisibility),
             typeof(SimpleStringGrid),
-            new PropertyMetadata(default(DataGridGridLinesVisibility),(d,e) => ((SimpleStringGrid)d).OnSourceChanged())
+            new PropertyMetadata(default(DataGridGridLinesVisibility),(d,e) =>
+            {
+                if (
+                    (((DataGridGridLinesVisibility)e.OldValue) | DataGridGridLinesVisibility.Vertical) !=
+                    (((DataGridGridLinesVisibility)e.NewValue) | DataGridGridLinesVisibility.Vertical)
+                    )
+                    ((SimpleStringGrid)d).ResetColumns();
+                else
+                    ((SimpleStringGrid)d).OnSourceChanged();
+            })
         );
         public DataGridGridLinesVisibility GridLinesVisibility
         {
@@ -192,7 +201,11 @@ namespace P42.Uno.Controls
             VerticalAlignment = VerticalAlignment.Stretch,
         };
 
-        ScrollViewer _scrollViewer = new ScrollViewer();
+        ScrollViewer _scrollViewer = new ScrollViewer
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+        };
 
         List<TextBlock> textBlocksStore = new List<TextBlock>();
         List<Rectangle> rectanglesStore = new List<Rectangle>();
@@ -201,7 +214,7 @@ namespace P42.Uno.Controls
         List<Rectangle> backgroundRectanglesBuffer = new List<Rectangle>();
         List<Rectangle> hzGridlinesRectanglesBuffer = new List<Rectangle>();
         List<Rectangle> vtGridlinesRectanglesBuffer = new List<Rectangle>();
-
+        List<double> MaxColumnWidths = new List<double>();
         #endregion
 
 
@@ -211,7 +224,9 @@ namespace P42.Uno.Controls
             HorizontalAlignment = HorizontalAlignment.Stretch;
             VerticalAlignment = VerticalAlignment.Stretch;
             Content = _scrollViewer.Content(_grid);
+
         }
+
         #endregion
 
 
@@ -221,15 +236,24 @@ namespace P42.Uno.Controls
 
         #region Helper Methods
 
+        void ResetColumns()
+        {
+            MaxColumnWidths.Clear();
+            OnSourceChanged();
+        }
+
         void OnSourceChanged()
         {
-            
+            RecordColumnWidths();
 
             Clear();
             UpdateColumnsCount();
 
             if (ItemsSource is null)
+            {
+                MaxColumnWidths.Clear();
                 return;
+            }
 
             int rowIndex = 0;
             if ((GridLinesVisibility & DataGridGridLinesVisibility.Horizontal) == 0)
@@ -274,6 +298,17 @@ namespace P42.Uno.Controls
 
         }
 
+        void RecordColumnWidths()
+        {
+            for (int i = 0; i < _grid.ColumnDefinitions.Count; i++)
+            {
+                while (MaxColumnWidths.Count <= i)
+                    MaxColumnWidths.Add(0.0);
+                
+                MaxColumnWidths[i] = Math.Max(MaxColumnWidths[i],_grid.ColumnDefinitions[i].ActualWidth);
+            }
+        }
+
         void AddText(string text, int i, int rowIndex, int colIndex)
         {
             textBlocksBuffer.Add(
@@ -307,9 +342,11 @@ namespace P42.Uno.Controls
         {
             if (i == 0)
             {
+                ColumnDefinition columnDef;
                 if (isSeparator)
                 {
-                    _grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1) });
+                    columnDef = new ColumnDefinition { Width = new GridLength(1) };
+                    _grid.ColumnDefinitions.Add(columnDef);
                     var rect = GetRectangle();
                     rect.Fill(VerticalGridLinesBrush);
                     Grid.SetRow(rect, 0);
@@ -318,8 +355,19 @@ namespace P42.Uno.Controls
                     Grid.SetColumnSpan(rect, 1);
                     vtGridlinesRectanglesBuffer.Add(rect);
                 }
+                else if (colIndex == columnsCount * 2 - 1)
+                {
+                    columnDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
+                    _grid.ColumnDefinitions.Add(columnDef);
+                }
                 else
-                    _grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                {
+                    columnDef = new ColumnDefinition { Width = GridLength.Auto };
+                    _grid.ColumnDefinitions.Add(columnDef);
+                }
+
+                if (colIndex < MaxColumnWidths.Count)
+                    columnDef.MinWidth = MaxColumnWidths[colIndex];
             }
         }
 
@@ -332,11 +380,13 @@ namespace P42.Uno.Controls
             for (int i = 0; i < ItemsSource.Count; i++)
             {
                 var row = ItemsSource[i];
-                for (int j = 0; j < row.Count; j++)
-                    columnsCount = Math.Max(row.Count, columnsCount);
+                columnsCount = Math.Max(row.Count, columnsCount);
             }
 
         }
+
+
+
         void Clear()
         {
             foreach (var child in _grid.Children)

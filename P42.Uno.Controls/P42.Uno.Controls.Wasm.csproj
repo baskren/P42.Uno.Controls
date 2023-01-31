@@ -24,8 +24,8 @@
 	
   <ItemGroup>
     <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
-    <PackageReference Include="Uno.WinUI.Lottie" Version="4.6.39" />
-    <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.6.39" />
+    <PackageReference Include="Uno.WinUI.Lottie" Version="4.6.41" />
+    <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.6.41" />
   </ItemGroup>
 
   <ItemGroup>
