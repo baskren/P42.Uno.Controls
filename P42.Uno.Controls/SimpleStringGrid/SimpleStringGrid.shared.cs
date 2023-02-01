@@ -32,7 +32,7 @@ namespace P42.Uno.Controls
             nameof(AlternatingRowBackground),
             typeof(Brush),
             typeof(SimpleStringGrid),
-            new PropertyMetadata(P42.Uno.Markup.SystemBrushes.ControlFillSecondary, (d, e) => ((SimpleStringGrid)d).OnSourceChanged())
+            new PropertyMetadata(P42.Uno.Markup.SystemBrushes.DefaultTextForeground, (d, e) => ((SimpleStringGrid)d).OnSourceChanged())
         );
         public Brush AlternatingRowBackground
         {
@@ -88,7 +88,7 @@ namespace P42.Uno.Controls
             nameof(RowForeground),
             typeof(Brush),
             typeof(SimpleStringGrid),
-            new PropertyMetadata(P42.Uno.Markup.SystemBrushes.TextFillSecondary, (d, e) => ((SimpleStringGrid)d).OnSourceChanged())
+            new PropertyMetadata(P42.Uno.Markup.SystemBrushes.DefaultTextForeground, (d, e) => ((SimpleStringGrid)d).OnSourceChanged())
         );
         public Brush RowForeground
         {
@@ -316,8 +316,8 @@ namespace P42.Uno.Controls
                     .Text(text)
                     .RowCol(rowIndex, colIndex)
                     .Foreground(i%2>0
-                        ? RowForeground
-                        : AlternatingRowForeground)
+                        ? AlternatingRowForeground 
+                        : RowForeground)
                 );
         }
 
@@ -332,8 +332,8 @@ namespace P42.Uno.Controls
             {
                 _grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
                 var fill = i % 2 > 0
-                    ? RowBackground
-                    : AlternatingRowBackground;
+                    ? AlternatingRowBackground 
+                    : RowBackground;
                 backgroundRectanglesBuffer.Add(GetRectangle().Fill(fill).RowCol(rowIndex, 0).ColumnSpan(columnsCount * 2 + 1).RowSpan(1));
             }
         }
@@ -415,7 +415,8 @@ namespace P42.Uno.Controls
                 HorizontalAlignment= HorizontalAlignment.Left,
                 VerticalAlignment= VerticalAlignment.Center,
                 Foreground = SystemBrushes.DefaultTextForeground,
-                Margin = new Thickness(2)
+                Margin = new Thickness(6),
+                FontSize = 15
             };
         }
 
