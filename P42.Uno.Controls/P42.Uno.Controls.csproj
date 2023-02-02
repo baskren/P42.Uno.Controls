@@ -49,7 +49,7 @@
 
   <!-- TIZEN -->
   <ItemGroup Condition=" $(TargetFramework.ToLower().Contains('tizen')) ">
-    <PackageReference Include="Uno.WinUI.Runtime.Skia.Tizen" Version="4.6.41" />
+    <PackageReference Include="Uno.WinUI.Runtime.Skia.Tizen" Version="4.7.37" />
     <Compile Include="**\*.tizen.cs" />
     <Compile Include="**\*.tizen.*.cs" />
   </ItemGroup>
@@ -70,9 +70,9 @@
 
   <!-- NOT Windows -->
   <ItemGroup Condition=" !$(TargetFramework.Contains('windows')) ">
-	  <PackageReference Include="Uno.WinUI" Version="4.6.41" />
-    <PackageReference Include="Uno.WinUI.Lottie" Version="4.6.41" />
-    <PackageReference Include="Uno.WinUI.Svg" Version="4.6.41" />
+	  <PackageReference Include="Uno.WinUI" Version="4.7.37" />
+    <PackageReference Include="Uno.WinUI.Lottie" Version="4.7.37" />
+    <PackageReference Include="Uno.WinUI.Svg" Version="4.7.37" />
     <PackageReference Include="Svg.Skia" Version="0.5.16" />
 	  <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
     <Compile Include="**\*.uno.cs" Exclude="$(DefaultItemExcludes)" />
