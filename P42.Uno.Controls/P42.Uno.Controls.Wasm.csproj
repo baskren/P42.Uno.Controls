@@ -35,7 +35,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="LinkerConfig.Wasm.xml">
-			<LogicalName>$(AssemblyName).xml</LogicalName>
+			<LogicalName>P42.Uno.Controls.Wasm.xml</LogicalName>
 		</EmbeddedResource>
 	</ItemGroup>
 
