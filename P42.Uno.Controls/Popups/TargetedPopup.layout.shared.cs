@@ -93,7 +93,14 @@ namespace P42.Uno.Controls
             this.FontFamily(family);
 #endif
             */
+
+            _contentPresenter.SizeChanged += _contentPresenter_SizeChanged;
         }
 
+        private void _contentPresenter_SizeChanged(object sender, SizeChangedEventArgs args)
+        {
+            System.Diagnostics.Debug.WriteLine($" ---- TargetedPopup.ContentPresenter_SizeChanged [{args.PreviousSize}] -> [{args.NewSize}] : phase:[{_contentPresenter.RenderPhase}] : [{_contentPresenter.DesiredSize}]---- ");
+
+        }
     }
 }

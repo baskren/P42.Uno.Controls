@@ -136,7 +136,10 @@ namespace P42.Uno.Controls
         protected virtual void OnTargetChanged(DependencyPropertyChangedEventArgs e)
         {
             if (_border != null)
+            {
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.OnTargetChanged ======= ");
                 UpdateMarginAndAlignment();
+            }
         }
 
         /// <summary>
@@ -159,7 +162,10 @@ namespace P42.Uno.Controls
         protected virtual void OnTargetPointChanged(DependencyPropertyChangedEventArgs e)
         {
             if (_border != null)
+            {
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.OnTargetPointChanged ======= ");
                 UpdateMarginAndAlignment();
+            }
         }
 
         /// <summary>
@@ -233,7 +239,10 @@ namespace P42.Uno.Controls
         protected virtual void OnPreferredPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
         {
             if (_border != null)
+            {
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPreferredPointerDirectionChanged ======= ");
                 UpdateMarginAndAlignment();
+            }
         }
         public PointerDirection PreferredPointerDirection
         {
@@ -252,7 +261,10 @@ namespace P42.Uno.Controls
         protected virtual void OnFallbackPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
         {
             if (_border != null && ActualPointerDirection == PointerDirection.None && PreferredPointerDirection != PointerDirection.None)
+            {
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.OnFallbackPointerDirectionChanged ======= ");
                 UpdateMarginAndAlignment();
+            }
         }
         public PointerDirection FallbackPointerDirection
         {
@@ -273,7 +285,10 @@ namespace P42.Uno.Controls
         protected virtual void OnPointerLengthChanged(DependencyPropertyChangedEventArgs e)
         {
             if (_border != null)
+            {
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPointerLengthChanged ======= ");
                 UpdateMarginAndAlignment();
+            }
         }
         /// <summary>
         /// Gets or sets the length of the bubble layout's pointer.
@@ -782,6 +797,7 @@ namespace P42.Uno.Controls
                 _popup.XamlRoot = P42.Utils.Uno.Platform.Window.Content.XamlRoot;
                 _popup.IsOpen = true;
                 await Task.Delay(5);
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyc ======= ");
                 UpdateMarginAndAlignment();
 
 
@@ -949,6 +965,7 @@ namespace P42.Uno.Controls
         {
             if (args.NewSize.Width < 1 || args.NewSize.Height < 1)
                 return;
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.OnBorderSizeChanged ======= ");
             UpdateMarginAndAlignment();
         }
         #endregion
@@ -957,7 +974,7 @@ namespace P42.Uno.Controls
         #region Layout
         void UpdateMarginAndAlignment()
         {
-            if (_border is null)
+            if (_border is null || PushPopState == PushPopState.Popped || PushPopState == PushPopState.Popping)
                 return;
 
             var windowSize = AppWindow.Size(this);
@@ -965,6 +982,7 @@ namespace P42.Uno.Controls
                 return;
 
             var safeMargin = AppWindow.SafeArea(this);
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment windowSize:[{windowSize}] Margin:[{Margin}] safeMargin:[{safeMargin}]");
 
 #if __ANDROID__
             //safeMargin.Top = AppWindow.StatusBarHeight(this);
@@ -972,8 +990,11 @@ namespace P42.Uno.Controls
 
             var windowWidth = windowSize.Width - Margin.Horizontal() - safeMargin.Horizontal();
             var windowHeight = windowSize.Height - Margin.Vertical() - safeMargin.Vertical();
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment windowWidth:[{windowWidth}] windowHeight:[{windowHeight}]");
+
 
             var cleanSize = MeasureBorder(new Size(windowWidth, windowHeight));
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment cleanSize:[{cleanSize}] : [{windowWidth},{windowHeight}]");
 
             if (PreferredPointerDirection == PointerDirection.None || Target is null)
             {
@@ -986,7 +1007,11 @@ namespace P42.Uno.Controls
 
             //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateBorderMarginAndAlignment targetBounds:["+targetBounds+"]");
             var availableSpace = AvailableSpace(target, safeMargin);
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment availableSpace:[{availableSpace}]");
             var stats = BestFit(availableSpace, cleanSize, safeMargin);
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment stats:[{stats}]");
+
+
 
             if (stats.PointerDirection == PointerDirection.None)
             {
@@ -1417,9 +1442,9 @@ namespace P42.Uno.Controls
             return stats;
         }
 
-        Size _lastSizeAvailable = Size.Empty;
-        Size _lastResultSize = Size.Empty;
-        bool _lastWasFixedWidth;
+        //Size _lastSizeAvailable = Size.Empty;
+        //Size _lastResultSize = Size.Empty;
+        //bool _lastWasFixedWidth;
         private bool disposedValue;
 
         Size MeasureBorder(Size available, Size failSize = default)
@@ -1430,40 +1455,58 @@ namespace P42.Uno.Controls
             var width = available.Width;
             var height = available.Height;
             if (this.HasPrescribedWidth())
+            {
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder HasPrescribedWidth");
                 width = Math.Min(Width, width);
+            }
             if (this.HasPrescribedHeight())
+            {
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder HasPrescribedHeight");
                 height = Math.Min(Height, height);
+            }
+
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder width[{width}][{height}]");
 
             if (this.HasPrescribedWidth() && this.HasPrescribedHeight())
             {
-                _lastSizeAvailable = Size.Empty;
-                _lastResultSize = Size.Empty;
-                _lastWasFixedWidth = false;
+                //_lastSizeAvailable = Size.Empty;
+                //_lastResultSize = Size.Empty;
+                //_lastWasFixedWidth = false;
                 return new Size(width, height);
             }
 
+            /*
             if (_lastWasFixedWidth && this.HasPrescribedWidth() &&
                 _lastSizeAvailable.Width == width)
             {
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder  : _lastWasFixedSize && PrescribedWidth && _lastAvailWidth = width");
                 if (VerticalAlignment == VerticalAlignment.Stretch || _lastResultSize.Height > height)
                     return new Size(_lastSizeAvailable.Width, height);
                 return _lastResultSize;
             }
+            */
 
 
             if (IsEmpty)
+            {
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder : IS EMPTY ");
+                return new Size(width, height);
+                /*
                 return new Size(
                     this.HasPrescribedWidth()
                         ? width : 50 + Padding.Horizontal(),
                     this.HasPrescribedHeight()
                         ? height : 50 + Padding.Vertical()
                     );
+                */
+            }
 
             if (HorizontalAlignment == HorizontalAlignment.Stretch && VerticalAlignment == VerticalAlignment.Stretch)
             {
-                _lastSizeAvailable = Size.Empty;
-                _lastResultSize = Size.Empty;
-                _lastWasFixedWidth = false;
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder : STRETCH ");
+                //_lastSizeAvailable = Size.Empty;
+                //_lastResultSize = Size.Empty;
+                //_lastWasFixedWidth = false;
                 return new Size(width, height);
             }
 
@@ -1476,7 +1519,10 @@ namespace P42.Uno.Controls
             {
                 _contentPresenter.Measure(new Size(availableWidth, availableHeight));
                 var result = _contentPresenter.DesiredSize;
-                //System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.DesiredSize:[" + _contentPresenter.DesiredSize + "]");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.RenderPhase:[" + _contentPresenter.RenderPhase + "]");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.RenderSize:[" + _contentPresenter.RenderSize + "]");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.DesiredSize:[" + _contentPresenter.DesiredSize + "]");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.ActualSize:[" + _contentPresenter.ActualSize + "]");
                 result.Width += Padding.Horizontal() + border;
                 result.Height += Padding.Vertical() + border;
 
@@ -1487,16 +1533,16 @@ namespace P42.Uno.Controls
                         ? height : result.Height
                     );
 
-                _lastSizeAvailable = available;
-                _lastResultSize = resultSize;
-                _lastWasFixedWidth = this.HasPrescribedWidth();
+                //_lastSizeAvailable = available;
+                //_lastResultSize = resultSize;
+                //_lastWasFixedWidth = this.HasPrescribedWidth();
 
                 return resultSize;
             }
 
-            _lastSizeAvailable = Size.Empty;
-            _lastResultSize = Size.Empty;
-            _lastWasFixedWidth = false;
+            //_lastSizeAvailable = Size.Empty;
+            //_lastResultSize = Size.Empty;
+            //_lastWasFixedWidth = false;
             return failSize;
         }
 

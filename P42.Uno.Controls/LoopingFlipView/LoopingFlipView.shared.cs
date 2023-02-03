@@ -142,10 +142,6 @@ namespace P42.Uno.Controls
             if (_cancellationTokenSource != null)
                 return;
 
-
-            System.Diagnostics.Debug.WriteLine($"LoopingFlipView.End : vel[{_lastVelocity}] ");
-
-
             if (Math.Abs(_dx) > 2 * ActualWidth / 3 ||
                 (Math.Abs(_dx) > ActualWidth /2 && _lastVelocity > 0.0001)
                 )
@@ -193,7 +189,6 @@ namespace P42.Uno.Controls
             {
                 var point = e.GetCurrentPoint(null);
                 _lastVelocity = Math.Abs(point.Position.X - _lastPoint.Position.X) / (point.Timestamp - _lastPoint.Timestamp);
-                System.Diagnostics.Debug.WriteLine($"LoopingFlipView.Move : vel[{_lastVelocity}]  [{point.Position.X}-{_lastPoint.Position.X}]/[{point.Timestamp} - {_lastPoint.Timestamp}]");
 
                 _lastPoint = point; 
                 _dx = _lastPoint.Position.X - _downX;
@@ -249,8 +244,6 @@ namespace P42.Uno.Controls
 
                         var offset = ActualWidth + Spacing;
 
-                        System.Diagnostics.Debug.WriteLine($"LoopingFlipView.LayoutChildren ====================================== ");
-
                         var mid = _grid.Children.Count / 2;
                         var dx = _dx;
                         if (dx > 0)
@@ -259,13 +252,11 @@ namespace P42.Uno.Controls
                             {
                                 dx -= offset;
                                 _grid.Children[indexes[i]].RenderTransform = new TranslateTransform { X = dx };
-                                System.Diagnostics.Debug.WriteLine($"LoopingFlipView.LayoutChildren : Child[{indexes[i]}] X = {dx};");
                             }
                             dx = _dx;
                             for (int i = 0; i < mid; i++)
                             {
                                 _grid.Children[indexes[i]].RenderTransform = new TranslateTransform { X = dx };
-                                System.Diagnostics.Debug.WriteLine($"LoopingFlipView.LayoutChildren : Child[{indexes[i]}] X = {dx};");
                                 dx += offset;
                             }
                         }
@@ -274,7 +265,6 @@ namespace P42.Uno.Controls
                             for (int i = 0; i <= mid; i++)
                             {
                                 _grid.Children[indexes[i]].RenderTransform = new TranslateTransform { X = dx };
-                                System.Diagnostics.Debug.WriteLine($"LoopingFlipView.LayoutChildren : Child[{indexes[i]}] X = {dx};");
                                 dx += offset;
                             }
                             dx = _dx;
@@ -282,7 +272,6 @@ namespace P42.Uno.Controls
                             {
                                 dx -= offset;
                                 _grid.Children[indexes[i]].RenderTransform = new TranslateTransform { X = dx };
-                                System.Diagnostics.Debug.WriteLine($"LoopingFlipView.LayoutChildren : Child[{indexes[i]}] X = {dx};");
                             }
 
                         }
@@ -326,8 +315,6 @@ namespace P42.Uno.Controls
                         {
                             var x = tt.X + dx;
                             child.RenderTransform = new TranslateTransform { X = x };
-
-                            System.Diagnostics.Debug.WriteLine($"LoopingFlipView.OnSelectedIndexChanged : dx:[{dx}] X:[{x}]");
                         }
                     }    
                     
