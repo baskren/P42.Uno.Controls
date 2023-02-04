@@ -605,10 +605,23 @@ namespace P42.Uno.Controls
 
         async void OnTargetedPopupPopped(object sender, PopupPoppedEventArgs e)
         {
+            if (IsLightDismissEnabled)
+            {
+                if (e.Cause == PopupPoppedCause.HardwareBackButtonPressed ||
+                    e.Cause == PopupPoppedCause.BackgroundTouch ||
+                    e.Cause == PopupPoppedCause.Timeout)
+                {
+                    var dismissEventArgs = new DismissPointerPressedEventArgs();
+                    DismissPointerPressed?.Invoke(this, dismissEventArgs);
+                    if (!dismissEventArgs.CancelDismiss)
+                        await PopDetailAsync();
+                }
+                else
+                    await PopDetailAsync();
+            }
             //_targetedPopup.DismissPointerPressed -= OnTargetedPopupDismissPointerPressed;
             //_targetedPopup.Popped -= OnTargetedPopupPopped;
             //DetailPushPopState = PushPopState.Popped;
-            await PopDetailAsync();
         }
 
         void OnTargetedPopupDismissPointerPressed(object sender, DismissPointerPressedEventArgs e)
