@@ -99,7 +99,7 @@ namespace P42.Uno.Controls
 
         private void _contentPresenter_SizeChanged(object sender, SizeChangedEventArgs args)
         {
-            System.Diagnostics.Debug.WriteLine($" ---- TargetedPopup.ContentPresenter_SizeChanged [{args.PreviousSize}] -> [{args.NewSize}] : phase:[{_contentPresenter.RenderPhase}] : [{_contentPresenter.DesiredSize}]---- ");
+            System.Diagnostics.Debug.WriteLine($" ---- TargetedPopup.ContentPresenter_SizeChanged [{args.PreviousSize}] -> [{args.NewSize}] : [{_contentPresenter.DesiredSize}]---- ");
 
         }
     }

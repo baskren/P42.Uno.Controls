@@ -1519,7 +1519,6 @@ namespace P42.Uno.Controls
             {
                 _contentPresenter.Measure(new Size(availableWidth, availableHeight));
                 var result = _contentPresenter.DesiredSize;
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.RenderPhase:[" + _contentPresenter.RenderPhase + "]");
                 System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.RenderSize:[" + _contentPresenter.RenderSize + "]");
                 System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.DesiredSize:[" + _contentPresenter.DesiredSize + "]");
                 System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.ActualSize:[" + _contentPresenter.ActualSize + "]");
