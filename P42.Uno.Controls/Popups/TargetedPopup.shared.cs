@@ -1522,6 +1522,7 @@ namespace P42.Uno.Controls
                 System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.RenderSize:[" + _contentPresenter.RenderSize + "]");
                 System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.DesiredSize:[" + _contentPresenter.DesiredSize + "]");
                 System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.ActualSize:[" + _contentPresenter.ActualSize + "]");
+
                 result.Width += Padding.Horizontal() + border;
                 result.Height += Padding.Vertical() + border;
 

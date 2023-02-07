@@ -40,18 +40,24 @@ namespace P42.Uno.Controls
         /// <param name="args"></param>
         protected virtual void OnTitleChanged(DependencyPropertyChangedEventArgs args)
         {
-            _titleBlock.Content = args.NewValue;
             if (args.NewValue is TextBlock tb)
             {
                 var t = tb.Text;
                 if (string.IsNullOrWhiteSpace(t))
                     t = tb.GetHtml();
                 _titleBlock.Collapsed(string.IsNullOrWhiteSpace(t));
+                _titleBlock.Content = tb;
             }
             else if (args.NewValue is string text)
+            {
                 _titleBlock.Collapsed(string.IsNullOrWhiteSpace(text));
+                _titleBlock.Content = new TextBlock { Text = text }.BindFont(_titleBlock);
+            }
             else
+            {
+                _titleBlock.Content = args.NewValue;
                 _titleBlock.Visible();
+            }
         }
 
         public object TitleContent
@@ -81,18 +87,24 @@ namespace P42.Uno.Controls
         /// <param name="args"></param>
         protected virtual void OnMessageChanged(DependencyPropertyChangedEventArgs args)
         {
-            _messageBlock.Content = args.NewValue;
             if (args.NewValue is TextBlock tb)
             {
                 var t = tb.Text;
                 if (string.IsNullOrWhiteSpace(t))
                     t = tb.GetHtml();
                 _messageBlock.Collapsed(string.IsNullOrWhiteSpace(t));
+                _messageBlock.Content = tb;
             }
             else if (args.NewValue is string text)
+            {
                 _messageBlock.Collapsed(string.IsNullOrWhiteSpace(text));
+                _messageBlock.Content = new TextBlock { Text = text }.BindFont(_messageBlock);
+            }
             else
+            {
+                _messageBlock.Content = args.NewValue;
                 _messageBlock.Visible();
+            }
         }
 
         public object Message
