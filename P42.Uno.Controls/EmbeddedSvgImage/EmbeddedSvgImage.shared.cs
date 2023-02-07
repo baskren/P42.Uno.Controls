@@ -72,7 +72,7 @@ namespace P42.Uno.Controls
                 if (stream is null)
                 {
                     var resources = assembly.GetManifestResourceNames();
-                    Console.WriteLine($"ERROR: Cannot file resource [{resourceId}] in assembly [{assembly}].");
+                    Console.WriteLine($"ERROR: Cannot find embedded resource [{resourceId}] in assembly [{assembly}].");
                     Console.WriteLine($"       Resources found:");
                     foreach (var resource in resources)
                         Console.WriteLine($"       [{resource}]");
