@@ -14,7 +14,7 @@ using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Shapes;
-
+using Microsoft.UI;
 
 namespace P42.Uno.Controls
 {
@@ -23,11 +23,8 @@ namespace P42.Uno.Controls
     /// </summary>
     [Microsoft.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
-    [ContentProperty(Name = nameof(XamlContent))]
-    public partial class TargetedPopup : UserControl, ITargetedPopup
-#if !HAS_UNO
-        , IDisposable
-#endif
+    //[ContentProperty(Name = nameof(Content))]
+    public partial class TargetedPopup : ITargetedPopup
     {
         static int _pushingCount = 0;
         public static bool IsPushing
@@ -42,87 +39,58 @@ namespace P42.Uno.Controls
 
         #region Properties
 
-        #region XamlContent Property
-        /// <summary>
-        /// Backing Property for Popup's Content
-        /// </summary>
-        public static readonly DependencyProperty XamlContentProperty = DependencyProperty.Register(
-            nameof(XamlContent),
-            typeof(object),
-            typeof(TargetedPopup),
-            new PropertyMetadata(null, OnPopupContentChanged)
-        );
 
+        #region Override Properties
+
+        #region Margin Property
+        public static readonly new DependencyProperty MarginProperty = DependencyProperty.Register(
+            nameof(Margin),
+            typeof(Thickness),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(Thickness), OnMarginChanged)
+        );
+        private static void OnMarginChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is TargetedPopup popup && e.NewValue is Thickness margin)
+            {
+                popup._grid?
+                    .Rows(margin.Top, "*", margin.Bottom)
+                    .Columns(margin.Left, "*", margin.Right);
+            }
+        }
+        public new Thickness Margin
+        {
+            get => (Thickness)GetValue(MarginProperty);
+            set => SetValue(MarginProperty, value);
+        }
+        #endregion Margin Property
+
+        #region Content Property
+        public static readonly new DependencyProperty ContentProperty = DependencyProperty.Register(
+            nameof(Content),
+            typeof(UIElement),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(FrameworkElement), OnPopupContentChanged)
+        );
         private static void OnPopupContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             if (d is TargetedPopup popup)
-                popup._contentPresenter.Content = args.NewValue;
+                popup._border.Content = args.NewValue;
         }
-
-        /// <summary>
-        /// Content for Popup
-        /// </summary>
-        public object XamlContent
+        public new UIElement Content
         {
-            get => GetValue(XamlContentProperty);
-            set => SetValue(XamlContentProperty, value);
+            get => (UIElement)GetValue(ContentProperty);
+            set => SetValue(ContentProperty, value);
         }
+        #endregion Content Property
 
-        /// <summary>
-        /// Content for Popup
-        /// </summary>
-        public new object Content
-        {
-            get => XamlContent;
-            set => XamlContent = value;
-        }
-        #endregion 
 
-        #region HasShadow Property
-        /// <summary>
-        /// Backing store for Popup's HasShadow Property
-        /// </summary>
-        public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
-            nameof(HasShadow),
-            typeof(bool),
-            typeof(TargetedPopup),
-            new PropertyMetadata(default(bool), OnHasShadowChanged)
-        );
 
-        private static void OnHasShadowChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
-        {
-            if (d is TargetedPopup popup)
-                popup._border.HasShadow = (bool)args.NewValue;
-        }
-
-        /// <summary>
-        /// NOT YET IMPLEMENTED
-        /// </summary>
-        public bool HasShadow
-        {
-            get => (bool)GetValue(HasShadowProperty);
-            set => SetValue(HasShadowProperty, value);
-        }
 
         #endregion
 
-        #region PopAfter Property
-        public static readonly DependencyProperty PopAfterProperty = DependencyProperty.Register(
-            nameof(PopAfter),
-            typeof(TimeSpan),
-            typeof(TargetedPopup),
-            new PropertyMetadata(default(TimeSpan))
-        );
 
-        /// <summary>
-        /// If greater than default TimeSpan, this is the amount of time the popup will display before automatically being popped.`
-        /// </summary>
-        public TimeSpan PopAfter
-        {
-            get => (TimeSpan)GetValue(PopAfterProperty);
-            set => SetValue(PopAfterProperty, value);
-        }
-        #endregion PopAfter Property
+        #region Pointer Properties
 
         #region Target Properties
 
@@ -179,8 +147,6 @@ namespace P42.Uno.Controls
         #endregion TargetPoint Property
 
         #endregion
-
-        #region Pointer Properties
 
         #region PointerBias Property
         public static readonly DependencyProperty PointerBiasProperty = DependencyProperty.Register(
@@ -364,6 +330,40 @@ namespace P42.Uno.Controls
 
         #endregion
 
+        #region PageOverlayBrush Property
+        public static readonly DependencyProperty PageOverlayBrushProperty = DependencyProperty.Register(
+            nameof(PageOverlayBrush),
+            typeof(Brush),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(Brush))
+        );
+        public Brush PageOverlayBrush
+        {
+            get => (Brush)GetValue(PageOverlayBrushProperty);
+            set => SetValue(PageOverlayBrushProperty, value);
+        }
+        #endregion PageOverlayBrush Property
+
+        #region Push/Pop Properties
+
+        #region PopAfter Property
+        public static readonly DependencyProperty PopAfterProperty = DependencyProperty.Register(
+            nameof(PopAfter),
+            typeof(TimeSpan),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(TimeSpan))
+        );
+
+        /// <summary>
+        /// If greater than default TimeSpan, this is the amount of time the popup will display before automatically being popped.`
+        /// </summary>
+        public TimeSpan PopAfter
+        {
+            get => (TimeSpan)GetValue(PopAfterProperty);
+            set => SetValue(PopAfterProperty, value);
+        }
+        #endregion PopAfter Property
+
         #region DismissOnPointerMove Property
         public static readonly DependencyProperty DismissOnPointerMoveProperty = DependencyProperty.Register(
             nameof(DismissOnPointerMove),
@@ -381,87 +381,93 @@ namespace P42.Uno.Controls
         }
         #endregion DismissOnPointerMove Property
 
-        #region LightDismiss Properties
-
-        #region IsLightDismissEnabled Property
-        public static readonly DependencyProperty IsLightDismissEnabledProperty = DependencyProperty.Register(
-            nameof(IsLightDismissEnabled),
+        #region CancelOnPageOverlayTouch Property
+        /// <summary>
+        /// CancelOnPageOverlayTouch backing store
+        /// </summary>
+        public static readonly DependencyProperty CancelOnPageOverlayTouchProperty = DependencyProperty.Register(
+            nameof(CancelOnPageOverlayTouch),
             typeof(bool),
             typeof(TargetedPopup),
-            new PropertyMetadata(true, new PropertyChangedCallback(OnIsLightDismissOverlayEnabledChanged))
+            new PropertyMetadata(true)
         );
-        private static void OnIsLightDismissOverlayEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is TargetedPopup popup && popup._popup != null)
-            {
-                popup._popup.IsLightDismissEnabled = popup.IsLightDismissEnabled;
-            }
-        }
-
         /// <summary>
-        /// Light Dismiss overlay enabled?
+        /// Will the popup pop upon a PageOverylay touch?
         /// </summary>
-        public bool IsLightDismissEnabled
+        public bool CancelOnPageOverlayTouch
         {
-            get => (bool)GetValue(IsLightDismissEnabledProperty);
-            set => SetValue(IsLightDismissEnabledProperty, value);
+            get => (bool)GetValue(CancelOnPageOverlayTouchProperty);
+            set => SetValue(CancelOnPageOverlayTouchProperty, value);
         }
-        #endregion IsLightDismissEnabled Property
+        #endregion CancelOnPageOverlayTouch Property
 
-        #region LightDismissOverlayMode Property
-        public static readonly DependencyProperty LightDismissOverlayModeProperty = DependencyProperty.Register(
-            nameof(LightDismissOverlayMode),
-            typeof(LightDismissOverlayMode),
+        #region CancelOnBackButtonClick Property
+        /// <summary>
+        /// CancelOnBackButtonClick property backing store
+        /// </summary>
+        public static readonly DependencyProperty CancelOnBackButtonClickProperty = DependencyProperty.Register(
+            nameof(CancelOnBackButtonClick),
+            typeof(bool),
             typeof(TargetedPopup),
-            new PropertyMetadata(LightDismissOverlayMode.On, new PropertyChangedCallback(OnLightDismissOverlayModeChanged))
+            new PropertyMetadata(true)
         );
-        private static void OnLightDismissOverlayModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is TargetedPopup popup && popup._popup != null)
-            {
-                popup._popup.LightDismissOverlayMode = popup.LightDismissOverlayMode;
-            }
-        }
-
         /// <summary>
-        /// Light Dismiss On/Off?
+        /// Will the popup pop upon a mobile device [BACK] button click?
         /// </summary>
-        public LightDismissOverlayMode LightDismissOverlayMode
+        public bool CancelOnBackButtonClick
         {
-            get => (LightDismissOverlayMode)GetValue(LightDismissOverlayModeProperty);
-            set => SetValue(LightDismissOverlayModeProperty, value);
+            get => (bool)GetValue(CancelOnBackButtonClickProperty);
+            set => SetValue(CancelOnBackButtonClickProperty, value);
         }
-        #endregion LightDismissOverlayMode Property
+        #endregion CancelOnBackButtonClick Property
 
-        #region AnimationDuration Property
-        public static readonly DependencyProperty AnimationDurationProperty = DependencyProperty.Register(
-            nameof(AnimationDuration),
-            typeof(int),
+        #region Parameter Property
+        /// <summary>
+        /// Parameter property backing store
+        /// </summary>
+        public static readonly DependencyProperty ParameterProperty = DependencyProperty.Register(
+            nameof(Parameter),
+            typeof(object),
             typeof(TargetedPopup),
-            new PropertyMetadata(200)
+            new PropertyMetadata(default(object))
         );
-
         /// <summary>
-        /// How long to animate the dismissal of the popup?
+        /// Object that can be set prior to appearance of Popup for the purpose of application to processing after the popup is disappeared
         /// </summary>
-        public int AnimationDuration
+        public object Parameter
         {
-            get => (int)GetValue(AnimationDurationProperty);
-            set => SetValue(AnimationDurationProperty, value);
+            get => (object)GetValue(ParameterProperty);
+            set => SetValue(ParameterProperty, value);
         }
-        #endregion AnimationDuration Property
+        #endregion Parameter Property
 
-        #endregion
+        #region PushEffect Property
+        public static readonly DependencyProperty PushEffectProperty = DependencyProperty.Register(
+            nameof(PushEffect),
+            typeof(Effect),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(Effect))
+        );
+        public Effect PushEffect
+        {
+            get => (Effect)GetValue(PushEffectProperty);
+            set => SetValue(PushEffectProperty, value);
+        }
+        #endregion PushEffect Property
 
+        #region PoppedCause Property
         /// <summary>
         /// Why did the popup pop?
         /// </summary>
         public PopupPoppedCause PoppedCause { get; private set; }
+        #endregion
 
+        #region PoppedTrigger Property
         /// <summary>
         /// What triggered the popup to pop?
         /// </summary>
         public object PoppedTrigger { get; private set; }
+        #endregion
 
         #region PushPopState Property
         public static readonly DependencyProperty PushPopStateProperty = DependencyProperty.Register(
@@ -486,35 +492,25 @@ namespace P42.Uno.Controls
         }
         #endregion PushPopState Property
 
-        /// <summary>
-        /// Is there no content for the popup?
-        /// </summary>
-        public bool IsEmpty
-        {
-            get
-            {
-                var contentPresenter = _contentPresenter;
-                while (contentPresenter?.Content is ContentPresenter cp)
-                    contentPresenter = cp;
-                //System.Diagnostics.Debug.WriteLine("TargetedPopup.IsEmpty: " + (contentPresenter.Content is null ? "TRUE" : "FALSE") );
-                return contentPresenter?.Content is null;
-            }
-        }
-        /*
-        #region IsAnimated Property
-        public static readonly DependencyProperty IsAnimatedProperty = DependencyProperty.Register(
-            nameof(IsAnimated),
-            typeof(bool),
+        #region AnimationDuration Property
+        public static readonly DependencyProperty AnimationDurationProperty = DependencyProperty.Register(
+            nameof(AnimationDuration),
+            typeof(TimeSpan),
             typeof(TargetedPopup),
-            new PropertyMetadata(true)
+            new PropertyMetadata(TimeSpan.FromMilliseconds(200))
         );
-        public bool IsAnimated
+
+        /// <summary>
+        /// How long to animate the dismissal of the popup?
+        /// </summary>
+        public TimeSpan AnimationDuration
         {
-            get => (bool)GetValue(IsAnimatedProperty);
-            set => SetValue(IsAnimatedProperty, value);
+            get => (TimeSpan)GetValue(AnimationDurationProperty);
+            set => SetValue(AnimationDurationProperty, value);
         }
-        #endregion IsAnimated Property
-        */
+        #endregion AnimationDuration Property
+
+        #endregion
 
         #endregion
 
@@ -577,54 +573,10 @@ namespace P42.Uno.Controls
         }
 #endif
 
-#if !HAS_UNO
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects)
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
-                disposedValue = true;
-            }
-        }
-
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~TargetedPopup()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
-
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            System.GC.SuppressFinalize(this);
-        }
-
-#endif
-
         #endregion
 
 
-        #region Event Handlers
-        /*
-        async void OnDismissPointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            if (IsLightDismissEnabled)
-            {
-                var dismissEventArgs = new DismissPointerPressedEventArgs();
-                DismissPointerPressed?.Invoke(this, dismissEventArgs);
-                if (!dismissEventArgs.CancelDismiss)
-                    await PopAsync(PopupPoppedCause.BackgroundTouch);
-            }
-        }
-        */
+        #region Pointer Move Event Handlers
 
         Point _enteredPoint = new Point(-1,-1);
         private void OnPointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
@@ -766,9 +718,7 @@ namespace P42.Uno.Controls
             if (PushPopState == PushPopState.Popping)
             {
                 if (_popCompletionSource is null)
-                {
                     await WaitForPoppedAsync();
-                }
                 else
                     return;
             }
@@ -786,29 +736,27 @@ namespace P42.Uno.Controls
 
             await OnPushBeginAsync();
 
-            // requiired to render popup the first time.
-            _border.Opacity = 0.0;
-            _popupOpenedCompletionSource = new TaskCompletionSource<bool>();
+            // required to render popup the first time.
+            _grid.Opacity = 0.0;
 
-            // WHAT IF WE PUT _popup.IsOpen AFTER UpdateMarginAndAlignment?
+            _popupOpenedCompletionSource = new TaskCompletionSource<bool>();
 
             try
             {
-                _popup.XamlRoot = P42.Utils.Uno.Platform.Window.Content.XamlRoot;
-                _popup.IsOpen = true;
-                await Task.Delay(5);
                 System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyc ======= ");
                 UpdateMarginAndAlignment();
 
+                PopupRootFrame.Current.Children.Add(this);
+                await Task.Delay(5);
 
                 if (animated)
                 {
-                    Action<double> action = percent => _border.Opacity = Opacity * percent;
+                    Action<double> action = percent => _grid.Opacity = Opacity * percent;
                     var animator = new P42.Utils.Uno.ActionAnimator(0.11, 0.95, TimeSpan.FromMilliseconds(300), action);
                     await animator.RunAsync();
                 }
 
-                _border.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
+                _grid.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
 
                 if (PopAfter > default(TimeSpan))
                 {
@@ -827,7 +775,6 @@ namespace P42.Uno.Controls
             }
             catch (Exception)
             {
-                PushPopState = PushPopState.Popped;
                 await InnerPop(PopupPoppedCause.Exception, animated);
             }
         }
@@ -862,26 +809,16 @@ namespace P42.Uno.Controls
             PushPopState = PushPopState.Popping;
             _pushCompletionSource = null;
 
-            _border.SizeChanged -= OnBorderSizeChanged;
-
             PoppedCause = cause;
             PoppedTrigger = trigger;
+
             await OnPopBeginAsync();
 
             if (animated)
             {
-                Action<double> action = percent => _border.Opacity = Opacity * percent;
+                Action<double> action = percent => _grid.Opacity = Opacity * percent;
                 var animator = new P42.Utils.Uno.ActionAnimator(0.95, 0.11, TimeSpan.FromMilliseconds(300), action);
                 await animator.RunAsync();
-            }
-
-            try
-            {
-                _popup.IsOpen = false;
-            }
-            catch (Exception)
-            {
-
             }
 
             CompletePop(PoppedCause, PoppedTrigger);
@@ -1121,14 +1058,20 @@ namespace P42.Uno.Controls
         { 
             var frame = CalculateFrame(margin, hzAlign, vtAlign, windowSize, cleanSize);
 
-            _popup.Margin = new Thickness(0);
-            _popup.HorizontalOffset = frame.Left;
-            _popup.VerticalOffset = frame.Top;
+            //_popup.Margin = new Thickness(0);
+            //_popup.HorizontalOffset = frame.Left;
+            //_popup.VerticalOffset = frame.Top;
+
+            _grid.Columns(frame.Left, "*", frame.Right);
+            _grid.Rows(frame.Top, "*", frame.Bottom);
+
+            /*
 #if !__ANDROID__
             _popup.VerticalOffset += P42.Utils.Uno.AppWindow.StatusBarHeight(this);
 #endif
+            */
 
-            _border.Margin = new Thickness(0);
+            //_border.Margin = new Thickness(0);
             _border.Width = frame.Width;
             _border.Height = frame.Height;
 
@@ -1445,7 +1388,7 @@ namespace P42.Uno.Controls
         //Size _lastSizeAvailable = Size.Empty;
         //Size _lastResultSize = Size.Empty;
         //bool _lastWasFixedWidth;
-        private bool disposedValue;
+        // private bool disposedValue;
 
         Size MeasureBorder(Size available, Size failSize = default)
         {
@@ -1487,7 +1430,7 @@ namespace P42.Uno.Controls
             */
 
 
-            if (IsEmpty)
+            if (Content is null)
             {
                 System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder : IS EMPTY ");
                 return new Size(width, height);
@@ -1515,13 +1458,13 @@ namespace P42.Uno.Controls
             var availableWidth = width - Padding.Horizontal() - border -1;
             var availableHeight = height - Padding.Vertical() - border -1;
             //System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder border:[{border}] Padding:[{Padding}]  availableWidth:[" + availableWidth+"] availableHeight:["+availableHeight+"]");
-            if (availableWidth > 0 && availableHeight > 0 && _contentPresenter.Content != null)
+            if (availableWidth > 0 && availableHeight > 0)
             {
-                _contentPresenter.Measure(new Size(availableWidth, availableHeight));
-                var result = _contentPresenter.DesiredSize;
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.RenderSize:[" + _contentPresenter.RenderSize + "]");
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.DesiredSize:[" + _contentPresenter.DesiredSize + "]");
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.ActualSize:[" + _contentPresenter.ActualSize + "]");
+                Content.Measure(new Size(availableWidth, availableHeight));
+                var result = Content.DesiredSize;
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.RenderSize:[" + Content.RenderSize + "]");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.DesiredSize:[" + Content.DesiredSize + "]");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.ActualSize:[" + Content.ActualSize + "]");
 
                 result.Width += Padding.Horizontal() + border;
                 result.Height += Padding.Vertical() + border;

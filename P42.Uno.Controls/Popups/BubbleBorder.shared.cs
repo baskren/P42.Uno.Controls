@@ -36,8 +36,8 @@ namespace P42.Uno.Controls
 
         private static void OnContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            if (d is BubbleBorder popup)
-            popup._contentPresenter.Content = args.NewValue;
+            if (d is BubbleBorder border)
+            border._contentPresenter.Content = args.NewValue;
         }
 
         public object XamlContent
@@ -73,7 +73,6 @@ namespace P42.Uno.Controls
             set => SetValue(PaddingProperty, value);
         }
         #endregion Padding Property
-
 
         #region HorizontalAlignment Property
         public static readonly new DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
@@ -408,6 +407,8 @@ namespace P42.Uno.Controls
         #region LayoutUpdate
         void UpdateContentPresenterMargin()
         {
+            
+
             var result = new Thickness(Padding.Left + BorderThickness.Left, Padding.Top + BorderThickness.Top, Padding.Right + BorderThickness.Right, Padding.Bottom + BorderThickness.Bottom);
             switch ((int)PointerDirection)
             {
@@ -450,8 +451,10 @@ namespace P42.Uno.Controls
         private void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
             Size = args.NewSize;
+
+            RegeneratePath(Size);
         }
-        
+        /*
         protected override Size MeasureOverride(Size availableSize)
         {
             if (IsEmpty)
@@ -482,7 +485,7 @@ namespace P42.Uno.Controls
             RegeneratePath(result);
             return result;
         }
-
+        */
         float scale = -1;
         SKPath GeneratePath(Size measuredSize = default)
         {

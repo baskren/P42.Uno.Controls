@@ -41,9 +41,7 @@ namespace P42.Uno.Controls
 
             _targetedPopup = new TargetedPopup
             {
-                IsLightDismissEnabled = false,
-                LightDismissOverlayMode = LightDismissOverlayMode.Off,
-                //IsAnimated = false,
+                PageOverlayBrush = new SolidColorBrush(Colors.Transparent),
                 Padding = new Thickness(4),
                 Opacity = 0,
                 Margin = new Thickness(popupMargin),
@@ -62,9 +60,6 @@ namespace P42.Uno.Controls
             _overlay.PointerPressed += OnDismissPointerPressed;
 
             _targetedPopup.Popped += OnTargetedPopupPopped;
-#if __ANDROID__
-            _targetedPopup.IsLightDismissEnabled = true;
-#endif
         }
     }
 }

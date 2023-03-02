@@ -4,7 +4,7 @@ using Uno.Wasm.Bootstrap.Server;
 
 namespace P42.Uno.Controls.Demo.WinUI
 {
-	public class Program
+	public sealed class Program
 	{
 		public static void Main(string[] args)
 		{
@@ -20,10 +20,12 @@ namespace P42.Uno.Controls.Demo.WinUI
 
 			app.UseAuthorization();
 
+<!--#if (WebAssembly)
 
 			app.UseUnoFrameworkFiles();
 			app.MapFallbackToFile("index.html");
 
+#endif -->
 
 			app.MapControllers();
 			app.UseStaticFiles();

@@ -1,10 +1,7 @@
 {
-	"profiles": {
-		"P42.Uno.Controls.Demo.WinUI.Windows (Package)": {
-			"commandName": "MsixPackage"
-		},
-		"P42.Uno.Controls.Demo.WinUI.Windows (Unpackaged)": {
-			"commandName": "Project"
-		}
-	}
+  "profiles": {
+    "P42.Uno.Controls.Demo.WinUI.Windows": {
+      "commandName": "MsixPackage"
+    }
+  }
 }

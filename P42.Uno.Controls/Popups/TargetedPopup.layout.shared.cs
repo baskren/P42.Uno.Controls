@@ -5,6 +5,8 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
 using P42.Uno.Markup;
 using P42.Utils.Uno;
+using Microsoft.UI.Xaml.Input;
+using System;
 
 namespace P42.Uno.Controls
 {
@@ -18,14 +20,14 @@ namespace P42.Uno.Controls
         #endregion
 
         #region Visual Elements
+        //internal BubbleBorder _border;
         internal BubbleBorder _border;
-        protected ContentPresenter _contentPresenter;
-        protected Microsoft.UI.Xaml.Controls.Primitives.Popup _popup;
+        internal Bubble _shadow;
+        Grid _grid;
         #endregion
 
         void Build()
         {
-            //Visibility = Visibility.Collapsed;
             Margin = new Thickness(40, 40, 40, 40);
             HorizontalAlignment = HorizontalAlignment.Center;
             VerticalAlignment = VerticalAlignment.Center;
@@ -40,21 +42,13 @@ namespace P42.Uno.Controls
             CornerRadius = new CornerRadius(DefaultCornerRadius);
             FontSize = 16;
 
-            Content = new Microsoft.UI.Xaml.Controls.Primitives.Popup
+            Content = new Grid
             {
-                Child =
+                Children =
+                {
                     new BubbleBorder()
-                    {
-                        Content = new ContentPresenter()
-                            .Assign(out _contentPresenter)
-                            .Margin(0)
-                            .Padding(Padding)
-                            .Stretch()
-                            .TextWrapping(TextWrapping.WrapWholeWords)
-                            .BindFont(this)
-                            .BindNullCollapse()
-                    }
                         .Assign(out _border)
+                        .RowCol(1,1)
                         .Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity))
                         .Bind(BubbleBorder.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
                         .Bind(BubbleBorder.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
@@ -69,38 +63,28 @@ namespace P42.Uno.Controls
                         .Bind(BubbleBorder.PointerBiasProperty, this, nameof(PointerBias))
                         .Bind(BubbleBorder.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
                         .Bind(BubbleBorder.PointerLengthProperty, this, nameof(PointerLength))
-                        .Bind(BubbleBorder.PointerTipRadiusProperty, this, nameof(PointerTipRadius)),
+                        .Bind(BubbleBorder.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
+                }
             }
-                .Assign(out _popup)
+                .Assign(out _grid)
+                .Rows(Margin.Left, "*", Margin.Right)
+                .Columns(Margin.Top,"*", Margin.Bottom)
                 .DataContext(this)
                 .Margin(0)
-                //.Padding(0)
+                .Padding(0)
                 .Stretch()
-                .Bind(Microsoft.UI.Xaml.Controls.Primitives.Popup.IsLightDismissEnabledProperty, this, nameof(IsLightDismissEnabled))
-                .Bind(Microsoft.UI.Xaml.Controls.Primitives.Popup.LightDismissOverlayModeProperty, this, nameof(LightDismissOverlayMode))
+                .Bind(Grid.BackgroundProperty, this, nameof(PageOverlayBrush))
+                .AddTapHandler(OnBackgroundTapped)
                 ;
 
-            //this.PointerMoved += OnPointerMoved;
-            //this.PointerEntered += OnPointerEntered;
-            _popup.Opened += OnPopupOpened;
-            _popup.Closed += OnPopupClosed;
-
-            LightDismissOverlayMode = LightDismissOverlayMode.On;
-            /*
-#if __IOS__
-            var uiFont = UIKit.UIFont.SystemFontOfSize(12f);
-            var family = uiFont.FamilyName;
-            this.FontFamily(family);
-#endif
-            */
-
-            _contentPresenter.SizeChanged += _contentPresenter_SizeChanged;
         }
 
-        private void _contentPresenter_SizeChanged(object sender, SizeChangedEventArgs args)
+        async void OnBackgroundTapped(object sender, TappedRoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine($" ---- TargetedPopup.ContentPresenter_SizeChanged [{args.PreviousSize}] -> [{args.NewSize}] : [{_contentPresenter.DesiredSize}]---- ");
-
+            if (CancelOnPageOverlayTouch)
+                await PopAsync(PopupPoppedCause.BackgroundTouch, false, e);
         }
+
+
     }
 }

@@ -4,7 +4,7 @@
 
     <RootNamespace>P42.Uno.Controls</RootNamespace>
     <PackageId Condition=" $(SolutionName.ToLower().Contains('.wasm')) OR $(P42TargetPlatform.ToLower.Contains('wasm')) ">$(MSBuildProjectName).Wasm</PackageId>
-    <Version>4.7.37</Version>
+    <Version>4.7.44</Version>
     <NoWarn>Uno0001;1701;1702;VSX1000;CA1416</NoWarn>
 
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
@@ -26,7 +26,7 @@
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <DebugType>portable</DebugType>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Ben Askren</Authors>
     <Company>42nd Parallel, LLC</Company>

@@ -20,6 +20,11 @@
 
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="Assets/**" />
+    <EmbeddedResource Include="Resources/**" />
+  </ItemGroup>
+
   <PropertyGroup Condition=" $(SolutionName.ToLower().Contains('.wasm')) OR $(P42TargetPlatform.ToLower.Contains('wasm')) ">
     <TargetFrameworks>net7.0</TargetFrameworks>
     <DefineConstants>__WASM__;$(DefineConstants);</DefineConstants>
@@ -58,7 +63,7 @@
 
   <!-- TIZEN -->
   <ItemGroup Condition=" $(TargetFramework.ToLower().Contains('tizen')) ">
-    <PackageReference Include="Uno.WinUI.Runtime.Skia.Tizen" Version="4.7.37" />
+    <PackageReference Include="Uno.WinUI.Runtime.Skia.Tizen" Version="4.7.44" />
     <Compile Include="**\*.tizen.cs" />
     <Compile Include="**\*.tizen.*.cs" />
   </ItemGroup>
@@ -73,9 +78,9 @@
 
   <!-- NOT Windows -->
   <ItemGroup Condition=" !$(TargetFramework.Contains('windows')) ">
-	  <PackageReference Include="Uno.WinUI" Version="4.7.37" />
-    <PackageReference Include="Uno.WinUI.Lottie" Version="4.7.37" />
-    <PackageReference Condition="! $(P42TargetPlatform.ToLower().Contains('wasm')) " Include="Uno.WinUI.Svg" Version="4.7.37" />
+	  <PackageReference Include="Uno.WinUI" Version="4.7.44" />
+    <PackageReference Include="Uno.WinUI.Lottie" Version="4.7.44" />
+    <PackageReference Condition="! $(P42TargetPlatform.ToLower().Contains('wasm')) " Include="Uno.WinUI.Svg" Version="4.7.44" />
     <PackageReference Include="Svg.Skia" Version="0.5.16" />
 	  <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
     <Compile Include="**\*.uno.cs" Exclude="$(DefaultItemExcludes)" />
@@ -89,7 +94,7 @@
 
 	<!-- WASM -->
 	<ItemGroup Condition=" $(P42TargetPlatform.ToLower().Contains('wasm')) ">
-		<PackageReference Include="Uno.WinUI.WebAssembly" Version="4.7.37" />
+		<PackageReference Include="Uno.WinUI.WebAssembly" Version="4.7.44" />
 
 		<Compile Include="**\*.wasm.cs" />
 		<Compile Include="**\*.wasm.*.cs" />
