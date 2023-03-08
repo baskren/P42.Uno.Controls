@@ -67,22 +67,6 @@ namespace P42.Uno.Controls
         }
         #endregion Margin Property
 
-        /*  Handled by ContentPresenter
-        #region Padding Property
-        public static readonly new DependencyProperty PaddingProperty = DependencyProperty.Register(
-            nameof(Padding),
-            typeof(Thickness),
-            typeof(TargetedPopup),
-            new PropertyMetadata(new Thickness(10.0))
-        );
-        public new Thickness Padding
-        {
-            get => (Thickness)GetValue(PaddingProperty);
-            set => SetValue(PaddingProperty, value);
-        }
-        #endregion Padding Property
-        */
-
         #region HorizontalAlignment Property
         public static readonly new DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
             nameof(HorizontalAlignment),
@@ -224,8 +208,6 @@ namespace P42.Uno.Controls
             set => SetValue(TargetRectProperty, value);
         }
         #endregion TargetRect Property
-
-
 
         #endregion
 
@@ -406,7 +388,6 @@ namespace P42.Uno.Controls
             set => SetValue(IsPageOverlayHitTestVisibleProperty, value);
         }
         #endregion IsPageOverlayHitTestVisible Property
-
 
         #endregion PageOverlay properties
 
@@ -786,20 +767,6 @@ namespace P42.Uno.Controls
 
 
         #region Push / Pop
-
-        private void OnPopupClosed(object sender, object e)
-        {
-            if (PushPopState == PushPopState.Pushed || PushPopState == PushPopState.Popping)
-            {
-                CompletePop(PopupPoppedCause.BackgroundTouch, null);
-            }
-        }
-
-        TaskCompletionSource<bool> _popupOpenedCompletionSource;
-        private void OnPopupOpened(object sender, object e)
-        {
-            _popupOpenedCompletionSource?.TrySetResult(true);
-        }
 
         /// <summary>
         /// Push (display) the popup

@@ -53,6 +53,7 @@ namespace P42.Uno.Controls.Demo
         {
             var result = new TargetedPopup()
             //.Background(Colors.Transparent)
+            .PushEffect(Effect.Info, EffectMode.On)
             .Content(new StackPanel()
                 .Stretch()
                 .Children

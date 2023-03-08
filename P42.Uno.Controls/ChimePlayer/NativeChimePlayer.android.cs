@@ -38,13 +38,13 @@ namespace P42.Uno.Controls
                  .SetAudioAttributes(audioAttributes)
                  .Build();
 
-                infoId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Info), 1);
-                warnId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Warning), 1);
-                errorId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Error), 1);
+            infoId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Info), 1);
+            warnId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Warning), 1);
+            errorId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Error), 1);
 
-                alarmId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Alarm), 1);
-                inquiryId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Inquiry), 1);
-                inquiryId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Progress), 1);
+            alarmId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Alarm), 1);
+            inquiryId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Inquiry), 1);
+            progressId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Progress), 1);
 
         }
 

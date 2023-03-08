@@ -218,8 +218,13 @@ namespace P42.Uno.Controls
         public static TElement Parameter<TElement>(this TElement element, object value) where TElement : ElementType
         { element.Parameter = value; return element; }
 
-        public static TElement PushEffect<TElement>(this TElement element, Effect value) where TElement : ElementType
-        { element.PushEffect = value; return element; }
+        public static TElement PushEffect<TElement>(this TElement element, Effect value, EffectMode? mode = null) where TElement : ElementType
+        { 
+            element.PushEffect = value;
+            if (mode is EffectMode effectMode)
+                element.PushEffectMode = effectMode;
+            return element; 
+        }
 
         public static TElement PushEffectMode<TElement>(this TElement element, EffectMode value) where TElement : ElementType
         { element.PushEffectMode = value; return element; }
