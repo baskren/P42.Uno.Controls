@@ -112,7 +112,7 @@ namespace P42.Uno.Controls.Demo
                         .Horizontal()
                         .Children(
                             new TextBlock().Text("Shadow:").Foreground(Colors.Black),
-                            new ToggleSwitch().Assign(out _shadowToggleSwitch).AddToggledHandler(OnShadowToggelButtonChanged),
+                            new ToggleSwitch().Assign(out _shadowToggleSwitch).On().AddToggledHandler(OnShadowToggelButtonChanged),
                             new TextBlock().Text("Overlay:").Foreground(Colors.Black),
                             new ToggleSwitch().Assign(out _overlayToggleSwitch).On().AddToggledHandler(OnPageOverlayToggleSwitchChanged),
                             new TextBlock().Text("Hitable:").Foreground(Colors.Black),

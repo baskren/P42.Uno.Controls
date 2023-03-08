@@ -70,8 +70,7 @@ namespace P42.Uno.Controls
                 .AddSizeChangedHandler(OnBorderSizeChanged);
 
             ShadowBorder = new SkiaBubble()
-                //.Bind(SkiaBubble.VisibilityProperty, this, nameof(HasShadow), converter: P42.Utils.Uno.VisibilityExtensions.VisibilityConverter)
-                //.Bind(SkiaBubble.CornerRadiusProperty, ContentBorder, nameof(NewBubbleBorder.CornerRadius))
+                .Bind(SkiaBubble.VisibilityProperty, this, nameof(HasShadow), converter: P42.Utils.Uno.VisibilityExtensions.VisibilityConverter)
                 .Bind(SkiaBubble.PointerCornerRadiusProperty, ContentBorder, nameof(NewBubbleBorder.PointerCornerRadius))
                 .Bind(SkiaBubble.PointerDirectionProperty, ContentBorder, nameof(NewBubbleBorder.PointerDirection))
                 .Bind(SkiaBubble.PointerLengthProperty, ContentBorder, nameof(NewBubbleBorder.PointerLength))

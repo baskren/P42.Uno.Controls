@@ -417,7 +417,7 @@ namespace P42.Uno.Controls
             nameof(HasShadow),
             typeof(bool),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(bool))
+            new PropertyMetadata(true)
         );
         public bool HasShadow
         {
