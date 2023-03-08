@@ -95,54 +95,6 @@ namespace P42.Uno.Controls
         }
         #endregion VerticalAlignment Property
 
-        // TODO: return to Background (get rid of BackgroundColor)
-        #region BackgroundColor Property
-        [Obsolete("Use BackgroundColor instead")]
-        public new Brush Background 
-        { 
-            get => new SolidColorBrush(BackgroundColor);
-            set
-            {
-                if (value is SolidColorBrush brush)
-                    BackgroundColor = brush.Color;
-            }
-        }
-
-        public static readonly DependencyProperty BackgroundColorProperty = DependencyProperty.Register(
-            nameof(BackgroundColor),
-            typeof(Color),
-            typeof(TargetedPopup),
-            new PropertyMetadata(default)
-        );
-#if __IOS__
-        public new Color BackgroundColor
-#else
-        public Color BackgroundColor
-#endif
-        {
-            get => (Color)GetValue(BackgroundColorProperty);
-            set => SetValue(BackgroundColorProperty, value);
-        }
-        #endregion BackgroundColor Property
-
-        // TODO: Return to BorderBrush (git rid of BorderColor)
-        #region BorderColor Property
-        [Obsolete("Use BorderColor instead")]
-        public new Brush BorderBrush { get; set; }
-
-        public static readonly DependencyProperty BorderColorProperty = DependencyProperty.Register(
-            nameof(BorderColor),
-            typeof(Color),
-            typeof(TargetedPopup),
-            new PropertyMetadata(default)
-        );
-        public Color BorderColor
-        {
-            get => (Color)GetValue(BorderColorProperty);
-            set => SetValue(BorderColorProperty, value);
-        }
-        #endregion BorderColor Property
-
         #region BorderWidth Property
         [Obsolete("Use BorderWidth instead")]
         public new Thickness BorderThickness { get; set; }
@@ -591,12 +543,24 @@ namespace P42.Uno.Controls
 
         #endregion
 
-
         #region Private Properties
-        Color WorkingBorderColor => BorderColor == default
-            ? SystemColors.ChromeDisabledHigh
-            : BorderColor;
+        bool HasBorder
+        {
+            get
+            {
+                if (BorderWidth <= 0)
+                    return false;
+                if (BorderBrush is Brush brush)
+                {
+                    if (brush is SolidColorBrush solidBrush)
+                        return solidBrush.Color.A > 0;
+                    return true;
+                }
+                return false;
+            }
+        }
         #endregion
+
 
 
         #region Events
@@ -605,8 +569,6 @@ namespace P42.Uno.Controls
         /// Occurs when popup has been cancelled.
         /// </summary>
         public event EventHandler<PopupPoppedEventArgs> Popped;
-
-        //public event EventHandler<DismissPointerPressedEventArgs> DismissPointerPressed;
         #endregion
 
 
@@ -1460,8 +1422,7 @@ namespace P42.Uno.Controls
                 return new Size(width, height);
             }
 
-            var hasBorder = (BorderWidth > 0) && WorkingBorderColor.A > 0;
-            var border = BorderWidth * (hasBorder ? 1 : 0) * 2;
+            var border = BorderWidth * (HasBorder ? 1 : 0) * 2;
             var availableWidth = width - (Padding.Horizontal() + border + 1);
             var availableHeight = height - (Padding.Vertical() + border + 1);
             //System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder border:[{border}] Padding:[{Padding}]  availableWidth:[" + availableWidth+"] availableHeight:["+availableHeight+"]");

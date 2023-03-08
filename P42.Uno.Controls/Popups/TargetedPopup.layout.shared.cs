@@ -55,13 +55,13 @@ namespace P42.Uno.Controls
                 .Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: P42.Utils.Uno.VisibilityExtensions.VisibilityConverter)
                 .AddTappedHandler(OnPageOverlayTapped);
 
-            //TODO: return to BubbleBorder and implement binding of properties to BubbleBorder.ContentPresenter 
+            //TODO: implement binding of properties to BubbleBorder.ContentPresenter 
             ContentBorder = new NewBubbleBorder()
                 .HitTestVisible(true)
                 .Content(ContentPresenter)
                 .Bind(NewBubbleBorder.PaddingProperty, this, nameof(Padding))
-                .Bind(NewBubbleBorder.BackgroundColorProperty, this, nameof(BackgroundColor))
-                .Bind(NewBubbleBorder.BorderColorProperty, this, nameof(BorderColor))
+                .Bind(NewBubbleBorder.BackgroundProperty, this, nameof(Background))
+                .Bind(NewBubbleBorder.BorderBrushProperty, this, nameof(BorderBrush))
                 .Bind(NewBubbleBorder.BorderWidthProperty, this, nameof(BorderWidth))
                 .Bind(NewBubbleBorder.CornerRadiusProperty, this, nameof(CornerRadius))
                 .Bind(NewBubbleBorder.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
@@ -81,6 +81,8 @@ namespace P42.Uno.Controls
             RootFrame.Current.SizeChanged += OnRootFrameSizeChanged;
 
             ActualPointerDirection = PointerDirection.None;
+            Background = new SolidColorBrush(SystemColors.ColorButtonFace);
+            BorderBrush = new SolidColorBrush(SystemColors.ChromeDisabledHigh);
             HorizontalContentAlignment = HorizontalAlignment.Stretch;
             PageOverlayBrush = new SolidColorBrush(Colors.Black.WithAlpha(0.25));
             VerticalContentAlignment = VerticalAlignment.Stretch;

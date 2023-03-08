@@ -39,9 +39,6 @@ namespace P42.Uno.Controls.Demo
         ToggleSwitch _indexOthogonal;
         Button _button;
         ListView _listView;
-        BubbleBorder _bubbleBorder;
-        NewBubbleBorder _bubble;
-        TextBlock _textBlock;
         TextBox _textBox;
         ToggleSwitch _shadowToggleSwitch, _overlayToggleSwitch, _hitTransparentOverlayToggleSwitch;
         Rectangle _targetRectangle, _bubbleTestRectangle;

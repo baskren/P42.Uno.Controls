@@ -15,7 +15,6 @@ namespace P42.Uno.Controls
     /// Border used by Popups
     /// </summary>
     [Microsoft.UI.Xaml.Data.Bindable]
-    //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class NewBubbleBorder : Grid
     {
         #region Properties
@@ -50,6 +49,35 @@ namespace P42.Uno.Controls
 
         #region Override Properties
 
+        #region Background Property
+        public static readonly new DependencyProperty BackgroundProperty = DependencyProperty.Register(
+            nameof(Background),
+            typeof(Brush),
+            typeof(NewBubbleBorder),
+            new PropertyMetadata(default(Brush))
+        );
+        public new Brush Background
+        {
+            get => (Brush)GetValue(BackgroundProperty);
+            set => SetValue(BackgroundProperty, value);
+        }
+        #endregion Background Property
+
+        #region BorderBrush Property
+        public static readonly new DependencyProperty BorderBrushProperty = DependencyProperty.Register(
+            nameof(BorderBrush),
+            typeof(Brush),
+            typeof(NewBubbleBorder),
+            new PropertyMetadata(default(Brush))
+        );
+        public new Brush BorderBrush
+        {
+            get => (Brush)GetValue(BorderBrushProperty);
+            set => SetValue(BorderBrushProperty, value);
+        }
+        #endregion BorderBrush Property
+
+
         #region Padding Property
         public static readonly new DependencyProperty PaddingProperty = DependencyProperty.Register(
             nameof(Padding),
@@ -70,48 +98,6 @@ namespace P42.Uno.Controls
             set => SetValue(PaddingProperty, value);
         }
         #endregion Padding Property
-
-        #region BackgroundColor Property
-        [Obsolete("Use BackgroundColor instead")]
-        public new Brush Background { get; set; }
-
-        public static readonly DependencyProperty BackgroundColorProperty = DependencyProperty.Register(
-            nameof(BackgroundColor),
-            typeof(Color),
-            typeof(NewBubbleBorder),
-            new PropertyMetadata(default(Color))
-        );
-
-        public Color BackgroundColor
-        {
-            get => (Color)GetValue(BackgroundColorProperty);
-            set => SetValue(BackgroundColorProperty, value);
-        }
-        #endregion BackgroundColor Property
-
-        #region BorderColor Property
-        [Obsolete("Use BorderColor instead")]
-        public new Brush BorderBrush { get; set; }
-
-        public static readonly DependencyProperty BorderColorProperty = DependencyProperty.Register(
-            nameof(BorderColor),
-            typeof(Color),
-            typeof(NewBubbleBorder),
-            new PropertyMetadata(default(Color), OnBorderColorChanged)
-        );
-
-        private static void OnBorderColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is NewBubbleBorder border)
-                border.UpdatePadding();
-        }
-
-        public Color BorderColor
-        {
-            get => (Color)GetValue(BorderColorProperty);
-            set => SetValue(BorderColorProperty, value);
-        }
-        #endregion BorderColor Property
 
         #region BorderWidth Property
         [Obsolete("Use BorderWidth instead")]
@@ -266,9 +252,22 @@ namespace P42.Uno.Controls
 
 
         #region Private Properties
-        Color WorkingBorderColor => BorderColor == default
-            ? SystemColors.ChromeDisabledHigh
-            : BorderColor;
+        bool HasBorder
+        {
+            get
+            {
+                if (BorderWidth <= 0)
+                    return false;
+                if (BorderBrush is Brush brush)
+                {
+                    if (brush is SolidColorBrush solidBrush)
+                        return solidBrush.Color.A > 0;
+                    return true;
+                }
+                return false;
+            }
+        }
+
         #endregion
 
 
@@ -277,7 +276,7 @@ namespace P42.Uno.Controls
         {
             base.Margin = new Thickness(0);
             base.Padding = new Thickness(0);
-
+            /*
             Children.Add(new SkiaBubble()
                 .Stretch()
                 .RowSpan(3)
@@ -292,7 +291,22 @@ namespace P42.Uno.Controls
                 .Bind(SkiaBubble.PointerCornerRadiusProperty, this, nameof (PointerCornerRadius))
                 .Bind(SkiaBubble.PointerDirectionProperty, this, nameof(PointerDirection))
                 );
+            */
 
+            Children.Add(new PathBubble()
+                .Stretch()
+                .RowSpan(3)
+                .ColumnSpan(3)
+                .Bind(PathBubble.FillProperty, this, nameof(Background))
+                .Bind(PathBubble.StrokeProperty, this, nameof(BorderBrush))
+                .Bind(PathBubble.StrokeThicknessProperty, this, nameof(BorderWidth))
+                .Bind(PathBubble.CornerRadiusProperty, this, nameof(CornerRadius))
+                .Bind(PathBubble.PointerLengthProperty, this, nameof(PointerLength))
+                .Bind(PathBubble.PointerAxialPositionProperty, this, nameof(PointerAxialPosition))
+                .Bind(PathBubble.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
+                .Bind(PathBubble.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
+                .Bind(PathBubble.PointerDirectionProperty, this, nameof(PointerDirection))
+                );
         }
         #endregion
 
@@ -322,7 +336,7 @@ namespace P42.Uno.Controls
                     throw new InvalidOperationException("BubbleBorder PointerDirection must be either Left, Right, Top, Bottom, or None");
             }
 
-            var borderWidth = (BorderWidth > 0 && WorkingBorderColor.A > 0)
+            var borderWidth = HasBorder
                 ? BorderWidth
                 : 0;
 

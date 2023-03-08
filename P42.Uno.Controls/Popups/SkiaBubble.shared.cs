@@ -38,12 +38,16 @@ namespace P42.Uno.Controls
             new PropertyMetadata(default(Color),Redraw)
         );
 
+#if __IOS__
+        public new Color BackgroundColor
+#else
         public Color BackgroundColor
+#endif
         {
             get => (Color)GetValue(BackgroundColorProperty);
             set => SetValue(BackgroundColorProperty, value);
         }
-        #endregion BackgroundColor Property
+#endregion BackgroundColor Property
 
 
         #region BorderColor Property
@@ -91,8 +95,7 @@ namespace P42.Uno.Controls
         #endregion CornerRadius Property
 
 
-        #endregion
-
+#endregion
 
         #region Pointer Properties
 
@@ -199,7 +202,7 @@ namespace P42.Uno.Controls
         #endregion
 
 
-        #endregion
+#endregion
 
 
         #region Fields
