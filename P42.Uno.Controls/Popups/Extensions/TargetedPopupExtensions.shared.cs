@@ -16,7 +16,7 @@ namespace P42.Uno.Controls
     public static class TargetedPopupExtensions
 
     {
-		public static TElement Content<TElement>(this TElement element, UIElement value) where TElement : ElementType
+		public static TElement Content<TElement>(this TElement element, object value) where TElement : ElementType
 		{ element.Content = value; return element; }
 
 		#region Alignment
@@ -101,6 +101,9 @@ namespace P42.Uno.Controls
 		public static TElement Padding<TElement>(this TElement element, Thickness padding) where TElement : ElementType
 		{ element.Padding = padding; return element; }
 		#endregion
+
+		public static TElement HasShadow<TElement>(this TElement element, bool value = true) where TElement : ElementType
+		{ element.HasShadow = value; return element; }
 
 		public static TElement PopAfter<TElement>(this TElement element, TimeSpan value) where TElement : ElementType
 		{ element.PopAfter = value; return element; }

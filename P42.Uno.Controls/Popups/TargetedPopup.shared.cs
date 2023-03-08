@@ -581,7 +581,6 @@ namespace P42.Uno.Controls
             typeof(TargetedPopup),
             new PropertyMetadata(TimeSpan.FromMilliseconds(200))
         );
-
         /// <summary>
         /// How long to animate the dismissal of the popup?
         /// </summary>
