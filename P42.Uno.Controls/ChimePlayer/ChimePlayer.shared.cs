@@ -34,7 +34,7 @@ namespace P42.Uno.Controls
             => new("ms-appx:///" + GetAssetRelativePath(chime));
 
         internal static string GetAssetRelativePath(Effect chime)
-            => new("UnoApp/Assets/Sounds/" + chime + ".mp3");
+            => new("P42.Uno.Controls/Assets/Sounds/" + chime + ".mp3");
 
 
     }

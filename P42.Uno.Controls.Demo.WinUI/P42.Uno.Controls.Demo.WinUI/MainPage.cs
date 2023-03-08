@@ -183,7 +183,7 @@ namespace P42.Uno.Controls.Demo
         async void _button_Click(object sender, RoutedEventArgs e)
         {
             TargetedPopup.Target = sender as UIElement;
-            if (sender == _button)
+            if ((sender as Button) == _button)
                 TargetedPopup.Target = null;
             await TargetedPopup.PushAsync();
 
