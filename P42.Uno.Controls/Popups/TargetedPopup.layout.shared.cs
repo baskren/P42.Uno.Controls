@@ -99,11 +99,11 @@ namespace P42.Uno.Controls
             ShadowBorder.Width = ContentBorder.ActualWidth + ShadowBorder.BlurSigma * 4;
         }
 
-        void OnPageOverlayTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+        async void OnPageOverlayTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             if (PopOnPageOverlayTouch)
             {
-                RootFrame.Remove(this);
+                await PopAsync(PopupPoppedCause.BackgroundTouch);
                 e.Handled = true;
             }
         }
