@@ -22,7 +22,6 @@ namespace P42.Uno.Controls
     /// Base Popup for UWP / UNO PLATFORM
     /// </summary>
     [Microsoft.UI.Xaml.Data.Bindable]
-    //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public partial class TargetedPopup : ITargetedPopup
     {
         static int _pushingCount = 0;
@@ -37,7 +36,6 @@ namespace P42.Uno.Controls
         }
 
         #region Properties
-
 
         #region Override Properties
 
@@ -428,6 +426,7 @@ namespace P42.Uno.Controls
 
         #region Push/Pop Properties
 
+        //TODO: TEST
         #region PopAfter Property
         public static readonly DependencyProperty PopAfterProperty = DependencyProperty.Register(
             nameof(PopAfter),
@@ -446,6 +445,7 @@ namespace P42.Uno.Controls
         }
         #endregion PopAfter Property
 
+        //TODO: TEST
         #region PopOnPointerMove Property
         public static readonly DependencyProperty PopOnPointerMoveProperty = DependencyProperty.Register(
             nameof(PopOnPointerMove),
@@ -483,6 +483,7 @@ namespace P42.Uno.Controls
         }
         #endregion PopOnPageOverlayTouch Property
 
+        //TODO: IMPLEMENT AND TEST
         #region PopOnBackButtonClick Property
         /// <summary>
         /// CancelOnBackButtonClick property backing store
@@ -536,6 +537,20 @@ namespace P42.Uno.Controls
             set => SetValue(PushEffectProperty, value);
         }
         #endregion PushEffect Property
+
+        #region PushEffectMode Property
+        public static readonly DependencyProperty PushEffectModeProperty = DependencyProperty.Register(
+            nameof(PushEffectMode),
+            typeof(EffectMode),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(EffectMode))
+        );
+        public EffectMode PushEffectMode
+        {
+            get => (EffectMode)GetValue(PushEffectModeProperty);
+            set => SetValue(PushEffectModeProperty, value);
+        }
+        #endregion PushEffectMode Property
 
         #region PoppedCause Property
         /// <summary>
@@ -622,12 +637,15 @@ namespace P42.Uno.Controls
         /// <param name="target">UI Element popup points to</param>
         /// <param name="bubbleContent">What's the popup's content?</param>
         /// <returns></returns>
-        public static async Task<TargetedPopup> CreateAsync(UIElement target, UIElement bubbleContent)
+        public static async Task<TargetedPopup> CreateAsync(UIElement target, UIElement bubbleContent, TimeSpan popAfter = default, Effect pushEffect = Effect.None, EffectMode effectMode = EffectMode.Default)
         {
             var result = new TargetedPopup
             {
                 Target = target,
-                Content = bubbleContent
+                Content = bubbleContent,
+                PopAfter = popAfter,
+                PushEffect = pushEffect,
+                PushEffectMode = effectMode
             };
             await result.PushAsync();
             return result;
@@ -829,6 +847,7 @@ namespace P42.Uno.Controls
                     await animator.RunAsync();
                 }
                 UpdateOpacity(Opacity);
+                Feedback.Play(PushEffect, PushEffectMode);
 
                 if (PopAfter > default(TimeSpan))
                 {
