@@ -398,34 +398,34 @@ namespace P42.Uno.Controls
 			Register(UserControl.FontStyleProperty, OnFontStyleChanged);
 			Register(UserControl.FontWeightProperty, OnFontWeightChanged);
 			_textBlock.Bind(TextBlock.ForegroundProperty, this, nameof(Foreground));
-			// HorizontalTextAlignment : Not implmented because redundant with TextAlignment
-			// InLines : local
-			// IsColorFontEnabled : Not implemented in Uno
-			// IsTextScaleFactorEnabled : Not implemented in Uno
-			// IsTextSelectionEnabled : Not implmeented in Uno
-			// IsTextTrimmed : Not implemented in Uno
-			// LineHeight : local
-			// LineStackingStrategy : local
-			// MaxLines : local
-			// OpticalMarginAlignment : Not implmented in Uno
-			// Padding : Grid.Padding
-			// SelectedText : Not implemented in Uno
-			// SelectionEnd : Not implemented in Uno
-			// SelectionFlyout : Not implmented in Uno
-			// SelectionHeightlightColor : Not implmented in Uno
-			// SelectionStart : Not implemnted in Uno
-			// TextAlignment : local
-			// TextDecorations : local
-			// TextHighlighters : Not implmented in Uno
-			// TextLineBounds : Not implmented in Uno
-			// Text : local
-			// TextReadingOrder : Not implmented in Uno
-			// TextTrimming : local
-			// TextWrapping : local
+            // HorizontalTextAlignment : Not implemented because redundant with TextAlignment
+            // InLines : local
+            // IsColorFontEnabled : Not implemented in Uno
+            // IsTextScaleFactorEnabled : Not implemented in Uno
+            // IsTextSelectionEnabled : Not implemented in Uno
+            // IsTextTrimmed : Not implemented in Uno
+            // LineHeight : local
+            // LineStackingStrategy : local
+            // MaxLines : local
+            // OpticalMarginAlignment : Not implemented in Uno
+            // Padding : Grid.Padding
+            // SelectedText : Not implemented in Uno
+            // SelectionEnd : Not implemented in Uno
+            // SelectionFlyout : Not implemented in Uno
+            // SelectionHeightlightColor : Not implemented in Uno
+            // SelectionStart : Not implemented in Uno
+            // TextAlignment : local
+            // TextDecorations : local
+            // TextHighlighters : Not implemented in Uno
+            // TextLineBounds : Not implemented in Uno
+            // Text : local
+            // TextReadingOrder : Not implemented in Uno
+            // TextTrimming : local
+            // TextWrapping : local
 
 
-			// Control Property Implementations
-			_grid.Bind(Grid.BackgroundProperty, this, nameof(Background));
+            // Control Property Implementations
+            _grid.Bind(Grid.BackgroundProperty, this, nameof(Background));
 			_grid.Bind(Grid.BackgroundSizingProperty, this, nameof(BackgroundSizing));
 			_grid.Bind(Grid.BorderBrushProperty, this, nameof(BorderBrush));
 			_grid.Bind(Grid.BorderThicknessProperty, this, nameof(BorderThickness));
@@ -442,18 +442,18 @@ namespace P42.Uno.Controls
 			// FontWeight : above
 			// Foreground : above
 			Register(UserControl.HorizontalContentAlignmentProperty, OnHorizontalContentAlignmentChanged);
-			// IsEnabled : not implmented
-			// IsFocusEngaged : not implmented
-			// IsFocusEngagementEnabled : not implmented
-			// isTabStop : not implemented
-			// IsTextScaleFactorEnabled : not implemented
-			// Padding : above
-			// RequiresPointer : not implemented
-			// TabIndex : not implemented
-			// TabNavigation : not implemented
-			// Template : not implemented
-			// UseSystemFocusVisuals : not implemented
-			Register(UserControl.VerticalContentAlignmentProperty, OnVerticalContentAlignmentChanged);
+            // IsEnabled : not implemented
+            // IsFocusEngaged : not implemented
+            // IsFocusEngagementEnabled : not implemented
+            // isTabStop : not implemented
+            // IsTextScaleFactorEnabled : not implemented
+            // Padding : above
+            // RequiresPointer : not implemented
+            // TabIndex : not implemented
+            // TabNavigation : not implemented
+            // Template : not implemented
+            // UseSystemFocusVisuals : not implemented
+            Register(UserControl.VerticalContentAlignmentProperty, OnVerticalContentAlignmentChanged);
 			// XYFocusDown : not implemented
 			// XYFocusLeft : not implemented
 			// XYFocusRight : not implemented
