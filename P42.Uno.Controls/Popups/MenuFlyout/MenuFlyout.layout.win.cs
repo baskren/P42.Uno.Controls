@@ -59,8 +59,7 @@ namespace P42.Uno.Controls
             _popup = new TargetedPopup(Target)
             {
                 PreferredPointerDirection = PointerDirection.Left,
-                LightDismissOverlayMode = LightDismissOverlayMode.Off,
-                IsLightDismissEnabled = false
+                PageOverlayBrush = null
             };
             _popup.Popped += OnPopup_Popped;
             _listView = new ListView
@@ -69,7 +68,7 @@ namespace P42.Uno.Controls
                 ItemTemplate = typeof(MenuFlyoutCell).AsDataTemplate(),
             };
             _listView.SelectionChanged += OnListView_SelectionChanged;
-            _popup.XamlContent = _listView;
+            _popup.Content = _listView;
         }
 
         private bool isDisposed;
@@ -191,8 +190,6 @@ namespace P42.Uno.Controls
             if (!(Target is MenuFlyoutCell cell))
             {
                 _popup.PreferredPointerDirection = PointerDirection.Vertical;
-                _popup.LightDismissOverlayMode = LightDismissOverlayMode.On;
-                _popup.IsLightDismissEnabled = true;
                 await _popup.PushAsync();
             }
         }

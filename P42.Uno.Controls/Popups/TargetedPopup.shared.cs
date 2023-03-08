@@ -14,7 +14,7 @@ using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Shapes;
-
+using Microsoft.UI;
 
 namespace P42.Uno.Controls
 {
@@ -23,11 +23,7 @@ namespace P42.Uno.Controls
     /// </summary>
     [Microsoft.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
-    [ContentProperty(Name = nameof(XamlContent))]
-    public partial class TargetedPopup : UserControl, ITargetedPopup
-#if !HAS_UNO
-        , IDisposable
-#endif
+    public partial class TargetedPopup : ITargetedPopup
     {
         static int _pushingCount = 0;
         public static bool IsPushing
@@ -42,87 +38,161 @@ namespace P42.Uno.Controls
 
         #region Properties
 
-        #region XamlContent Property
-        /// <summary>
-        /// Backing Property for Popup's Content
-        /// </summary>
-        public static readonly DependencyProperty XamlContentProperty = DependencyProperty.Register(
-            nameof(XamlContent),
-            typeof(object),
+
+        #region Override Properties
+
+        #region Opacity Property
+        public static readonly new DependencyProperty OpacityProperty = DependencyProperty.Register(
+            nameof(Opacity),
+            typeof(double),
             typeof(TargetedPopup),
-            new PropertyMetadata(null, OnPopupContentChanged)
+            new PropertyMetadata(1.0, (d,e) => ((TargetedPopup)d).UpdateOpacity())
         );
-
-        private static void OnPopupContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        public new double Opacity
         {
-            if (d is TargetedPopup popup)
-                popup._contentPresenter.Content = args.NewValue;
+            get => (double)GetValue(OpacityProperty);
+            set => SetValue(OpacityProperty, value);
         }
+        #endregion Opacity Property
 
-        /// <summary>
-        /// Content for Popup
-        /// </summary>
-        public object XamlContent
-        {
-            get => GetValue(XamlContentProperty);
-            set => SetValue(XamlContentProperty, value);
-        }
-
-        /// <summary>
-        /// Content for Popup
-        /// </summary>
-        public new object Content
-        {
-            get => XamlContent;
-            set => XamlContent = value;
-        }
-        #endregion 
-
-        #region HasShadow Property
-        /// <summary>
-        /// Backing store for Popup's HasShadow Property
-        /// </summary>
-        public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
-            nameof(HasShadow),
-            typeof(bool),
+        #region Margin Property
+        public static readonly new DependencyProperty MarginProperty = DependencyProperty.Register(
+            nameof(Margin),
+            typeof(Thickness),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(bool), OnHasShadowChanged)
+            new PropertyMetadata(new Thickness(40), (d,e) => ((TargetedPopup)d).UpdateMarginAndAlignment())
         );
-
-        private static void OnHasShadowChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        public new Thickness Margin
         {
-            if (d is TargetedPopup popup)
-                popup._border.HasShadow = (bool)args.NewValue;
+            get => (Thickness)GetValue(MarginProperty);
+            set => SetValue(MarginProperty, value);
+        }
+        #endregion Margin Property
+
+        /*  Handled by ContentPresenter
+        #region Padding Property
+        public static readonly new DependencyProperty PaddingProperty = DependencyProperty.Register(
+            nameof(Padding),
+            typeof(Thickness),
+            typeof(TargetedPopup),
+            new PropertyMetadata(new Thickness(10.0))
+        );
+        public new Thickness Padding
+        {
+            get => (Thickness)GetValue(PaddingProperty);
+            set => SetValue(PaddingProperty, value);
+        }
+        #endregion Padding Property
+        */
+
+        #region HorizontalAlignment Property
+        public static readonly new DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
+            nameof(HorizontalAlignment),
+            typeof(HorizontalAlignment),
+            typeof(TargetedPopup),
+            new PropertyMetadata(HorizontalAlignment.Center, (d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment())
+        );
+        public new HorizontalAlignment HorizontalAlignment
+        {
+            get => (HorizontalAlignment)GetValue(HorizontalAlignmentProperty);
+            set => SetValue(HorizontalAlignmentProperty, value);
+        }
+        #endregion HorizontalAlignment Property
+
+        #region VerticalAlignment Property
+        public static readonly new DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register(
+            nameof(VerticalAlignment),
+            typeof(VerticalAlignment),
+            typeof(TargetedPopup),
+            new PropertyMetadata(VerticalAlignment.Center, (d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment())
+        );
+        public new VerticalAlignment VerticalAlignment
+        {
+            get => (VerticalAlignment)GetValue(VerticalAlignmentProperty);
+            set => SetValue(VerticalAlignmentProperty, value);
+        }
+        #endregion VerticalAlignment Property
+
+        // TODO: return to Background (get rid of BackgroundColor)
+        #region BackgroundColor Property
+        [Obsolete("Use BackgroundColor instead")]
+        public new Brush Background 
+        { 
+            get => new SolidColorBrush(BackgroundColor);
+            set
+            {
+                if (value is SolidColorBrush brush)
+                    BackgroundColor = brush.Color;
+            }
         }
 
-        /// <summary>
-        /// NOT YET IMPLEMENTED
-        /// </summary>
-        public bool HasShadow
+        public static readonly DependencyProperty BackgroundColorProperty = DependencyProperty.Register(
+            nameof(BackgroundColor),
+            typeof(Color),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default)
+        );
+#if __IOS__
+        public new Color BackgroundColor
+#else
+        public Color BackgroundColor
+#endif
         {
-            get => (bool)GetValue(HasShadowProperty);
-            set => SetValue(HasShadowProperty, value);
+            get => (Color)GetValue(BackgroundColorProperty);
+            set => SetValue(BackgroundColorProperty, value);
         }
+        #endregion BackgroundColor Property
+
+        // TODO: Return to BorderBrush (git rid of BorderColor)
+        #region BorderColor Property
+        [Obsolete("Use BorderColor instead")]
+        public new Brush BorderBrush { get; set; }
+
+        public static readonly DependencyProperty BorderColorProperty = DependencyProperty.Register(
+            nameof(BorderColor),
+            typeof(Color),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default)
+        );
+        public Color BorderColor
+        {
+            get => (Color)GetValue(BorderColorProperty);
+            set => SetValue(BorderColorProperty, value);
+        }
+        #endregion BorderColor Property
+
+        #region BorderWidth Property
+        [Obsolete("Use BorderWidth instead")]
+        public new Thickness BorderThickness { get; set; }
+
+        public static readonly DependencyProperty BorderWidthProperty = DependencyProperty.Register(
+            nameof(BorderWidth),
+            typeof(double),
+            typeof(TargetedPopup),
+            new PropertyMetadata(1.0)
+        );
+        public double BorderWidth
+        {
+            get => (double)GetValue(BorderWidthProperty);
+            set => SetValue(BorderWidthProperty, value);
+        }
+        #endregion BorderWidth Property
+
+        #region CornerRadius Property
+        public static readonly new DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
+            nameof(CornerRadius),
+            typeof(double),
+            typeof(TargetedPopup),
+            new PropertyMetadata(6.0)
+        );
+        public new double CornerRadius
+        {
+            get => (double)GetValue(CornerRadiusProperty);
+            set => SetValue(CornerRadiusProperty, value);
+        }
+        #endregion CornerRadius Property
 
         #endregion
-
-        #region PopAfter Property
-        public static readonly DependencyProperty PopAfterProperty = DependencyProperty.Register(
-            nameof(PopAfter),
-            typeof(TimeSpan),
-            typeof(TargetedPopup),
-            new PropertyMetadata(default(TimeSpan))
-        );
-
-        /// <summary>
-        /// If greater than default TimeSpan, this is the amount of time the popup will display before automatically being popped.`
-        /// </summary>
-        public TimeSpan PopAfter
-        {
-            get => (TimeSpan)GetValue(PopAfterProperty);
-            set => SetValue(PopAfterProperty, value);
-        }
-        #endregion PopAfter Property
 
         #region Target Properties
 
@@ -131,17 +201,8 @@ namespace P42.Uno.Controls
             nameof(Target),
             typeof(UIElement),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(UIElement), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnTargetChanged(e)))
+            new PropertyMetadata(default(UIElement), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
         );
-        protected virtual void OnTargetChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (_border != null)
-            {
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.OnTargetChanged ======= ");
-                UpdateMarginAndAlignment();
-            }
-        }
-
         /// <summary>
         /// The UIElement the popup will point at (no pointer if Target is null or not found)
         /// </summary>
@@ -152,31 +213,21 @@ namespace P42.Uno.Controls
         }
         #endregion Target Property
 
-        #region TargetPoint Property
-        public static readonly DependencyProperty TargetPointProperty = DependencyProperty.Register(
-            nameof(TargetPoint),
-            typeof(Point),
+        #region TargetRect Property
+        public static readonly DependencyProperty TargetRectProperty = DependencyProperty.Register(
+            nameof(TargetRect),
+            typeof(Rect),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(Point), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnTargetPointChanged(e)))
+            new PropertyMetadata(default(Rect))
         );
-        protected virtual void OnTargetPointChanged(DependencyPropertyChangedEventArgs e)
+        public Rect TargetRect
         {
-            if (_border != null)
-            {
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.OnTargetPointChanged ======= ");
-                UpdateMarginAndAlignment();
-            }
+            get => (Rect)GetValue(TargetRectProperty);
+            set => SetValue(TargetRectProperty, value);
         }
+        #endregion TargetRect Property
 
-        /// <summary>
-        /// The Point to which the popup will point to
-        /// </summary>
-        public Point TargetPoint
-        {
-            get => (Point)GetValue(TargetPointProperty);
-            set => SetValue(TargetPointProperty, value);
-        }
-        #endregion TargetPoint Property
+
 
         #endregion
 
@@ -187,12 +238,8 @@ namespace P42.Uno.Controls
             nameof(PointerBias),
             typeof(double),
             typeof(TargetedPopup),
-            new PropertyMetadata(0.5, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPointerBiasChanged(e)))
+            new PropertyMetadata(0.5, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
         );
-        protected virtual void OnPointerBiasChanged(DependencyPropertyChangedEventArgs e)
-        {
-            
-        }
         /// <summary>
         /// Gets or sets the bias (0.0 is start; 0.5 is center;  1.0 is end; greater than 1.0 is pixels from start; less than 0.0 is pixels from end)of the pointer relative to the chosen face on the target.
         /// </summary>
@@ -234,16 +281,8 @@ namespace P42.Uno.Controls
             nameof(PreferredPointerDirection),
             typeof(PointerDirection),
             typeof(TargetedPopup),
-            new PropertyMetadata(PointerDirection.Any, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPreferredPointerDirectionChanged(e)))
+            new PropertyMetadata(PointerDirection.Any, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
         );
-        protected virtual void OnPreferredPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (_border != null)
-            {
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPreferredPointerDirectionChanged ======= ");
-                UpdateMarginAndAlignment();
-            }
-        }
         public PointerDirection PreferredPointerDirection
         {
             get => (PointerDirection)GetValue(PreferredPointerDirectionProperty);
@@ -256,16 +295,8 @@ namespace P42.Uno.Controls
             nameof(FallbackPointerDirection),
             typeof(PointerDirection),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnFallbackPointerDirectionChanged(e)))
+            new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
         );
-        protected virtual void OnFallbackPointerDirectionChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (_border != null && ActualPointerDirection == PointerDirection.None && PreferredPointerDirection != PointerDirection.None)
-            {
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.OnFallbackPointerDirectionChanged ======= ");
-                UpdateMarginAndAlignment();
-            }
-        }
         public PointerDirection FallbackPointerDirection
         {
             get => (PointerDirection)GetValue(FallbackPointerDirectionProperty);
@@ -280,16 +311,8 @@ namespace P42.Uno.Controls
             nameof(PointerLength),
             typeof(double),
             typeof(TargetedPopup),
-            new PropertyMetadata(10.0, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPointerLengthChanged(e)))
+            new PropertyMetadata(10.0, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
         );
-        protected virtual void OnPointerLengthChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (_border != null)
-            {
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPointerLengthChanged ======= ");
-                UpdateMarginAndAlignment();
-            }
-        }
         /// <summary>
         /// Gets or sets the length of the bubble layout's pointer.
         /// </summary>
@@ -306,12 +329,8 @@ namespace P42.Uno.Controls
             nameof(PointerTipRadius),
             typeof(double),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(double), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPointerTipRadiusChanged(e)))
+            new PropertyMetadata(2.0)
         );
-        protected virtual void OnPointerTipRadiusChanged(DependencyPropertyChangedEventArgs e)
-        {
-            // if done correctly, BubbleBorder would calculate the difference between sharp and rounded tip and adjust margins
-        }
         /// <summary>
         /// Gets or sets the radius of the bubble's pointer tip.
         /// </summary>
@@ -328,12 +347,8 @@ namespace P42.Uno.Controls
             nameof(PointToOffScreenElements),
             typeof(bool),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(bool), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).OnPointToOffScreenElementsChanged(e)))
+            new PropertyMetadata(default(bool), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
         );
-        protected virtual void OnPointToOffScreenElementsChanged(DependencyPropertyChangedEventArgs e)
-        {
-        }
-
         /// <summary>
         /// If Target is off screen (but known), should the popup still point at it?
         /// </summary>
@@ -349,7 +364,7 @@ namespace P42.Uno.Controls
             nameof(PointerMargin),
             typeof(double),
             typeof(TargetedPopup),
-            new PropertyMetadata(3.0)
+            new PropertyMetadata(3.0, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
         );
 
         /// <summary>
@@ -364,9 +379,76 @@ namespace P42.Uno.Controls
 
         #endregion
 
-        #region DismissOnPointerMove Property
-        public static readonly DependencyProperty DismissOnPointerMoveProperty = DependencyProperty.Register(
-            nameof(DismissOnPointerMove),
+        #region PageOverlay Properties
+
+        #region PageOverlayBrush Property
+        public static readonly DependencyProperty PageOverlayBrushProperty = DependencyProperty.Register(
+            nameof(PageOverlayBrush),
+            typeof(Brush),
+            typeof(TargetedPopup),
+            new PropertyMetadata(new SolidColorBrush(Colors.Transparent))
+        );
+        public Brush PageOverlayBrush
+        {
+            get => (Brush)GetValue(PageOverlayBrushProperty);
+            set => SetValue(PageOverlayBrushProperty, value);
+        }
+        #endregion PageOverlayBrush Property
+
+        #region IsPageOverlayHitTestVisible Property
+        public static readonly DependencyProperty IsPageOverlayHitTestVisibleProperty = DependencyProperty.Register(
+            nameof(IsPageOverlayHitTestVisible),
+            typeof(bool),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(bool))
+        );
+        public bool IsPageOverlayHitTestVisible
+        {
+            get => (bool)GetValue(IsPageOverlayHitTestVisibleProperty);
+            set => SetValue(IsPageOverlayHitTestVisibleProperty, value);
+        }
+        #endregion IsPageOverlayHitTestVisible Property
+
+
+        #endregion PageOverlay properties
+
+        #region HasShadow Property
+        public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
+            nameof(HasShadow),
+            typeof(bool),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(bool))
+        );
+        public bool HasShadow
+        {
+            get => (bool)GetValue(HasShadowProperty);
+            set => SetValue(HasShadowProperty, value);
+        }
+        #endregion HasShadow Property
+
+        #region Push/Pop Properties
+
+        #region PopAfter Property
+        public static readonly DependencyProperty PopAfterProperty = DependencyProperty.Register(
+            nameof(PopAfter),
+            typeof(TimeSpan),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(TimeSpan))
+        );
+
+        /// <summary>
+        /// If greater than default TimeSpan, this is the amount of time the popup will display before automatically being popped.`
+        /// </summary>
+        public TimeSpan PopAfter
+        {
+            get => (TimeSpan)GetValue(PopAfterProperty);
+            set => SetValue(PopAfterProperty, value);
+        }
+        #endregion PopAfter Property
+
+        #region PopOnPointerMove Property
+        public static readonly DependencyProperty PopOnPointerMoveProperty = DependencyProperty.Register(
+            nameof(PopOnPointerMove),
             typeof(bool),
             typeof(TargetedPopup),
             new PropertyMetadata(default(bool))
@@ -374,94 +456,100 @@ namespace P42.Uno.Controls
         /// <summary>
         /// Causes the popup to be dismissed (popped) when the Pointer (mouse) moves outside of the Target
         /// </summary>
-        public bool DismissOnPointerMove
+        public bool PopOnPointerMove
         {
-            get => (bool)GetValue(DismissOnPointerMoveProperty);
-            set => SetValue(DismissOnPointerMoveProperty, value);
+            get => (bool)GetValue(PopOnPointerMoveProperty);
+            set => SetValue(PopOnPointerMoveProperty, value);
         }
-        #endregion DismissOnPointerMove Property
+        #endregion PopOnPointerMove Property
 
-        #region LightDismiss Properties
-
-        #region IsLightDismissEnabled Property
-        public static readonly DependencyProperty IsLightDismissEnabledProperty = DependencyProperty.Register(
-            nameof(IsLightDismissEnabled),
+        #region PopOnPageOverlayTouch Property
+        /// <summary>
+        /// CancelOnPageOverlayTouch backing store
+        /// </summary>
+        public static readonly DependencyProperty PopOnPageOverlayTouchProperty = DependencyProperty.Register(
+            nameof(PopOnPageOverlayTouch),
             typeof(bool),
             typeof(TargetedPopup),
-            new PropertyMetadata(true, new PropertyChangedCallback(OnIsLightDismissOverlayEnabledChanged))
+            new PropertyMetadata(true)
         );
-        private static void OnIsLightDismissOverlayEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is TargetedPopup popup && popup._popup != null)
-            {
-                popup._popup.IsLightDismissEnabled = popup.IsLightDismissEnabled;
-            }
-        }
-
         /// <summary>
-        /// Light Dismiss overlay enabled?
+        /// Will the popup pop upon a PageOverlay touch?
         /// </summary>
-        public bool IsLightDismissEnabled
+        public bool PopOnPageOverlayTouch
         {
-            get => (bool)GetValue(IsLightDismissEnabledProperty);
-            set => SetValue(IsLightDismissEnabledProperty, value);
+            get => (bool)GetValue(PopOnPageOverlayTouchProperty);
+            set => SetValue(PopOnPageOverlayTouchProperty, value);
         }
-        #endregion IsLightDismissEnabled Property
+        #endregion PopOnPageOverlayTouch Property
 
-        #region LightDismissOverlayMode Property
-        public static readonly DependencyProperty LightDismissOverlayModeProperty = DependencyProperty.Register(
-            nameof(LightDismissOverlayMode),
-            typeof(LightDismissOverlayMode),
+        #region PopOnBackButtonClick Property
+        /// <summary>
+        /// CancelOnBackButtonClick property backing store
+        /// </summary>
+        public static readonly DependencyProperty PopOnBackButtonClickProperty = DependencyProperty.Register(
+            nameof(PopOnBackButtonClick),
+            typeof(bool),
             typeof(TargetedPopup),
-            new PropertyMetadata(LightDismissOverlayMode.On, new PropertyChangedCallback(OnLightDismissOverlayModeChanged))
+            new PropertyMetadata(true)
         );
-        private static void OnLightDismissOverlayModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is TargetedPopup popup && popup._popup != null)
-            {
-                popup._popup.LightDismissOverlayMode = popup.LightDismissOverlayMode;
-            }
-        }
-
         /// <summary>
-        /// Light Dismiss On/Off?
+        /// Will the popup pop upon a mobile device [BACK] button click?
         /// </summary>
-        public LightDismissOverlayMode LightDismissOverlayMode
+        public bool PopOnBackButtonClick
         {
-            get => (LightDismissOverlayMode)GetValue(LightDismissOverlayModeProperty);
-            set => SetValue(LightDismissOverlayModeProperty, value);
+            get => (bool)GetValue(PopOnBackButtonClickProperty);
+            set => SetValue(PopOnBackButtonClickProperty, value);
         }
-        #endregion LightDismissOverlayMode Property
+        #endregion PopOnBackButtonClick Property
 
-        #region AnimationDuration Property
-        public static readonly DependencyProperty AnimationDurationProperty = DependencyProperty.Register(
-            nameof(AnimationDuration),
-            typeof(int),
+        #region Parameter Property
+        /// <summary>
+        /// Parameter property backing store
+        /// </summary>
+        public static readonly DependencyProperty ParameterProperty = DependencyProperty.Register(
+            nameof(Parameter),
+            typeof(object),
             typeof(TargetedPopup),
-            new PropertyMetadata(200)
+            new PropertyMetadata(default)
         );
-
         /// <summary>
-        /// How long to animate the dismissal of the popup?
+        /// Object that can be set prior to appearance of Popup for the purpose of application to processing after the popup is disappeared
         /// </summary>
-        public int AnimationDuration
+        public object Parameter
         {
-            get => (int)GetValue(AnimationDurationProperty);
-            set => SetValue(AnimationDurationProperty, value);
+            get => (object)GetValue(ParameterProperty);
+            set => SetValue(ParameterProperty, value);
         }
-        #endregion AnimationDuration Property
+        #endregion Parameter Property
 
-        #endregion
+        #region PushEffect Property
+        public static readonly DependencyProperty PushEffectProperty = DependencyProperty.Register(
+            nameof(PushEffect),
+            typeof(Effect),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(Effect))
+        );
+        public Effect PushEffect
+        {
+            get => (Effect)GetValue(PushEffectProperty);
+            set => SetValue(PushEffectProperty, value);
+        }
+        #endregion PushEffect Property
 
+        #region PoppedCause Property
         /// <summary>
         /// Why did the popup pop?
         /// </summary>
         public PopupPoppedCause PoppedCause { get; private set; }
+        #endregion
 
+        #region PoppedTrigger Property
         /// <summary>
         /// What triggered the popup to pop?
         /// </summary>
         public object PoppedTrigger { get; private set; }
+        #endregion
 
         #region PushPopState Property
         public static readonly DependencyProperty PushPopStateProperty = DependencyProperty.Register(
@@ -486,36 +574,33 @@ namespace P42.Uno.Controls
         }
         #endregion PushPopState Property
 
-        /// <summary>
-        /// Is there no content for the popup?
-        /// </summary>
-        public bool IsEmpty
-        {
-            get
-            {
-                var contentPresenter = _contentPresenter;
-                while (contentPresenter?.Content is ContentPresenter cp)
-                    contentPresenter = cp;
-                //System.Diagnostics.Debug.WriteLine("TargetedPopup.IsEmpty: " + (contentPresenter.Content is null ? "TRUE" : "FALSE") );
-                return contentPresenter?.Content is null;
-            }
-        }
-        /*
-        #region IsAnimated Property
-        public static readonly DependencyProperty IsAnimatedProperty = DependencyProperty.Register(
-            nameof(IsAnimated),
-            typeof(bool),
+        #region AnimationDuration Property
+        public static readonly DependencyProperty AnimationDurationProperty = DependencyProperty.Register(
+            nameof(AnimationDuration),
+            typeof(TimeSpan),
             typeof(TargetedPopup),
-            new PropertyMetadata(true)
+            new PropertyMetadata(TimeSpan.FromMilliseconds(200))
         );
-        public bool IsAnimated
-        {
-            get => (bool)GetValue(IsAnimatedProperty);
-            set => SetValue(IsAnimatedProperty, value);
-        }
-        #endregion IsAnimated Property
-        */
 
+        /// <summary>
+        /// How long to animate the dismissal of the popup?
+        /// </summary>
+        public TimeSpan AnimationDuration
+        {
+            get => (TimeSpan)GetValue(AnimationDurationProperty);
+            set => SetValue(AnimationDurationProperty, value);
+        }
+        #endregion AnimationDuration Property
+
+        #endregion Push/Pop Properties
+
+        #endregion
+
+
+        #region Private Properties
+        Color WorkingBorderColor => BorderColor == default
+            ? SystemColors.ChromeDisabledHigh
+            : BorderColor;
         #endregion
 
 
@@ -561,72 +646,18 @@ namespace P42.Uno.Controls
         /// Constructor
         /// </summary>
         /// <param name="target">UI Element popup points to</param>
-        public TargetedPopup(UIElement target = null) : this()
+        public TargetedPopup(UIElement target) : this()
         {
             if (target != null)
                 Target = target;
         }
 
-#if __ANDROID__
-        protected override void OnNativeUnloaded()
-        {
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.OnNativeUnload ENTER");
-            base.OnNativeUnloaded();
-            P42.Utils.Uno.GC.Collect();
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.OnNativeUnload EXIT");
-        }
-#endif
-
-#if !HAS_UNO
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects)
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
-                disposedValue = true;
-            }
-        }
-
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~TargetedPopup()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
-
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            System.GC.SuppressFinalize(this);
-        }
-
-#endif
-
         #endregion
 
 
-        #region Event Handlers
-        /*
-        async void OnDismissPointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            if (IsLightDismissEnabled)
-            {
-                var dismissEventArgs = new DismissPointerPressedEventArgs();
-                DismissPointerPressed?.Invoke(this, dismissEventArgs);
-                if (!dismissEventArgs.CancelDismiss)
-                    await PopAsync(PopupPoppedCause.BackgroundTouch);
-            }
-        }
-        */
+        #region Pointer Move Event Handlers
 
-        Point _enteredPoint = new Point(-1,-1);
+        Point _enteredPoint = new(-1,-1);
         private void OnPointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             _enteredPoint = e.GetCurrentPoint(P42.Utils.Uno.Platform.Window.Content).Position;
@@ -635,7 +666,7 @@ namespace P42.Uno.Controls
 
         async void OnPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (DismissOnPointerMove)
+            if (PopOnPointerMove)
             {
                 var position = e.GetCurrentPoint(P42.Utils.Uno.Platform.Window.Content).Position;
                 System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPointerMoved e: [" + position.X + ", " + position.Y + "]");
@@ -645,15 +676,15 @@ namespace P42.Uno.Controls
 
                     var zone = new Rect(position.X - 5, position.Y - 5, 10, 10);
 
-                    var targetBounts = Target.GetBounds();
-                    var borderBounds = _border.GetBounds();
+                    var targetBounds = Target.GetBounds();
+                    var borderBounds = ContentBorder.GetBounds();
 
-                    if (Microsoft.UI.Xaml.RectHelper.Intersect(targetBounts, zone) is Rect intersect0
+                    if (Microsoft.UI.Xaml.RectHelper.Intersect(targetBounds, zone) is Rect intersect0
                         && intersect0.Width > 0
                         && intersect0.Height > 0)
                     {
-                        System.Diagnostics.Debug.WriteLine("\t\t RectHelper.Intersect(targetBounts, zone) = " + RectHelper.Intersect(targetBounts, zone));
-                        System.Diagnostics.Debug.WriteLine("\t\t in Target ["+ targetBounts + "]");
+                        System.Diagnostics.Debug.WriteLine("\t\t RectHelper.Intersect(targetBounds, zone) = " + RectHelper.Intersect(targetBounds, zone));
+                        System.Diagnostics.Debug.WriteLine("\t\t in Target ["+ targetBounds + "]");
                         return;
                     }
                     else if (Microsoft.UI.Xaml.RectHelper.Intersect(borderBounds, zone) is Rect intersect1
@@ -664,43 +695,43 @@ namespace P42.Uno.Controls
                         System.Diagnostics.Debug.WriteLine("\t\t in Border");
                         return;
                     }
-                    else if (Microsoft.UI.Xaml.RectHelper.Intersect(borderBounds, targetBounts) is Rect intersect2
+                    else if (Microsoft.UI.Xaml.RectHelper.Intersect(borderBounds, targetBounds) is Rect intersect2
                         && intersect2.Width <= 0
                         && intersect2.Height <= 0)
                     {
-                        System.Diagnostics.Debug.WriteLine("\t\t RectHelper.Intersect(borderBounds, targetBounts) = " + RectHelper.Intersect(borderBounds, targetBounts));
+                        System.Diagnostics.Debug.WriteLine("\t\t RectHelper.Intersect(borderBounds, targetBounds) = " + RectHelper.Intersect(borderBounds, targetBounds));
                         System.Diagnostics.Debug.WriteLine("\t\t testing Bridge");
 
                         var bridge = new Rect();
-                        if (targetBounts.Left > borderBounds.Right)
+                        if (targetBounds.Left > borderBounds.Right)
                         {
                             bridge.X = borderBounds.Right;
-                            bridge.Width = targetBounts.Left - borderBounds.Right;
+                            bridge.Width = targetBounds.Left - borderBounds.Right;
                         }
-                        else if (targetBounts.Right < borderBounds.Left)
+                        else if (targetBounds.Right < borderBounds.Left)
                         {
-                            bridge.X = targetBounts.Right;
-                            bridge.Width = borderBounds.Left - targetBounts.Right;
+                            bridge.X = targetBounds.Right;
+                            bridge.Width = borderBounds.Left - targetBounds.Right;
                         }
                         else
                         {
-                            bridge.X = Math.Max(targetBounts.X, borderBounds.X);
-                            bridge.Width = Math.Min(targetBounts.Width, borderBounds.Width);
+                            bridge.X = Math.Max(targetBounds.X, borderBounds.X);
+                            bridge.Width = Math.Min(targetBounds.Width, borderBounds.Width);
                         }
-                        if (targetBounts.Top > borderBounds.Bottom)
+                        if (targetBounds.Top > borderBounds.Bottom)
                         {
                             bridge.Y = borderBounds.Bottom;
-                            bridge.Height = targetBounts.Top - borderBounds.Bottom;
+                            bridge.Height = targetBounds.Top - borderBounds.Bottom;
                         }
-                        else if (targetBounts.Bottom < borderBounds.Top)
+                        else if (targetBounds.Bottom < borderBounds.Top)
                         {
-                            bridge.Y = targetBounts.Bottom;
-                            bridge.Height = borderBounds.Top - targetBounts.Bottom;
+                            bridge.Y = targetBounds.Bottom;
+                            bridge.Height = borderBounds.Top - targetBounds.Bottom;
                         }
                         else
                         {
-                            bridge.Y = Math.Max(targetBounts.Y, borderBounds.Y);
-                            bridge.Width = Math.Min(targetBounts.Height, borderBounds.Height);
+                            bridge.Y = Math.Max(targetBounds.Y, borderBounds.Y);
+                            bridge.Width = Math.Min(targetBounds.Height, borderBounds.Height);
                         }
 
                         bridge.X -= 5;
@@ -728,8 +759,8 @@ namespace P42.Uno.Controls
 
                     var dx = position.X - _enteredPoint.X;
                     var dy = position.Y - _enteredPoint.Y;
-                    var dist = Math.Sqrt(dx * dx + dy * dy);
-                    if (dist > 10)
+                    var distance = Math.Sqrt(dx * dx + dy * dy);
+                    if (distance > 10)
                         await PopAsync(PopupPoppedCause.PointerMoved);
                 }
             }
@@ -764,51 +795,41 @@ namespace P42.Uno.Controls
                 return;
 
             if (PushPopState == PushPopState.Popping)
-            {
-                if (_popCompletionSource is null)
-                {
-                    await WaitForPoppedAsync();
-                }
-                else
-                    return;
-            }
+                await WaitForPoppedAsync();
 
-            await InnerPushAsyc(animated);
+            await InnerPushAsync(animated);
         }
 
-        async Task InnerPushAsyc(bool animated)
+        async Task InnerPushAsync(bool animated)
         { 
             PushPopState = PushPopState.Pushing;
             _popCompletionSource = null;
+            _pushCompletionSource = null;
 
             PoppedCause = PopupPoppedCause.BackgroundTouch;
             PoppedTrigger = null;
 
+            // required to render popup the first time.
+            // UpdateOpacity(0.001);
+
             await OnPushBeginAsync();
-
-            // requiired to render popup the first time.
-            _border.Opacity = 0.0;
-            _popupOpenedCompletionSource = new TaskCompletionSource<bool>();
-
-            // WHAT IF WE PUT _popup.IsOpen AFTER UpdateMarginAndAlignment?
 
             try
             {
-                _popup.XamlRoot = P42.Utils.Uno.Platform.Window.Content.XamlRoot;
-                _popup.IsOpen = true;
-                await Task.Delay(5);
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsyc ======= ");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsync ======= ");
                 UpdateMarginAndAlignment();
 
+                UpdateOpacity(0.0);
+                RootFrame.Add(this);
+                await Task.Delay(5);
 
                 if (animated)
                 {
-                    Action<double> action = percent => _border.Opacity = Opacity * percent;
+                    void action(double percent) => UpdateOpacity(Opacity * percent);
                     var animator = new P42.Utils.Uno.ActionAnimator(0.11, 0.95, TimeSpan.FromMilliseconds(300), action);
                     await animator.RunAsync();
                 }
-
-                _border.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
+                UpdateOpacity(Opacity);
 
                 if (PopAfter > default(TimeSpan))
                 {
@@ -827,7 +848,6 @@ namespace P42.Uno.Controls
             }
             catch (Exception)
             {
-                PushPopState = PushPopState.Popped;
                 await InnerPop(PopupPoppedCause.Exception, animated);
             }
         }
@@ -845,43 +865,28 @@ namespace P42.Uno.Controls
                 return;
             
             if (PushPopState == PushPopState.Pushing)
-            {
-                if (_pushCompletionSource is null)
-                    await WaitForPush();
-                else
-                    return;
-            }
+                await WaitForPushAsync();
 
             await InnerPop(cause, animated, trigger);
         }
 
         async Task InnerPop(PopupPoppedCause cause, bool animated = false, [CallerMemberName] object trigger = null)
         {
+            _popCompletionSource = null;
             _pushCompletionSource = null;
 
             PushPopState = PushPopState.Popping;
-            _pushCompletionSource = null;
-
-            _border.SizeChanged -= OnBorderSizeChanged;
 
             PoppedCause = cause;
             PoppedTrigger = trigger;
+
             await OnPopBeginAsync();
 
             if (animated)
             {
-                Action<double> action = percent => _border.Opacity = Opacity * percent;
+                void action(double percent) => UpdateOpacity(Opacity * percent);
                 var animator = new P42.Utils.Uno.ActionAnimator(0.95, 0.11, TimeSpan.FromMilliseconds(300), action);
                 await animator.RunAsync();
-            }
-
-            try
-            {
-                _popup.IsOpen = false;
-            }
-            catch (Exception)
-            {
-
             }
 
             CompletePop(PoppedCause, PoppedTrigger);
@@ -889,12 +894,13 @@ namespace P42.Uno.Controls
 
         void CompletePop(PopupPoppedCause poppedCause, object poppedTrigger)
         {
-            var result = new PopupPoppedEventArgs(PoppedCause, PoppedTrigger);
+            UpdateOpacity(0.001);
+            RootFrame.Remove(this);
+
             PushPopState = PushPopState.Popped;
-            _border.Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity));
-            _popCompletionSource?.TrySetResult(result);
+            var result = new PopupPoppedEventArgs(poppedCause, poppedTrigger);
             Popped?.Invoke(this, result);
-            P42.Utils.Uno.GC.Collect();
+            _popCompletionSource?.TrySetResult(result);
         }
 
         TaskCompletionSource<PopupPoppedEventArgs> _popCompletionSource;
@@ -904,7 +910,7 @@ namespace P42.Uno.Controls
         /// <returns></returns>
         public async Task<PopupPoppedEventArgs> WaitForPoppedAsync()
         {
-            _popCompletionSource = _popCompletionSource ?? new TaskCompletionSource<PopupPoppedEventArgs>();
+            _popCompletionSource ??= new TaskCompletionSource<PopupPoppedEventArgs>();
             return await _popCompletionSource.Task;
         }
 
@@ -913,10 +919,10 @@ namespace P42.Uno.Controls
         /// Wait for popup to be pushed
         /// </summary>
         /// <returns></returns>
-        async Task<bool> WaitForPush()
+        async Task WaitForPushAsync()
         {
-            _pushCompletionSource = _pushCompletionSource ?? new TaskCompletionSource<bool>();
-            return await _pushCompletionSource.Task;
+            _pushCompletionSource ??= new TaskCompletionSource<bool>();
+            await _pushCompletionSource.Task;
         }
         #endregion
 
@@ -928,7 +934,7 @@ namespace P42.Uno.Controls
         /// <returns></returns>
         protected virtual async Task OnPushBeginAsync()
         {
-            await (_popupOpenedCompletionSource?.Task ?? Task.CompletedTask);
+            await Task.CompletedTask;
         }
 
         /// <summary>
@@ -960,21 +966,29 @@ namespace P42.Uno.Controls
         #endregion
 
 
-        #region Event Handlers
-        protected virtual void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
-        {
-            if (args.NewSize.Width < 1 || args.NewSize.Height < 1)
-                return;
-            System.Diagnostics.Debug.WriteLine("TargetedPopup.OnBorderSizeChanged ======= ");
-            UpdateMarginAndAlignment();
-        }
-        #endregion
-
-
         #region Layout
+        void UpdateOpacity(double value = -1)
+        {
+            if (value < 0)
+                value = Opacity;
+
+            ContentBorder.Opacity = ShadowBorder.Opacity = PageOverlay.Opacity = value;
+        }
+
+        void SetAlignmentAndMargins(HorizontalAlignment hz, VerticalAlignment vt, Thickness margin)
+        {
+            ContentBorder.HorizontalAlignment = ShadowBorder.HorizontalAlignment = hz;
+            ContentBorder.VerticalAlignment = ShadowBorder.VerticalAlignment = vt;
+            ShadowBorder.CornerRadius = CornerRadius;
+            ShadowBorder.Margin = margin.Subtract(ShadowBorder.BlurSigma * 2);
+            ContentBorder.Margin = margin;
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment vtAlign:" + vt + " hzAlign:" + hz);
+            System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment margin:" + margin + " shadowMargin:" + ShadowBorder.Margin);
+        }
+
         void UpdateMarginAndAlignment()
         {
-            if (_border is null || PushPopState == PushPopState.Popped || PushPopState == PushPopState.Popping)
+            if (PushPopState == PushPopState.Popped || PushPopState == PushPopState.Popping)
                 return;
 
             var windowSize = AppWindow.Size(this);
@@ -998,24 +1012,23 @@ namespace P42.Uno.Controls
 
             if (PreferredPointerDirection == PointerDirection.None || Target is null)
             {
-                //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateMarginAndAlignment PreferredPointerDirection == PointerDirection.None");
-                CleanMarginAndAlignment(HorizontalAlignment,VerticalAlignment, windowSize, cleanSize, safeMargin);
+                SetAlignmentAndMargins(HorizontalAlignment, VerticalAlignment, Margin.Add(safeMargin));
+                ActualPointerDirection = ContentBorder.PointerDirection = PointerDirection.None;
                 return;
             }
 
-            var target = TargetBounds();
+            var targetBounds = TargetBounds();
 
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateBorderMarginAndAlignment targetBounds:["+targetBounds+"]");
-            var availableSpace = AvailableSpace(target, safeMargin);
+            System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateBorderMarginAndAlignment targetBounds:["+targetBounds+"]");
+            var availableSpace = AvailableSpace(targetBounds.Grow(PointerMargin), safeMargin);
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment availableSpace:[{availableSpace}]");
             var stats = BestFit(availableSpace, cleanSize, safeMargin);
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment stats:[{stats}]");
 
-
-
             if (stats.PointerDirection == PointerDirection.None)
             {
-                CleanMarginAndAlignment(HorizontalAlignment.Center, VerticalAlignment.Center, windowSize, cleanSize, safeMargin);
+                SetAlignmentAndMargins(HorizontalAlignment.Center, VerticalAlignment.Center, Margin.Add(safeMargin));
+                ActualPointerDirection = ContentBorder.PointerDirection = PointerDirection.None;
                 return;
             }
 
@@ -1028,120 +1041,92 @@ namespace P42.Uno.Controls
             {
                 if (stats.PointerDirection == PointerDirection.Left)
                 {
-                    margin.Left = target.Right;
+                    margin.Left = targetBounds.Right + PointerMargin;
                     if (HorizontalAlignment != HorizontalAlignment.Stretch)
                         hzAlign = HorizontalAlignment.Left;
                 }
                 else if (stats.PointerDirection == PointerDirection.Right)
                 {
-                    margin.Right = windowSize.Width - target.Left;
+                    margin.Right = (windowSize.Width - targetBounds.Left) + PointerMargin;
                     if (HorizontalAlignment != HorizontalAlignment.Stretch)
                         hzAlign = HorizontalAlignment.Right;
                 }
 
                 if (VerticalAlignment == VerticalAlignment.Top)
-                {
-                    margin.Top = Math.Max(Margin.Top, target.Top);
-                }
+                    margin.Top = Math.Max(Margin.Top, targetBounds.Top);
                 else if (VerticalAlignment == VerticalAlignment.Center)
                 {
-                    margin.Top = Math.Max(Margin.Top, (target.Top + target.Bottom) / 2.0 - stats.BorderSize.Height / 2.0);
+                    margin.Top = Math.Max(Margin.Top, (targetBounds.Top + targetBounds.Bottom) / 2.0 - stats.BorderSize.Height / 2.0);
                     vtAlign = VerticalAlignment.Top;
                 }
                 else if (VerticalAlignment == VerticalAlignment.Bottom)
-                {
-                    margin.Bottom = Math.Max(Margin.Bottom, windowSize.Height - target.Bottom);
-                }
+                    margin.Bottom = Math.Max(Margin.Bottom, windowSize.Height - targetBounds.Bottom);
 
                 if (margin.Top + stats.BorderSize.Height > windowSize.Height - Margin.Bottom)
                     margin.Top = windowSize.Height - Margin.Bottom - stats.BorderSize.Height;
 
-                if (VerticalAlignment == VerticalAlignment.Bottom)
-                    _border.PointerAxialPosition = (target.Top - (windowSize.Height - margin.Bottom - cleanSize.Height)) + target.Bottom - (target.Top + target.Bottom) / 2.0;
+                var shortest = Math.Min(stats.BorderSize.Height, Target.ActualSize.Y);
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentAndMargins : stats.Border.Height:[{stats.BorderSize.Height}] target.Height:[{Target.ActualSize.Y}] shortest [{shortest}]");
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentAndMargins : PointerBias:[{PointerBias}]");
+                if (VerticalAlignment == VerticalAlignment.Top)
+                    ContentBorder.PointerAxialPosition = shortest * PointerBias;
+                else if (VerticalAlignment == VerticalAlignment.Bottom)
+                    ContentBorder.PointerAxialPosition = stats.BorderSize.Height - shortest * PointerBias;
+                else if (targetBounds.Height < stats.BorderSize.Height)
+                    ContentBorder.PointerAxialPosition = (targetBounds.Top - margin.Top) + targetBounds.Height * PointerBias;
                 else
-                    _border.PointerAxialPosition = (target.Top - margin.Top) + target.Bottom - (target.Top + target.Bottom) / 2.0;
+                    ContentBorder.PointerAxialPosition = margin.Top + shortest * PointerBias;
+
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentAndMargins : PointerAxialPosition:[{ContentBorder.PointerAxialPosition}]");
             }
             else
             {
-                //System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment: stats: " + stats);
                 if (stats.PointerDirection == PointerDirection.Up)
                 {
-                    margin.Top = target.Bottom;
+                    margin.Top = targetBounds.Bottom + PointerMargin;
                     if (VerticalAlignment != VerticalAlignment.Stretch)
                         vtAlign = VerticalAlignment.Top;
                 }
                 else if (stats.PointerDirection == PointerDirection.Down)
                 {
-                    margin.Bottom = windowSize.Height - target.Top;
+                    margin.Bottom = (windowSize.Height - targetBounds.Top) + PointerMargin;
                     if (VerticalAlignment != VerticalAlignment.Stretch)
                         vtAlign = VerticalAlignment.Bottom;
                 }
                 //System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment margin: " + margin);
 
                 if (HorizontalAlignment == HorizontalAlignment.Left)
-                {
-                    margin.Left = Math.Max(Margin.Left, target.Left);
-                }
+                    margin.Left = Math.Max(Margin.Left, targetBounds.Left);
                 else if (HorizontalAlignment == HorizontalAlignment.Center)
                 {
-                    margin.Left = Math.Max(Margin.Left, (target.Left + target.Right) / 2.0 - stats.BorderSize.Width / 2.0);
+                    margin.Left = Math.Max(Margin.Left, (targetBounds.Left + targetBounds.Right) / 2.0 - stats.BorderSize.Width / 2.0);
                     hzAlign = HorizontalAlignment.Left;
                 }
                 else if (HorizontalAlignment == HorizontalAlignment.Right)
-                {
-                    margin.Right = Math.Max(Margin.Right, windowSize.Width - target.Right);
-                }
+                    margin.Right = Math.Max(Margin.Right, windowSize.Width - targetBounds.Right);
 
                 if (margin.Left + stats.BorderSize.Width > windowSize.Width - Margin.Right)
                     margin.Left = windowSize.Width - Margin.Right - stats.BorderSize.Width;
 
-                if (HorizontalAlignment == HorizontalAlignment.Right)
-                    _border.PointerAxialPosition = (target.Left - (windowSize.Width - margin.Right - cleanSize.Width)) + (target.Right - (target.Left + target.Right) / 2.0);
+                var shortest = Math.Min(stats.BorderSize.Width, Target.ActualSize.X);
+                if (HorizontalAlignment == HorizontalAlignment.Left)
+                    ContentBorder.PointerAxialPosition = shortest * PointerBias;
+                else if (HorizontalAlignment == HorizontalAlignment.Right)
+                    ContentBorder.PointerAxialPosition = stats.BorderSize.Width - shortest * PointerBias;
+                else if (targetBounds.Width < stats.BorderSize.Width)
+                    ContentBorder.PointerAxialPosition = (targetBounds.Left - margin.Left) + targetBounds.Width * PointerBias;
                 else
-                    _border.PointerAxialPosition = (target.Left - margin.Left) + (target.Right - (target.Left + target.Right) / 2.0);
+                    ContentBorder.PointerAxialPosition = margin.Left + shortest * PointerBias;
             }
 
-            ActualPointerDirection = _border.PointerDirection = stats.PointerDirection;
-            //System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment margin: "+margin+" vtAlign: " + vtAlign + " cleanSize: " + cleanSize);
-            SetMarginAndAlignment(margin, hzAlign, vtAlign, windowSize, stats.BorderSize);
+            ShadowBorder.PointerAxialPosition = ContentBorder.PointerAxialPosition + ShadowBorder.BlurSigma * 2; 
+            ActualPointerDirection = ContentBorder.PointerDirection = stats.PointerDirection;
+            SetAlignmentAndMargins(hzAlign, vtAlign, margin);
+
         }
 
-        void CleanMarginAndAlignment(HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size windowSize, Size cleanSize, Thickness safeMargin)
-        {
-            ActualPointerDirection = PointerDirection.None;
 
-            if (_border is null)
-                return;
-
-            _border.PointerDirection = ActualPointerDirection;
-            SetMarginAndAlignment(Margin.Add(safeMargin), hzAlign, vtAlign, windowSize, cleanSize);
-        }
-
-        void SetMarginAndAlignment(Thickness margin, HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size windowSize, Size cleanSize)
-        { 
-            var frame = CalculateFrame(margin, hzAlign, vtAlign, windowSize, cleanSize);
-
-            _popup.Margin = new Thickness(0);
-            _popup.HorizontalOffset = frame.Left;
-            _popup.VerticalOffset = frame.Top;
-#if !__ANDROID__
-            _popup.VerticalOffset += P42.Utils.Uno.AppWindow.StatusBarHeight(this);
-#endif
-
-            _border.Margin = new Thickness(0);
-            _border.Width = frame.Width;
-            _border.Height = frame.Height;
-
-            _border.HorizontalAlignment = hzAlign == HorizontalAlignment.Stretch && !this.HasPrescribedWidth()
-                ? HorizontalAlignment.Stretch
-                : HorizontalAlignment.Left;
-            _border.VerticalAlignment = vtAlign == VerticalAlignment.Stretch && !this.HasPrescribedHeight()
-                ? VerticalAlignment.Stretch
-                : VerticalAlignment.Top;
-
-            //System.Diagnostics.Debug.WriteLine("TargetedPopup.CleanMarginAndAlignment frame: " + frame);
-        }
-
+        /*
         Rect CalculateFrame(Thickness margin, HorizontalAlignment hzAlign, VerticalAlignment vtAlign, Size windowSize, Size borderSize)
         {
             var hzPointer = ActualPointerDirection.IsHorizontal() ? PointerLength : 0;
@@ -1187,6 +1172,7 @@ namespace P42.Uno.Controls
 
             return new Rect(left, top, right - left, bottom - top);
         }
+        */
 
         DirectionStats BestFit(Thickness availableSpace, Size cleanSize, Thickness safeMargin)
         {
@@ -1234,7 +1220,7 @@ namespace P42.Uno.Controls
             return cleanStat;
         }
 
-        DirectionStats? GetBestDirectionStat(List<DirectionStats> stats)
+        static DirectionStats? GetBestDirectionStat(List<DirectionStats> stats)
         {
             if (stats.Count == 1)
                 return stats[0];
@@ -1257,10 +1243,10 @@ namespace P42.Uno.Controls
         {
             var targetBounds = Target is null ? Rect.Empty : Target.GetBounds();
 
-            double targetLeft = (Target is null ? TargetPoint.X : targetBounds.Left) - PointerMargin;
-            double targetRight = (Target is null ? TargetPoint.X : targetBounds.Right) + PointerMargin;
-            double targetTop = (Target is null ? TargetPoint.Y : targetBounds.Top) - PointerMargin;
-            double targetBottom = (Target is null ? TargetPoint.Y : targetBounds.Bottom) + PointerMargin;
+            double targetLeft = (Target is null ? TargetRect.Left : targetBounds.Left);
+            double targetRight = (Target is null ? TargetRect.Right : targetBounds.Right);
+            double targetTop = (Target is null ? TargetRect.Top : targetBounds.Top);
+            double targetBottom = (Target is null ? TargetRect.Bottom: targetBounds.Bottom);
 
             return new Rect(targetLeft, targetTop, targetRight - targetLeft, targetBottom - targetTop);
         }
@@ -1268,7 +1254,7 @@ namespace P42.Uno.Controls
         Thickness AvailableSpace(Rect target, Thickness safeMargin)
         {
             var windowBounds = AppWindow.Size(this);
-            if (Target != null || (TargetPoint.X > 0 || TargetPoint.Y > 0))
+            if (Target != null || (TargetRect.Width > 0 || TargetRect.Height > 0))
             {
                 if (target.Right > 0 && target.Left < windowBounds.Width && target.Bottom > 0 && target.Top < windowBounds.Height)
                 {
@@ -1442,11 +1428,6 @@ namespace P42.Uno.Controls
             return stats;
         }
 
-        //Size _lastSizeAvailable = Size.Empty;
-        //Size _lastResultSize = Size.Empty;
-        //bool _lastWasFixedWidth;
-        private bool disposedValue;
-
         Size MeasureBorder(Size available, Size failSize = default)
         {
             //System.Diagnostics.Debug.WriteLine("\n");
@@ -1457,74 +1438,58 @@ namespace P42.Uno.Controls
             if (this.HasPrescribedWidth())
             {
                 System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder HasPrescribedWidth");
-                width = Math.Min(Width, width);
+                //width = Math.Min(Width, width);
+                width = Width;
             }
             if (this.HasPrescribedHeight())
             {
                 System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder HasPrescribedHeight");
-                height = Math.Min(Height, height);
+                //height = Math.Min(Height, height);
+                height = Height;
             }
+
+            if (this.HasPrescribedWidth() && this.HasPrescribedHeight())
+                return new Size(width, height);
+
+            if (this.HasMinWidth())
+                width = Math.Max(width, MinWidth);
+            if (this.HasMinHeight())
+                height = Math.Max(height, MinHeight);
+
+            if (this.HasMaxWidth())
+                width = Math.Min(width, MaxWidth);
+            if (this.HasMaxHeight())
+                height = Math.Min(height, MaxHeight);
 
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder width[{width}][{height}]");
 
-            if (this.HasPrescribedWidth() && this.HasPrescribedHeight())
-            {
-                //_lastSizeAvailable = Size.Empty;
-                //_lastResultSize = Size.Empty;
-                //_lastWasFixedWidth = false;
-                return new Size(width, height);
-            }
-
-            /*
-            if (_lastWasFixedWidth && this.HasPrescribedWidth() &&
-                _lastSizeAvailable.Width == width)
-            {
-                System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder  : _lastWasFixedSize && PrescribedWidth && _lastAvailWidth = width");
-                if (VerticalAlignment == VerticalAlignment.Stretch || _lastResultSize.Height > height)
-                    return new Size(_lastSizeAvailable.Width, height);
-                return _lastResultSize;
-            }
-            */
-
-
-            if (IsEmpty)
+            if (Content is null)
             {
                 System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder : IS EMPTY ");
                 return new Size(width, height);
-                /*
-                return new Size(
-                    this.HasPrescribedWidth()
-                        ? width : 50 + Padding.Horizontal(),
-                    this.HasPrescribedHeight()
-                        ? height : 50 + Padding.Vertical()
-                    );
-                */
             }
 
             if (HorizontalAlignment == HorizontalAlignment.Stretch && VerticalAlignment == VerticalAlignment.Stretch)
             {
                 System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder : STRETCH ");
-                //_lastSizeAvailable = Size.Empty;
-                //_lastResultSize = Size.Empty;
-                //_lastWasFixedWidth = false;
                 return new Size(width, height);
             }
 
-            var hasBorder = (BorderThickness.Average() > 0) && BorderBrush is SolidColorBrush brush && brush.Color.A > 0;
-            var border = BorderThickness.Average() * (hasBorder ? 1 : 0) * 2;
-            var availableWidth = width - Padding.Horizontal() - border -1;
-            var availableHeight = height - Padding.Vertical() - border -1;
+            var hasBorder = (BorderWidth > 0) && WorkingBorderColor.A > 0;
+            var border = BorderWidth * (hasBorder ? 1 : 0) * 2;
+            var availableWidth = width - (Padding.Horizontal() + border + 1);
+            var availableHeight = height - (Padding.Vertical() + border + 1);
             //System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder border:[{border}] Padding:[{Padding}]  availableWidth:[" + availableWidth+"] availableHeight:["+availableHeight+"]");
-            if (availableWidth > 0 && availableHeight > 0 && _contentPresenter.Content != null)
+            if (availableWidth > 0 && availableHeight > 0)
             {
-                _contentPresenter.Measure(new Size(availableWidth, availableHeight));
-                var result = _contentPresenter.DesiredSize;
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.RenderSize:[" + _contentPresenter.RenderSize + "]");
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.DesiredSize:[" + _contentPresenter.DesiredSize + "]");
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.ActualSize:[" + _contentPresenter.ActualSize + "]");
+                ContentPresenter.Measure(new Size(availableWidth, availableHeight));
+                var result = ContentPresenter.DesiredSize;
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.RenderSize:[" + ContentPresenter.RenderSize + "]");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.DesiredSize:[" + ContentPresenter.DesiredSize + "]");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.ActualSize:[" + ContentPresenter.ActualSize + "]");
 
-                result.Width += Padding.Horizontal() + border;
-                result.Height += Padding.Vertical() + border;
+                result.Width += Padding.Horizontal() + border + 1;
+                result.Height += Padding.Vertical() + border + 1;
 
                 var resultSize = new Size(
                     this.HasPrescribedWidth()
@@ -1533,16 +1498,12 @@ namespace P42.Uno.Controls
                         ? height : result.Height
                     );
 
-                //_lastSizeAvailable = available;
-                //_lastResultSize = resultSize;
-                //_lastWasFixedWidth = this.HasPrescribedWidth();
-
                 return resultSize;
             }
 
-            //_lastSizeAvailable = Size.Empty;
-            //_lastResultSize = Size.Empty;
-            //_lastWasFixedWidth = false;
+            if (failSize == default)
+                return new Size(width,height);
+
             return failSize;
         }
 

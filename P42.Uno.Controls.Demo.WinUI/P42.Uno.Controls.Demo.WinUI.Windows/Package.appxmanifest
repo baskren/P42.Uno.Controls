@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
@@ -7,7 +7,7 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="94545008-2EED-4A63-8267-D9D8BA40AA62"
+    Name="7A97ECC1-0DA9-4A24-B4B9-9E87A1D1E56D"
     Publisher="O=P42.Uno.Controls.Demo.WinUI"
     Version="1.0.0.0" />
 

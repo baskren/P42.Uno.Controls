@@ -38,7 +38,7 @@ namespace P42.Uno.Controls
                         .RowSpan(2)
                         .Margin(3)
                         .Center()
-                        //.Bind(ContentPresenter.ContentProperty, this, nameof(IconElement))
+                        .Bind(ContentPresenter.ContentProperty, this, nameof(IconElement))
                         .BindNullCollapse(),
 
                     new ContentPresenter()

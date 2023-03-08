@@ -5,7 +5,7 @@ using Windows.UI.Core;
 
 namespace P42.Uno.Controls.Demo.WinUI
 {
-	class Program
+	public sealed class Program
 	{
 		static void Main(string[] args)
 		{
@@ -28,7 +28,7 @@ namespace P42.Uno.Controls.Demo.WinUI
 						}
 					};
 
-					return new App();
+					return new AppHead();
 				});
 				host.Run();
 			}

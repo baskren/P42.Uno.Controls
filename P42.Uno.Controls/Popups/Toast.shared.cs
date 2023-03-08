@@ -249,6 +249,7 @@ namespace P42.Uno.Controls
         }
         #endregion
 
+        /*
         protected override void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
         {
             base.OnBorderSizeChanged(sender, args);
@@ -260,7 +261,7 @@ namespace P42.Uno.Controls
             IsMessageScrollable = desiredSize.Height > size.Height;
             System.Diagnostics.Debug.WriteLine($"Toast.OnBorderSizeChanged height[{size.Height}] desiredHeight[{desiredSize.Height}]");
         }
-
+        */
 
         private void OnCurrentWindow_SizeChanged(object sender, Microsoft.UI.Xaml.WindowSizeChangedEventArgs e)
         {

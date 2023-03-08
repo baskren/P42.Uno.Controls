@@ -9,15 +9,15 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using ElementType = P42.Uno.Controls.TargetedPopup;
-
+using P42.Uno.Markup;
 
 namespace P42.Uno.Controls
 {
     public static class TargetedPopupExtensions
 
     {
-		public static TElement Content<TElement>(this TElement element, object value) where TElement : ElementType
-		{ element.XamlContent = value; return element; }
+		public static TElement Content<TElement>(this TElement element, UIElement value) where TElement : ElementType
+		{ element.Content = value; return element; }
 
 		#region Alignment
 
@@ -102,9 +102,6 @@ namespace P42.Uno.Controls
 		{ element.Padding = padding; return element; }
 		#endregion
 
-		public static TElement HasShadow<TElement>(this TElement element, bool value = true) where TElement : ElementType
-		{ element.HasShadow = value; return element; }
-
 		public static TElement PopAfter<TElement>(this TElement element, TimeSpan value) where TElement : ElementType
 		{ element.PopAfter = value; return element; }
 
@@ -176,12 +173,12 @@ namespace P42.Uno.Controls
         #endregion
 
         #region LightDismiss Properties
+        /*
         public static TElement IsLightDismissEnabled<TElement>(this TElement element, bool value = true) where TElement : ElementType
 		{ element.IsLightDismissEnabled = value; return element; }
 
 		public static TElement LightDismissOverlayMode<TElement>(this TElement element, LightDismissOverlayMode value) where TElement : ElementType
 		{ element.LightDismissOverlayMode = value; return element; }
-		/*
 		public static TElement LightDismissOverlayBrush<TElement>(this TElement element, Brush value) where TElement : ElementType
 		{ element.LightDismissOverlayBrush = value; return element; }
 
@@ -193,6 +190,20 @@ namespace P42.Uno.Controls
 		*/
         #endregion
 
+
+        #region PageOverlay
+        public static TElement PageOverlay<TElement>(this TElement element, Brush brush) where TElement : ElementType
+        { element.PageOverlayBrush = brush; return element; }
+
+        public static TElement PageOverlay<TElement>(this TElement element, Color color) where TElement : ElementType
+        { element.PageOverlayBrush = new SolidColorBrush(color); return element; }
+
+        public static TElement PageOverlay<TElement>(this TElement element, string color) where TElement : ElementType
+        { element.PageOverlayBrush = new SolidColorBrush(ColorExtensions.ColorFromString(color)); return element; }
+
+        public static TElement PageOverlay<TElement>(this TElement element, uint hex) where TElement : ElementType
+        { element.PageOverlayBrush = new SolidColorBrush(ColorExtensions.ColorFromUint(hex)); return element; }
+        #endregion
 
     }
 }

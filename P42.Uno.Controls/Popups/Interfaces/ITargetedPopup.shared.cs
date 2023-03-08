@@ -5,18 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
     interface ITargetedPopup
     {
-        bool HasShadow { get; set; }
 
-        TimeSpan PopAfter { get; set; }
+        Thickness Margin { get; set; }
 
+        Thickness Padding { get; set; }
+
+        object Content { get; set; }
+
+        #region Pointer Properties
         UIElement Target { get; set; }
 
-        Point TargetPoint { get; set; }
+        Rect TargetRect { get; set; }
 
         double PointerBias { get; set; }
 
@@ -32,9 +37,40 @@ namespace P42.Uno.Controls
 
         double PointerTipRadius { get; set; }
 
+        bool PointToOffScreenElements { get; set; }
+
+        double PointerMargin { get; set; }
+
+        #endregion
+
+        Brush PageOverlayBrush { get; set; }
+
+        #region Push / Pop Properties
+        TimeSpan PopAfter { get; set; }
+
+        bool PopOnPointerMove { get; set; }
+
+        bool PopOnPageOverlayTouch { get; set; }
+
+        bool PopOnBackButtonClick { get; set; }
+
+        object Parameter { get; set; }
+
+        Effect PushEffect { get; set; }
+        
         PopupPoppedCause PoppedCause { get; }
 
         object PoppedTrigger { get; }
+
+        PushPopState PushPopState { get; }
+
+        TimeSpan AnimationDuration { get; set; }
+
+        #endregion
+
+
+
+        event EventHandler Pushed;
 
         event EventHandler<PopupPoppedEventArgs> Popped;
 

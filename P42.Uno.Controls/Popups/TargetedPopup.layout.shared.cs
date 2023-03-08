@@ -5,10 +5,13 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
 using P42.Uno.Markup;
 using P42.Utils.Uno;
+using Microsoft.UI.Xaml.Input;
+using System;
+using Microsoft.UI;
 
 namespace P42.Uno.Controls
 {
-    public partial class TargetedPopup : UserControl
+    public partial class TargetedPopup : ContentControl
     {
         #region Defaults
         const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Center;
@@ -18,89 +21,94 @@ namespace P42.Uno.Controls
         #endregion
 
         #region Visual Elements
-        internal BubbleBorder _border;
-        protected ContentPresenter _contentPresenter;
-        protected Microsoft.UI.Xaml.Controls.Primitives.Popup _popup;
+        internal SkiaBubble ShadowBorder;
+        internal NewBubbleBorder ContentBorder;
+        internal Rectangle PageOverlay;
+        ContentPresenter ContentPresenter;
         #endregion
 
         void Build()
         {
-            //Visibility = Visibility.Collapsed;
-            Margin = new Thickness(40, 40, 40, 40);
-            HorizontalAlignment = HorizontalAlignment.Center;
-            VerticalAlignment = VerticalAlignment.Center;
-            HorizontalContentAlignment = HorizontalAlignment.Center;
-            VerticalContentAlignment = VerticalAlignment.Center;
-            ActualPointerDirection = PointerDirection.None;
 
-            Background = (Brush)Application.Current.Resources["SystemControlBackgroundChromeMediumBrush"];
-            BorderBrush = (Brush)Application.Current.Resources["SystemControlForegroundBaseLowBrush"];
-            Foreground = (Brush)Application.Current.Resources["SystemControlForegroundBaseHighBrush"];
-            BorderThickness = new Thickness(DefaultBorderThickness);
-            CornerRadius = new CornerRadius(DefaultCornerRadius);
-            FontSize = 16;
+            ContentPresenter = new ContentPresenter()
+                .Bind(ContentPresenter.ContentProperty, this, nameof(Content))
+                .Bind(ContentPresenter.ContentTemplateProperty, this, nameof(ContentTemplate))
+                .Bind(ContentPresenter.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
+                .Bind(ContentPresenter.ContentTransitionsProperty, this, nameof(ContentTransitions))
+                .Bind(ContentPresenter.CharacterSpacingProperty, this, nameof(CharacterSpacing))
+                .BindFont(this)
+                .Bind(ContentPresenter.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
+                .Bind(ContentPresenter.IsTextScaleFactorEnabledProperty, this, nameof(IsTextScaleFactorEnabled))
+                //.Bind(ContentPresenter.LineHeightProperty, this, nameof(LineHeight))
+                //.Bind(ContentPresenter.LineStackingStrategy, this, nameof(LineStackingStrategy))
+                //.Bind(ContentPresenter.MaxLinesProperty, this, nameof(MaxLines))
+                //.Bind(ContentPresenter.OpticalMarginAlignmentProperty, this, nameof(OpticalMarginAlignment))
+                .Bind(ContentPresenter.PaddingProperty, this, nameof(Padding))
+                //.Bind(TextLineBoundsProperty, this, nameof(TextLineBounds))
+                //.Bind(ContentPresenter.TextWrappingProperty, this, nameof(TextWrapping))
+                .Bind(ContentPresenter.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment));
 
-            Content = new Microsoft.UI.Xaml.Controls.Primitives.Popup
-            {
-                Child =
-                    new BubbleBorder()
-                    {
-                        Content = new ContentPresenter()
-                            .Assign(out _contentPresenter)
-                            .Margin(0)
-                            .Padding(Padding)
-                            .Stretch()
-                            .TextWrapping(TextWrapping.WrapWholeWords)
-                            .BindFont(this)
-                            .BindNullCollapse()
-                    }
-                        .Assign(out _border)
-                        .Bind(BubbleBorder.OpacityProperty, this, nameof(Opacity))
-                        .Bind(BubbleBorder.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
-                        .Bind(BubbleBorder.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
-                        .Bind(BubbleBorder.WidthProperty, this, nameof(Width))
-                        .Bind(BubbleBorder.HeightProperty, this, nameof(Height))
-                        .Bind(BubbleBorder.PaddingProperty, this, nameof(Padding))
-                        .Bind(BubbleBorder.BackgroundProperty, this, nameof(Background))
-                        .Bind(BubbleBorder.BorderBrushProperty, this, nameof(BorderBrush))
-                        .Bind(BubbleBorder.BorderThicknessProperty, this, nameof(BorderThickness))
-                        .Bind(BubbleBorder.CornerRadiusProperty, this, nameof(CornerRadius))
-                        //.Bind(BubbleBorder.HasShadowProperty, this, nameof(HasShadow))
-                        .Bind(BubbleBorder.PointerBiasProperty, this, nameof(PointerBias))
-                        .Bind(BubbleBorder.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
-                        .Bind(BubbleBorder.PointerLengthProperty, this, nameof(PointerLength))
-                        .Bind(BubbleBorder.PointerTipRadiusProperty, this, nameof(PointerTipRadius)),
-            }
-                .Assign(out _popup)
-                .DataContext(this)
-                .Margin(0)
-                //.Padding(0)
+            PageOverlay = new Rectangle()
                 .Stretch()
-                .Bind(Microsoft.UI.Xaml.Controls.Primitives.Popup.IsLightDismissEnabledProperty, this, nameof(IsLightDismissEnabled))
-                .Bind(Microsoft.UI.Xaml.Controls.Primitives.Popup.LightDismissOverlayModeProperty, this, nameof(LightDismissOverlayMode))
-                ;
+                .Bind(Rectangle.FillProperty, this, nameof(PageOverlayBrush))
+                .Bind(Rectangle.IsHitTestVisibleProperty, this, nameof(IsPageOverlayHitTestVisible))
+                .Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: P42.Utils.Uno.VisibilityExtensions.VisibilityConverter)
+                .AddTappedHandler(OnPageOverlayTapped);
 
-            //this.PointerMoved += OnPointerMoved;
-            //this.PointerEntered += OnPointerEntered;
-            _popup.Opened += OnPopupOpened;
-            _popup.Closed += OnPopupClosed;
+            //TODO: return to BubbleBorder and implement binding of properties to BubbleBorder.ContentPresenter 
+            ContentBorder = new NewBubbleBorder()
+                .HitTestVisible(true)
+                .Content(ContentPresenter)
+                .Bind(NewBubbleBorder.PaddingProperty, this, nameof(Padding))
+                .Bind(NewBubbleBorder.BackgroundColorProperty, this, nameof(BackgroundColor))
+                .Bind(NewBubbleBorder.BorderColorProperty, this, nameof(BorderColor))
+                .Bind(NewBubbleBorder.BorderWidthProperty, this, nameof(BorderWidth))
+                .Bind(NewBubbleBorder.CornerRadiusProperty, this, nameof(CornerRadius))
+                .Bind(NewBubbleBorder.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
+                .Bind(NewBubbleBorder.PointerLengthProperty, this, nameof(PointerLength))
+                .Bind(NewBubbleBorder.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
+                .AddSizeChangedHandler(OnBorderSizeChanged);
 
-            LightDismissOverlayMode = LightDismissOverlayMode.On;
-            /*
-#if __IOS__
-            var uiFont = UIKit.UIFont.SystemFontOfSize(12f);
-            var family = uiFont.FamilyName;
-            this.FontFamily(family);
-#endif
-            */
+            ShadowBorder = new SkiaBubble()
+                //.Bind(SkiaBubble.VisibilityProperty, this, nameof(HasShadow), converter: P42.Utils.Uno.VisibilityExtensions.VisibilityConverter)
+                //.Bind(SkiaBubble.CornerRadiusProperty, ContentBorder, nameof(NewBubbleBorder.CornerRadius))
+                .Bind(SkiaBubble.PointerCornerRadiusProperty, ContentBorder, nameof(NewBubbleBorder.PointerCornerRadius))
+                .Bind(SkiaBubble.PointerDirectionProperty, ContentBorder, nameof(NewBubbleBorder.PointerDirection))
+                .Bind(SkiaBubble.PointerLengthProperty, ContentBorder, nameof(NewBubbleBorder.PointerLength))
+                .Bind(SkiaBubble.PointerTipRadiusProperty, ContentBorder, nameof(NewBubbleBorder.PointerTipRadius))
+                .IsShadow();
 
-            _contentPresenter.SizeChanged += _contentPresenter_SizeChanged;
+
+            RootFrame.Current.SizeChanged += OnRootFrameSizeChanged;
+
+            ActualPointerDirection = PointerDirection.None;
+            HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            PageOverlayBrush = new SolidColorBrush(Colors.Black.WithAlpha(0.25));
+            VerticalContentAlignment = VerticalAlignment.Stretch;
+            MinWidth = 40;
+            MinHeight = 40;
+
+
         }
 
-        private void _contentPresenter_SizeChanged(object sender, SizeChangedEventArgs args)
+        protected virtual void OnRootFrameSizeChanged(object sender, SizeChangedEventArgs e)
+            => UpdateMarginAndAlignment();
+
+        protected virtual void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
         {
-            System.Diagnostics.Debug.WriteLine($" ---- TargetedPopup.ContentPresenter_SizeChanged [{args.PreviousSize}] -> [{args.NewSize}] : [{_contentPresenter.DesiredSize}]---- ");
-
+            ShadowBorder.Height = ContentBorder.ActualHeight + ShadowBorder.BlurSigma * 4;
+            ShadowBorder.Width = ContentBorder.ActualWidth + ShadowBorder.BlurSigma * 4;
         }
+
+        void OnPageOverlayTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            if (PopOnPageOverlayTouch)
+            {
+                RootFrame.Remove(this);
+                e.Handled = true;
+            }
+        }
+
+
     }
 }
