@@ -332,7 +332,7 @@ namespace P42.Uno.Controls
             nameof(IsPageOverlayHitTestVisible),
             typeof(bool),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(bool))
+            new PropertyMetadata(true)
         );
         public bool IsPageOverlayHitTestVisible
         {

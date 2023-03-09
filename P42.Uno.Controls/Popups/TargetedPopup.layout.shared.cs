@@ -81,8 +81,9 @@ namespace P42.Uno.Controls
             RootFrame.Current.SizeChanged += OnRootFrameSizeChanged;
 
             ActualPointerDirection = PointerDirection.None;
-            Background = new SolidColorBrush(SystemColors.ColorButtonFace);
-            BorderBrush = new SolidColorBrush(SystemColors.ChromeDisabledHigh);
+            Background = SystemTeachingTipBrushes.Background;
+            BorderBrush = SystemTeachingTipBrushes.Border;
+            Foreground = SystemTeachingTipBrushes.Foreground;
             HorizontalContentAlignment = HorizontalAlignment.Stretch;
             PageOverlayBrush = new SolidColorBrush(Colors.Black.WithAlpha(0.25));
             VerticalContentAlignment = VerticalAlignment.Stretch;
@@ -97,8 +98,18 @@ namespace P42.Uno.Controls
 
         protected virtual void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
         {
-            ShadowBorder.Height = ContentBorder.ActualHeight + ShadowBorder.BlurSigma * 4;
-            ShadowBorder.Width = ContentBorder.ActualWidth + ShadowBorder.BlurSigma * 4;
+            if (HasShadow)
+            {
+                var heightChanged = args.NewSize.Height - args.PreviousSize.Height;
+                if (heightChanged <= 0 && heightChanged > -2)
+                    return;
+                var widthChanged = args.NewSize.Width - args.PreviousSize.Width;
+                if (widthChanged <= 0 && widthChanged > -2)
+                    return;
+
+                ShadowBorder.Height = ContentBorder.ActualHeight + ShadowBorder.BlurSigma * 4;
+                ShadowBorder.Width = ContentBorder.ActualWidth + ShadowBorder.BlurSigma * 4;
+            }
         }
 
         async void OnPageOverlayTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)

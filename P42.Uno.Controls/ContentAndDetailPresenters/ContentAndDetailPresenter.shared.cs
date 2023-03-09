@@ -372,9 +372,16 @@ namespace P42.Uno.Controls
 
         #region Layout
 
-        void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
-            LayoutDetailAndOverlay(e.NewSize, DetailPushPopState == PushPopState.Pushed ? 1 : 0);
+            var heightChanged = args.NewSize.Height - args.PreviousSize.Height;
+            if (heightChanged <= 0 && heightChanged > -2)
+                return;
+            var widthChanged = args.NewSize.Width - args.PreviousSize.Width;
+            if (widthChanged <= 0 && widthChanged > -2)
+                return;
+
+            LayoutDetailAndOverlay(args.NewSize, DetailPushPopState == PushPopState.Pushed ? 1 : 0);
         }
 
         void LayoutDetailAndOverlay(Size size, double percentOpen)

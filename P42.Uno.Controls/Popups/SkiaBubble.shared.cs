@@ -8,6 +8,7 @@ using Windows.UI;
 using P42.Uno.Markup;
 using SkiaSharp.Views.Windows;
 using Microsoft.UI;
+using System.Runtime.CompilerServices;
 
 namespace P42.Uno.Controls
 {
@@ -21,10 +22,10 @@ namespace P42.Uno.Controls
 
         #region Properties
 
-        static void Redraw(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        void Redraw([CallerMemberName] string caller = null)
         {
-            if (d is SkiaBubble bubble)
-                bubble.Invalidate();
+            System.Diagnostics.Debug.WriteLine($"SkiaBubble.Redraw : [{caller}]");
+            Invalidate();
         }
 
         #region UserControl Properties
@@ -35,7 +36,7 @@ namespace P42.Uno.Controls
             nameof(BackgroundColor),
             typeof(Color),
             typeof(SkiaBubble),
-            new PropertyMetadata(default(Color),Redraw)
+            new PropertyMetadata(default(Color),(d,e) => ((SkiaBubble)d).Redraw(nameof(BackgroundColor)))
         );
 
 #if __IOS__
@@ -55,7 +56,7 @@ namespace P42.Uno.Controls
             nameof(BorderColor),
             typeof(Color),
             typeof(SkiaBubble),
-            new PropertyMetadata(default(Color), Redraw)
+            new PropertyMetadata(default(Color), (d, e) => ((SkiaBubble)d).Redraw(nameof(BorderColor)))
         );
         public Color BorderColor
         {
@@ -70,7 +71,7 @@ namespace P42.Uno.Controls
             nameof(BorderWidth),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(1.0, Redraw)
+            new PropertyMetadata(1.0, (d, e) => ((SkiaBubble)d).Redraw(nameof(BorderWidth)))
         );
         public double BorderWidth
         {
@@ -85,7 +86,7 @@ namespace P42.Uno.Controls
             nameof(CornerRadius),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(4.0, Redraw)
+            new PropertyMetadata(4.0, (d, e) => ((SkiaBubble)d).Redraw(nameof(CornerRadius)))
         );
         public double CornerRadius
         {
@@ -105,7 +106,7 @@ namespace P42.Uno.Controls
             nameof(PointerLength),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(10.0, Redraw)
+            new PropertyMetadata(10.0, (d, e) => ((SkiaBubble)d).Redraw(nameof(PointerLength)))
         );
         /// <summary>
         /// Gets or sets the length of the bubble layout's pointer.
@@ -124,7 +125,7 @@ namespace P42.Uno.Controls
             nameof(PointerTipRadius),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(1.0, Redraw)
+            new PropertyMetadata(1.0, (d, e) => ((SkiaBubble)d).Redraw(nameof(PointerTipRadius)))
         );
         /// <summary>
         /// Gets or sets the radius of the bubble's pointer tip.
@@ -143,7 +144,7 @@ namespace P42.Uno.Controls
             nameof(PointerAxialPosition),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(0.5, Redraw)
+            new PropertyMetadata(0.5, (d, e) => ((SkiaBubble)d).Redraw(nameof(PointerAxialPosition)))
         );
         /// <summary>
         /// Gets or sets the position of the bubble's pointer along the face it's on.
@@ -162,7 +163,7 @@ namespace P42.Uno.Controls
             nameof(PointerDirection),
             typeof(PointerDirection),
             typeof(SkiaBubble),
-            new PropertyMetadata(PointerDirection.None, Redraw)
+            new PropertyMetadata(PointerDirection.None, (d, e) => ((SkiaBubble)d).Redraw(nameof(PointerDirection)))
         );
         /// <summary>
         /// Gets or sets the direction in which the pointer pointing.
@@ -181,7 +182,7 @@ namespace P42.Uno.Controls
             nameof(PointerCornerRadius),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(default(double), Redraw)
+            new PropertyMetadata(default(double), (d, e) => ((SkiaBubble)d).Redraw(nameof(PointerCornerRadius)))
         );
         public double PointerCornerRadius
         {
@@ -283,7 +284,10 @@ namespace P42.Uno.Controls
             float pointerPosition,
             float cornerRadius,
             float tipRadius,
-            float filetRadius)
+            float filetRadius,
+            [CallerMemberName] string callerMember = null,
+            [CallerFilePath] string callerPath = null,
+            [CallerLineNumber] int callerLineNumber = default)
         {
             if (measuredSize == default)
                 return new SKPath();
@@ -295,6 +299,7 @@ namespace P42.Uno.Controls
             if (width < 1 || height < 1)
                 return new SKPath();
 
+            //System.Diagnostics.Debug.WriteLine($"SkiaBubble.GeneratePath : [{callerMember}]:[{callerLineNumber}]:[{callerPath}]");
             //System.Diagnostics.Debug.WriteLine($"Bubble.GeneratePath : scale [{scale}]");
             //System.Diagnostics.Debug.WriteLine($"Bubble.GeneratePath : borderWidth [{borderWidth}]");
             //System.Diagnostics.Debug.WriteLine($"Bubble.GeneratePath : pointerLength [{pointerLength}]");
@@ -352,7 +357,7 @@ namespace P42.Uno.Controls
                     ? right - pointerPosition
                     : bottom - pointerPosition;
             }
-            System.Diagnostics.Debug.WriteLine($"SkiaBubble.GeneratePath : pointerPosition [{pointerPosition}]");
+            //System.Diagnostics.Debug.WriteLine($"SkiaBubble.GeneratePath : pointerPosition [{pointerPosition}]");
 
             const float sqrt3 = 1.732050807568877f;
             const float sqrt3d2 = 0.86602540378444f;
