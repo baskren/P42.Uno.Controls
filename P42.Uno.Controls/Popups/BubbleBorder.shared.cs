@@ -15,28 +15,33 @@ namespace P42.Uno.Controls
     /// Border used by Popups
     /// </summary>
     [Microsoft.UI.Xaml.Data.Bindable]
-    public partial class BubbleBorder : ContentControl
+    public partial class BubbleBorder : Grid
     {
         #region Properties
 
         #region Content Property
-        public static readonly new DependencyProperty ContentProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
             nameof(Content),
             typeof(UIElement),
             typeof(BubbleBorder),
-            new PropertyMetadata(default(UIElement))
+            new PropertyMetadata(null, OnContentChanged)
         );
-        /*
+        
         private static void OnContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is BubbleBorder border)
             {
+                if (e.OldValue is UIElement oldElement)
+                    border.Children.Remove(oldElement);
                 if (e.NewValue is UIElement newElement)
-                    border._contentPresenter.Content = newElement;
+                {
+                    newElement.RowCol(1, 1);
+                    border.Children.Add(newElement);
+                }
             }
         }
-        */
-        public new UIElement Content
+        
+        public UIElement Content
         {
             get => (UIElement)GetValue(ContentProperty);
             set => SetValue(ContentProperty, value);
@@ -268,10 +273,11 @@ namespace P42.Uno.Controls
 
 
         #region Fields
-        Grid _grid;
+        //Grid _grid;
         ContentPresenter _contentPresenter;
         PathBubble _pathBubble;
         #endregion
+
 
         #region Construction
         public BubbleBorder()
@@ -279,13 +285,17 @@ namespace P42.Uno.Controls
             base.Margin = new Thickness(0);
             base.Padding = new Thickness(0);
 
-            base.Content = new Grid()
-                .Assign(out _grid)
+            //base.Background = new SolidColorBrush(Colors.Green);
+
+            //base.Content = new Grid()
+            this
+                //.Assign(out _grid)
+                //.Stretch()
                 .Children
                 (
                     new PathBubble()
                         .Assign(out _pathBubble)
-                        .Stretch()
+                        //.Stretch()
                         .RowSpan(3)
                         .ColumnSpan(3)
                         .Bind(PathBubble.FillProperty, this, nameof(Background))
@@ -296,28 +306,48 @@ namespace P42.Uno.Controls
                         .Bind(PathBubble.PointerAxialPositionProperty, this, nameof(PointerAxialPosition))
                         .Bind(PathBubble.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
                         .Bind(PathBubble.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
-                        .Bind(PathBubble.PointerDirectionProperty, this, nameof(PointerDirection)),
+                        .Bind(PathBubble.PointerDirectionProperty, this, nameof(PointerDirection))
+                    /*
+                    new Microsoft.UI.Xaml.Shapes.Rectangle()
+                        .RowCol(1,1)
+                        .Stretch()
+                        .Fill(Colors.Pink),
+                    */
+                   /*
                     new ContentPresenter()
+                    .Background(Colors.Pink)
                         .Assign(out _contentPresenter)
                         .RowCol(1,1)
+                        .Padding(0)
+                        .Margin(0)
                         //Background
                         //BackgroundSizing
                         //BorderBrush
                         //BorderThickness
                         .Bind(ContentPresenter.ContentProperty, this, nameof(Content))
-                        .Bind(ContentPresenter.ContentTemplateProperty, this, nameof(ContentTemplate))
-                        .Bind(ContentPresenter.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
-                        .Bind(ContentPresenter.ContentTransitionsProperty, this, nameof(ContentTransitions))
+                        //.Bind(ContentPresenter.ContentTemplateProperty, this, nameof(ContentTemplate))
+                        //.Bind(ContentPresenter.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
+                        //.Bind(ContentPresenter.ContentTransitionsProperty, this, nameof(ContentTransitions))
                         //CornerRadius
-                        .BindTextProperties(this)
-                        .Bind(ContentPresenter.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
-                        .Bind(ContentPresenter.PaddingProperty, this, nameof(Padding))
-                        .Bind(ContentPresenter.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
+                        //.BindTextProperties(this)
+                        //.Bind(ContentPresenter.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
+                        //.Bind(ContentPresenter.PaddingProperty, this, nameof(Padding))
+                        //.Bind(ContentPresenter.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
+                    */
                 );
 
             Background = SystemTeachingTipBrushes.Background;
             BorderBrush = SystemTeachingTipBrushes.Border;
+            //HorizontalContentAlignment = HorizontalAlignment.Left;
+            //VerticalContentAlignment = VerticalAlignment.Top;
 
+            RegisterPropertyChangedCallback(HorizontalAlignmentProperty, OnAlignmentChanged);
+
+        }
+
+        private void OnAlignmentChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            System.Diagnostics.Debug.WriteLine($"BubbleBorder. : [{HorizontalAlignment}]");
         }
         #endregion
 
@@ -351,11 +381,12 @@ namespace P42.Uno.Controls
                 ? BorderWidth
                 : 0;
 
-            _grid
-                .Rows(padding.Top + borderWidth, "*", padding.Bottom + borderWidth + 1)
-                .Columns(padding.Left + borderWidth, "*", padding.Right + borderWidth + 1);
+            this
+                .Rows(padding.Top + borderWidth, "*", padding.Bottom + borderWidth )
+                .Columns(padding.Left + borderWidth, "*", padding.Right + borderWidth);
 
-            _contentPresenter.CornerRadius = new CornerRadius(
+            if (Content is ContentPresenter p)
+            p.CornerRadius = new CornerRadius(
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Left + Padding.Top)/2.0),
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Top + Padding.Right) / 2.0),
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Right + Padding.Bottom) / 2.0),

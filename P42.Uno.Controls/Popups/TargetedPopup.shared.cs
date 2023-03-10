@@ -929,6 +929,8 @@ namespace P42.Uno.Controls
             ShadowBorder.CornerRadius = CornerRadius;
             ShadowBorder.Margin = margin.Subtract(ShadowBorder.BlurSigma * 2);
             ContentBorder.Margin = margin;
+            ContentBorder.InvalidateMeasure();
+
             System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment vtAlign:" + vt + " hzAlign:" + hz);
             System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment margin:" + margin + " shadowMargin:" + ShadowBorder.Margin);
         }
@@ -954,7 +956,7 @@ namespace P42.Uno.Controls
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment windowWidth:[{windowWidth}] windowHeight:[{windowHeight}]");
 
 
-            var cleanSize = MeasureBorder(new Size(windowWidth, windowHeight));
+            var cleanSize = MeasureCleanBorder(new Size(windowWidth, windowHeight));
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment cleanSize:[{cleanSize}] : [{windowWidth},{windowHeight}]");
 
             if (PreferredPointerDirection == PointerDirection.None || Target is null)
@@ -1123,7 +1125,7 @@ namespace P42.Uno.Controls
 
         DirectionStats BestFit(Thickness availableSpace, Size cleanSize, Thickness safeMargin)
         {
-            // given the amount of free space, determine if the border will fit 
+            // given the amount of free space, determine if the borderSize will fit 
             var windowSize = AppWindow.Size(this);
             var windowSpaceW = Math.Max(0, windowSize.Width - Margin.Horizontal() - safeMargin.Horizontal());
             var windowSpaceH = Math.Max(0, windowSize.Height - Margin.Vertical() - safeMargin.Vertical());
@@ -1305,7 +1307,7 @@ namespace P42.Uno.Controls
                 if (availableSpace.Right > 0)
                 {
                     var size = new Size(availableSpace.Right, windowSpace.Height);
-                    var borderSize = MeasureBorder(size, cleanStat.BorderSize);
+                    var borderSize = MeasureCleanBorder(size, cleanStat.BorderSize);
                     var stat = cleanStat;
                     stat.PointerDirection = PointerDirection.Left;
                     stat.BorderSize = borderSize;
@@ -1323,11 +1325,11 @@ namespace P42.Uno.Controls
                 if (availableSpace.Left > 0)
                 {
                     var size = new Size(availableSpace.Left, windowSpace.Height);
-                    var border = MeasureBorder(size, cleanStat.BorderSize);
+                    var borderSize = MeasureCleanBorder(size, cleanStat.BorderSize);
                     var stat = cleanStat;
                     stat.PointerDirection = PointerDirection.Right;
-                    stat.BorderSize = border;
-                    var free = availableSpace.Left - border.Width;
+                    stat.BorderSize = borderSize;
+                    var free = availableSpace.Left - borderSize.Width;
                     if (free >= 0)
                     {
                         stat.FreeSpace.Width = free;
@@ -1341,11 +1343,11 @@ namespace P42.Uno.Controls
                 if (availableSpace.Bottom > 0)
                 {
                     var size = new Size(windowSpace.Width, availableSpace.Bottom);
-                    var border = MeasureBorder(size, cleanStat.BorderSize);
+                    var borderSize = MeasureCleanBorder(size, cleanStat.BorderSize);
                     var stat = cleanStat;
                     stat.PointerDirection = PointerDirection.Up;
-                    stat.BorderSize = border;
-                    var free = availableSpace.Bottom - border.Height;
+                    stat.BorderSize = borderSize;
+                    var free = availableSpace.Bottom - borderSize.Height;
                     if (free >= 0)
                     {
                         stat.FreeSpace.Height = free;
@@ -1359,11 +1361,11 @@ namespace P42.Uno.Controls
                 if (availableSpace.Top > 0)
                 {
                     var size = new Size(windowSpace.Width, availableSpace.Top);
-                    var border = MeasureBorder(size, cleanStat.BorderSize);
+                    var borderSize = MeasureCleanBorder(size, cleanStat.BorderSize);
                     var stat = cleanStat;
                     stat.PointerDirection = PointerDirection.Down;
-                    stat.BorderSize = border;
-                    var free = availableSpace.Top - border.Height;
+                    stat.BorderSize = borderSize;
+                    var free = availableSpace.Top - borderSize.Height;
                     if (free >= 0)
                     {
                         stat.FreeSpace.Height = free;
@@ -1375,22 +1377,22 @@ namespace P42.Uno.Controls
             return stats;
         }
 
-        Size MeasureBorder(Size available, Size failSize = default)
+        Size MeasureCleanBorder(Size available, Size failSize = default)
         {
             //System.Diagnostics.Debug.WriteLine("\n");
-            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder({available})");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureCleanBorder({available})");
 
             var width = available.Width;
             var height = available.Height;
             if (this.HasPrescribedWidth())
             {
-                System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder HasPrescribedWidth");
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureCleanBorder HasPrescribedWidth");
                 //width = Math.Min(Width, width);
                 width = Width;
             }
             if (this.HasPrescribedHeight())
             {
-                System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder HasPrescribedHeight");
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureCleanBorder HasPrescribedHeight");
                 //height = Math.Min(Height, height);
                 height = Height;
             }
@@ -1408,31 +1410,31 @@ namespace P42.Uno.Controls
             if (this.HasMaxHeight())
                 height = Math.Min(height, MaxHeight);
 
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder width[{width}][{height}]");
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureCleanBorder width[{width}][{height}]");
 
             if (Content is null)
             {
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder : IS EMPTY ");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureCleanBorder : IS EMPTY ");
                 return new Size(width, height);
             }
 
             if (HorizontalAlignment == HorizontalAlignment.Stretch && VerticalAlignment == VerticalAlignment.Stretch)
             {
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder : STRETCH ");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureCleanBorder : STRETCH ");
                 return new Size(width, height);
             }
 
             var border = BorderWidth * (HasBorder ? 1 : 0) * 2;
             var availableWidth = width - (Padding.Horizontal() + border + 1);
             var availableHeight = height - (Padding.Vertical() + border + 1);
-            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureBorder border:[{border}] Padding:[{Padding}]  availableWidth:[" + availableWidth+"] availableHeight:["+availableHeight+"]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureCleanBorder borderSize:[{borderSize}] Padding:[{Padding}]  availableWidth:[" + availableWidth+"] availableHeight:["+availableHeight+"]");
             if (availableWidth > 0 && availableHeight > 0)
             {
-                ContentPresenter.Measure(new Size(availableWidth, availableHeight));
-                var result = ContentPresenter.DesiredSize;
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.RenderSize:[" + ContentPresenter.RenderSize + "]");
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.DesiredSize:[" + ContentPresenter.DesiredSize + "]");
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureBorder  _contentPresenter.ActualSize:[" + ContentPresenter.ActualSize + "]");
+                ContentBorder.Content.Measure(new Size(availableWidth, availableHeight));
+                var result = ContentBorder.Content.DesiredSize;
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureCleanBorder  _contentPresenter.RenderSize:[" + ContentBorder.Content.RenderSize + "]");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureCleanBorder  _contentPresenter.DesiredSize:[" + ContentBorder.Content.DesiredSize + "]");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureCleanBorder  _contentPresenter.ActualSize:[" + ContentBorder.Content.ActualSize + "]");
 
                 result.Width += Padding.Horizontal() + border + 1;
                 result.Height += Padding.Vertical() + border + 1;

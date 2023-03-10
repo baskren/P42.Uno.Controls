@@ -24,12 +24,11 @@ namespace P42.Uno.Controls
         internal SkiaBubble ShadowBorder;
         internal BubbleBorder ContentBorder;
         internal Rectangle PageOverlay;
-        ContentPresenter ContentPresenter;
         #endregion
 
         void Build()
         {
-
+            /*
             ContentPresenter = new ContentPresenter()
                 .Bind(ContentPresenter.ContentProperty, this, nameof(Content))
                 .Bind(ContentPresenter.ContentTemplateProperty, this, nameof(ContentTemplate))
@@ -47,18 +46,25 @@ namespace P42.Uno.Controls
                 //.Bind(TextLineBoundsProperty, this, nameof(TextLineBounds))
                 //.Bind(ContentPresenter.TextWrappingProperty, this, nameof(TextWrapping))
                 .Bind(ContentPresenter.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment));
-
+            */
+            
             PageOverlay = new Rectangle()
                 .Stretch()
                 .Bind(Rectangle.FillProperty, this, nameof(PageOverlayBrush))
                 .Bind(Rectangle.IsHitTestVisibleProperty, this, nameof(IsPageOverlayHitTestVisible))
                 .Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: P42.Utils.Uno.VisibilityExtensions.VisibilityConverter)
                 .AddTappedHandler(OnPageOverlayTapped);
-
+            
             //TODO: implement binding of properties to BubbleBorder.ContentPresenter 
             ContentBorder = new BubbleBorder()
                 .HitTestVisible(true)
-                .Content(ContentPresenter)
+                .Bind(BubbleBorder.ContentProperty, this, nameof(Content))
+                //.Bind(BubbleBorder.ContentTemplateProperty, this, nameof(ContentTemplate))
+                //.Bind(BubbleBorder.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
+                //.Bind(BubbleBorder.ContentTransitionsProperty, this, nameof(ContentTransitions))
+                //.BindFont(this)
+                //.Bind(BubbleBorder.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
+                //.Bind(BubbleBorder.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
                 .Bind(BubbleBorder.PaddingProperty, this, nameof(Padding))
                 .Bind(BubbleBorder.BackgroundProperty, this, nameof(Background))
                 .Bind(BubbleBorder.BorderBrushProperty, this, nameof(BorderBrush))
@@ -84,9 +90,9 @@ namespace P42.Uno.Controls
             Background = SystemTeachingTipBrushes.Background;
             BorderBrush = SystemTeachingTipBrushes.Border;
             Foreground = SystemTeachingTipBrushes.Foreground;
-            HorizontalContentAlignment = HorizontalAlignment.Stretch;
             PageOverlayBrush = new SolidColorBrush(Colors.Black.WithAlpha(0.25));
-            VerticalContentAlignment = VerticalAlignment.Stretch;
+            HorizontalContentAlignment = HorizontalAlignment.Left;
+            VerticalContentAlignment = VerticalAlignment.Top;
             MinWidth = 40;
             MinHeight = 40;
 

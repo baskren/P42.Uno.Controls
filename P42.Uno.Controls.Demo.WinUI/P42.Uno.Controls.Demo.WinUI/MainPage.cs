@@ -58,10 +58,6 @@ namespace P42.Uno.Controls.Demo
                 .Stretch()
                 .Children
                 (
-                    new TextBlock()
-                        .Text("TITLE")
-                        .BoldFontWeight()
-                        .Margin(10, 5),
                     new Grid()
                         .Background(Colors.White)
                         .BorderBrush(Colors.Gray)
@@ -69,14 +65,24 @@ namespace P42.Uno.Controls.Demo
                         .Children
                         (
                             new TextBlock()
-                                .WrapWords()
-                                .Bind(TextBlock.TextProperty, _textBox, nameof(TextBox.Text))
+                                .Text("TITLE")
+                                .BoldFontWeight()
                         ),
-                    new Button()
-                        .Content("CANCEL")
-                        .AddClickHandler(OnTargetedPopupCancelButtonClicked)
-                        .Center()
+                    new TextBlock()
+                        .WrapWords()
                         .Margin(10)
+                        .Bind(TextBlock.TextProperty, _textBox, nameof(TextBox.Text)),
+                    new Grid()
+                        .Background(Colors.White)
+                        .BorderBrush(Colors.Gray)
+                        .Padding(10)
+                        .Children
+                        (
+                            new Button()
+                                .Content("CANCEL")
+                                .AddClickHandler(OnTargetedPopupCancelButtonClicked)
+                                .Center()
+                        )
                 )
             );
             //result.BackgroundColor = Colors.Transparent;

@@ -108,7 +108,7 @@ namespace P42.Uno.Controls.Demo
                         .Horizontal()
                         .Children(
                             new TextBlock().Text("Shadow:").Foreground(Colors.Black),
-                            new ToggleSwitch().Assign(out _shadowToggleSwitch).On().AddToggledHandler(OnShadowToggelButtonChanged),
+                            new ToggleSwitch().Assign(out _shadowToggleSwitch).On().AddToggledHandler(OnShadowToggleButtonChanged),
                             new TextBlock().Text("Overlay:").Foreground(Colors.Black),
                             new ToggleSwitch().Assign(out _overlayToggleSwitch).On().AddToggledHandler(OnPageOverlayToggleSwitchChanged),
                             new TextBlock().Text("Hitable:").Foreground(Colors.Black),
@@ -152,7 +152,7 @@ namespace P42.Uno.Controls.Demo
             TargetedPopup.IsPageOverlayHitTestVisible = _hitTransparentOverlayToggleSwitch.IsOn;
         }
 
-        private void OnShadowToggelButtonChanged(object sender, RoutedEventArgs e)
+        private void OnShadowToggleButtonChanged(object sender, RoutedEventArgs e)
         {
             TargetedPopup.HasShadow = _shadowToggleSwitch.IsOn;
         }
@@ -183,7 +183,7 @@ namespace P42.Uno.Controls.Demo
             if (_vtAlignCombo.SelectedItem is not VerticalAlignment align)
                 align = VerticalAlignment.Top;
 
-            TargetedPopup.VerticalAlignment = align;
+            //TargetedPopup.VerticalAlignment = align;
             _bubble.VerticalAlignment = align;
         }
 
@@ -192,7 +192,7 @@ namespace P42.Uno.Controls.Demo
             if (_hzAlignCombo.SelectedItem is not HorizontalAlignment align)
                 align = HorizontalAlignment.Left;
 
-            TargetedPopup.HorizontalAlignment = align;
+            //TargetedPopup.HorizontalAlignment = align;
             _bubble.HorizontalAlignment = align;
         }
     }
