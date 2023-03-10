@@ -22,6 +22,7 @@ using P42.Utils.Uno;
 
 namespace P42.Uno.Controls.Demo
 {
+    [Microsoft.UI.Xaml.Data.Bindable]
     public partial class SegmentedControlTestPage : Page
     {
         #region Fields

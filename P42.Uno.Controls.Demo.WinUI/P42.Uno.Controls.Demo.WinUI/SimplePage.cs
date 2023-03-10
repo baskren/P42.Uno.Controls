@@ -19,6 +19,7 @@ using Microsoft.UI;
 
 namespace App1
 {
+    [Microsoft.UI.Xaml.Data.Bindable]
     public sealed partial class SimplePage : Page
     {
         public SimplePage()

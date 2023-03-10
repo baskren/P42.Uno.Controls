@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace P42.Uno.Controls.Demo
 {
+    [Microsoft.UI.Xaml.Data.Bindable]
     public sealed partial class LabelTestPage : Page
     {
         static string text1 = "Żyłę;^`g <b><em>Lorem</em></b> ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Odio ut enim blandit volutpat maecenas. Diam volutpat commodo sed egestas egestas fringilla phasellus. Odio eu feugiat pretium nibh ipsum consequat. Urna condimentum mattis pellentesque id nibh tortor. Ut lectus arcu bibendum at varius vel pharetra. Dui nunc mattis enim ut tellus. Nullam vehicula ipsum a arcu cursus vitae congue mauris. Libero nunc consequat interdum varius sit amet mattis vulputate. Pharetra pharetra massa massa ultricies. Lorem sed risus ultricies tristique nulla aliquet enim tortor at. Aliquam sem et tortor consequat id porta. Ultrices in iaculis nunc sed augue. Tincidunt vitae semper quis lectus nulla at volutpat diam. Vitae elementum curabitur vitae nunc sed velit.";

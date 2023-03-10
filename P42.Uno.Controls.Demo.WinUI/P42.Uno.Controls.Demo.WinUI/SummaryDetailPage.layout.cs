@@ -25,6 +25,7 @@ namespace P42.Uno.Controls.Demo
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
+    [Microsoft.UI.Xaml.Data.Bindable]
     public sealed partial class SummaryDetailPage : Page
     {
         ContentAndDetailPresenter _ContentAndDetailPresenter;
