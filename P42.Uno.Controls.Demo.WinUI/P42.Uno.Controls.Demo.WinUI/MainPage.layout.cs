@@ -151,7 +151,7 @@ namespace P42.Uno.Controls.Demo
                         .Assign(out _bubble)
                     */
                     /*
-                    new NewBubbleBorder
+                    new BubbleBorder
                     {
                         Content = new Border
                         {

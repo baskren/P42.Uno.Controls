@@ -15,7 +15,7 @@ namespace P42.Uno.Controls
     /// Border used by Popups
     /// </summary>
     [Microsoft.UI.Xaml.Data.Bindable]
-    public partial class NewBubbleBorder : Grid
+    public partial class BubbleBorder : Grid
     {
         #region Properties
 
@@ -23,12 +23,12 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
             nameof(Content),
             typeof(UIElement),
-            typeof(NewBubbleBorder),
+            typeof(BubbleBorder),
             new PropertyMetadata(default(UIElement), OnContentChanged)
         );
         private static void OnContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is NewBubbleBorder border)
+            if (d is BubbleBorder border)
             {
                 if (e.OldValue is UIElement oldElement)
                     border.Children.Remove(oldElement);
@@ -53,7 +53,7 @@ namespace P42.Uno.Controls
         public static readonly new DependencyProperty BackgroundProperty = DependencyProperty.Register(
             nameof(Background),
             typeof(Brush),
-            typeof(NewBubbleBorder),
+            typeof(BubbleBorder),
             new PropertyMetadata(default(Brush))
         );
         public new Brush Background
@@ -67,7 +67,7 @@ namespace P42.Uno.Controls
         public static readonly new DependencyProperty BorderBrushProperty = DependencyProperty.Register(
             nameof(BorderBrush),
             typeof(Brush),
-            typeof(NewBubbleBorder),
+            typeof(BubbleBorder),
             new PropertyMetadata(default(Brush))
         );
         public new Brush BorderBrush
@@ -82,13 +82,13 @@ namespace P42.Uno.Controls
         public static readonly new DependencyProperty PaddingProperty = DependencyProperty.Register(
             nameof(Padding),
             typeof(Thickness),
-            typeof(NewBubbleBorder),
+            typeof(BubbleBorder),
             new PropertyMetadata(default,OnPaddingChanged)
         );
 
         private static void OnPaddingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is NewBubbleBorder border)
+            if (d is BubbleBorder border)
                 border.UpdatePadding();
         }
 
@@ -106,13 +106,13 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty BorderWidthProperty = DependencyProperty.Register(
             nameof(BorderWidth),
             typeof(double),
-            typeof(NewBubbleBorder),
+            typeof(BubbleBorder),
             new PropertyMetadata(1.0, OnBorderWidthChanged)
         );
 
         private static void OnBorderWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is NewBubbleBorder border)
+            if (d is BubbleBorder border)
                 border.UpdatePadding();
         }
 
@@ -127,7 +127,7 @@ namespace P42.Uno.Controls
         public static readonly new DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
             nameof(CornerRadius),
             typeof(double),
-            typeof(NewBubbleBorder),
+            typeof(BubbleBorder),
             new PropertyMetadata(4.0)
         );
         public new double CornerRadius
@@ -146,13 +146,13 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty PointerLengthProperty = DependencyProperty.Register(
             nameof(PointerLength),
             typeof(double),
-            typeof(NewBubbleBorder),
+            typeof(BubbleBorder),
             new PropertyMetadata(10.0, OnPointerLengthChanged)
         );
 
         private static void OnPointerLengthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is NewBubbleBorder border && e.NewValue is double length)
+            if (d is BubbleBorder border && e.NewValue is double length)
                 border.UpdatePadding();
         }
 
@@ -172,7 +172,7 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty PointerTipRadiusProperty = DependencyProperty.Register(
             nameof(PointerTipRadius),
             typeof(double),
-            typeof(NewBubbleBorder),
+            typeof(BubbleBorder),
             new PropertyMetadata(1.0)
         );
         /// <summary>
@@ -191,7 +191,7 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty PointerAxialPositionProperty = DependencyProperty.Register(
             nameof(PointerAxialPosition),
             typeof(double),
-            typeof(NewBubbleBorder),
+            typeof(BubbleBorder),
             new PropertyMetadata(0.5)
         );
         /// <summary>
@@ -210,13 +210,13 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty PointerDirectionProperty = DependencyProperty.Register(
             nameof(PointerDirection),
             typeof(PointerDirection),
-            typeof(NewBubbleBorder),
+            typeof(BubbleBorder),
             new PropertyMetadata(PointerDirection.None, OnPointerDirectionChanged)
         );
 
         private static void OnPointerDirectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is NewBubbleBorder border && e.NewValue is PointerDirection dir)
+            if (d is BubbleBorder border && e.NewValue is PointerDirection dir)
                 border.UpdatePadding();
         }
 
@@ -236,7 +236,7 @@ namespace P42.Uno.Controls
         public static readonly DependencyProperty PointerCornerRadiusProperty = DependencyProperty.Register(
             nameof(PointerCornerRadius),
             typeof(double),
-            typeof(NewBubbleBorder),
+            typeof(BubbleBorder),
             new PropertyMetadata(default(double))
         );
         public double PointerCornerRadius
@@ -272,7 +272,7 @@ namespace P42.Uno.Controls
 
 
         #region Construction
-        public NewBubbleBorder()
+        public BubbleBorder()
         {
             base.Margin = new Thickness(0);
             base.Padding = new Thickness(0);
@@ -352,7 +352,7 @@ namespace P42.Uno.Controls
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Bottom + Padding.Left) / 2.0)
                     );
 
-            //System.Diagnostics.Debug.WriteLine($"NewBubbleBorder.UpdatePadding : padding [{padding}] BorderWidth[{BorderWidth}] BorderColor[{BorderColor.A},{BorderColor.R},{BorderColor.G},{BorderColor.B}]");
+            //System.Diagnostics.Debug.WriteLine($"BubbleBorder.UpdatePadding : padding [{padding}] BorderWidth[{BorderWidth}] BorderColor[{BorderColor.A},{BorderColor.R},{BorderColor.G},{BorderColor.B}]");
         }
         #endregion
 

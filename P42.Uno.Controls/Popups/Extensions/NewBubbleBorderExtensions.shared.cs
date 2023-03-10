@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
-using ElementType = P42.Uno.Controls.NewBubbleBorder;
+using ElementType = P42.Uno.Controls.BubbleBorder;
 
 namespace P42.Uno.Controls
 {

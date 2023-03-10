@@ -25,7 +25,7 @@ namespace P42.Uno.Controls.Demo
     /// </summary>
     public sealed partial class BubblePointerAdjustPage : Page
     {
-        NewBubbleBorder _bubble;
+        BubbleBorder _bubble;
         Slider _slider;
         Slider _borderThicknessSlider;
 
@@ -35,7 +35,7 @@ namespace P42.Uno.Controls.Demo
                 .Rows("*", 30, 30)
                 .Children
                 (
-                    new NewBubbleBorder()
+                    new BubbleBorder()
                         .Assign(out _bubble)
                         .Stretch()
                         .Background(Colors.Blue)

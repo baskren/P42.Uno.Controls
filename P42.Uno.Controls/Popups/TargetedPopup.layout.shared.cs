@@ -22,7 +22,7 @@ namespace P42.Uno.Controls
 
         #region Visual Elements
         internal SkiaBubble ShadowBorder;
-        internal NewBubbleBorder ContentBorder;
+        internal BubbleBorder ContentBorder;
         internal Rectangle PageOverlay;
         ContentPresenter ContentPresenter;
         #endregion
@@ -56,25 +56,25 @@ namespace P42.Uno.Controls
                 .AddTappedHandler(OnPageOverlayTapped);
 
             //TODO: implement binding of properties to BubbleBorder.ContentPresenter 
-            ContentBorder = new NewBubbleBorder()
+            ContentBorder = new BubbleBorder()
                 .HitTestVisible(true)
                 .Content(ContentPresenter)
-                .Bind(NewBubbleBorder.PaddingProperty, this, nameof(Padding))
-                .Bind(NewBubbleBorder.BackgroundProperty, this, nameof(Background))
-                .Bind(NewBubbleBorder.BorderBrushProperty, this, nameof(BorderBrush))
-                .Bind(NewBubbleBorder.BorderWidthProperty, this, nameof(BorderWidth))
-                .Bind(NewBubbleBorder.CornerRadiusProperty, this, nameof(CornerRadius))
-                .Bind(NewBubbleBorder.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
-                .Bind(NewBubbleBorder.PointerLengthProperty, this, nameof(PointerLength))
-                .Bind(NewBubbleBorder.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
+                .Bind(BubbleBorder.PaddingProperty, this, nameof(Padding))
+                .Bind(BubbleBorder.BackgroundProperty, this, nameof(Background))
+                .Bind(BubbleBorder.BorderBrushProperty, this, nameof(BorderBrush))
+                .Bind(BubbleBorder.BorderWidthProperty, this, nameof(BorderWidth))
+                .Bind(BubbleBorder.CornerRadiusProperty, this, nameof(CornerRadius))
+                .Bind(BubbleBorder.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
+                .Bind(BubbleBorder.PointerLengthProperty, this, nameof(PointerLength))
+                .Bind(BubbleBorder.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
                 .AddSizeChangedHandler(OnBorderSizeChanged);
 
             ShadowBorder = new SkiaBubble()
                 .Bind(SkiaBubble.VisibilityProperty, this, nameof(HasShadow), converter: P42.Utils.Uno.VisibilityExtensions.VisibilityConverter)
-                .Bind(SkiaBubble.PointerCornerRadiusProperty, ContentBorder, nameof(NewBubbleBorder.PointerCornerRadius))
-                .Bind(SkiaBubble.PointerDirectionProperty, ContentBorder, nameof(NewBubbleBorder.PointerDirection))
-                .Bind(SkiaBubble.PointerLengthProperty, ContentBorder, nameof(NewBubbleBorder.PointerLength))
-                .Bind(SkiaBubble.PointerTipRadiusProperty, ContentBorder, nameof(NewBubbleBorder.PointerTipRadius))
+                .Bind(SkiaBubble.PointerCornerRadiusProperty, ContentBorder, nameof(BubbleBorder.PointerCornerRadius))
+                .Bind(SkiaBubble.PointerDirectionProperty, ContentBorder, nameof(BubbleBorder.PointerDirection))
+                .Bind(SkiaBubble.PointerLengthProperty, ContentBorder, nameof(BubbleBorder.PointerLength))
+                .Bind(SkiaBubble.PointerTipRadiusProperty, ContentBorder, nameof(BubbleBorder.PointerTipRadius))
                 .IsShadow();
 
 
