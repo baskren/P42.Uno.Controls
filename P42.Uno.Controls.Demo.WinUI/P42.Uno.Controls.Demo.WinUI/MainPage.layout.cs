@@ -36,12 +36,13 @@ namespace P42.Uno.Controls.Demo
         Border _altBorder;
         TextBox _marginTextBox, _paddingTextBox;
         ComboBox _pointerDirectionCombo, _hzAlignCombo, _vtAlignCombo;
-        ToggleSwitch _indexOthogonal;
         Button _button;
         ListView _listView;
         TextBox _textBox;
+        TextBlock _textBlock;
         ToggleSwitch _shadowToggleSwitch, _overlayToggleSwitch, _hitTransparentOverlayToggleSwitch;
         Rectangle _targetRectangle, _bubbleTestRectangle;
+        BubbleBorder _bubble;
 
         void Build()
         {
@@ -129,49 +130,16 @@ namespace P42.Uno.Controls.Demo
                         .CenterHorizontal()
                         .Child(new TextBlock { Text = "TARGET", VerticalAlignment = VerticalAlignment.Center })
                         .Background(Colors.Pink)
-                        .AddTapHandler(OnElementTapped)
-                    /*
+                        .AddTapHandler(OnElementTapped),
                     new BubbleBorder()
-                        .Assign(out _bubbleBorder)
-                        .Content(new TextBlock().Text("TEST TEST TEST").Foreground(Colors.Red))
-                        .BorderBrush(Colors.Green)
-                        .Background(Colors.Orange),
-                        */
-                    /*
-                    new Bubble
-                    {
-                        BorderWidth = 0,
-                        BorderColor = Colors.Blue,
-                        BackgroundColor = Colors.Red,
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        MinWidth = 50,
-                        MinHeight = 50,
-                    }
                         .Assign(out _bubble)
-                    */
-                    /*
-                    new BubbleBorder
-                    {
-                        Content = new Border
-                        {
-                            Child = new TextBlock
-                                {
-                                    Margin = new Thickness(10)
-                                }
+                        .Content(new Border()
+                            .Child(new TextBlock()
                                 .Assign(out _textBlock)
+                                .Margin(10)
                                 .Bind(TextBlock.TextProperty, _textBox, nameof(TextBox.Text))
-                            ,
-                            //Background = new SolidColorBrush(Colors.Green.WithAlpha(0.25))
-                        },
-                        //BackgroundColor = Colors.White,
-                        BorderColor = Colors.Red,
-                        //Padding = new Thickness(1)
-
-
-        }
-                        .Assign(out _bubble)
-                    */
+                            )
+                        )
                 );
 
             OnPointerDirChanged(null, null);
@@ -202,12 +170,12 @@ namespace P42.Uno.Controls.Demo
                 dir = PointerDirection.None;
             TargetedPopup.PreferredPointerDirection = dir;
 
-            /*
+            
             if (dir == PointerDirection.Horizontal ||  dir == PointerDirection.Vertical || dir == PointerDirection.Any)
                 _bubble.PointerDirection = PointerDirection.None;
             else
                 _bubble.PointerDirection = dir;
-            */
+            
         }
 
         private void OnVtAlignChanged(object sender, SelectionChangedEventArgs e)
@@ -216,7 +184,7 @@ namespace P42.Uno.Controls.Demo
                 align = VerticalAlignment.Top;
 
             TargetedPopup.VerticalAlignment = align;
-            //_bubble.VerticalAlignment = align;
+            _bubble.VerticalAlignment = align;
         }
 
         private void OnHzAlignChanged(object sender, SelectionChangedEventArgs e)
@@ -225,7 +193,7 @@ namespace P42.Uno.Controls.Demo
                 align = HorizontalAlignment.Left;
 
             TargetedPopup.HorizontalAlignment = align;
-            //_bubble.HorizontalAlignment = align;
+            _bubble.HorizontalAlignment = align;
         }
     }
 
