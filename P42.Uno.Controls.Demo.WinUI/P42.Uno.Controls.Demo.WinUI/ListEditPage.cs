@@ -176,7 +176,7 @@ namespace P42.Uno.Controls.Demo
                     Target = textBlock
                 }
                 .Padding(4)
-                //.LightDismissOverlayBrush("#01FFFFFF")
+                //.PageOverlayBrush("#01FFFFFF")
                 .Opacity(1)
                 .Margin(100)
                 .PreferredPointerDirection(PointerDirection.Vertical)

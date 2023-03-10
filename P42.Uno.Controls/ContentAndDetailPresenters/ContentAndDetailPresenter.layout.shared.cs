@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml.Input;
 
 namespace P42.Uno.Controls
 {
@@ -18,8 +19,8 @@ namespace P42.Uno.Controls
         Border _detailDrawer;
         Rectangle _overlay;
 
-        ColumnDefinition _drawerColumnDefinition = new ColumnDefinition { Width = GridLength.Auto };
-        RowDefinition _drawerRowDefinition = new RowDefinition { Height = GridLength.Auto };
+        ColumnDefinition _drawerColumnDefinition = new ColumnDefinition().Auto();
+        RowDefinition _drawerRowDefinition = new RowDefinition().Auto();
 
         const double popupMargin = 30;
 
@@ -29,37 +30,49 @@ namespace P42.Uno.Controls
             // r1,c0 : Footer
             this.Rows("*", _drawerRowDefinition);
             this.Columns("*", _drawerColumnDefinition);
-            _detailDrawer = new Border()
-                .BorderBrush(SystemColors.BaseMediumHigh)
-                .Background(SystemColors.AltHigh)
-                .BorderThickness(1);
-
             _overlay = new Rectangle()
                 .Row(0)
                 .RowSpan(2)
-                .Bind(Rectangle.FillProperty, this, nameof(LightDismissOverlayBrush));
+                .Bind(Rectangle.FillProperty, this, nameof(PageOverlayBrush))
+                .Bind(Rectangle.IsHitTestVisibleProperty, this, nameof(IsPageOverlayHitTestVisible))
+                .Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: P42.Utils.Uno.VisibilityExtensions.VisibilityConverter)
+                .AddTappedHandler(OnDismissPointerPressed);
 
-            _targetedPopup = new TargetedPopup
-            {
-                PageOverlayBrush = new SolidColorBrush(Colors.Transparent),
-                Padding = new Thickness(4),
-                Opacity = 0,
-                Margin = new Thickness(popupMargin),
-                HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                VerticalContentAlignment = VerticalAlignment.Stretch,
-                PreferredPointerDirection = PointerDirection.Vertical,
-                FallbackPointerDirection = PointerDirection.Any
-            }
+            _detailDrawer = new Border()
+                .Bind(Border.BorderBrushProperty, this, nameof(BorderBrush))
+                .Bind(Border.BackgroundProperty, this, nameof(Background));
+
+            _targetedPopup = new TargetedPopup()
+                .Padding(0)
+                .Opacity(0)
+                .Margin(popupMargin)
+                .ContentStretch()
+                .HasShadow()
+                .PreferredPointerDirection(PointerDirection.Up)
+                .FallbackPointerDirection(PointerDirection.Any)
+                .PageOverlay(Colors.Transparent)
+                .PageOverlayHitTestVisible(false)
                 .Bind(TargetedPopup.TargetProperty, this, nameof(Target))
                 .Bind(TargetedPopup.WidthProperty, this, nameof(PopupWidth))
                 .Bind(TargetedPopup.HeightProperty, this, nameof(PopupHeight))
+                .AddPoppedHandler(OnTargetedPopupPopped)
                 ;
 
-            //LightDismissOverlayBrush = SystemColors.AltMedium.WithAlpha(0.25).ToBrush();
-            LightDismissOverlayBrush = Colors.Black.WithAlpha(0.01).ToBrush();
-            _overlay.PointerPressed += OnDismissPointerPressed;
+            RegisterPropertyChangedCallback(Grid.BorderThicknessProperty, OnBorderThicknessPropertyChanged);
 
-            _targetedPopup.Popped += OnTargetedPopupPopped;
+            PageOverlayBrush = Colors.Black.WithAlpha(0.01).ToBrush();
+            BorderThickness = new Thickness(1);
+
+        }
+
+
+        private void OnBorderThicknessPropertyChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            _detailDrawer.BorderThickness = new Thickness(
+                DrawerOrientation == Orientation.Horizontal ? BorderThickness.Left : 0,
+                DrawerOrientation == Orientation.Vertical ? BorderThickness.Top : 0,
+                0, 0);
+            _targetedPopup.BorderWidth = BorderThickness.Max();
         }
     }
 }

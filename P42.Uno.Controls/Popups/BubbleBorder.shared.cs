@@ -266,7 +266,7 @@ namespace P42.Uno.Controls
             typeof(BubbleBorder),
             new PropertyMetadata(default(Brush))
         );
-#if __MACOS__ || __ANDROID__
+#if __ANDROID__
         public new Brush Foreground
 #else
         public Brush Foreground

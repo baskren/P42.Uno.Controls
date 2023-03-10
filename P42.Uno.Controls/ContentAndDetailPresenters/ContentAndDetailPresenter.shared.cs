@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml.Input;
 
 namespace P42.Uno.Controls
 {
@@ -65,8 +66,6 @@ namespace P42.Uno.Controls
                     view.Children.Insert(0,newElement);
                 }
             }
-            //    view._footerContentPresenter.Content = e.NewValue;
-
         }
         public FrameworkElement Footer
         {
@@ -218,6 +217,7 @@ namespace P42.Uno.Controls
 
         #endregion
 
+
         public bool IsInDrawerMode => LocalIsInDrawerMode(ViewEstimatedSize);
 
         Size ViewEstimatedSize
@@ -250,8 +250,6 @@ namespace P42.Uno.Controls
         public Orientation DrawerOrientation
             => ActualWidth > ActualHeight ? Orientation.Horizontal : Orientation.Vertical;
 
-
-
         public PushPopState DetailPushPopState { get; private set; } = PushPopState.Popped;
 
 
@@ -270,49 +268,49 @@ namespace P42.Uno.Controls
         #endregion IsAnimated Property
 
 
-        #region LightDismiss Properties
+        #region PageOverlay Properties
 
-        #region IsLightDismissEnabled Property
-        public static readonly DependencyProperty IsLightDismissEnabledProperty = DependencyProperty.Register(
-            nameof(IsLightDismissEnabled),
+        #region PopOnPageOverlayTouch Property
+        public static readonly DependencyProperty PopOnPageOverlayTouchProperty = DependencyProperty.Register(
+            nameof(PopOnPageOverlayTouch),
             typeof(bool),
             typeof(ContentAndDetailPresenter),
             new PropertyMetadata(true)
         );
-        public bool IsLightDismissEnabled
+        public bool PopOnPageOverlayTouch
         {
-            get => (bool)GetValue(IsLightDismissEnabledProperty);
-            set => SetValue(IsLightDismissEnabledProperty, value);
+            get => (bool)GetValue(PopOnPageOverlayTouchProperty);
+            set => SetValue(PopOnPageOverlayTouchProperty, value);
         }
-        #endregion IsLightDismissEnabled Property
+        #endregion PopOnPageOverlayTouch Property
 
-        #region LightDismissOverlayMode Property
-        public static readonly DependencyProperty LightDismissOverlayModeProperty = DependencyProperty.Register(
-            nameof(LightDismissOverlayMode),
-            typeof(LightDismissOverlayMode),
+        #region IsPageOverlayHitTestVisible Property
+        public static readonly DependencyProperty IsPageOverlayHitTestVisibleProperty = DependencyProperty.Register(
+            nameof(IsPageOverlayHitTestVisible),
+            typeof(bool),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(LightDismissOverlayMode.On)
+            new PropertyMetadata(true)
         );
-        public LightDismissOverlayMode LightDismissOverlayMode
+        public bool IsPageOverlayHitTestVisible
         {
-            get => (LightDismissOverlayMode)GetValue(LightDismissOverlayModeProperty);
-            set => SetValue(LightDismissOverlayModeProperty, value);
+            get => (bool)GetValue(IsPageOverlayHitTestVisibleProperty);
+            set => SetValue(IsPageOverlayHitTestVisibleProperty, value);
         }
-        #endregion LightDismissOverlayMode Property
+        #endregion IsPageOverlayHitTestVisible Property
 
-        #region LightDismissOverlayBrush Property
-        public static readonly DependencyProperty LightDismissOverlayBrushProperty = DependencyProperty.Register(
-            nameof(LightDismissOverlayBrush),
+        #region PageOverlayBrush Property
+        public static readonly DependencyProperty PageOverlayBrushProperty = DependencyProperty.Register(
+            nameof(PageOverlayBrush),
             typeof(Brush),
             typeof(ContentAndDetailPresenter),
             new PropertyMetadata(Colors.Black.WithAlpha(0.01).ToBrush())
         );
-        public Brush LightDismissOverlayBrush
+        public Brush PageOverlayBrush
         {
-            get => (Brush)GetValue(LightDismissOverlayBrushProperty);
-            set => SetValue(LightDismissOverlayBrushProperty, value);
+            get => (Brush)GetValue(PageOverlayBrushProperty);
+            set => SetValue(PageOverlayBrushProperty, value);
         }
-        #endregion LightDismissOverlayBrush Property
+        #endregion PageOverlay Property
 
         #endregion
 
@@ -415,7 +413,8 @@ namespace P42.Uno.Controls
             //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.LayoutDetailAndOverlay percentOpen: " + percentOpen);
         }
 
-        public Size PopupSize(Size availableSize)
+        /*
+        public Size PopupSize(Size availableSize, PointerDirection pointerDirection)
         {
             var footerHeight = Footer?.ActualHeight ?? 0;
             var targetHeight = Target?.ActualSize.Y ?? 100;
@@ -426,8 +425,9 @@ namespace P42.Uno.Controls
             {
                 if (double.IsNaN(popWt))
                 {
-                    Detail.Measure(availableSize);
-                    popHt = Detail.DesiredSize.Width * DetailAspectRatio;
+                    //Detail.Measure(availableSize);
+                    var measurements = _targetedPopup.GetAlignmentMarginsAndPointerMeasurements(Detail);
+                    popHt = measurements.Size.Width * DetailAspectRatio;
                 }
                 else
                 {
@@ -438,8 +438,17 @@ namespace P42.Uno.Controls
             if (double.IsNaN(popWt))
                 popWt = popHt / DetailAspectRatio;
 
+            popWt += _targetedPopup.Padding.Horizontal() + _targetedPopup.BorderWidth * 2;
+            popHt += _targetedPopup.Padding.Vertical() + _targetedPopup.BorderWidth * 2;
+
+            if (pointerDirection.IsVertical())
+                popHt += _targetedPopup.PointerLength;
+            if (pointerDirection.IsHorizontal())
+                popWt += _targetedPopup.PointerLength;
+
             return new Size(popHt, popWt);
         }
+        */
 
         public Size DrawerSize
         {
@@ -461,30 +470,8 @@ namespace P42.Uno.Controls
             if (Detail is null)
                 return false;
 
-            var footerHeight = Footer?.ActualHeight ?? 0;
-            var targetHeight = Target?.ActualSize.Y ?? 100;
-
-
-            var popupSize = PopupSize(availableSize);
-
-            // is popHt enough room vertically to show the popup?
-            if (popupSize.Height > 0 && availableSize.Height - footerHeight - popupMargin > popupSize.Height * 2 + targetHeight)
-                return false;
-
-            if (availableSize.Width > availableSize.Height)
-            {
-                if (popupSize.Width > 0 && availableSize.Width - popupMargin > popupSize.Width * 2)
-                    return true;
-            }
-            else
-            {
-                if (popupSize.Width > 0 && availableSize.Width > popupSize.Width * 2)
-                    return false;
-
-                return true;
-            }
-
-            return false;
+            var measurements = _targetedPopup.GetAlignmentMarginsAndPointerMeasurements(Detail);
+            return !measurements.PointerDirection.IsVertical();
         }
 
         double AspectRatio(Size size)
@@ -574,7 +561,7 @@ namespace P42.Uno.Controls
 
         async void OnTargetedPopupPopped(object sender, PopupPoppedEventArgs e)
         {
-            if (IsLightDismissEnabled)
+            if (PopOnPageOverlayTouch)
             {
                 if (e.Cause == PopupPoppedCause.HardwareBackButtonPressed ||
                     e.Cause == PopupPoppedCause.BackgroundTouch ||
@@ -595,15 +582,15 @@ namespace P42.Uno.Controls
 
         void OnTargetedPopupDismissPointerPressed(object sender, DismissPointerPressedEventArgs e)
         {
-            if (IsLightDismissEnabled)
+            if (PopOnPageOverlayTouch)
                 DismissPointerPressed?.Invoke(this, e);
             else
                 e.CancelDismiss = true;
         }
 
-        async void OnDismissPointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        async void OnDismissPointerPressed(object sender, TappedRoutedEventArgs e)
         {
-            if (IsLightDismissEnabled)
+            if (PopOnPageOverlayTouch)
             {
                 var dismissEventArgs = new DismissPointerPressedEventArgs();
                 DismissPointerPressed?.Invoke(this, dismissEventArgs);
