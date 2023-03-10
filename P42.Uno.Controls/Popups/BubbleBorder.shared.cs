@@ -15,32 +15,28 @@ namespace P42.Uno.Controls
     /// Border used by Popups
     /// </summary>
     [Microsoft.UI.Xaml.Data.Bindable]
-    public partial class BubbleBorder : Grid
+    public partial class BubbleBorder : ContentControl
     {
         #region Properties
 
         #region Content Property
-        public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
+        public static readonly new DependencyProperty ContentProperty = DependencyProperty.Register(
             nameof(Content),
             typeof(UIElement),
             typeof(BubbleBorder),
-            new PropertyMetadata(default(UIElement), OnContentChanged)
+            new PropertyMetadata(default(UIElement))
         );
+        /*
         private static void OnContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is BubbleBorder border)
             {
-                if (e.OldValue is UIElement oldElement)
-                    border.Children.Remove(oldElement);
                 if (e.NewValue is UIElement newElement)
-                {
-                    newElement.RowCol(1, 1);
-                    border.Children.Add(newElement);
-                }
+                    border._contentPresenter.Content = newElement;
             }
         }
-
-        public UIElement Content
+        */
+        public new UIElement Content
         {
             get => (UIElement)GetValue(ContentProperty);
             set => SetValue(ContentProperty, value);
@@ -271,42 +267,57 @@ namespace P42.Uno.Controls
         #endregion
 
 
+        #region Fields
+        Grid _grid;
+        ContentPresenter _contentPresenter;
+        PathBubble _pathBubble;
+        #endregion
+
         #region Construction
         public BubbleBorder()
         {
             base.Margin = new Thickness(0);
             base.Padding = new Thickness(0);
-            /*
-            Children.Add(new SkiaBubble()
-                .Stretch()
-                .RowSpan(3)
-                .ColumnSpan(3)
-                .Bind(SkiaBubble.BackgroundColorProperty, this, nameof(BackgroundColor))
-                .Bind(SkiaBubble.BorderColorProperty, this, nameof(BorderColor))
-                .Bind(SkiaBubble.BorderWidthProperty, this, nameof(BorderWidth))
-                .Bind(SkiaBubble.CornerRadiusProperty, this, nameof(CornerRadius))
-                .Bind(SkiaBubble.PointerLengthProperty, this, nameof(PointerLength))
-                .Bind(SkiaBubble.PointerAxialPositionProperty, this, nameof(PointerAxialPosition))
-                .Bind(SkiaBubble.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
-                .Bind(SkiaBubble.PointerCornerRadiusProperty, this, nameof (PointerCornerRadius))
-                .Bind(SkiaBubble.PointerDirectionProperty, this, nameof(PointerDirection))
-                );
-            */
 
-            Children.Add(new PathBubble()
-                .Stretch()
-                .RowSpan(3)
-                .ColumnSpan(3)
-                .Bind(PathBubble.FillProperty, this, nameof(Background))
-                .Bind(PathBubble.StrokeProperty, this, nameof(BorderBrush))
-                .Bind(PathBubble.StrokeThicknessProperty, this, nameof(BorderWidth))
-                .Bind(PathBubble.CornerRadiusProperty, this, nameof(CornerRadius))
-                .Bind(PathBubble.PointerLengthProperty, this, nameof(PointerLength))
-                .Bind(PathBubble.PointerAxialPositionProperty, this, nameof(PointerAxialPosition))
-                .Bind(PathBubble.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
-                .Bind(PathBubble.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
-                .Bind(PathBubble.PointerDirectionProperty, this, nameof(PointerDirection))
+            base.Content = new Grid()
+                .Assign(out _grid)
+                .Children
+                (
+                    new PathBubble()
+                        .Assign(out _pathBubble)
+                        .Stretch()
+                        .RowSpan(3)
+                        .ColumnSpan(3)
+                        .Bind(PathBubble.FillProperty, this, nameof(Background))
+                        .Bind(PathBubble.StrokeProperty, this, nameof(BorderBrush))
+                        .Bind(PathBubble.StrokeThicknessProperty, this, nameof(BorderWidth))
+                        .Bind(PathBubble.CornerRadiusProperty, this, nameof(CornerRadius))
+                        .Bind(PathBubble.PointerLengthProperty, this, nameof(PointerLength))
+                        .Bind(PathBubble.PointerAxialPositionProperty, this, nameof(PointerAxialPosition))
+                        .Bind(PathBubble.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
+                        .Bind(PathBubble.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
+                        .Bind(PathBubble.PointerDirectionProperty, this, nameof(PointerDirection)),
+                    new ContentPresenter()
+                        .Assign(out _contentPresenter)
+                        .RowCol(1,1)
+                        //Background
+                        //BackgroundSizing
+                        //BorderBrush
+                        //BorderThickness
+                        .Bind(ContentPresenter.ContentProperty, this, nameof(Content))
+                        .Bind(ContentPresenter.ContentTemplateProperty, this, nameof(ContentTemplate))
+                        .Bind(ContentPresenter.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
+                        .Bind(ContentPresenter.ContentTransitionsProperty, this, nameof(ContentTransitions))
+                        //CornerRadius
+                        .BindTextProperties(this)
+                        .Bind(ContentPresenter.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
+                        .Bind(ContentPresenter.PaddingProperty, this, nameof(Padding))
+                        .Bind(ContentPresenter.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
                 );
+
+            Background = SystemTeachingTipBrushes.Background;
+            BorderBrush = SystemTeachingTipBrushes.Border;
+
         }
         #endregion
 
@@ -340,12 +351,11 @@ namespace P42.Uno.Controls
                 ? BorderWidth
                 : 0;
 
-            this
+            _grid
                 .Rows(padding.Top + borderWidth, "*", padding.Bottom + borderWidth + 1)
                 .Columns(padding.Left + borderWidth, "*", padding.Right + borderWidth + 1);
 
-            if (Content is ContentPresenter p)
-                p.CornerRadius = new CornerRadius(
+            _contentPresenter.CornerRadius = new CornerRadius(
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Left + Padding.Top)/2.0),
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Top + Padding.Right) / 2.0),
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Right + Padding.Bottom) / 2.0),
