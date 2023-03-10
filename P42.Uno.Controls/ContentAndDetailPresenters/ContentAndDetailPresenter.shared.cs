@@ -1,4 +1,4 @@
-using P42.Uno.Markup;
+﻿using P42.Uno.Markup;
 using P42.Utils.Uno;
 using System;
 using System.Threading.Tasks;
@@ -330,43 +330,6 @@ namespace P42.Uno.Controls
             Build();
             SizeChanged += OnSizeChanged;
         }
-
-        bool _disposed;
-#if !HAS_UNO
-        public void Dispose()
-        {
-            Dispose(true);
-            System.GC.SuppressFinalize(this);
-        }
-#else
-        public new void Dispose()
-        {
-            Dispose(true);
-            System.GC.SuppressFinalize(this);
-            base.Dispose();
-        }
-#endif
-
-#if __ANDROID__ 
-        protected override void Dispose(bool disposing)
-#elif __MACOS__ || __IOS__
-        protected virtual new void Dispose(bool disposing)
-#else
-        protected virtual void Dispose(bool disposing)
-#endif
-        {
-            if (disposing && !_disposed)
-            {
-                _disposed = true;
-                SizeChanged -= OnSizeChanged;
-            }
-#if __ANDROID__ || __MACOS__ || __IOS__
-            base.Dispose(disposing);
-#endif
-        }
-
-
-
         #endregion
 
 
@@ -374,13 +337,12 @@ namespace P42.Uno.Controls
 
         void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
-            var heightChanged = args.NewSize.Height - args.PreviousSize.Height;
-            if (heightChanged <= 0 && heightChanged > -2)
+            /*
+            var ΔHeight = args.NewSize.Height - args.PreviousSize.Height;
+            var ΔWidth = args.NewSize.Width - args.PreviousSize.Width;
+            if (ΔWidth <= 0 && ΔWidth > -1 && ΔHeight <= 0 && ΔHeight > -1)
                 return;
-            var widthChanged = args.NewSize.Width - args.PreviousSize.Width;
-            if (widthChanged <= 0 && widthChanged > -2)
-                return;
-
+            */
             LayoutDetailAndOverlay(args.NewSize, DetailPushPopState == PushPopState.Pushed ? 1 : 0);
         }
 

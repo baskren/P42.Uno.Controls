@@ -100,11 +100,9 @@ namespace P42.Uno.Controls
         {
             if (HasShadow)
             {
-                var heightChanged = args.NewSize.Height - args.PreviousSize.Height;
-                if (heightChanged <= 0 && heightChanged > -2)
-                    return;
-                var widthChanged = args.NewSize.Width - args.PreviousSize.Width;
-                if (widthChanged <= 0 && widthChanged > -2)
+                var ΔHeight = args.NewSize.Height - (ShadowBorder.Height + ShadowBorder.BlurSigma * 4);
+                var ΔWidth = args.NewSize.Width - (ShadowBorder.Width + ShadowBorder.BlurSigma * 4);
+                if (ΔWidth <= 0 && ΔWidth > -2 && ΔHeight <= 0 && ΔHeight > -2)
                     return;
 
                 ShadowBorder.Height = ContentBorder.ActualHeight + ShadowBorder.BlurSigma * 4;
@@ -123,4 +121,6 @@ namespace P42.Uno.Controls
 
 
     }
+
+
 }

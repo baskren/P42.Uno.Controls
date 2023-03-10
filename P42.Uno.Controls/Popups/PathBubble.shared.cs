@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -27,7 +27,7 @@ namespace P42.Uno.Controls
             nameof(CornerRadius),
             typeof(double),
             typeof(PathBubble),
-            new PropertyMetadata(4.0, (d, e) => ((PathBubble)d).RegeneratePath(nameof(CornerRadius)))
+            new PropertyMetadata(4.0, (d, e) => ((PathBubble)d).UpdatePath(nameof(CornerRadius)))
         );
         public double CornerRadius
         {
@@ -43,7 +43,7 @@ namespace P42.Uno.Controls
             nameof(PointerLength),
             typeof(double),
             typeof(PathBubble),
-            new PropertyMetadata(10.0, (d, e) => ((PathBubble)d).RegeneratePath(nameof(PointerLength)))
+            new PropertyMetadata(10.0, (d, e) => ((PathBubble)d).UpdatePath(nameof(PointerLength)))
         );
         /// <summary>
         /// Gets or sets the length of the bubble layout's pointer.
@@ -62,7 +62,7 @@ namespace P42.Uno.Controls
             nameof(PointerTipRadius),
             typeof(double),
             typeof(PathBubble),
-            new PropertyMetadata(1.0, (d, e) => ((PathBubble)d).RegeneratePath(nameof(PointerTipRadius)))
+            new PropertyMetadata(1.0, (d, e) => ((PathBubble)d).UpdatePath(nameof(PointerTipRadius)))
         );
         /// <summary>
         /// Gets or sets the radius of the bubble's pointer tip.
@@ -81,7 +81,7 @@ namespace P42.Uno.Controls
             nameof(PointerAxialPosition),
             typeof(double),
             typeof(PathBubble),
-            new PropertyMetadata(0.5, (d, e) => ((PathBubble)d).RegeneratePath(nameof(PointerAxialPosition)))
+            new PropertyMetadata(0.5, (d, e) => ((PathBubble)d).UpdatePath(nameof(PointerAxialPosition)))
         );
         /// <summary>
         /// Gets or sets the position of the bubble's pointer along the face it's on.
@@ -100,7 +100,7 @@ namespace P42.Uno.Controls
             nameof(PointerDirection),
             typeof(PointerDirection),
             typeof(PathBubble),
-            new PropertyMetadata(PointerDirection.None, (d, e) => ((PathBubble)d).RegeneratePath(nameof(PointerDirection)))
+            new PropertyMetadata(PointerDirection.None, (d, e) => ((PathBubble)d).UpdatePath(nameof(PointerDirection)))
         );
         /// <summary>
         /// Gets or sets the direction in which the pointer pointing.
@@ -119,7 +119,7 @@ namespace P42.Uno.Controls
             nameof(PointerCornerRadius),
             typeof(double),
             typeof(PathBubble),
-            new PropertyMetadata(default(double), (d,e) => ((PathBubble)d).RegeneratePath(nameof(PointerCornerRadius)))
+            new PropertyMetadata(default(double), (d,e) => ((PathBubble)d).UpdatePath(nameof(PointerCornerRadius)))
         );
         public double PointerCornerRadius
         {
@@ -159,38 +159,36 @@ namespace P42.Uno.Controls
             SizeChanged += OnSizeChanged;
         }
 
-        bool _pendingRegenerate;
-        bool _regenerating;
-        Size _pendingSize;
-        Size _lastSize;
+        bool _pendingUpdatePath;
+        bool _updatingPath;
+        Size _pendingPathSize;
+        Size _currentPathSize;
         private void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
-            var heightChanged = args.NewSize.Height - args.PreviousSize.Height;
-            if (heightChanged <= 0 && heightChanged > -2)
+            var ΔHeight = args.NewSize.Height - _currentPathSize.Height;
+            var ΔWidth = args.NewSize.Width - _currentPathSize.Width;
+            if (ΔWidth <= 0 && ΔWidth > -1 && ΔHeight <= 0 && ΔHeight > -1)
                 return;
-            var widthChanged = args.NewSize.Width - args.PreviousSize.Width;
-            if (widthChanged <= 0 && widthChanged > -2)
-                return;
-                       
-            RegeneratePath($"OnSizeChanged({args.NewSize})");
+
+            UpdatePath($"OnSizeChanged({args.NewSize})");
         }
         
 
-        protected void RegeneratePath([CallerMemberName] string caller = null, bool force = false)
+        protected void UpdatePath([CallerMemberName] string caller = null, bool force = false)
         {
             var size = new Size(ActualWidth, ActualHeight);
-            if (size == _lastSize)
+            if (size == _currentPathSize)
                 return;
             if (force)
-                _pendingRegenerate = false;
-            else if (_regenerating)
+                _pendingUpdatePath = false;
+            else if (_updatingPath)
             {
-                _pendingSize = size;
-                _pendingRegenerate = true;
+                _pendingPathSize = size;
+                _pendingUpdatePath = true;
                 return;
             }
-            _regenerating = true;
-            _lastSize = size;
+            _updatingPath = true;
+            _currentPathSize = size;
 
             System.Diagnostics.Debug.WriteLine($"PathBubble.RegeneratePath : [{caller}]");
             var borderWidth = 0.0f;
@@ -220,10 +218,10 @@ namespace P42.Uno.Controls
             Data = P42.Utils.Uno.StringToPathGeometryConverter.Current.Convert(data);
 #endif
 
-            if (_pendingRegenerate)
-                RegeneratePath($"pending({_pendingSize})", true);
+            if (_pendingUpdatePath)
+                UpdatePath($"pending({_pendingPathSize})", true);
             else
-                _regenerating = false;
+                _updatingPath = false;
             //System.Diagnostics.Debug.WriteLine($"Bubble.OnPaintSurface : EXIT");
         }
 

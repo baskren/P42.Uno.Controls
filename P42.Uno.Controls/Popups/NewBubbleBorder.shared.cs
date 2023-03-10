@@ -341,8 +341,16 @@ namespace P42.Uno.Controls
                 : 0;
 
             this
-                .Rows(padding.Top + borderWidth, "*", padding.Bottom + borderWidth)
-                .Columns(padding.Left + borderWidth, "*", padding.Right + borderWidth);
+                .Rows(padding.Top + borderWidth, "*", padding.Bottom + borderWidth + 1)
+                .Columns(padding.Left + borderWidth, "*", padding.Right + borderWidth + 1);
+
+            if (Content is ContentPresenter p)
+                p.CornerRadius = new CornerRadius(
+                    Math.Max(0, CornerRadius - borderWidth - (Padding.Left + Padding.Top)/2.0),
+                    Math.Max(0, CornerRadius - borderWidth - (Padding.Top + Padding.Right) / 2.0),
+                    Math.Max(0, CornerRadius - borderWidth - (Padding.Right + Padding.Bottom) / 2.0),
+                    Math.Max(0, CornerRadius - borderWidth - (Padding.Bottom + Padding.Left) / 2.0)
+                    );
 
             //System.Diagnostics.Debug.WriteLine($"NewBubbleBorder.UpdatePadding : padding [{padding}] BorderWidth[{BorderWidth}] BorderColor[{BorderColor.A},{BorderColor.R},{BorderColor.G},{BorderColor.B}]");
         }

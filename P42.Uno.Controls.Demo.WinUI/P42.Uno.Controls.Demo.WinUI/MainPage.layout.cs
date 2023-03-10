@@ -97,8 +97,6 @@ namespace P42.Uno.Controls.Demo
                                 .ItemsSource(Enum.GetValues(typeof(VerticalAlignment)))
                                 .SelectedIndex(0)
                                 .AddSelectionChangedHandler(OnVtAlignChanged),
-                            new TextBlock().Text("Index Orthogonal:").Foreground(Colors.Black),
-                            new ToggleSwitch().Assign(out _indexOthogonal).Foreground(Colors.Black),
                             new Button().Assign(out _button)
                                 .Content("Show Popup")
                                 .AddTapHandler(_button_Click)
@@ -113,7 +111,7 @@ namespace P42.Uno.Controls.Demo
                             new TextBlock().Text("Overlay:").Foreground(Colors.Black),
                             new ToggleSwitch().Assign(out _overlayToggleSwitch).On().AddToggledHandler(OnPageOverlayToggleSwitchChanged),
                             new TextBlock().Text("Hitable:").Foreground(Colors.Black),
-                            new ToggleSwitch().Assign(out _hitTransparentOverlayToggleSwitch).AddToggledHandler(OnHitTransparentToggleButtonChanged)
+                            new ToggleSwitch().Assign(out _hitTransparentOverlayToggleSwitch).On().AddToggledHandler(OnHitTransparentToggleButtonChanged)
                         ),
                     new ListView()
                         .Assign(out _listView)
