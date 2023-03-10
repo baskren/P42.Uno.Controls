@@ -183,7 +183,7 @@ namespace P42.Uno.Controls.Demo
             if (_vtAlignCombo.SelectedItem is not VerticalAlignment align)
                 align = VerticalAlignment.Top;
 
-            //TargetedPopup.VerticalAlignment = align;
+            TargetedPopup.VerticalAlignment = align;
             _bubble.VerticalAlignment = align;
         }
 
@@ -192,7 +192,7 @@ namespace P42.Uno.Controls.Demo
             if (_hzAlignCombo.SelectedItem is not HorizontalAlignment align)
                 align = HorizontalAlignment.Left;
 
-            //TargetedPopup.HorizontalAlignment = align;
+            TargetedPopup.HorizontalAlignment = align;
             _bubble.HorizontalAlignment = align;
         }
     }

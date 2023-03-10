@@ -1430,11 +1430,14 @@ namespace P42.Uno.Controls
             //System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureCleanBorder borderSize:[{borderSize}] Padding:[{Padding}]  availableWidth:[" + availableWidth+"] availableHeight:["+availableHeight+"]");
             if (availableWidth > 0 && availableHeight > 0)
             {
-                ContentBorder.Content.Measure(new Size(availableWidth, availableHeight));
-                var result = ContentBorder.Content.DesiredSize;
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureCleanBorder  _contentPresenter.RenderSize:[" + ContentBorder.Content.RenderSize + "]");
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureCleanBorder  _contentPresenter.DesiredSize:[" + ContentBorder.Content.DesiredSize + "]");
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureCleanBorder  _contentPresenter.ActualSize:[" + ContentBorder.Content.ActualSize + "]");
+                var content = ContentBorder.Content as UIElement;
+                if (content is null)
+                    content = ContentBorder._contentPresenter;
+                content.Measure(new Size(availableWidth, availableHeight));
+                var result = content.DesiredSize;
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureCleanBorder  _contentPresenter.RenderSize:[" + content.RenderSize + "]");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureCleanBorder  _contentPresenter.DesiredSize:[" + content.DesiredSize + "]");
+                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureCleanBorder  _contentPresenter.ActualSize:[" + content.ActualSize + "]");
 
                 result.Width += Padding.Horizontal() + border + 1;
                 result.Height += Padding.Vertical() + border + 1;

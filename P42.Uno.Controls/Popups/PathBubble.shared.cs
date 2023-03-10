@@ -159,12 +159,19 @@ namespace P42.Uno.Controls
             SizeChanged += OnSizeChanged;
         }
 
+
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            return new Size(10, 10);// base.MeasureOverride(availableSize);
+        }
+
         bool _pendingUpdatePath;
         bool _updatingPath;
         Size _pendingPathSize;
         Size _currentPathSize;
         private void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
+            System.Diagnostics.Debug.WriteLine($"PathBubble.OnSizeChanged : [{args.NewSize}]");
             var ΔHeight = args.NewSize.Height - _currentPathSize.Height;
             var ΔWidth = args.NewSize.Width - _currentPathSize.Width;
             if (ΔWidth <= 0 && ΔWidth > -1 && ΔHeight <= 0 && ΔHeight > -1)
@@ -177,8 +184,6 @@ namespace P42.Uno.Controls
         protected void UpdatePath([CallerMemberName] string caller = null, bool force = false)
         {
             var size = new Size(ActualWidth, ActualHeight);
-            if (size == _currentPathSize)
-                return;
             if (force)
                 _pendingUpdatePath = false;
             else if (_updatingPath)

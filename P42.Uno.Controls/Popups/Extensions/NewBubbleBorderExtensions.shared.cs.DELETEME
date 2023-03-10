@@ -15,7 +15,7 @@ namespace P42.Uno.Controls
         #region BubbleBorder
 
         #region Content
-        public static TElement Content<TElement>(this TElement element, UIElement content) where TElement : ElementType
+        public static TElement Content<TElement>(this TElement element, object content) where TElement : ElementType
         {
             element.Content = content;
             return element;

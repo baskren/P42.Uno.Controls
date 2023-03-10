@@ -28,25 +28,6 @@ namespace P42.Uno.Controls
 
         void Build()
         {
-            /*
-            ContentPresenter = new ContentPresenter()
-                .Bind(ContentPresenter.ContentProperty, this, nameof(Content))
-                .Bind(ContentPresenter.ContentTemplateProperty, this, nameof(ContentTemplate))
-                .Bind(ContentPresenter.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
-                .Bind(ContentPresenter.ContentTransitionsProperty, this, nameof(ContentTransitions))
-                .Bind(ContentPresenter.CharacterSpacingProperty, this, nameof(CharacterSpacing))
-                .BindFont(this)
-                .Bind(ContentPresenter.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
-                .Bind(ContentPresenter.IsTextScaleFactorEnabledProperty, this, nameof(IsTextScaleFactorEnabled))
-                //.Bind(ContentPresenter.LineHeightProperty, this, nameof(LineHeight))
-                //.Bind(ContentPresenter.LineStackingStrategy, this, nameof(LineStackingStrategy))
-                //.Bind(ContentPresenter.MaxLinesProperty, this, nameof(MaxLines))
-                //.Bind(ContentPresenter.OpticalMarginAlignmentProperty, this, nameof(OpticalMarginAlignment))
-                .Bind(ContentPresenter.PaddingProperty, this, nameof(Padding))
-                //.Bind(TextLineBoundsProperty, this, nameof(TextLineBounds))
-                //.Bind(ContentPresenter.TextWrappingProperty, this, nameof(TextWrapping))
-                .Bind(ContentPresenter.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment));
-            */
             
             PageOverlay = new Rectangle()
                 .Stretch()
@@ -55,16 +36,15 @@ namespace P42.Uno.Controls
                 .Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: P42.Utils.Uno.VisibilityExtensions.VisibilityConverter)
                 .AddTappedHandler(OnPageOverlayTapped);
             
-            //TODO: implement binding of properties to BubbleBorder.ContentPresenter 
             ContentBorder = new BubbleBorder()
                 .HitTestVisible(true)
                 .Bind(BubbleBorder.ContentProperty, this, nameof(Content))
-                //.Bind(BubbleBorder.ContentTemplateProperty, this, nameof(ContentTemplate))
-                //.Bind(BubbleBorder.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
-                //.Bind(BubbleBorder.ContentTransitionsProperty, this, nameof(ContentTransitions))
-                //.BindFont(this)
-                //.Bind(BubbleBorder.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
-                //.Bind(BubbleBorder.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
+                .Bind(BubbleBorder.ContentTemplateProperty, this, nameof(ContentTemplate))
+                .Bind(BubbleBorder.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
+                .Bind(BubbleBorder.ContentTransitionsProperty, this, nameof(ContentTransitions))
+                .BindFont(this)
+                .Bind(BubbleBorder.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
+                .Bind(BubbleBorder.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
                 .Bind(BubbleBorder.PaddingProperty, this, nameof(Padding))
                 .Bind(BubbleBorder.BackgroundProperty, this, nameof(Background))
                 .Bind(BubbleBorder.BorderBrushProperty, this, nameof(BorderBrush))
