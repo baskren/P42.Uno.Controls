@@ -592,7 +592,7 @@ namespace P42.Uno.Controls
                     */
                    
                     new ContentPresenter()
-                    .Background(Colors.Pink)
+                    //.Background(Colors.Pink)
                         .Assign(out _contentPresenter)
                         .RowCol(1,1)
                         .Padding(0)

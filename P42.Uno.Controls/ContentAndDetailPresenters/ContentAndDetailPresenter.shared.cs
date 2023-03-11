@@ -96,24 +96,52 @@ namespace P42.Uno.Controls
             nameof(DetailBackground),
             typeof(Brush),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(SystemColors.BaseLow.ToBrush(), OnDetailBackgroundChanged)
+            new PropertyMetadata(SystemColors.BaseLow.ToBrush())
         );
-
-        private static void OnDetailBackgroundChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is ContentAndDetailPresenter cdp)
-            {
-                cdp._targetedPopup.Background = cdp.DetailBackground;
-                cdp._detailDrawer.Background = cdp.DetailBackground;
-            }    
-        }
-
         public Brush DetailBackground
         {
             get => (Brush)GetValue(DetailBackgroundProperty);
             set => SetValue(DetailBackgroundProperty, value);
         }
         #endregion DetailBackground Property
+
+        #region DetailBorderThickness Property
+        public static readonly DependencyProperty DetailBorderThicknessProperty = DependencyProperty.Register(
+            nameof(DetailBorderThickness),
+            typeof(Thickness),
+            typeof(ContentAndDetailPresenter),
+            new PropertyMetadata(default(Thickness),(d,e) => ((ContentAndDetailPresenter)d).OnDetailBorderThicknessChanged(e))
+        );
+
+        private void OnDetailBorderThicknessChanged(DependencyPropertyChangedEventArgs e)
+        {
+            _detailDrawer.BorderThickness = new Thickness(
+                DrawerOrientation == Orientation.Horizontal ? DetailBorderThickness.Left : 0,
+                DrawerOrientation == Orientation.Vertical ? DetailBorderThickness.Top : 0,
+                0, 0);
+            _targetedPopup.BorderWidth = DetailBorderThickness.Max();
+        }
+        public Thickness DetailBorderThickness
+        {
+            get => (Thickness)GetValue(DetailBorderThicknessProperty);
+            set => SetValue(DetailBorderThicknessProperty, value);
+        }
+        #endregion DetailBorderThickness Property
+
+        #region DetailBorderBrush Property
+        public static readonly DependencyProperty DetailBorderBrushProperty = DependencyProperty.Register(
+            nameof(DetailBorderBrush),
+            typeof(Brush),
+            typeof(ContentAndDetailPresenter),
+            new PropertyMetadata(default(Brush))
+        );
+        public Brush DetailBorderBrush
+        {
+            get => (Brush)GetValue(DetailBorderBrushProperty);
+            set => SetValue(DetailBorderBrushProperty, value);
+        }
+        #endregion DetailBorderBrush Property
+
 
         #region DetailAspectRatio Property
         public static readonly DependencyProperty DetailAspectRatioProperty = DependencyProperty.Register(
@@ -412,43 +440,6 @@ namespace P42.Uno.Controls
 
             //System.Diagnostics.Debug.WriteLine("ContentAndDetailPresenter.LayoutDetailAndOverlay percentOpen: " + percentOpen);
         }
-
-        /*
-        public Size PopupSize(Size availableSize, PointerDirection pointerDirection)
-        {
-            var footerHeight = Footer?.ActualHeight ?? 0;
-            var targetHeight = Target?.ActualSize.Y ?? 100;
-
-            var popHt = PopupHeight;
-            var popWt = PopupWidth;
-            if (double.IsNaN(popHt))
-            {
-                if (double.IsNaN(popWt))
-                {
-                    //Detail.Measure(availableSize);
-                    var measurements = _targetedPopup.GetAlignmentMarginsAndPointerMeasurements(Detail);
-                    popHt = measurements.Size.Width * DetailAspectRatio;
-                }
-                else
-                {
-                    popHt = DetailAspectRatio * popWt;
-                }
-            }
-
-            if (double.IsNaN(popWt))
-                popWt = popHt / DetailAspectRatio;
-
-            popWt += _targetedPopup.Padding.Horizontal() + _targetedPopup.BorderWidth * 2;
-            popHt += _targetedPopup.Padding.Vertical() + _targetedPopup.BorderWidth * 2;
-
-            if (pointerDirection.IsVertical())
-                popHt += _targetedPopup.PointerLength;
-            if (pointerDirection.IsHorizontal())
-                popWt += _targetedPopup.PointerLength;
-
-            return new Size(popHt, popWt);
-        }
-        */
 
         public Size DrawerSize
         {

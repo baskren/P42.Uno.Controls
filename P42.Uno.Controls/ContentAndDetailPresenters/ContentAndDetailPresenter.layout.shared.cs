@@ -39,8 +39,8 @@ namespace P42.Uno.Controls
                 .AddTappedHandler(OnDismissPointerPressed);
 
             _detailDrawer = new Border()
-                .Bind(Border.BorderBrushProperty, this, nameof(BorderBrush))
-                .Bind(Border.BackgroundProperty, this, nameof(Background));
+                .Bind(Border.BorderBrushProperty, this, nameof(DetailBorderBrush))
+                .Bind(Border.BackgroundProperty, this, nameof(DetailBackground));
 
             _targetedPopup = new TargetedPopup()
                 .Padding(0)
@@ -55,24 +55,18 @@ namespace P42.Uno.Controls
                 .Bind(TargetedPopup.TargetProperty, this, nameof(Target))
                 .Bind(TargetedPopup.WidthProperty, this, nameof(PopupWidth))
                 .Bind(TargetedPopup.HeightProperty, this, nameof(PopupHeight))
+                .Bind(TargetedPopup.BorderBrushProperty, this, nameof(DetailBorderBrush))
+                .Bind(TargetedPopup.BackgroundProperty, this, nameof(DetailBackground))
                 .AddPoppedHandler(OnTargetedPopupPopped)
                 ;
 
-            RegisterPropertyChangedCallback(Grid.BorderThicknessProperty, OnBorderThicknessPropertyChanged);
-
             PageOverlayBrush = Colors.Black.WithAlpha(0.01).ToBrush();
-            BorderThickness = new Thickness(1);
+            DetailBorderThickness = new Thickness(1);
+            DetailBackground = SystemTeachingTipBrushes.Background;
+            DetailBorderBrush = SystemTeachingTipBrushes.Border;
 
         }
 
 
-        private void OnBorderThicknessPropertyChanged(DependencyObject sender, DependencyProperty dp)
-        {
-            _detailDrawer.BorderThickness = new Thickness(
-                DrawerOrientation == Orientation.Horizontal ? BorderThickness.Left : 0,
-                DrawerOrientation == Orientation.Vertical ? BorderThickness.Top : 0,
-                0, 0);
-            _targetedPopup.BorderWidth = BorderThickness.Max();
-        }
     }
 }
