@@ -15,10 +15,10 @@ namespace P42.Uno.Controls
 
         static async Task Initialize()
         {
-            if (await ChimePlayer.GetPathAsync(Chime.Alarm) is string path)
+            if (await ChimePlayer.GetPathAsync(Effect.Alarm) is string path)
             {
                 var ac = "/local/.assetsCache";
-                SoundAssetsPath = path.Replace(ac, ".").Replace(Chime.Alarm + ".mp3", "");
+                SoundAssetsPath = path.Replace(ac, ".").Replace(Effect.Alarm + ".mp3", "");
                 System.Console.WriteLine($"NativeAudioPlaer.Initialize : path=[{SoundAssetsPath}]");
                 return;
             }
@@ -28,7 +28,7 @@ namespace P42.Uno.Controls
 
 
 
-        public void Play(Chime chime, EffectMode mode)
+        public void Play(Effect chime, EffectMode mode)
         {
             if (mode == EffectMode.Off)
                 return;
@@ -46,7 +46,7 @@ function play() {
 play();
                 ";
 
-            Uno.Foundation.WebAssemblyRuntime.InvokeJS(javascript);
+            global::Uno.Foundation.WebAssemblyRuntime.InvokeJS(javascript);
         }
     }
 }

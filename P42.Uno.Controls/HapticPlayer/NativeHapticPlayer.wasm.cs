@@ -53,7 +53,7 @@ navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mo
 if (navigator.vibrate) {
 	" + command + @"
 }";
-            Uno.Foundation.WebAssemblyRuntime.InvokeJS(javascript);
+            global::Uno.Foundation.WebAssemblyRuntime.InvokeJS(javascript);
         }
     }
 }

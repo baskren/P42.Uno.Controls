@@ -81,9 +81,9 @@ public partial class App : Application
 				// configuring the new page by passing required information as a navigation
 				// parameter
 
-				//rootFrame.Navigate(typeof(MainPage), args.Arguments);
+				rootFrame.Navigate(typeof(MainPage), args.Arguments);
 				//rootFrame.Navigate(typeof(SummaryDetailPage), args.Arguments);
-				rootFrame.Navigate(typeof(ListEditPage), args.Arguments);
+				//rootFrame.Navigate(typeof(ListEditPage), args.Arguments);
 			}
 			// Ensure the current window is active
 			MainWindow.Activate();
