@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Shapes;
 using Microsoft.UI;
+using Windows.UI.ViewManagement;
 
 namespace P42.Uno.Controls
 {
@@ -24,17 +25,6 @@ namespace P42.Uno.Controls
     [Microsoft.UI.Xaml.Data.Bindable]
     public partial class TargetedPopup : ITargetedPopup
     {
-        static int _pushingCount = 0;
-        public static bool IsPushing
-        {
-            get => _pushingCount > 0;
-            private set
-            {
-                _pushingCount += value ? 1 : -1;
-            }
-
-        }
-
         #region Properties
 
         #region Override Properties
@@ -545,7 +535,19 @@ namespace P42.Uno.Controls
 
         #endregion Push/Pop Properties
 
+        static int _pushingCount = 0;
+        public static bool IsPushing
+        {
+            get => _pushingCount > 0;
+            private set
+            {
+                _pushingCount += value ? 1 : -1;
+            }
+
+        }
+
         #endregion
+
 
         #region Private Properties
         bool HasBorder
@@ -564,7 +566,6 @@ namespace P42.Uno.Controls
             }
         }
         #endregion
-
 
 
         #region Events
@@ -980,12 +981,9 @@ namespace P42.Uno.Controls
             if (windowSize.Width < 1 || windowSize.Height < 1)
                 return null;
 
-            var safeMargin = AppWindow.SafeArea(this);
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment windowSize:[{windowSize}] Margin:[{Margin}] safeMargin:[{safeMargin}]");
 
-#if __ANDROID__
-            //safeMargin.Top = AppWindow.StatusBarHeight(this);
-#endif
+            var safeMargin = AppWindow.SafeMargin(this);
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment windowSize:[{windowSize}] Margin:[{Margin}] safeMargin:[{safeMargin}]");
 
             var windowWidth = windowSize.Width - Margin.Horizontal() - safeMargin.Horizontal();
             var windowHeight = windowSize.Height - Margin.Vertical() - safeMargin.Vertical();
