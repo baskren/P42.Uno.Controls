@@ -25,7 +25,7 @@ namespace P42.Uno.Controls
 
         void Redraw([CallerMemberName] string caller = null)
         {
-            System.Diagnostics.Debug.WriteLine($"SkiaBubble.Redraw : [{caller}]");
+            //System.Diagnostics.Debug.WriteLine($"SkiaBubble.Redraw : [{caller}]");
             Invalidate();
         }
 

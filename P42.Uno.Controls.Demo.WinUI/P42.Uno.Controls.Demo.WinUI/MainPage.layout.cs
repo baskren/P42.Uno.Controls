@@ -137,7 +137,7 @@ namespace P42.Uno.Controls.Demo
                         .Assign(out _bubble)
                         .Content(new Border()
                             .Child(new TextBlock()
-                                .Assign(out _textBlock)
+                                //.Assign(out _textBlock)
                                 .Margin(10)
                                 .Bind(TextBlock.TextProperty, _textBox, nameof(TextBox.Text))
                             )

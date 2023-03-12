@@ -266,7 +266,7 @@ namespace P42.Uno.Controls
             nameof(Foreground),
             typeof(Brush),
             typeof(BubbleBorder),
-            new PropertyMetadata(default(Brush))
+            new PropertyMetadata(P42.Uno.Markup.SystemTextBoxBrushes.Foreground)
         );
 #if __ANDROID__
         public new Brush Foreground
@@ -562,6 +562,13 @@ namespace P42.Uno.Controls
 
         #region Fields
         internal ContentPresenter _contentPresenter;
+        ColumnDefinition _leftColumn = new ColumnDefinition { Width = new GridLength(1) };
+        ColumnDefinition _centerColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
+        ColumnDefinition _rightColumn = new ColumnDefinition { Width = new GridLength(1) };
+
+        RowDefinition _topRow = new RowDefinition { Height = new GridLength(1) };
+        RowDefinition _centerRow = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
+        RowDefinition _bottomRow = new RowDefinition { Height = new GridLength(1) };
         #endregion
 
 
@@ -572,6 +579,8 @@ namespace P42.Uno.Controls
             base.Padding = new Thickness(0);
 
             this
+                .Rows(_topRow, _centerRow, _bottomRow)
+                .Columns(_leftColumn, _centerColumn, _rightColumn)
                 .Children
                 (
                     new PathBubble()
@@ -603,7 +612,12 @@ namespace P42.Uno.Controls
                         //BackgroundSizing
                         //BorderBrush
                         //BorderThickness
+                        .Bind(ContentPresenter.MinHeightProperty, this, nameof(MinHeight))
+                        .Bind(ContentPresenter.MaxHeightProperty, this, nameof(MaxHeight))
+                        .Bind(ContentPresenter.MinWidthProperty, this, nameof(MinWidth))
+                        .Bind(ContentPresenter.MaxWidthProperty, this, nameof(MaxWidth))
                         .Bind(ContentPresenter.ContentProperty, this, nameof(Content))
+
                         .Bind(ContentPresenter.ContentTemplateProperty, this, nameof(ContentTemplate))
                         .Bind(ContentPresenter.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
                         .Bind(ContentPresenter.ContentTransitionsProperty, this, nameof(ContentTransitions))
@@ -625,10 +639,10 @@ namespace P42.Uno.Controls
 
                         .Bind(ContentPresenter.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
                         .Bind(ContentPresenter.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
-                    
+
+                        
                 );
 
-            Foreground = P42.Uno.Markup.SystemTextBoxBrushes.Foreground;
             UpdatePadding();
         }
 
@@ -664,9 +678,17 @@ namespace P42.Uno.Controls
                 ? BorderWidth
                 : 0;
 
+            /*
             this
-                .Rows(padding.Top + borderWidth, "*", padding.Bottom + borderWidth + 1)
-                .Columns(padding.Left + borderWidth, "*", padding.Right + borderWidth + 1);
+                .Rows(padding.Top + borderWidth, _centerRow, padding.Bottom + borderWidth + 1)
+                .Columns(padding.Left + borderWidth, _centerColumn, padding.Right + borderWidth + 1);
+            */
+
+            _leftColumn.Width = padding.Left + borderWidth;
+            _rightColumn.Width = padding.Right + borderWidth + 1;
+            _topRow.Height = padding.Top + borderWidth;
+            _bottomRow.Height = padding.Bottom + borderWidth + 1;
+            
 
             _contentPresenter.CornerRadius = new CornerRadius(
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Left + Padding.Top)/2.0),
