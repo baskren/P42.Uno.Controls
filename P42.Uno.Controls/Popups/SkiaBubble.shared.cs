@@ -221,9 +221,6 @@ namespace P42.Uno.Controls
 
         protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
         {
-
-            //base.Background = new SolidColorBrush(Colors.Green.WithAlpha(0.5));
-
             //System.Diagnostics.Debug.WriteLine($"Bubble.OnPaintSurface : ENTER");
             SKImageInfo info = e.Info;
             SKSurface surface = e.Surface;
@@ -283,13 +280,9 @@ namespace P42.Uno.Controls
                 canvas.DrawPath(path, paint);
             }
 
-            //TextBlock.Arrange(new Rect(0, 0, ActualWidth, ActualHeight));
-
             //System.Diagnostics.Debug.WriteLine($"Bubble.OnPaintSurface : EXIT");
-            
         }
 
-        //float scale = -1;
         internal static SKPath GeneratePath(
             Size measuredSize, 
             float borderWidth, 
