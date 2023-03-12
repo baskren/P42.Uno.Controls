@@ -11,6 +11,8 @@ using Microsoft.UI;
 using P42.Utils.Uno;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.UI.Text;
+using Microsoft.UI.Xaml.Data;
+using Windows.UI.ViewManagement;
 
 namespace P42.Uno.Controls
 {
@@ -30,7 +32,7 @@ namespace P42.Uno.Controls
             nameof(Background),
             typeof(Brush),
             typeof(BubbleBorder),
-            new PropertyMetadata(default(Brush))
+            new PropertyMetadata(SystemTeachingTipBrushes.Background)
         );
         public new Brush Background
         {
@@ -72,7 +74,7 @@ namespace P42.Uno.Controls
             nameof(BorderBrush),
             typeof(Brush),
             typeof(BubbleBorder),
-            new PropertyMetadata(default(Brush))
+            new PropertyMetadata(SystemTeachingTipBrushes.Border)
         );
         public new Brush BorderBrush
         {
@@ -602,24 +604,32 @@ namespace P42.Uno.Controls
                         //BorderBrush
                         //BorderThickness
                         .Bind(ContentPresenter.ContentProperty, this, nameof(Content))
-                        //.Bind(ContentPresenter.ContentTemplateProperty, this, nameof(ContentTemplate))
-                        //.Bind(ContentPresenter.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
-                        //.Bind(ContentPresenter.ContentTransitionsProperty, this, nameof(ContentTransitions))
+                        .Bind(ContentPresenter.ContentTemplateProperty, this, nameof(ContentTemplate))
+                        .Bind(ContentPresenter.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
+                        .Bind(ContentPresenter.ContentTransitionsProperty, this, nameof(ContentTransitions))
                         //CornerRadius
-                        //.BindTextProperties(this)
-                        //.Bind(ContentPresenter.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
-                        //.Bind(ContentPresenter.PaddingProperty, this, nameof(Padding))
-                        //.Bind(ContentPresenter.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
+
+                        .Bind(ContentPresenter.CharacterSpacingProperty, this, nameof(CharacterSpacing))
+                        .Bind(ContentPresenter.FontFamilyProperty, this, nameof(FontFamily))
+                        .Bind(ContentPresenter.FontSizeProperty, this, nameof(FontSize))
+                        .Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
+                        .Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
+                        .Bind(ContentPresenter.FontWeightProperty, this, nameof(FontWeight))
+                        .Bind(ContentPresenter.ForegroundProperty, this, nameof(Foreground))
+                        .Bind(ContentPresenter.IsTextScaleFactorEnabledProperty, this, nameof(IsTextScaleFactorEnabled))
+                        .Bind(ContentPresenter.LineHeightProperty, this, nameof(LineHeight))
+                        .Bind(ContentPresenter.LineStackingStrategyProperty, this, nameof(LineStackingStrategy))
+                        .Bind(ContentPresenter.MaxLinesProperty, this, nameof(MaxLines))
+                        .Bind(ContentPresenter.TextLineBoundsProperty, this, nameof(TextLineBounds))
+                        .Bind(ContentPresenter.TextWrappingProperty, this, nameof(TextWrapping))
+
+                        .Bind(ContentPresenter.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
+                        .Bind(ContentPresenter.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
                     
                 );
 
-            Background = SystemTeachingTipBrushes.Background;
-            BorderBrush = SystemTeachingTipBrushes.Border;
-            //HorizontalContentAlignment = HorizontalAlignment.Left;
-            //VerticalContentAlignment = VerticalAlignment.Top;
-
-            //RegisterPropertyChangedCallback(HorizontalAlignmentProperty, OnAlignmentChanged);
-
+            Foreground = P42.Uno.Markup.SystemTextBoxBrushes.Foreground;
+            UpdatePadding();
         }
 
         #endregion
@@ -655,8 +665,8 @@ namespace P42.Uno.Controls
                 : 0;
 
             this
-                .Rows(padding.Top + borderWidth, "*", padding.Bottom + borderWidth )
-                .Columns(padding.Left + borderWidth, "*", padding.Right + borderWidth);
+                .Rows(padding.Top + borderWidth, "*", padding.Bottom + borderWidth + 1)
+                .Columns(padding.Left + borderWidth, "*", padding.Right + borderWidth + 1);
 
             _contentPresenter.CornerRadius = new CornerRadius(
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Left + Padding.Top)/2.0),
