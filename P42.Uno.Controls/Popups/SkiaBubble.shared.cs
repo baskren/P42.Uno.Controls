@@ -9,6 +9,7 @@ using P42.Uno.Markup;
 using SkiaSharp.Views.Windows;
 using Microsoft.UI;
 using System.Runtime.CompilerServices;
+using Uno.UI;
 
 namespace P42.Uno.Controls
 {
@@ -48,7 +49,7 @@ namespace P42.Uno.Controls
             get => (Color)GetValue(BackgroundColorProperty);
             set => SetValue(BackgroundColorProperty, value);
         }
-#endregion BackgroundColor Property
+        #endregion BackgroundColor Property
 
 
         #region BorderColor Property
@@ -211,16 +212,25 @@ namespace P42.Uno.Controls
         internal bool ApplyBlur = false;
         #endregion
 
+        public SkiaBubble()
+        {
+#if __IOS__
+            ((UIKit.UIView)this).BackgroundColor = UIKit.UIColor.Clear;
+#endif
+        }
 
         protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
         {
+
+            //base.Background = new SolidColorBrush(Colors.Green.WithAlpha(0.5));
+
             //System.Diagnostics.Debug.WriteLine($"Bubble.OnPaintSurface : ENTER");
             SKImageInfo info = e.Info;
             SKSurface surface = e.Surface;
             SKCanvas canvas = surface.Canvas;
 
-            canvas.Clear();
-
+            canvas.Clear(SKColor.Empty);
+            
             SKPaint paint = new SKPaint();
             paint.IsAntialias = true;
             var scale = info.Width / (float)ActualWidth;
@@ -238,6 +248,10 @@ namespace P42.Uno.Controls
             if (Math.Abs(PointerAxialPosition) > 1)
                 pointerPosition *= scale;
 
+#if __IOS__ || __ANDROID__
+            //System.Diagnostics.Debug.WriteLine($"Popup.VISUAL TREE : ");
+            //System.Diagnostics.Debug.WriteLine(this.ShowLocalVisualTree(100));
+#endif
 
             //System.Diagnostics.Debug.WriteLine($"Bubble.OnPaintSurface : [{size}]");
             var path = GeneratePath(
@@ -272,6 +286,7 @@ namespace P42.Uno.Controls
             //TextBlock.Arrange(new Rect(0, 0, ActualWidth, ActualHeight));
 
             //System.Diagnostics.Debug.WriteLine($"Bubble.OnPaintSurface : EXIT");
+            
         }
 
         //float scale = -1;

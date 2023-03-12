@@ -59,7 +59,7 @@ namespace P42.Uno.Controls.Demo
                 .Children
                 (
                     new Grid()
-                        .Background(Colors.White)
+                        .Background(P42.Uno.Markup.SystemColors.AltHigh)
                         .BorderBrush(Colors.Gray)
                         .Padding(10)
                         .Children
@@ -73,7 +73,7 @@ namespace P42.Uno.Controls.Demo
                         .Margin(10)
                         .Bind(TextBlock.TextProperty, _textBox, nameof(TextBox.Text)),
                     new Grid()
-                        .Background(Colors.White)
+                        .Background(P42.Uno.Markup.SystemColors.AltHigh)
                         .BorderBrush(Colors.Gray)
                         .Padding(10)
                         .Children
