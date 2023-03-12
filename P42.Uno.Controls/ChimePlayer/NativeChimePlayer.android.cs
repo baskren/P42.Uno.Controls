@@ -10,7 +10,7 @@ namespace P42.Uno.Controls
 {
     class NativeChimePlayer : INativeChimePlayer
     {
-        readonly static AudioManager _audio;
+        static AudioManager _audio;
         static SoundPool _soundPool;
         static int infoId;
         static int warnId;
@@ -20,35 +20,7 @@ namespace P42.Uno.Controls
         static int inquiryId;
         static int progressId;
 
-        static NativeChimePlayer()
-        {
-            _audio = (Android.Media.AudioManager)Android.App.Application.Context.GetSystemService(Context.AudioService);
-            Task.Run(Initialize).Wait();
-        }
-
-        static async Task Initialize()
-        {
-            var audioAttributes = new AudioAttributes.Builder()
-                 .SetUsage(AudioUsageKind.NotificationEvent)
-                 .SetContentType(AudioContentType.Sonification)
-                 .Build();
-
-            _soundPool = new SoundPool.Builder()
-                 .SetMaxStreams(6)
-                 .SetAudioAttributes(audioAttributes)
-                 .Build();
-
-            infoId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Info), 1);
-            warnId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Warning), 1);
-            errorId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Error), 1);
-
-            alarmId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Alarm), 1);
-            inquiryId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Inquiry), 1);
-            progressId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Progress), 1);
-
-        }
-
-        public void Play(Effect chime, EffectMode mode)
+        public async Task PlayAsync(Effect chime, EffectMode mode)
         {
             if (mode == EffectMode.Off)
                 return;
@@ -58,6 +30,30 @@ namespace P42.Uno.Controls
                 var enabled = Android.Provider.Settings.System.GetInt(Android.App.Application.Context.ContentResolver, Android.Provider.Settings.System.SoundEffectsEnabled) != 0;
                 if (!enabled)
                     return;
+            }
+
+            if (_audio is null)
+            {
+                _audio = (Android.Media.AudioManager)Android.App.Application.Context.GetSystemService(Context.AudioService);
+
+                var audioAttributes = new AudioAttributes.Builder()
+                     .SetUsage(AudioUsageKind.NotificationEvent)
+                     .SetContentType(AudioContentType.Sonification)
+                     .Build();
+
+                _soundPool = new SoundPool.Builder()
+                     .SetMaxStreams(6)
+                     .SetAudioAttributes(audioAttributes)
+                     .Build();
+
+                infoId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Info), 1);
+                warnId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Warning), 1);
+                errorId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Error), 1);
+
+                alarmId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Alarm), 1);
+                inquiryId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Inquiry), 1);
+                progressId = _soundPool.Load(await ChimePlayer.GetPathAsync(Effect.Progress), 1);
+
             }
 
             switch (chime)

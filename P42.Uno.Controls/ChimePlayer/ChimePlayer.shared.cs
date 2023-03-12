@@ -12,12 +12,12 @@ namespace P42.Uno.Controls
 
         public static EffectMode DefaultEffectMode { get; set; }
 
-        public static void Play(Effect chime, EffectMode mode = default)
+        public static async Task PlayAsync(Effect chime, EffectMode mode = default)
         {
             if (mode == EffectMode.Default)
                 mode = DefaultEffectMode;
 
-            NativeChimePlayer.Play(chime, mode);
+            await NativeChimePlayer.PlayAsync(chime, mode);
         }
 
         internal static async Task<string> GetPathAsync(Effect chime)

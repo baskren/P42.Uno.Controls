@@ -8,33 +8,24 @@ namespace P42.Uno.Controls
     {
         static string SoundAssetsPath = string.Empty;
 
-        static NativeChimePlayer()
-        {
-            Task.Run(Initialize).Wait();
-        }
-
-        static async Task Initialize()
-        {
-            if (await ChimePlayer.GetPathAsync(Effect.Alarm) is string path)
-            {
-                var ac = "/local/.assetsCache";
-                SoundAssetsPath = path.Replace(ac, ".").Replace(Effect.Alarm + ".mp3", "");
-                System.Console.WriteLine($"NativeAudioPlaer.Initialize : path=[{SoundAssetsPath}]");
-                return;
-            }
-
-            throw new Exception("Could not find P42.Uno.Controls sound assets");
-        }
-
-
-
-        public void Play(Effect chime, EffectMode mode)
+        public async Task PlayAsync(Effect chime, EffectMode mode)
         {
             if (mode == EffectMode.Off)
                 return;
 
             if (string.IsNullOrWhiteSpace(SoundAssetsPath))
-                return;
+            {
+                if (await ChimePlayer.GetPathAsync(Effect.Alarm) is string path)
+                {
+                    var ac = "/local/.assetsCache";
+                    SoundAssetsPath = path.Replace(ac, ".").Replace(Effect.Alarm + ".mp3", "");
+                    System.Console.WriteLine($"NativeAudioPlaer.Initialize : path=[{SoundAssetsPath}]");
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(SoundAssetsPath))
+                throw new Exception("Could not find P42.Uno.Controls sound assets");
+
             string fileName = chime + ".mp3";
 
             var javascript = @"

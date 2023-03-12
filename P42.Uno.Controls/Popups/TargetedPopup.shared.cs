@@ -780,7 +780,7 @@ namespace P42.Uno.Controls
                     await animator.RunAsync();
                 }
                 UpdateOpacity(Opacity);
-                Feedback.Play(PushEffect, PushEffectMode);
+                await Feedback.PlayAsync(PushEffect, PushEffectMode);
 
                 if (PopAfter > default(TimeSpan))
                 {
