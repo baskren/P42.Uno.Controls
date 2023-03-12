@@ -46,6 +46,8 @@ namespace P42.Uno.Controls.Demo
 
         void Build()
         {
+            
+
             this.Padding(0)
                 .Margin(0);
 
@@ -141,6 +143,9 @@ namespace P42.Uno.Controls.Demo
                             )
                         )
                 );
+
+            global::Uno.Toolkit.UI.SafeArea.SetInsets(_grid, global::Uno.Toolkit.UI.SafeArea.InsetMask.All);
+
 
             OnPointerDirChanged(null, null);
             OnVtAlignChanged(null, null);
