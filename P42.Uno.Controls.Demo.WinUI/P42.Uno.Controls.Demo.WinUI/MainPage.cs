@@ -73,7 +73,7 @@ namespace P42.Uno.Controls.Demo
                         .Margin(10)
                         .Bind(TextBlock.TextProperty, _textBox, nameof(TextBox.Text)),
                     new Grid()
-                        .Background(P42.Uno.Markup.SystemColors.AltHigh)
+                        .Background(Colors.Pink)
                         .BorderBrush(Colors.Gray)
                         .Padding(10)
                         .Children
@@ -119,6 +119,13 @@ namespace P42.Uno.Controls.Demo
                 _bubble.Margin(result);
                 TargetedPopup.Margin(result);
             }
+        }
+
+        private void OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+#if __ANDROID__
+            _textBlock.Text = _textBox.Text;
+#endif
         }
 
 

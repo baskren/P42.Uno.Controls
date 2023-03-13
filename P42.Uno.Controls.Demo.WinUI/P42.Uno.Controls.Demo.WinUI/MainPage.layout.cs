@@ -124,7 +124,8 @@ namespace P42.Uno.Controls.Demo
                     new TextBox()
                         .Row(5)
                         .Assign(out _textBox)
-                        .Text("My Text Test Here!"),
+                        .Text("My Text Test Here!")
+                        .AddTextChangedHandler(OnTextChanged) ,
                     new Border()
                         .Assign(out _altBorder)
                         .Row(3)
@@ -136,10 +137,13 @@ namespace P42.Uno.Controls.Demo
                     new BubbleBorder()
                         .Assign(out _bubble)
                         .Content(new Border()
+                            .Background(Colors.Pink)
+                            .Stretch()
                             .Child(new TextBlock()
-                                //.Assign(out _textBlock)
+                                .Assign(out _textBlock)
                                 .Margin(10)
                                 .Bind(TextBlock.TextProperty, _textBox, nameof(TextBox.Text))
+                                .Foreground(Colors.Gray)
                             )
                         )
                 );
@@ -150,6 +154,7 @@ namespace P42.Uno.Controls.Demo
             OnPointerDirChanged(null, null);
             OnVtAlignChanged(null, null);
             OnHzAlignChanged(null, null);
+            OnTextChanged(null, null);
         }
 
         private void OnHitTransparentToggleButtonChanged(object sender, RoutedEventArgs e)

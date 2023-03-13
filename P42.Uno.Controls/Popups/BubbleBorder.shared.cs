@@ -562,13 +562,6 @@ namespace P42.Uno.Controls
 
         #region Fields
         internal ContentPresenter _contentPresenter;
-        ColumnDefinition _leftColumn = new ColumnDefinition { Width = new GridLength(1) };
-        ColumnDefinition _centerColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-        ColumnDefinition _rightColumn = new ColumnDefinition { Width = new GridLength(1) };
-
-        RowDefinition _topRow = new RowDefinition { Height = new GridLength(1) };
-        RowDefinition _centerRow = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
-        RowDefinition _bottomRow = new RowDefinition { Height = new GridLength(1) };
         #endregion
 
 
@@ -579,13 +572,9 @@ namespace P42.Uno.Controls
             base.Padding = new Thickness(0);
 
             this
-                .Rows(_topRow, _centerRow, _bottomRow)
-                .Columns(_leftColumn, _centerColumn, _rightColumn)
                 .Children
                 (
                     new PathBubble()
-                        .RowSpan(3)
-                        .ColumnSpan(3)
                         .Bind(PathBubble.FillProperty, this, nameof(Background))
                         .Bind(PathBubble.StrokeProperty, this, nameof(BorderBrush))
                         .Bind(PathBubble.StrokeThicknessProperty, this, nameof(BorderWidth))
@@ -605,7 +594,6 @@ namespace P42.Uno.Controls
                     new ContentPresenter()
                     //.Background(Colors.Pink)
                         .Assign(out _contentPresenter)
-                        .RowCol(1,1)
                         .Padding(0)
                         .Margin(0)
                         //Background
@@ -644,7 +632,12 @@ namespace P42.Uno.Controls
                 );
 
             UpdatePadding();
+
+#if __ANDROID__
+            //RegisterPropertyChangedCallback(ContentProperty, OnContentChanged);
+#endif
         }
+
 
         #endregion
 
@@ -652,7 +645,11 @@ namespace P42.Uno.Controls
         #region Private Methods
         void UpdatePadding()
         {
-            var padding = Padding;
+            var borderWidth = HasBorder
+                ? BorderWidth
+                : 0;
+
+            var padding = Padding.Add(borderWidth);
 
             switch (PointerDirection)
             {
@@ -674,23 +671,7 @@ namespace P42.Uno.Controls
                     throw new InvalidOperationException("BubbleBorder PointerDirection must be either Left, Right, Top, Bottom, or None");
             }
 
-            var borderWidth = HasBorder
-                ? BorderWidth
-                : 0;
-
-            /*
-            this
-                .Rows(padding.Top + borderWidth, _centerRow, padding.Bottom + borderWidth + 1)
-                .Columns(padding.Left + borderWidth, _centerColumn, padding.Right + borderWidth + 1);
-            */
-
-
-            _leftColumn.Width = new GridLength( padding.Left + borderWidth);
-            _rightColumn.Width = new GridLength(padding.Right + borderWidth + 1);
-            _topRow.Height = new GridLength(padding.Top + borderWidth);
-            _bottomRow.Height = new GridLength(padding.Bottom + borderWidth + 1);   
-            
-
+            _contentPresenter.Margin = padding;
             _contentPresenter.CornerRadius = new CornerRadius(
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Left + Padding.Top)/2.0),
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Top + Padding.Right) / 2.0),
@@ -701,6 +682,11 @@ namespace P42.Uno.Controls
             //System.Diagnostics.Debug.WriteLine($"BubbleBorder.UpdatePadding : padding [{padding}] BorderWidth[{BorderWidth}] BorderColor[{BorderColor.A},{BorderColor.R},{BorderColor.G},{BorderColor.B}]");
         }
         #endregion
+
+
+#if __ANDROID__
+
+#endif
 
     }
 }
