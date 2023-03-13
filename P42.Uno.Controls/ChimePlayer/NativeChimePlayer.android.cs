@@ -23,6 +23,7 @@ namespace P42.Uno.Controls
         static string inquiryPath;
         static string progressPath;
 
+        /*
         static int infoId;
         static int warnId;
         static int errorId;
@@ -30,6 +31,7 @@ namespace P42.Uno.Controls
         static int alarmId;
         static int inquiryId;
         static int progressId;
+        */
 
         public void OnPrepared(MediaPlayer mp)
         {

@@ -210,7 +210,7 @@ namespace P42.Uno.Controls
             nameof(FontSize),
             typeof(double),
             typeof(BubbleBorder),
-            new PropertyMetadata(default(double))
+            new PropertyMetadata(12.0)
         );
         public double FontSize
         {
@@ -684,10 +684,11 @@ namespace P42.Uno.Controls
                 .Columns(padding.Left + borderWidth, _centerColumn, padding.Right + borderWidth + 1);
             */
 
-            _leftColumn.Width = padding.Left + borderWidth;
-            _rightColumn.Width = padding.Right + borderWidth + 1;
-            _topRow.Height = padding.Top + borderWidth;
-            _bottomRow.Height = padding.Bottom + borderWidth + 1;
+
+            _leftColumn.Width = new GridLength( padding.Left + borderWidth);
+            _rightColumn.Width = new GridLength(padding.Right + borderWidth + 1);
+            _topRow.Height = new GridLength(padding.Top + borderWidth);
+            _bottomRow.Height = new GridLength(padding.Bottom + borderWidth + 1);   
             
 
             _contentPresenter.CornerRadius = new CornerRadius(

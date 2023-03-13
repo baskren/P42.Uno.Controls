@@ -9,7 +9,6 @@ using P42.Uno.Markup;
 using SkiaSharp.Views.Windows;
 using Microsoft.UI;
 using System.Runtime.CompilerServices;
-using Uno.UI;
 
 namespace P42.Uno.Controls
 {
