@@ -1087,6 +1087,14 @@ namespace P42.Uno.Controls
                 return new AlignmentMarginsAndPointer(cleanSize, HorizontalAlignment, VerticalAlignment, Margin.Add(safeMargin), PointerDirection.None);
 
             var targetBounds = TargetBounds();
+#if __ANDROID__
+            if (Target != null)
+            {
+                var shift = AppWindow.StatusBarHeight(RootFrame.Current);
+                targetBounds = new Rect(targetBounds.Left, targetBounds.Top - shift, targetBounds.Width, targetBounds.Height);
+            }
+#endif
+
 
             System.Diagnostics.Debug.WriteLine(GetType() + ".UpdateBorderMarginAndAlignment targetBounds:["+targetBounds+"]");
             var availableSpace = AvailableSpace(targetBounds.Grow(PointerMargin), safeMargin);
