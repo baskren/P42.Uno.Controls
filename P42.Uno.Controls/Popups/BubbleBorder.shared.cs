@@ -25,22 +25,83 @@ namespace P42.Uno.Controls
     {
         #region Properties
 
+        #region Alternative Properties (Because Shape.Path doesn't work in Android?!?!)
+
+        #region BackgroundColor Property
+        public static readonly DependencyProperty BackgroundColorProperty = DependencyProperty.Register(
+            nameof(BackgroundColor),
+            typeof(Color),
+            typeof(BubbleBorder),
+            new PropertyMetadata(default(Color))
+        );
+        public Color BackgroundColor
+        {
+            get => (Color)GetValue(BackgroundColorProperty);
+            set => SetValue(BackgroundColorProperty, value);
+        }
+        #endregion BackgroundColor Property
+
+        #region BorderColor Property
+        public static readonly DependencyProperty BorderColorProperty = DependencyProperty.Register(
+            nameof(BorderColor),
+            typeof(Color),
+            typeof(BubbleBorder),
+            new PropertyMetadata(default(Color))
+        );
+        public Color BorderColor
+        {
+            get => (Color)GetValue(BorderColorProperty);
+            set => SetValue(BorderColorProperty, value);
+        }
+        #endregion BorderColor Property
+
+        #region BorderWidth
+        public static readonly DependencyProperty BorderWidthProperty = DependencyProperty.Register(
+            nameof(BorderWidth),
+            typeof(double),
+            typeof(BubbleBorder),
+            new PropertyMetadata(1.0, OnBorderWidthChanged)
+        );
+        private static void OnBorderWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is BubbleBorder border)
+                border.UpdateConetntPresenterMarginAndCorners();
+        }
+        public double BorderWidth
+        {
+            get => (double)GetValue(BorderWidthProperty);
+            set => SetValue(BorderWidthProperty, value);
+        }
+        #endregion BorderWidth Property
+
+        #endregion
+
         #region ContentPresenter Properties
 
         #region Background Property
+
         public static readonly new DependencyProperty BackgroundProperty = DependencyProperty.Register(
             nameof(Background),
             typeof(Brush),
             typeof(BubbleBorder),
             new PropertyMetadata(SystemTeachingTipBrushes.Background)
         );
+        
+        [Obsolete("Use BackgroundColor, instead")]
         public new Brush Background
         {
-            get => (Brush)GetValue(BackgroundProperty);
-            set => SetValue(BackgroundProperty, value);
+            get => BackgroundColor.ToBrush();
+            set
+            {
+                if (value is SolidColorBrush brush)
+                    BackgroundColor = brush.Color;
+                else
+                    throw new Exception("Only SolidColorBrush will work");
+            }
         }
         #endregion Background Property
 
+        /*
         #region BackgroundSizing Property
         public static readonly new DependencyProperty BackgroundSizingProperty = DependencyProperty.Register(
             nameof(BackgroundSizing),
@@ -68,6 +129,7 @@ namespace P42.Uno.Controls
             set => SetValue(BackgroundTransitionProperty, value);
         }
         #endregion BackgroundTransition Property
+        */
 
         #region BorderBrush Property
         public static readonly new DependencyProperty BorderBrushProperty = DependencyProperty.Register(
@@ -76,36 +138,19 @@ namespace P42.Uno.Controls
             typeof(BubbleBorder),
             new PropertyMetadata(SystemTeachingTipBrushes.Border)
         );
+        [Obsolete("Use BorderWidth, instead")]
         public new Brush BorderBrush
         {
-            get => (Brush)GetValue(BorderBrushProperty);
-            set => SetValue(BorderBrushProperty, value);
+            get => new SolidColorBrush(BorderColor);
+            set
+            {
+                if (value is SolidColorBrush brush)
+                    BorderColor = brush.Color;
+                else
+                    throw new Exception("Can only use SolidColorBrush for BorderBrush");
+            }
         }
         #endregion BorderBrush Property
-
-        #region BorderWidth Property
-        [Obsolete("Use BorderWidth instead")]
-        public new Thickness BorderThickness { get; set; }
-
-        public static readonly DependencyProperty BorderWidthProperty = DependencyProperty.Register(
-            nameof(BorderWidth),
-            typeof(double),
-            typeof(BubbleBorder),
-            new PropertyMetadata(1.0, OnBorderWidthChanged)
-        );
-
-        private static void OnBorderWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is BubbleBorder border)
-                border.UpdatePadding();
-        }
-
-        public double BorderWidth
-        {
-            get => (double)GetValue(BorderWidthProperty);
-            set => SetValue(BorderWidthProperty, value);
-        }
-        #endregion BorderWidth Property
 
         #region CharacterSpacing Property
         public static readonly DependencyProperty CharacterSpacingProperty = DependencyProperty.Register(
@@ -374,7 +419,7 @@ namespace P42.Uno.Controls
         private static void OnPaddingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is BubbleBorder border)
-                border.UpdatePadding();
+                border.UpdateConetntPresenterMarginAndCorners();
         }
 
         public new Thickness Padding
@@ -442,7 +487,7 @@ namespace P42.Uno.Controls
         private static void OnPointerLengthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is BubbleBorder border)
-                border.UpdatePadding();
+                border.UpdateConetntPresenterMarginAndCorners();
         }
 
         /// <summary>
@@ -506,7 +551,7 @@ namespace P42.Uno.Controls
         private static void OnPointerDirectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is BubbleBorder border)
-                border.UpdatePadding();
+                border.UpdateConetntPresenterMarginAndCorners();
         }
 
         /// <summary>
@@ -547,13 +592,7 @@ namespace P42.Uno.Controls
             {
                 if (BorderWidth <= 0)
                     return false;
-                if (BorderBrush is Brush brush)
-                {
-                    if (brush is SolidColorBrush solidBrush)
-                        return solidBrush.Color.A > 0;
-                    return true;
-                }
-                return false;
+                return BorderColor.A > 0;
             }
         }
 
@@ -562,6 +601,7 @@ namespace P42.Uno.Controls
 
         #region Fields
         internal ContentPresenter _contentPresenter;
+        SkiaBubble _bubble;
         #endregion
 
 
@@ -571,28 +611,44 @@ namespace P42.Uno.Controls
             base.Margin = new Thickness(0);
             base.Padding = new Thickness(0);
 
+            BorderColor = P42.Uno.Markup.SystemTeachingTipBrushes.Border.AsColor();
+            BackgroundColor = P42.Uno.Markup.SystemTeachingTipBrushes.Background.AsColor();
+
             this
                 .Children
                 (
-                    new PathBubble()
-                        .Bind(PathBubble.FillProperty, this, nameof(Background))
-                        .Bind(PathBubble.StrokeProperty, this, nameof(BorderBrush))
-                        .Bind(PathBubble.StrokeThicknessProperty, this, nameof(BorderWidth))
-                        .Bind(PathBubble.CornerRadiusProperty, this, nameof(CornerRadius))
-                        .Bind(PathBubble.PointerLengthProperty, this, nameof(PointerLength))
-                        .Bind(PathBubble.PointerAxialPositionProperty, this, nameof(PointerAxialPosition))
-                        .Bind(PathBubble.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
-                        .Bind(PathBubble.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
-                        .Bind(PathBubble.PointerDirectionProperty, this, nameof(PointerDirection)),
-                    /*
-                    new Microsoft.UI.Xaml.Shapes.Rectangle()
-                        .RowCol(1,1)
-                        .Stretch()
-                        .Fill(Colors.Pink),
-                    */
-                   
+                    new SkiaBubble()
+                        .Assign(out _bubble)
+                        .Margin(0)
+                        .Bind(SkiaBubble.BackgroundColorProperty, this, nameof(BackgroundColor))
+                        .Bind(SkiaBubble.BorderColorProperty, this, nameof(BorderColor))
+                        .Bind(SkiaBubble.BorderWidthProperty, this, nameof(BorderWidth))
+                        .Bind(SkiaBubble.CornerRadiusProperty, this, nameof(CornerRadius))
+                        .Bind(SkiaBubble.PointerLengthProperty, this, nameof(PointerLength))
+                        .Bind(SkiaBubble.PointerAxialPositionProperty, this, nameof(PointerAxialPosition))
+                        .Bind(SkiaBubble.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
+                        .Bind(SkiaBubble.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
+                        .Bind(SkiaBubble.PointerDirectionProperty, this, nameof(PointerDirection)),
+
+                    /* Does not work in Android - perhaps a bug with Shape.Path in Android?
+                        new PathBubble()
+                            .Bind(PathBubble.FillProperty, this, nameof(Background))
+                            .Bind(PathBubble.StrokeProperty, this, nameof(BorderBrush))
+                            .Bind(PathBubble.StrokeThicknessProperty, this, nameof(BorderWidth))
+                            .Bind(PathBubble.CornerRadiusProperty, this, nameof(CornerRadius))
+                            .Bind(PathBubble.PointerLengthProperty, this, nameof(PointerLength))
+                            .Bind(PathBubble.PointerAxialPositionProperty, this, nameof(PointerAxialPosition))
+                            .Bind(PathBubble.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
+                            .Bind(PathBubble.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
+                            .Bind(PathBubble.PointerDirectionProperty, this, nameof(PointerDirection)),
+                        /*
+                        new Microsoft.UI.Xaml.Shapes.Rectangle()
+                            .RowCol(1,1)
+                            .Stretch()
+                            .Fill(Colors.Pink),
+                        */
+
                     new ContentPresenter()
-                    //.Background(Colors.Pink)
                         .Assign(out _contentPresenter)
                         .Padding(0)
                         .Margin(0)
@@ -604,8 +660,8 @@ namespace P42.Uno.Controls
                         .Bind(ContentPresenter.MaxHeightProperty, this, nameof(MaxHeight))
                         .Bind(ContentPresenter.MinWidthProperty, this, nameof(MinWidth))
                         .Bind(ContentPresenter.MaxWidthProperty, this, nameof(MaxWidth))
-                        .Bind(ContentPresenter.ContentProperty, this, nameof(Content))
 
+                        .Bind(ContentPresenter.ContentProperty, this, nameof(Content))
                         .Bind(ContentPresenter.ContentTemplateProperty, this, nameof(ContentTemplate))
                         .Bind(ContentPresenter.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
                         .Bind(ContentPresenter.ContentTransitionsProperty, this, nameof(ContentTransitions))
@@ -622,56 +678,97 @@ namespace P42.Uno.Controls
                         .Bind(ContentPresenter.LineHeightProperty, this, nameof(LineHeight))
                         .Bind(ContentPresenter.LineStackingStrategyProperty, this, nameof(LineStackingStrategy))
                         .Bind(ContentPresenter.MaxLinesProperty, this, nameof(MaxLines))
+                        .Bind(ContentPresenter.OpticalMarginAlignmentProperty, this, nameof(OpticalMarginAlignment))
                         .Bind(ContentPresenter.TextLineBoundsProperty, this, nameof(TextLineBounds))
                         .Bind(ContentPresenter.TextWrappingProperty, this, nameof(TextWrapping))
 
                         .Bind(ContentPresenter.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
                         .Bind(ContentPresenter.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
+#if __ANDROID__
+                        //.AddSizeChangedHandler(OnContentSizeChanged)
+#endif
 
-                        
                 );
 
-            UpdatePadding();
-
+            UpdateConetntPresenterMarginAndCorners();
 #if __ANDROID__
-            //RegisterPropertyChangedCallback(ContentProperty, OnContentChanged);
+            SizeChanged += OnFESizeChanged;
+            RegisterPropertyChangedCallback(OpacityProperty, OnOpacityChanged);
 #endif
+
         }
 
+
+#if __ANDROID__
+        private void OnOpacityChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            //UpdateConetntPresenterMarginAndCorners();
+        }
+        private void OnFESizeChanged(object sender, SizeChangedEventArgs args)
+        {
+            //UpdateConetntPresenterMarginAndCorners();
+            //_bubble.InvalidateMeasure();
+            //_contentPresenter.Invalidate();
+            //_contentPresenter.InvalidateArrange();
+            //_contentPresenter.InvalidateMeasure();
+        }
+
+        private void OnContentSizeChanged(object sender, SizeChangedEventArgs args)
+        {
+            //UpdateConetntPresenterMarginAndCorners();
+            //_bubble.InvalidateMeasure();
+            //_bubble.Invalidate();
+        }
+#endif
 
         #endregion
 
 
         #region Private Methods
-        void UpdatePadding()
+        void UpdateConetntPresenterMarginAndCorners()
         {
+            if (_contentPresenter is null)
+                return;
+
             var borderWidth = HasBorder
+#if __ANDROID__
+                ? BorderWidth + 1
+#else
                 ? BorderWidth
+#endif
                 : 0;
 
-            var padding = Padding.Add(borderWidth);
+            var margin = Padding.Add(borderWidth);
+#if __ANDROID__
+            if (HasBorder)
+                borderWidth -= 1;
+#endif
 
             switch (PointerDirection)
             {
                 case PointerDirection.None:
                     break;
                 case PointerDirection.Left:
-                    padding.Left += PointerLength;
+                    margin.Left += PointerLength;
                     break;
                 case PointerDirection.Right:
-                    padding.Right += PointerLength;
+                    margin.Right += PointerLength;
                     break;
                 case PointerDirection.Up:
-                    padding.Top += PointerLength;
+                    margin.Top += PointerLength;
                     break;
                 case PointerDirection.Down:
-                    padding.Bottom += PointerLength;
+                    margin.Bottom += PointerLength;
                     break;
                 default:
                     throw new InvalidOperationException("BubbleBorder PointerDirection must be either Left, Right, Top, Bottom, or None");
             }
 
-            _contentPresenter.Margin = padding;
+
+            _contentPresenter.Margin = margin;
+
+            System.Diagnostics.Debug.WriteLine($"BubbleBorder.ContentPresenter.Margin : [{margin}]");
+
             _contentPresenter.CornerRadius = new CornerRadius(
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Left + Padding.Top)/2.0),
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Top + Padding.Right) / 2.0),
@@ -681,7 +778,7 @@ namespace P42.Uno.Controls
 
             //System.Diagnostics.Debug.WriteLine($"BubbleBorder.UpdatePadding : padding [{padding}] BorderWidth[{BorderWidth}] BorderColor[{BorderColor.A},{BorderColor.R},{BorderColor.G},{BorderColor.B}]");
         }
-        #endregion
+#endregion
 
 
 #if __ANDROID__

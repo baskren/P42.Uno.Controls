@@ -228,7 +228,7 @@ namespace P42.Uno.Controls
             canvas.Clear(SKColor.Empty);
             
             SKPaint paint = new SKPaint();
-            paint.IsAntialias = true;
+            //paint.IsAntialias = true;
             var scale = info.Width / (float)ActualWidth;
             var size = new Size(info.Width, info.Height);
             var borderWidth = 0.0f;

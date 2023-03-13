@@ -85,14 +85,96 @@ namespace P42.Uno.Controls
         }
         #endregion VerticalAlignment Property
 
-        #region BorderWidth Property
-        [Obsolete("Use BorderWidth instead")]
-        public new Thickness BorderThickness 
-        { 
-            get => new Thickness(BorderWidth) ; 
-            set => BorderWidth = value.Average(); 
+        #region Background Property
+        public static readonly new DependencyProperty BackgroundProperty = DependencyProperty.Register(
+            nameof(Background),
+            typeof(Brush),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(Brush))
+        );
+        [Obsolete("Use BackgroundColor, instead")]
+        public new Brush Background
+        {
+            get => new SolidColorBrush(BackgroundColor);
+            set
+            {
+                if (value is SolidColorBrush brush)
+                    BackgroundColor = brush.Color;
+                else
+                    throw new Exception("Background not supported, use BackgroundColor instead");
+            }
         }
+        #endregion Background Property
 
+        #region BackgroundColor Property
+        public static readonly DependencyProperty BackgroundColorProperty = DependencyProperty.Register(
+            nameof(BackgroundColor),
+            typeof(Color),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(Color))
+        );
+        public Color BackgroundColor
+        {
+            get => (Color)GetValue(BackgroundColorProperty);
+            set => SetValue(BackgroundColorProperty, value);
+        }
+        #endregion BackgroundColor Property
+
+        #region BorderBrush Property
+        public static readonly new DependencyProperty BorderBrushProperty = DependencyProperty.Register(
+            nameof(BorderBrush),
+            typeof(Brush),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(Brush))
+        );
+        [Obsolete("Use BorderColor, instead")]
+        public new Brush BorderBrush
+        {
+            get => new SolidColorBrush(BorderColor);
+            set
+            {
+                if (value is SolidColorBrush brush)
+                    BorderColor = brush.Color;
+                else
+                    throw new Exception("BorderBrush not supported, use BorderColor instead");
+            }
+        }
+        #endregion BorderBrush Property
+
+        #region BorderColor Property
+        public static readonly DependencyProperty BorderColorProperty = DependencyProperty.Register(
+            nameof(BorderColor),
+            typeof(Color),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(Color))
+        );
+        public Color BorderColor
+        {
+            get => (Color)GetValue(BorderColorProperty);
+            set => SetValue(BorderColorProperty, value);
+        }
+        #endregion BorderColor Property
+
+        #region BorderThickness Property
+        public static readonly new DependencyProperty BorderThicknessProperty = DependencyProperty.Register(
+            nameof(BorderThickness),
+            typeof(Thickness),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(Thickness))
+        );
+        [Obsolete("Use BorderWidth instead")]
+        public new Thickness BorderThickness
+        {
+            get => new Thickness(BorderWidth);
+            set
+            {
+                if (value is Thickness thickness)
+                    BorderWidth = thickness.Max();
+            }
+        }
+        #endregion BorderThickness Property
+
+        #region BorderWidth Property
         public static readonly DependencyProperty BorderWidthProperty = DependencyProperty.Register(
             nameof(BorderWidth),
             typeof(double),
@@ -963,6 +1045,14 @@ namespace P42.Uno.Controls
 
             System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment vtAlign:" + value.VerticalAlignment + " hzAlign:" + value.HorizontalAlignment);
             System.Diagnostics.Debug.WriteLine("TargetedPopup.UpdateMarginAndAlignment margin:" + value.Margin + " shadowMargin:" + ShadowBorder.Margin);
+
+#if __ANDROID__
+            ContentBorder.Invalidate();
+            ContentBorder.InvalidateArrange();
+            ContentBorder.InvalidateMeasure();
+            //ContentBorder.InvalidateDrawable();
+            ContentBorder.InvalidateOutline();
+#endif
         }
 
 
@@ -1435,7 +1525,7 @@ namespace P42.Uno.Controls
         }
 
 
-        #endregion
+#endregion
 
     }
 }

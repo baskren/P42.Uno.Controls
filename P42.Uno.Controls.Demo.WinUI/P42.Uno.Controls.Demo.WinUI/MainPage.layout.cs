@@ -34,7 +34,7 @@ namespace P42.Uno.Controls.Demo
     {
         Grid _grid;
         Border _altBorder;
-        TextBox _marginTextBox, _paddingTextBox;
+        TextBox _marginTextBox, _paddingTextBox, _borderTextBox;
         ComboBox _pointerDirectionCombo, _hzAlignCombo, _vtAlignCombo;
         Button _button;
         ListView _listView;
@@ -42,7 +42,7 @@ namespace P42.Uno.Controls.Demo
         TextBlock _textBlock;
         ToggleSwitch _shadowToggleSwitch, _overlayToggleSwitch, _hitTransparentOverlayToggleSwitch;
         Rectangle _targetRectangle, _bubbleTestRectangle;
-        BubbleBorder _bubble;
+        //BubbleBorder _bubble;
 
         void Build()
         {
@@ -114,7 +114,10 @@ namespace P42.Uno.Controls.Demo
                             new TextBlock().Text("Overlay:").Foreground(Colors.Black),
                             new ToggleSwitch().Assign(out _overlayToggleSwitch).On().AddToggledHandler(OnPageOverlayToggleSwitchChanged),
                             new TextBlock().Text("Hitable:").Foreground(Colors.Black),
-                            new ToggleSwitch().Assign(out _hitTransparentOverlayToggleSwitch).On().AddToggledHandler(OnHitTransparentToggleButtonChanged)
+                            new ToggleSwitch().Assign(out _hitTransparentOverlayToggleSwitch).On().AddToggledHandler(OnHitTransparentToggleButtonChanged),
+                            new TextBlock().Text("Border:").Foreground(Colors.Black),
+                            new TextBox().Assign(out _borderTextBox).Text("1").Foreground(Colors.Black).AddTextChangedHandler(_borderTextBox_TextChanged)
+
                         ),
                     new ListView()
                         .Assign(out _listView)
@@ -133,7 +136,8 @@ namespace P42.Uno.Controls.Demo
                         .CenterHorizontal()
                         .Child(new TextBlock { Text = "TARGET", VerticalAlignment = VerticalAlignment.Center })
                         .Background(Colors.Pink)
-                        .AddTapHandler(OnElementTapped),
+                        .AddTapHandler(OnElementTapped)
+                        /*,
                     new BubbleBorder()
                         .Assign(out _bubble)
                         .Content(new Border()
@@ -145,7 +149,7 @@ namespace P42.Uno.Controls.Demo
                                 .Bind(TextBlock.TextProperty, _textBox, nameof(TextBox.Text))
                                 .Foreground(Colors.Gray)
                             )
-                        )
+                        )*/
                 );
 
             global::Uno.Toolkit.UI.SafeArea.SetInsets(_grid, global::Uno.Toolkit.UI.SafeArea.InsetMask.All);
@@ -180,12 +184,12 @@ namespace P42.Uno.Controls.Demo
                 dir = PointerDirection.None;
             TargetedPopup.PreferredPointerDirection = dir;
 
-            
+            /*
             if (dir == PointerDirection.Horizontal ||  dir == PointerDirection.Vertical || dir == PointerDirection.Any)
                 _bubble.PointerDirection = PointerDirection.None;
             else
                 _bubble.PointerDirection = dir;
-            
+            */
         }
 
         private void OnVtAlignChanged(object sender, SelectionChangedEventArgs e)
@@ -194,7 +198,7 @@ namespace P42.Uno.Controls.Demo
                 align = VerticalAlignment.Top;
 
             TargetedPopup.VerticalAlignment = align;
-            _bubble.VerticalAlignment = align;
+            //_bubble.VerticalAlignment = align;
         }
 
         private void OnHzAlignChanged(object sender, SelectionChangedEventArgs e)
@@ -203,7 +207,7 @@ namespace P42.Uno.Controls.Demo
                 align = HorizontalAlignment.Left;
 
             TargetedPopup.HorizontalAlignment = align;
-            _bubble.HorizontalAlignment = align;
+            //_bubble.HorizontalAlignment = align;
         }
     }
 

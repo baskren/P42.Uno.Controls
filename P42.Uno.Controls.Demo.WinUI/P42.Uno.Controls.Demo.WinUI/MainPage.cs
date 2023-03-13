@@ -54,6 +54,8 @@ namespace P42.Uno.Controls.Demo
             var result = new TargetedPopup()
             //.Background(Colors.Transparent)
             .PushEffect(Effect.Info, EffectMode.On)
+            .HorizontalContentAlignment(HorizontalAlignment.Stretch)
+            .VerticalContentAlignment(VerticalAlignment.Stretch)
             .Content(new StackPanel()
                 .Stretch()
                 .Children
@@ -107,7 +109,7 @@ namespace P42.Uno.Controls.Demo
         {
             if (double.TryParse(_paddingTextBox.Text, out double result))
             {
-                _bubble.Padding(result);
+                //_bubble.Padding(result);
                 TargetedPopup.Padding(result);
             }
         }
@@ -116,15 +118,24 @@ namespace P42.Uno.Controls.Demo
         {
             if (double.TryParse(_marginTextBox.Text, out double result))
             {
-                _bubble.Margin(result);
+                //_bubble.Margin(result);
                 TargetedPopup.Margin(result);
+            }
+        }
+
+        private void _borderTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (double.TryParse(_borderTextBox.Text, out double result))
+            {
+                //_bubble.BorderWidth(result);
+                TargetedPopup.BorderWidth(result);
             }
         }
 
         private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
 #if __ANDROID__
-            _textBlock.Text = _textBox.Text;
+            //_textBlock.Text = _textBox.Text;
 #endif
         }
 

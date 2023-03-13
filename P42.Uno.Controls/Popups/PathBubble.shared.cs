@@ -172,7 +172,7 @@ namespace P42.Uno.Controls
         Size _currentPathSize;
         private void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
-            //System.Diagnostics.Debug.WriteLine($"PathBubble.OnSizeChanged : [{args.NewSize}]");
+            System.Diagnostics.Debug.WriteLine($"PathBubble.OnSizeChanged : [{args.NewSize}]");
             var ΔHeight = args.NewSize.Height - _currentPathSize.Height;
             var ΔWidth = args.NewSize.Width - _currentPathSize.Width;
             if (ΔWidth <= 0 && ΔWidth > -1 && ΔHeight <= 0 && ΔHeight > -1)
@@ -196,7 +196,7 @@ namespace P42.Uno.Controls
             _updatingPath = true;
             _currentPathSize = size;
 
-            //System.Diagnostics.Debug.WriteLine($"PathBubble.RegeneratePath : [{caller}]");
+            System.Diagnostics.Debug.WriteLine($"PathBubble.RegeneratePath : [{caller}]");
             var borderWidth = 0.0f;
             if (HasBorder)
                 borderWidth = (float)StrokeThickness;
