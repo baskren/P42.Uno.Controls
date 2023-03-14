@@ -98,8 +98,10 @@
 
 	<!-- WASM -->
 	<ItemGroup Condition=" $(P42TargetPlatform.ToLower().Contains('wasm')) ">
+    <!-- THIS WILL CAUSE ASSETS TO NOT BE ADDED TO BUILD FILES.  FORTUNATELY, WASM CALLS STILL WORK SINCE THIS PACKAGE IS REFERENCED IN P42.Utils.Uno
 		<PackageReference Include="Uno.WinUI.WebAssembly" Version="4.7.44" />
-
+    -->
+    
 		<Compile Include="**\*.wasm.cs" />
 		<Compile Include="**\*.wasm.*.cs" />
 
