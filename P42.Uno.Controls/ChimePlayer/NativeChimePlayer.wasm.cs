@@ -13,18 +13,25 @@ namespace P42.Uno.Controls
             if (mode == EffectMode.Off)
                 return;
 
+
             if (string.IsNullOrWhiteSpace(SoundAssetsPath))
             {
+                Console.WriteLine($"NativeAudioPlayer.Initialize: === ENTER ====");
                 if (await ChimePlayer.GetPathAsync(Effect.Alarm) is string path)
                 {
+                    System.Console.WriteLine($"NativeAudioPlayer.Initialize : path=[{path}]");
                     var ac = "/local/.assetsCache";
                     SoundAssetsPath = path.Replace(ac, ".").Replace(Effect.Alarm + ".mp3", "");
-                    System.Console.WriteLine($"NativeAudioPlaer.Initialize : path=[{SoundAssetsPath}]");
+                    System.Console.WriteLine($"NativeAudioPlayer.Initialize : path=[{SoundAssetsPath}]");
                 }
+                Console.WriteLine($"NativeAudioPlayer.Initialize: === EXIT ====");
             }
 
             if (string.IsNullOrWhiteSpace(SoundAssetsPath))
-                throw new Exception("Could not find P42.Uno.Controls sound assets");
+            {
+                System.Console.WriteLine($"NativeChimePlayer.Could not find P42.Uno.Controls sound assets");
+                return;
+            }
 
             string fileName = chime + ".mp3";
 
@@ -37,7 +44,9 @@ function play() {
 play();
                 ";
 
-            global::Uno.Foundation.WebAssemblyRuntime.InvokeJS(javascript);
+            //global::Uno.Foundation.WebAssemblyRuntime.InvokeJS(javascript);
+
+            System.Console.WriteLine($"ChimePlayerScript: [{javascript}]");
         }
     }
 }

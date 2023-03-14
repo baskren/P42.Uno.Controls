@@ -25,8 +25,15 @@ namespace P42.Uno.Controls
 
         internal static async Task<StorageFile> GetStorageFileAsync(Effect chime)
         {
-            if (await StorageFile.GetFileFromApplicationUriAsync(GetAssetUri(chime)) is StorageFile file)
+            Console.WriteLine($"ChimePlayer.GetStorageFileAsync({chime})  ==== ENTER ====");
+            var uri = GetAssetUri(chime);
+            Console.WriteLine($"ChimePlayer.GetStorageFileAsync  uri=[{uri}]");
+            if (await StorageFile.GetFileFromApplicationUriAsync(uri) is StorageFile file)
+            {
+                Console.WriteLine($"ChimePlayer.GetStorageFileAsync({chime}) = [{file.Path}]  ==== EXIT ====");
                 return file;
+            }
+            Console.WriteLine($"ChimePlayer.GetStorageFileAsync({chime}) = [null]  ==== EXIT ====");
             return null;
         }
 
