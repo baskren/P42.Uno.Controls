@@ -215,7 +215,7 @@ namespace P42.Uno.Controls
                 (float)PointerCornerRadius);
             var data = path.ToSvgPathData();
 
-#if __WASM__
+#if __P42WASM__
             //System.Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
             var x = this.GetFirstHtmlDescendent();
             x.SetHtmlContent($"<path fill-rule=\"even-odd\" d=\"{data}\"></path>");
