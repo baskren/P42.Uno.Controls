@@ -836,8 +836,8 @@ namespace P42.Uno.Controls
         async Task InnerPushAsync(bool animated)
         { 
             PushPopState = PushPopState.Pushing;
+            _popCompletionSource?.TrySetResult(new PopupPoppedEventArgs(PopupPoppedCause.NotPushed, false));
             _popCompletionSource = null;
-            _pushCompletionSource = null;
 
             PoppedCause = PopupPoppedCause.BackgroundTouch;
             PoppedTrigger = null;
@@ -906,7 +906,7 @@ namespace P42.Uno.Controls
 
         async Task InnerPop(PopupPoppedCause cause, bool animated = false, [CallerMemberName] object trigger = null)
         {
-            _popCompletionSource = null;
+            _pushCompletionSource?.TrySetResult(false);
             _pushCompletionSource = null;
 
             PushPopState = PushPopState.Popping;

@@ -91,6 +91,8 @@ namespace P42.Uno.Controls.Demo
             return result;
         }
 
+        
+
         async void OnTargetedPopupCancelButtonClicked(object sender, RoutedEventArgs e)
         {
             await TargetedPopup.PopAsync();
@@ -147,10 +149,16 @@ namespace P42.Uno.Controls.Demo
 
         async void _button_Click(object sender, RoutedEventArgs e)
         {
-            TargetedPopup.Target = sender as UIElement;
-            if ((sender as Button) == _button)
-                TargetedPopup.Target = null;
-            await TargetedPopup.PushAsync();
+            if (sender is UIElement element)
+            {
+                var permission = await PermissionPopup.CreateAsync(element, "PERMISSION", "Is is ok?");
+                await permission.WaitForPoppedAsync();
+
+                TargetedPopup.Target = sender as UIElement;
+                if ((sender as Button) == _button)
+                    TargetedPopup.Target = null;
+                await TargetedPopup.PushAsync();
+            }
         }
 
 

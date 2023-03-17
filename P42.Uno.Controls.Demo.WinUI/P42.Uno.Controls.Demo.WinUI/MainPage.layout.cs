@@ -223,10 +223,16 @@ namespace P42.Uno.Controls.Demo
                 .BorderBrush(Colors.Green)
                 .BorderThickness(1)
                 .CornerRadius(5)
-                //.AddTapHandler(BorderTapped)
+                .AddTapHandler(BorderTapped)
                 .Content(new TextBlock { Text = "ZAP" });
 
             DataContextChanged += CellTemplate_DataContextChanged;
+        }
+
+        private void BorderTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var page = this.FindAncestor<MainPage>();
+            System.Diagnostics.Debug.WriteLine($"page=[{page}]");
         }
 
         private void CellTemplate_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
