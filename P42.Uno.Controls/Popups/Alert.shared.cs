@@ -82,16 +82,25 @@ namespace P42.Uno.Controls
 
         #region Construction / Initialization
         /// <summary>
-        /// Create and present the specified title, text, okText, cancelText, okButtonColor, cancelButtonColor, okTextColor and cancelTextColor.
+        /// Creates the Alert (simpler)
         /// </summary>
-        /// <param name="title">Title.</param>
-        /// <param name="message">Text.</param>
-        /// <param name="okContent">Ok text.</param>
-        /// <param name="okButtonColor">Ok button color.</param>
-        /// <param name="okTextColor">Ok text color.</param>
-        public static async Task<Alert> CreateAsync(object title, object message, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
+        /// <param name="titleText"></param>
+        /// <param name="messageText"></param>
+        /// <param name="okButtonText"></param>
+        /// <param name="okButtonColor"></param>
+        /// <param name="okTextColor"></param>
+        /// <returns></returns>
+        public static async Task<Alert> CreateAsync(string titleText, string messageText, string okButtonText = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
         {
-            var popup = new Alert { TitleContent = title, Message = message, OkButtonContent = okContent ?? "OK" };
+            var popup = new Alert() 
+            { 
+                Target = null, 
+                TitleContent = titleText, 
+                Message = messageText, 
+                OkButtonContent = okButtonText ?? "OK",
+                PushEffect = effect,
+                PushEffectMode = effectMode
+            };
             if (okTextColor != default)
                 popup.OkButtonForeground = okTextColor.ToBrush();
             if (okButtonColor != default)
@@ -104,15 +113,23 @@ namespace P42.Uno.Controls
         /// Creates the Alert
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="title"></param>
-        /// <param name="message"></param>
-        /// <param name="okContent"></param>
+        /// <param name="titleContent"></param>
+        /// <param name="messageContent"></param>
+        /// <param name="okButtonContent"></param>
         /// <param name="okButtonColor"></param>
         /// <param name="okTextColor"></param>
         /// <returns></returns>
-        public static async Task<Alert> CreateAsync(UIElement target, object title, object message, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
+        public static async Task<Alert> CreateAsync(UIElement target, object titleContent, object messageContent, object okButtonContent = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
         {
-            var popup = new Alert() {Target = target, TitleContent = title, Message = message, OkButtonContent = okContent ?? "OK" };
+            var popup = new Alert() 
+            {
+                Target = target, 
+                TitleContent = titleContent, 
+                Message = messageContent, 
+                OkButtonContent = okButtonContent ?? "OK",
+                PushEffect = effect,
+                PushEffectMode = effectMode
+            };
             if (okTextColor != default)
                 popup.OkButtonForeground = okTextColor.ToBrush();
             if (okButtonColor != default)
@@ -133,7 +150,7 @@ namespace P42.Uno.Controls
 
 
         #region Event Handlers
-        protected virtual async void OnOkButtonClicked(object sender, RoutedEventArgs e)
+        protected virtual async void OnOkButtonClickedAsync(object sender, RoutedEventArgs e)
         {
             await PopAsync(PopupPoppedCause.ButtonTapped, true, sender);
         }
@@ -149,7 +166,7 @@ namespace P42.Uno.Controls
         public override async Task PushAsync(bool animated = true)
         {
             await base.PushAsync(animated);
-            _okButton.Click += OnOkButtonClicked;
+            _okButton.Click += OnOkButtonClickedAsync;
         }
 
         /// <summary>
@@ -161,7 +178,7 @@ namespace P42.Uno.Controls
         /// <returns></returns>
         public override async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = true, [CallerMemberName] object trigger = null)
         {
-            _okButton.Click -= OnOkButtonClicked;
+            _okButton.Click -= OnOkButtonClickedAsync;
             await base.PopAsync(cause, animated, trigger);
         }
         #endregion

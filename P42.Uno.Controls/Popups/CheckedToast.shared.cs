@@ -47,16 +47,24 @@ namespace P42.Uno.Controls
 
         #region Construction / Initialization
         /// <summary>
-        /// Create and present the specified title, text, okText, cancelText, okButtonColor, cancelButtonColor, okTextColor and cancelTextColor.
+        /// Create the CheckedToast
         /// </summary>
-        /// <param name="title">Title.</param>
-        /// <param name="message">Text.</param>
-        /// <param name="okContent">Ok text.</param>
-        /// <param name="okButtonColor">Ok button color.</param>
-        /// <param name="okTextColor">Ok text color.</param>
-        public static new async Task<CheckedToast> CreateAsync(object title, object message, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
+        /// <param name="titleText"></param>
+        /// <param name="messageText"></param>
+        /// <param name="okButtonText"></param>
+        /// <param name="okButtonColor"></param>
+        /// <param name="okTextColor"></param>
+        /// <returns></returns>
+        public static new async Task<CheckedToast> CreateAsync(string titleText, string messageText, string okButtonText = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
         {
-            var popup = new CheckedToast { TitleContent = title, Message = message, OkButtonContent = okContent ?? "OK" };
+            var popup = new CheckedToast() 
+            { 
+                TitleContent = titleText, 
+                Message = messageText, 
+                OkButtonContent = okButtonText ?? "OK" ,
+                PushEffect = effect,
+                PushEffectMode = effectMode
+            };
             if (okTextColor != default)
                 popup.OkButtonForeground = okTextColor.ToBrush();
             if (okButtonColor != default)
@@ -69,15 +77,23 @@ namespace P42.Uno.Controls
         /// Creates the CheckedToast
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="title"></param>
-        /// <param name="message"></param>
-        /// <param name="okContent"></param>
+        /// <param name="titleContent"></param>
+        /// <param name="messageContent"></param>
+        /// <param name="okButtonContent"></param>
         /// <param name="okButtonColor"></param>
         /// <param name="okTextColor"></param>
         /// <returns></returns>
-        public static new async Task<CheckedToast> CreateAsync(UIElement target, object title, object message, object okContent = null, Color okButtonColor = default, Color okTextColor = default)
+        public static new async Task<CheckedToast> CreateAsync(UIElement target, object titleContent, object messageContent, object okButtonContent = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
         {
-            var popup = new CheckedToast() { Target = target, TitleContent = title, Message = message, OkButtonContent = okContent ?? "OK" };
+            var popup = new CheckedToast() 
+            { 
+                Target = target, 
+                TitleContent = titleContent, 
+                Message = messageContent, 
+                OkButtonContent = okButtonContent ?? "OK" ,
+                PushEffect = effect,
+                PushEffectMode = effectMode
+            };
             if (okTextColor != default)
                 popup.OkButtonForeground = okTextColor.ToBrush();
             if (okButtonColor != default)
@@ -98,9 +114,9 @@ namespace P42.Uno.Controls
 
 
         #region Event Handlers
-        protected override void OnOkButtonClicked(object sender, RoutedEventArgs e)
+        protected override void OnOkButtonClickedAsync(object sender, RoutedEventArgs e)
         {
-            base.OnOkButtonClicked(sender, e);
+            base.OnOkButtonClickedAsync(sender, e);
         }
         #endregion
     }

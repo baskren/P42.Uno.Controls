@@ -82,7 +82,7 @@ namespace P42.Uno.Controls
                 t.OnMessageChanged(args);
         }
         /// <summary>
-        /// The message's string or UIElement
+        /// The messageContent's string or UIElement
         /// </summary>
         /// <param name="args"></param>
         protected virtual void OnMessageChanged(DependencyPropertyChangedEventArgs args)
@@ -169,7 +169,7 @@ namespace P42.Uno.Controls
             }
         }
         /// <summary>
-        /// Can we scroll if the message exceeds the available space?
+        /// Can we scroll if the messageContent exceeds the available space?
         /// </summary>
         public bool IsMessageScrollable
         {
@@ -183,12 +183,18 @@ namespace P42.Uno.Controls
         /// <summary>
         /// Create and present the Toast
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="messageContent"></param>
         /// <param name="popAfter"></param>
         /// <returns></returns>
-        public static async Task<Toast> CreateAsync(object message, TimeSpan popAfter = default)
+        public static async Task<Toast> CreateAsync(object messageContent, TimeSpan popAfter = default, Effect effect = Effect.Info, EffectMode effectMode = EffectMode.Default)
         {
-            var result = new Toast { Message = message, PopAfter = popAfter, };
+            var result = new Toast 
+            { 
+                Message = messageContent,
+                PopAfter = popAfter,
+                PushEffect = effect,
+                PushEffectMode = effectMode
+            };
             await result.PushAsync();
             return result;
         }
@@ -197,12 +203,19 @@ namespace P42.Uno.Controls
         /// Create and present the specified title and text.
         /// </summary>
         /// <param name="titleContent"></param>
-        /// <param name="message"></param>
+        /// <param name="messageContent"></param>
         /// <param name="popAfter">Will dissappear after popAfter TimeSpan</param>
         /// <returns></returns>
-        public static async Task<Toast> CreateAsync(object titleContent, object message, TimeSpan popAfter = default)
+        public static async Task<Toast> CreateAsync(object titleContent, object messageContent, TimeSpan popAfter = default, Effect effect = Effect.Info, EffectMode effectMode = EffectMode.Default)
         {
-            var result = new Toast { TitleContent = titleContent, Message = message, PopAfter = popAfter, };
+            var result = new Toast 
+            { 
+                TitleContent = titleContent, 
+                Message = messageContent,
+                PopAfter = popAfter,
+                PushEffect = effect,
+                PushEffectMode = effectMode
+            };
             await result.PushAsync();
             return result;
         }
@@ -212,12 +225,20 @@ namespace P42.Uno.Controls
         /// </summary>
         /// <param name="target"></param>
         /// <param name="titleContent"></param>
-        /// <param name="message"></param>
+        /// <param name="messageContent"></param>
         /// <param name="popAfter"></param>
         /// <returns></returns>
-        public static async Task<Toast> CreateAsync(UIElement target, object titleContent, object message, TimeSpan popAfter = default)
+        public static async Task<Toast> CreateAsync(UIElement target, object titleContent, object messageContent, TimeSpan popAfter = default, Effect effect = Effect.Info, EffectMode effectMode = EffectMode.Default)
         {
-            var result = new Toast { Target = target, TitleContent = titleContent, Message = message, PopAfter = popAfter, };
+            var result = new Toast 
+            { 
+                Target = target, 
+                TitleContent = titleContent, 
+                Message = messageContent,
+                PopAfter = popAfter,
+                PushEffect = effect,
+                PushEffectMode = effectMode
+            };
             await result.PushAsync();
             return result;
         }

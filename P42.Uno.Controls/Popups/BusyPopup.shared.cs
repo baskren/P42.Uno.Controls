@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Media;
 namespace P42.Uno.Controls
 {
     /// <summary>
-    /// BusyPopup: popup with spinner, title and message
+    /// BusyPopup: popup with spinner, title and messageContent
     /// </summary>
     [Microsoft.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
@@ -53,14 +53,14 @@ namespace P42.Uno.Controls
 
         #region Factory
         /// <summary>
-        /// Create and present with message
+        /// Create and present with messageContent
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="messageContent"></param>
         /// <param name="popAfter"></param>
         /// <returns></returns>
-        public static new async Task<BusyPopup> CreateAsync(object message, TimeSpan popAfter = default)
+        public static new async Task<BusyPopup> CreateAsync(object messageContent, TimeSpan popAfter = default)
         {
-            var result = new BusyPopup {Message = message, PopAfter = popAfter, };
+            var result = new BusyPopup {Message = messageContent, PopAfter = popAfter, };
             await result.PushAsync();
             return result;
         }
@@ -69,27 +69,27 @@ namespace P42.Uno.Controls
         /// Create and present the specified title and text.
         /// </summary>
         /// <param name="titleContent"></param>
-        /// <param name="message"></param>
+        /// <param name="messageContent"></param>
         /// <param name="popAfter">Will dissappear after popAfter TimeSpan</param>
         /// <returns></returns>
-        public static new async Task<BusyPopup> CreateAsync(object titleContent, object message, TimeSpan popAfter = default)
+        public static new async Task<BusyPopup> CreateAsync(object titleContent, object messageContent, TimeSpan popAfter = default)
         {
-            var result = new BusyPopup { TitleContent = titleContent, Message = message, PopAfter = popAfter, };
+            var result = new BusyPopup { TitleContent = titleContent, Message = messageContent, PopAfter = popAfter, };
             await result.PushAsync();
             return result;
         }
 
         /// <summary>
-        /// Create and present, pointing towards target, with title and message
+        /// Create and present, pointing towards target, with title and messageContent
         /// </summary>
         /// <param name="target"></param>
         /// <param name="title"></param>
-        /// <param name="message"></param>
+        /// <param name="messageContent"></param>
         /// <param name="popAfter"></param>
         /// <returns></returns>
-        public static new async Task<BusyPopup> CreateAsync(UIElement target, object title,  object message, TimeSpan popAfter = default)
+        public static new async Task<BusyPopup> CreateAsync(UIElement target, object title,  object messageContent, TimeSpan popAfter = default)
         {
-            var result = new BusyPopup { Target = target, TitleContent = title, Message = message, PopAfter = popAfter, };
+            var result = new BusyPopup { Target = target, TitleContent = title, Message = messageContent, PopAfter = popAfter, };
             await result.PushAsync();
             return result;
         }

@@ -124,19 +124,29 @@ namespace P42.Uno.Controls
 
         #region Factories
         /// <summary>
-        /// Create the specified title, text, okText, cancelText, okButtonColor, cancelButtonColor, OkButtonContent and cancelTextColor.
+        /// Create the specified titleText, messageText, okText, cancelText, okButtonColor, cancelButtonColor, OkButtonContent and cancelTextColor.
         /// </summary>
-        /// <param name="title">Title.</param>
-        /// <param name="message">Text.</param>
-        /// <param name="okButtonContent">Ok text.</param>
-        /// <param name="cancelButtonContent">Cancel text.</param>
-        /// <param name="okButtonColor">Ok button color.</param>
-        /// <param name="cancelButtonColor">Cancel button color.</param>
-        /// <param name="okButtonTextColor">Ok text color.</param>
-        /// <param name="cancelTextColor">Cancel text color.</param>
-        public static async Task<PermissionPopup> CreateAsync(object title, object message, string okButtonContent = null, object cancelButtonContent = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default)
+        /// <param name="titleText"></param>
+        /// <param name="messageText"></param>
+        /// <param name="okButtonText"></param>
+        /// <param name="cancelButtonText"></param>
+        /// <param name="okButtonColor"></param>
+        /// <param name="cancelButtonColor"></param>
+        /// <param name="okButtonTextColor"></param>
+        /// <param name="cancelTextColor"></param>
+        /// <returns></returns>
+        public static async Task<PermissionPopup> CreateAsync(string titleText, string messageText, string okButtonText = null, string cancelButtonText = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default, Effect effect = Effect.Inquiry, EffectMode effectMode = EffectMode.Default)
         {
-            var popup = new PermissionPopup { TitleContent = title, Message = message, OkButtonContent = okButtonContent ?? "OK", CancelButtonContent = cancelButtonContent ?? "Cancel" };
+            var popup = new PermissionPopup() 
+            { 
+                Target = null, 
+                TitleContent = titleText, 
+                Message = messageText, 
+                OkButtonContent = okButtonText ?? "OK", 
+                CancelButtonContent = cancelButtonText ?? "Cancel",
+                PushEffect = effect,
+                PushEffectMode = effectMode
+            };
             if (okButtonTextColor != default)
                 popup.OkButtonForeground = okButtonTextColor.ToBrush();
             if (okButtonColor != default)
@@ -149,22 +159,33 @@ namespace P42.Uno.Controls
             return popup;
         }
 
+
+
         /// <summary>
-        /// Create the specified target, title, text, okText, cancelText, okButtonColor, cancelButtonColor, OkButtonContent and cancelTextColor.
+        /// Create the specified target, titleContent, text, okText, cancelText, okButtonColor, cancelButtonColor, OkButtonContent and cancelTextColor.
         /// </summary>
         /// <returns>The create.</returns>
         /// <param name="target">Target.</param>
-        /// <param name="title">Title.</param>
-        /// <param name="message">Text.</param>
+        /// <param name="titleContent">Title.</param>
+        /// <param name="messageContent">Text.</param>
         /// <param name="okButtonContent">Ok text.</param>
         /// <param name="cancelButtonContent">Cancel text.</param>
         /// <param name="okButtonColor">Ok button color.</param>
         /// <param name="cancelButtonColor">Cancel button color.</param>
         /// <param name="okButtonTextColor">Ok text color.</param>
         /// <param name="cancelTextColor">Cancel text color.</param>
-        public static async Task<PermissionPopup> CreateAsync(UIElement target, object title, object message, string okButtonContent = null, object cancelButtonContent = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default)
+        public static async Task<PermissionPopup> CreateAsync(UIElement target, object titleContent, object messageContent, object okButtonContent = null, object cancelButtonContent = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default, Effect effect = Effect.Inquiry, EffectMode effectMode = EffectMode.Default)
         {
-            var popup = new PermissionPopup() { Target = target, TitleContent = title, Message = message, OkButtonContent = okButtonContent ?? "OK", CancelButtonContent = cancelButtonContent ?? "Cancel" };
+            var popup = new PermissionPopup() 
+            { 
+                Target = target, 
+                TitleContent = titleContent, 
+                Message = messageContent, 
+                OkButtonContent = okButtonContent ?? "OK", 
+                CancelButtonContent = cancelButtonContent ?? "Cancel",
+                PushEffect = effect,
+                PushEffectMode = effectMode
+            };
             if (okButtonTextColor != default)
                 popup.OkButtonForeground = okButtonTextColor.ToBrush();
             if (okButtonColor != default)
@@ -180,7 +201,7 @@ namespace P42.Uno.Controls
 
 
         #region Event Handlers
-        async void OnCancelButtonClicked(object sender, RoutedEventArgs e)
+        async void OnCancelButtonClickedAsync(object sender, RoutedEventArgs e)
         {
             await PopAsync(PopupPoppedCause.ButtonTapped, true, sender);
         }
@@ -197,7 +218,7 @@ namespace P42.Uno.Controls
         {
             PermissionState = PermissionState.Pending;
             await base.PushAsync(animated);
-            _cancelButton.Click += OnCancelButtonClicked;
+            _cancelButton.Click += OnCancelButtonClickedAsync;
         }
 
         /// <summary>
@@ -209,7 +230,7 @@ namespace P42.Uno.Controls
         /// <returns></returns>
         public override async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = true, [CallerMemberName] object trigger = null)
         {
-            _cancelButton.Click -= OnCancelButtonClicked;
+            _cancelButton.Click -= OnCancelButtonClickedAsync;
 
             if (cause == PopupPoppedCause.ButtonTapped)
             {
