@@ -27,8 +27,38 @@ namespace P42.Uno.Controls
             nameof(OkButtonContent),
             typeof(object),
             typeof(Alert),
-            new PropertyMetadata("OK")
+            new PropertyMetadata("OK", (d,e) => ((Alert)d).OnOkButtonContentChanged(e))
         );
+
+        private void OnOkButtonContentChanged(DependencyPropertyChangedEventArgs args)
+        {
+            if (args.NewValue is TextBlock tb)
+            {
+                var t = tb.Text;
+                if (string.IsNullOrWhiteSpace(t))
+                    t = tb.GetHtml();
+                _okButton.Collapsed(string.IsNullOrWhiteSpace(t));
+                _okButton.Content = tb;
+            }
+            else if (args.NewValue is string text)
+            {
+                _okButton.Collapsed(string.IsNullOrWhiteSpace(text));
+                if (_okButton.IsVisible())
+                {
+                    _okButton.Content = new TextBlock()
+                        .BindFont(_okButton)
+                        .WrapWords()
+                        .SetHtml(text);
+                }
+                else
+                    _okButton.Content = null;
+            }
+            else
+            {
+                _okButton.Content = args.NewValue;
+                _okButton.Visible();
+            }
+        }
 
         /// <summary>
         /// Text or UIElement for "OK" button content

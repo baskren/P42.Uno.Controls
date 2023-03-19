@@ -51,7 +51,15 @@ namespace P42.Uno.Controls
             else if (args.NewValue is string text)
             {
                 _titleBlock.Collapsed(string.IsNullOrWhiteSpace(text));
-                _titleBlock.Content = new TextBlock { Text = text }.BindFont(_titleBlock);
+                if (_titleBlock.IsVisible())
+                {
+                    _titleBlock.Content = new TextBlock()
+                        .BindFont(_titleBlock)
+                        .WrapWords()
+                        .SetHtml(text);
+                }
+                else
+                    _titleBlock.Content = null;
             }
             else
             {
@@ -98,7 +106,15 @@ namespace P42.Uno.Controls
             else if (args.NewValue is string text)
             {
                 _messageBlock.Collapsed(string.IsNullOrWhiteSpace(text));
-                _messageBlock.Content = new TextBlock { Text = text }.BindFont(_messageBlock);
+                if (_messageBlock.IsVisible())
+                {
+                    _messageBlock.Content = new TextBlock()
+                        .BindFont(_messageBlock)
+                        .WrapWords()
+                        .SetHtml(text);
+                }
+                else
+                    _messageBlock.Content = null;
             }
             else
             {

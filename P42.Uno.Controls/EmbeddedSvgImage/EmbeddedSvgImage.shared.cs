@@ -53,21 +53,32 @@ namespace P42.Uno.Controls
         {
             Background = Colors.Transparent.ToBrush();
             PaintSurface += OnPaintSurface;
+            MinHeight = 20;
+            MinWidth = 20;
 #if __IOS__
             Opaque = false;
 #endif
         }
 
-        public EmbeddedSvgImage(Assembly assembly, string resourceId) : this()
+        public EmbeddedSvgImage(string resourceId, Assembly assembly = null) : this()
         {
-            SetSource(assembly, resourceId);
+            SetSource(resourceId, assembly);
         }
 #endregion
 
 
-        public void SetSource(Assembly assembly, string resourceId)
+        public void SetSource(string resourceId, Assembly assembly = null)
         {
-            using (var stream = assembly.GetManifestResourceStream(resourceId))
+            _skSvg = null;
+
+            if (string.IsNullOrWhiteSpace(resourceId))
+                return;
+
+            assembly = assembly ?? P42.Utils.Uno.EmbeddedResourceExtensions.FindAssemblyForResourceId(resourceId);
+            if (assembly == null)
+                return;
+
+            using (var stream = P42.Utils.Uno.EmbeddedResourceExtensions.FindStreamForResourceId(resourceId, assembly))
             {
                 if (stream is null)
                 {
@@ -88,7 +99,7 @@ namespace P42.Uno.Controls
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             var canvas = e.Surface?.Canvas;
-            if (canvas == null || _skSvg == null)
+            if (canvas == null)
                 return;
 
             var clipBounds = canvas.LocalClipBounds;
@@ -97,6 +108,8 @@ namespace P42.Uno.Controls
             var fillRect = e.Info.Rect;
 
             workingCanvas.Clear();
+            if (_skSvg is null)
+                return;
             workingCanvas.Save();
 
             var fillRectAspect = (float)fillRect.Width / (float)fillRect.Height;

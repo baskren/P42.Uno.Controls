@@ -27,8 +27,38 @@ namespace P42.Uno.Controls
             nameof(CancelButtonContent),
             typeof(object),
             typeof(PermissionPopup),
-            new PropertyMetadata("Cancel")
+            new PropertyMetadata("Cancel", (d,e) => ((PermissionPopup)d).OnCancelButtonContentChanged(e))
         );
+
+        private void OnCancelButtonContentChanged(DependencyPropertyChangedEventArgs args)
+        {
+            if (args.NewValue is TextBlock tb)
+            {
+                var t = tb.Text;
+                if (string.IsNullOrWhiteSpace(t))
+                    t = tb.GetHtml();
+                _cancelButton.Collapsed(string.IsNullOrWhiteSpace(t));
+                _cancelButton.Content = tb;
+            }
+            else if (args.NewValue is string text)
+            {
+                _cancelButton.Collapsed(string.IsNullOrWhiteSpace(text));
+                if (_cancelButton.IsVisible())
+                {
+                    _cancelButton.Content = new TextBlock()
+                        .BindFont(_cancelButton)
+                        .WrapWords()
+                        .SetHtml(text);
+                }
+                else
+                    _cancelButton.Content = null;
+            }
+            else
+            {
+                _cancelButton.Content = args.NewValue;
+                _cancelButton.Visible();
+            }
+        }
 
         /// <summary>
         /// Content for Cancel button
