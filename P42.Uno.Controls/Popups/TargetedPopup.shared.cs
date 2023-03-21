@@ -836,6 +836,7 @@ namespace P42.Uno.Controls
         async Task InnerPushAsync(bool animated)
         { 
             PushPopState = PushPopState.Pushing;
+            await OnPushBeginAsync();
             _popCompletionSource?.TrySetResult(new PopupPoppedEventArgs(PopupPoppedCause.NotPushed, false));
             _popCompletionSource = null;
 
@@ -845,7 +846,6 @@ namespace P42.Uno.Controls
             // required to render popup the first time.
             // UpdateOpacity(0.001);
 
-            await OnPushBeginAsync();
 
             try
             {
@@ -874,9 +874,9 @@ namespace P42.Uno.Controls
                     });
                 }
 
-                await OnPushEndAsync();
 
                 PushPopState = PushPopState.Pushed;
+                await OnPushEndAsync();
                 Pushed?.Invoke(this, EventArgs.Empty);
                 _pushCompletionSource?.TrySetResult(true);
             }
@@ -910,11 +910,11 @@ namespace P42.Uno.Controls
             _pushCompletionSource = null;
 
             PushPopState = PushPopState.Popping;
+            await OnPopBeginAsync();
 
             PoppedCause = cause;
             PoppedTrigger = trigger;
 
-            await OnPopBeginAsync();
 
             if (animated)
             {
@@ -924,6 +924,7 @@ namespace P42.Uno.Controls
             }
 
             CompletePop(PoppedCause, PoppedTrigger);
+            await OnPopEndAsync();
         }
 
         void CompletePop(PopupPoppedCause poppedCause, object poppedTrigger)
