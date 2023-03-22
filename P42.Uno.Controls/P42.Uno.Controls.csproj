@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <!-- NUGET PACKAGE GENERATION -->
-  <PropertyGroup Condition=" $(P42LocalNuGet) != '' AND !$(P42TargetPlatform.ToLower().Contains('android')) AND !$(P42TargetPlatform.ToLower().Contains('ios')) AND !$(P42TargetPlatform.ToLower().Contains('mac')) AND !$(P42TargetPlatform.ToLower().Contains('windows')) AND !$(P42TargetPlatform.ToLower().Contains('tizen')) ">
+  <PropertyGroup Condition=" $(P42_LocalNuGetFolderPath) != '' AND !$(P42_TargetOnlyThisPlatform.ToLower().Contains('android')) AND !$(P42_TargetOnlyThisPlatform.ToLower().Contains('ios')) AND !$(P42_TargetOnlyThisPlatform.ToLower().Contains('mac')) AND !$(P42_TargetOnlyThisPlatform.ToLower().Contains('windows')) AND !$(P42_TargetOnlyThisPlatform.ToLower().Contains('tizen')) ">
    
     <Version>4.7.44</Version>
-    <PackageId Condition=" $(P42TargetPlatform.ToLower.Contains('wasm')) ">$(MSBuildProjectName).Wasm</PackageId>
+    <PackageId Condition=" $(P42_TargetOnlyThisPlatform.ToLower.Contains('wasm')) ">$(MSBuildProjectName).Wasm</PackageId>
     <!--
     Force all projects of this folder to use a different output
     path to avoid intermediate output collisions
@@ -53,12 +53,12 @@
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
   </ItemGroup>
-  <ItemGroup Condition=" $(Bc3Source.ToLower.Contains('nuget')) AND $(P42TargetPlatform.ToLower().Contains('wasm')) ">
+  <ItemGroup Condition=" $(Bc3Source.ToLower.Contains('nuget')) AND $(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) ">
     <PackageReference Include="P42.Utils" Version="1.0.3" />
     <PackageReference Include="P42.Utils.Uno.Wasm" Version="4.7.44" />
     <PackageReference Include="P42.Uno.Markup.Wasm" Version="4.7.44" />
   </ItemGroup>
-  <ItemGroup Condition=" $(Bc3Source.ToLower.Contains('nuget')) AND !$(P42TargetPlatform.ToLower().Contains('wasm')) ">
+  <ItemGroup Condition=" $(Bc3Source.ToLower.Contains('nuget')) AND !$(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) ">
     <PackageReference Include="P42.Utils" Version="1.0.3" />
     <PackageReference Include="P42.Utils.Uno" Version="4.7.44" />
     <PackageReference Include="P42.Uno.Markup" Version="4.7.44" />
@@ -92,17 +92,17 @@
   <!-- NOT Windows -->
   <ItemGroup Condition=" !$(TargetFramework.Contains('windows')) ">
     <PackageReference Include="Uno.WinUI.Lottie" Version="4.7.44" />
-    <PackageReference Condition="! $(P42TargetPlatform.ToLower().Contains('wasm')) " Include="Uno.WinUI.Svg" Version="4.7.44" />
+    <PackageReference Condition="! $(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) " Include="Uno.WinUI.Svg" Version="4.7.44" />
     <PackageReference Include="Svg.Skia" Version="0.5.16" />
 	  <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
   </ItemGroup>
 
 	<!-- .NetStandard Bait -->
-	<ItemGroup Condition=" !$(P42TargetPlatform.ToLower().Contains('wasm')) AND $(TargetFramework.ToLower().Equals('net7.0')) ">
+	<ItemGroup Condition=" !$(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) AND $(TargetFramework.ToLower().Equals('net7.0')) ">
 	</ItemGroup>
 
 	<!-- WASM -->
-	<ItemGroup Condition=" $(P42TargetPlatform.ToLower().Contains('wasm')) ">
+	<ItemGroup Condition=" $(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) ">
     <!-- THIS WILL CAUSE ASSETS TO NOT BE ADDED TO BUILD FILES.  FORTUNATELY, WASM CALLS STILL WORK SINCE THIS PACKAGE IS REFERENCED IN P42.Utils.Uno
 		<PackageReference Include="Uno.WinUI.WebAssembly" Version="4.7.44" />
     -->
