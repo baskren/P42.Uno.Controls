@@ -195,10 +195,10 @@ namespace P42.Uno.Controls
 
         #region Private Properties
         Color WorkingBackgroundColor => BackgroundColor == default
-            ? SystemColors.ColorButtonFace
+            ? SystemColors.AltHigh
             : BackgroundColor;
         Color WorkingBorderColor => BorderColor == default
-            ? SystemColors.ChromeDisabledHigh
+            ? SystemColors.BaseMedium
             : BorderColor;
         #endregion
 

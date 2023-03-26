@@ -67,8 +67,8 @@ namespace P42.Uno.Controls
             RootFrame.Current.SizeChanged += OnRootFrameSizeChanged;
 
             ActualPointerDirection = PointerDirection.None;
-            Background = SystemTeachingTipBrushes.Background;
-            BorderBrush = SystemTeachingTipBrushes.Border;
+            //Background = SystemTeachingTipBrushes.Background;
+            //BorderBrush = SystemTeachingTipBrushes.Border;
             Foreground = SystemTeachingTipBrushes.Foreground;
             PageOverlayBrush = new SolidColorBrush(Colors.Black.WithAlpha(0.25));
             HorizontalContentAlignment = HorizontalAlignment.Left;

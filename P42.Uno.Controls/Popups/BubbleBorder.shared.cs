@@ -608,11 +608,14 @@ namespace P42.Uno.Controls
         #region Construction
         public BubbleBorder()
         {
+
             base.Margin = new Thickness(0);
             base.Padding = new Thickness(0);
 
-            BorderColor = P42.Uno.Markup.SystemTeachingTipBrushes.Border.AsColor();
-            BackgroundColor = P42.Uno.Markup.SystemTeachingTipBrushes.Background.AsColor();
+            //BorderColor = P42.Uno.Markup.SystemTeachingTipBrushes.Border.AsColor();
+            //BorderColor = SystemColors.ChromeAltLow;
+            //BackgroundColor = P42.Uno.Markup.SystemTeachingTipBrushes.Background.AsColor();
+            //BackgroundColor = SystemColors.AltHigh;
 
             this
                 .Children
