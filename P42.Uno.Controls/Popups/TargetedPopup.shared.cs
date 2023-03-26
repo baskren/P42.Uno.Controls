@@ -1146,11 +1146,11 @@ namespace P42.Uno.Controls
                 if (VerticalAlignment == VerticalAlignment.Top)
                     axialPosition = shortest * PointerBias;
                 else if (VerticalAlignment == VerticalAlignment.Bottom)
-                    axialPosition = stats.BorderSize.Height - shortest * PointerBias;
+                    axialPosition = Math.Max(0, stats.BorderSize.Height - shortest * PointerBias);
                 else if (targetBounds.Height < stats.BorderSize.Height)
-                    axialPosition = (targetBounds.Top - margin.Top) + targetBounds.Height * PointerBias;
+                    axialPosition = Math.Max(0, (targetBounds.Top - margin.Top) + targetBounds.Height * PointerBias);
                 else
-                    axialPosition = margin.Top + shortest * PointerBias;
+                    axialPosition = stats.BorderSize.Height * PointerBias;
 
                 //System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentAndMargins : PointerAxialPosition:[{axialPosition}]");
             }
@@ -1187,11 +1187,11 @@ namespace P42.Uno.Controls
                 if (HorizontalAlignment == HorizontalAlignment.Left)
                     axialPosition = shortest * PointerBias;
                 else if (HorizontalAlignment == HorizontalAlignment.Right)
-                    axialPosition = stats.BorderSize.Width - shortest * PointerBias;
+                    axialPosition = Math.Max(0, stats.BorderSize.Width - shortest * PointerBias);
                 else if (targetBounds.Width < stats.BorderSize.Width)
-                    axialPosition = (targetBounds.Left - margin.Left) + targetBounds.Width * PointerBias;
+                    axialPosition = Math.Max(0,(targetBounds.Left - margin.Left) + targetBounds.Width * PointerBias);
                 else
-                    axialPosition = margin.Left + shortest * PointerBias;
+                    axialPosition = stats.BorderSize.Width * PointerBias;
             }
 
             return new AlignmentMarginsAndPointer(stats.BorderSize, hzAlign, vtAlign, margin, actualPointerDirection, axialPosition);
