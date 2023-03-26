@@ -222,6 +222,12 @@ namespace P42.Uno.Controls
             return rootFrame;
         }
 
+        public static void HidePopups()
+            => Grid.Visibility = Visibility.Collapsed;
+
+        public static void ShowPopups()
+            => Grid.Visibility = Visibility.Visible;
+
         internal static void Add(TargetedPopup popup)
         {
             if (!Grid.Children.Contains(popup.ContentBorder))
