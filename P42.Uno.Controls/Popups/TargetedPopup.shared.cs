@@ -856,6 +856,7 @@ namespace P42.Uno.Controls
                 RootFrame.Add(this);
                 await Task.Delay(5);
 
+                await Feedback.PlayAsync(PushEffect, PushEffectMode);
                 if (animated)
                 {
                     void action(double percent) => UpdateOpacity(Opacity * percent);
@@ -863,7 +864,6 @@ namespace P42.Uno.Controls
                     await animator.RunAsync();
                 }
                 UpdateOpacity(Opacity);
-                await Feedback.PlayAsync(PushEffect, PushEffectMode);
 
                 if (PopAfter > default(TimeSpan))
                 {
