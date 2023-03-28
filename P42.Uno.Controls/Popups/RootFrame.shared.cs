@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -14,8 +15,6 @@ namespace P42.Uno.Controls
 {
     public partial class RootFrame : Frame
     {
-
-
         #region Frame Properties
 
         public new int BackStackDepth => InnerFrame?.BackStackDepth ?? base.BackStackDepth;
@@ -146,10 +145,11 @@ namespace P42.Uno.Controls
 
         #region Private Properties
         static Grid _grid;
-        static Grid Grid => _grid ??= (Grid)Current.FindChildByName("PopupGrid");
+        internal static Grid Grid => _grid ??= (Grid)Current.FindChildByName("PopupGrid");
 
         static RootFrame _current;
         internal static RootFrame Current => _current ??= Inject();
+
         #endregion
 
 
@@ -163,6 +163,7 @@ namespace P42.Uno.Controls
         {
             DefaultStyleKey = typeof(RootFrame);
             _current = this;
+            SizeChanged += Popups.OnRootFrameSizeChanged;
         }
 
         public RootFrame(Frame innerFrame) : this()
@@ -222,32 +223,23 @@ namespace P42.Uno.Controls
             return rootFrame;
         }
 
+        [Obsolete("Use Popups.Visibility property instead")]
         public static void HidePopups()
-            => Grid.Visibility = Visibility.Collapsed;
+            => throw new NotSupportedException("Use Popups.Visibility property instead");
 
+        [Obsolete("Use Popups.Visibility property instead")]
         public static void ShowPopups()
-            => Grid.Visibility = Visibility.Visible;
+            => throw new NotSupportedException("Use Popups.Visibility property instead");
 
-        internal static void Add(TargetedPopup popup)
+        public static bool TryGoBack()
         {
-            if (!Grid.Children.Contains(popup.ContentBorder))
+            if (_current != null && _current.CanGoBack)
             {
-                Grid.Children.Add(popup.PageOverlay);
-                Grid.Children.Add(popup.ShadowBorder);
-                Grid.Children.Add(popup.ContentBorder);
+                _current.GoBack();
+                return true;
             }
+            return false;
         }
-
-        internal static void Remove(TargetedPopup popup)
-        {
-            if (Grid.Children.Contains(popup.ContentBorder))
-            {
-                Grid.Children.Remove(popup.PageOverlay);
-                Grid.Children.Remove(popup.ShadowBorder);
-                Grid.Children.Remove(popup.ContentBorder);
-            }
-        }
-
         #endregion
 
 

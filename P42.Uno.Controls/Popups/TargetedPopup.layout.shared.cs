@@ -64,7 +64,7 @@ namespace P42.Uno.Controls
                 .IsShadow();
 
 
-            RootFrame.Current.SizeChanged += OnRootFrameSizeChanged;
+            Popups.FrameSizeChanged += OnPopupFrameSizeChanged;
 
             ActualPointerDirection = PointerDirection.None;
             //Background = SystemTeachingTipBrushes.Background;
@@ -79,7 +79,7 @@ namespace P42.Uno.Controls
 
         }
 
-        protected virtual void OnRootFrameSizeChanged(object sender, SizeChangedEventArgs e)
+        protected virtual void OnPopupFrameSizeChanged(object sender, SizeChangedEventArgs e)
             => UpdateMarginAndAlignment();
 
         protected virtual void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)

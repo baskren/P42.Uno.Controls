@@ -853,7 +853,7 @@ namespace P42.Uno.Controls
                 UpdateMarginAndAlignment();
 
                 UpdateOpacity(0.0);
-                RootFrame.Add(this);
+                Popups.Add(this);
                 await Task.Delay(5);
 
                 await Feedback.PlayAsync(PushEffect, PushEffectMode);
@@ -930,7 +930,7 @@ namespace P42.Uno.Controls
         void CompletePop(PopupPoppedCause poppedCause, object poppedTrigger)
         {
             UpdateOpacity(0.001);
-            RootFrame.Remove(this);
+            Popups.Remove(this);
 
             PushPopState = PushPopState.Popped;
             var result = new PopupPoppedEventArgs(poppedCause, poppedTrigger);
@@ -1091,7 +1091,7 @@ namespace P42.Uno.Controls
 #if __ANDROID__
             if (Target != null)
             {
-                var shift = AppWindow.StatusBarHeight(RootFrame.Current);
+                var shift = AppWindow.StatusBarHeight();
                 targetBounds = new Rect(targetBounds.Left, targetBounds.Top - shift, targetBounds.Width, targetBounds.Height);
             }
 #endif
