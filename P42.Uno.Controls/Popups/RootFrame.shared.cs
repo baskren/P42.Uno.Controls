@@ -175,28 +175,48 @@ namespace P42.Uno.Controls
 
         #region INavigate Methods
         public new string GetNavigationState()
-            => InnerFrame.GetNavigationState();
+            => InnerFrame?.GetNavigationState() ?? base.GetNavigationState();
 
         public new void GoBack()
-            => InnerFrame.GoBack();
+        {
+            if (InnerFrame is null)
+                base.GoBack();
+            else
+                InnerFrame.GoBack();
+        }
 
         public new void GoBack(NavigationTransitionInfo transitionInfoOverride)
-            => InnerFrame.GoBack(transitionInfoOverride);
+        {
+            if (InnerFrame is null)
+                base.GoBack(transitionInfoOverride);
+            else
+                InnerFrame.GoBack(transitionInfoOverride);
+        }
 
         public new void GoForward()
-            => InnerFrame.GoForward();
+        {
+            if (InnerFrame is null)
+                base.GoForward();
+            else
+                InnerFrame.GoForward();
+        }
 
         public new bool Navigate(Type sourcePageType)
-            => InnerFrame.Navigate(sourcePageType);
-
+            => InnerFrame?.Navigate(sourcePageType) ?? base.Navigate(sourcePageType);
+         
         public new bool Navigate(Type sourcePageType, object parameter)
-            => InnerFrame.Navigate(sourcePageType, parameter);
+            => InnerFrame?.Navigate(sourcePageType, parameter) ?? base.Navigate(sourcePageType, parameter);
 
         public new bool Navigate(Type sourcePageType, object parameter, NavigationTransitionInfo infoOverride)
-            => InnerFrame.Navigate(sourcePageType, parameter, infoOverride);
+            => InnerFrame?.Navigate(sourcePageType, parameter, infoOverride) ?? base.Navigate(sourcePageType, parameter, infoOverride);
 
         public new void SetNavigationState(string navigationState)
-            => InnerFrame.SetNavigationState(navigationState);
+        {
+            if (InnerFrame is null)
+                base.SetNavigationState(navigationState);
+            else
+                InnerFrame.SetNavigationState(navigationState);
+        }
         #endregion
 
 
