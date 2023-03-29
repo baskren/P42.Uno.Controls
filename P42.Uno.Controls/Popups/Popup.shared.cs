@@ -54,6 +54,9 @@ namespace P42.Uno.Controls
 
         public static async Task<bool> TryPopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled)
         {
+            if (Visibility == Visibility.Collapsed)
+                return false;
+
             if (Stack.LastOrDefault() is TargetedPopup popup)
             {
                 await popup.PopAsync(cause);

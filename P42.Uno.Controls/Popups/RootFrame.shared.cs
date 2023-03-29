@@ -243,14 +243,6 @@ namespace P42.Uno.Controls
             return rootFrame;
         }
 
-        [Obsolete("Use Popups.Visibility property instead")]
-        public static void HidePopups()
-            => throw new NotSupportedException("Use Popups.Visibility property instead");
-
-        [Obsolete("Use Popups.Visibility property instead")]
-        public static void ShowPopups()
-            => throw new NotSupportedException("Use Popups.Visibility property instead");
-
         public static bool TryGoBack()
         {
             if (_current != null && _current.CanGoBack)
