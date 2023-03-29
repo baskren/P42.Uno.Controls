@@ -772,7 +772,7 @@ namespace P42.Uno.Controls
 
             _contentPresenter.Margin = margin;
 
-            System.Diagnostics.Debug.WriteLine($"BubbleBorder.ContentPresenter.Margin : [{margin}]");
+            //System.Diagnostics.Debug.WriteLine($"BubbleBorder.ContentPresenter.Margin : [{margin}]");
 
             _contentPresenter.CornerRadius = new CornerRadius(
                     Math.Max(0, CornerRadius - borderWidth - (Padding.Left + Padding.Top)/2.0),

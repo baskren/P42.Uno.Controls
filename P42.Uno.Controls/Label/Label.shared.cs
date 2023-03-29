@@ -693,7 +693,7 @@ namespace P42.Uno.Controls
 					control.Measure(new Size(width, double.PositiveInfinity));
 				}
 				tmpHt = control.DesiredSize.Height;
-				System.Diagnostics.Debug.WriteLine($"tmpHt: {tmpHt} linesHeight: {linesHeight}");
+				//System.Diagnostics.Debug.WriteLine($"tmpHt: {tmpHt} linesHeight: {linesHeight}");
 			}
 
 			// the following doesn't apply when where growing 
@@ -711,7 +711,7 @@ namespace P42.Uno.Controls
 			result = new Size(Math.Ceiling(control.DesiredSize.Width), Math.Ceiling(tmpHt));
 
 			control.MaxLines = Lines > 0 ? Lines : MaxLines; // int.MaxValue / 3;
-			System.Diagnostics.Debug.WriteLine($"control.MaxLines: {control.MaxLines}");
+			//System.Diagnostics.Debug.WriteLine($"control.MaxLines: {control.MaxLines}");
 			control.MaxWidth = MaxWidth;
 			control.MaxHeight = MaxHeight;
 			control.MinHeight = MinHeight;
@@ -799,7 +799,7 @@ namespace P42.Uno.Controls
 			control.FontSize = mid;
 			control.Measure(new Size(availWidth-1, double.PositiveInfinity));
 			var linesHeight = control.HeightForLinesAtFontSize(lines, mid);
-			System.Diagnostics.Debug.WriteLine($"mid: {mid} midHeight: {linesHeight} desiredHeight: {control.DesiredSize.Height}");
+			//System.Diagnostics.Debug.WriteLine($"mid: {mid} midHeight: {linesHeight} desiredHeight: {control.DesiredSize.Height}");
 			if (control.DesiredSize.Width <= availWidth)
             {
 				//if (control.DesiredSize.Height == linesHeight)
