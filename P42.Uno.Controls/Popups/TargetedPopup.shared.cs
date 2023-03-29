@@ -1208,7 +1208,7 @@ namespace P42.Uno.Controls
         DirectionStats BestFit(Thickness availableSpace, Size cleanSize, Thickness safeMargin)
         {
 
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit({availableSpace}, {cleanSize}, {safeMargin}) ");
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit(available:[{availableSpace}], clean:[{cleanSize}], safe:[{safeMargin}]) ");
 
             // given the amount of free space, determine if the borderSize will fit 
             var windowSize = AppWindow.Size(this);
@@ -1228,29 +1228,48 @@ namespace P42.Uno.Controls
 
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit : cleanStat=[{cleanStat}]");
 
+
+            // Check if clean border fits in preferred pointer quadrants
+            var cleanStats = GetRectangleBorderStatsForDirection(PreferredPointerDirection | FallbackPointerDirection, cleanStat, availableSpace);
+            if (GetBestDirectionStat(cleanStats, PreferredPointerDirection) is DirectionStats stats1)
+                return stats1;
+
+
+            // Check if border + content could fit in any of the preferred pointer quadrants
+            //var borderContentStats = GetMeasuredStatsForDirection(PreferredPointerDirection | FallbackPointerDirection, cleanStat, availableSpace, windowSpace);
+            //if (GetBestDirectionStat(borderContentStats, PreferredPointerDirection) is DirectionStats stats2)
+            //    return stats2;
+
+            // Check if clean border fits in unchecked fallback pointer quadrants
+            if (GetBestDirectionStat(cleanStats, FallbackPointerDirection) is DirectionStats stats3)
+                return stats3;
+
+            // Check if border + content could fit in any of the unchecked fallback pointer quadrants
+            //if (GetBestDirectionStat(borderContentStats, FallbackPointerDirection) is DirectionStats stats4)
+            //    return stats4;
+
+
+            /*
             #region Check if clean border fits in preferred pointer quadrants
             // see if the existing measurement data works
-            if (GetBestDirectionStat(GetRectangleBorderStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace), cleanStat) is DirectionStats stats0)
+            if (GetBestDirectionStat(GetRectangleBorderStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace)) is DirectionStats stats0)
                 return stats0;
             #endregion
 
-
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit : A");
-
 
             #region Check if border + content could fit in any of the preferred pointer quadrants
             // at this point in time valid and invalid fits are in the stats list
-            if (GetBestDirectionStat(GetMeasuredStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace, windowSpace), cleanStat) is DirectionStats stats1)
+            if (GetBestDirectionStat(GetMeasuredStatsForDirection(PreferredPointerDirection, cleanStat, availableSpace, windowSpace)) is DirectionStats stats1)
                 return stats1;
             #endregion
-
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit : B");
 
             // the stats list only contains invalid fallback fits ... but perhaps not all fallback fits have yet been tried
             var uncheckedFallbackPointerDirection = (FallbackPointerDirection ^ PreferredPointerDirection) | FallbackPointerDirection;
 
             #region Check if clean border fits in unchecked fallback pointer quadrants
-            if (GetBestDirectionStat(GetRectangleBorderStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace), cleanStat) is DirectionStats stats2)
+            if (GetBestDirectionStat(GetRectangleBorderStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace)) is DirectionStats stats2)
                 return stats2;
             #endregion
 
@@ -1258,23 +1277,25 @@ namespace P42.Uno.Controls
 
 
             #region Check if border + content could fit in any of the unchecked fallback pointer quadrants
-            if (GetBestDirectionStat(GetMeasuredStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace, windowSpace), cleanStat) is DirectionStats stats3)
+            if (GetBestDirectionStat(GetMeasuredStatsForDirection(uncheckedFallbackPointerDirection, cleanStat, availableSpace, windowSpace)) is DirectionStats stats3)
                 return stats3;
             #endregion
 
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit : D");
+                        */
 
             return cleanStat;
         }
 
-        static DirectionStats? GetBestDirectionStat(List<DirectionStats> stats, DirectionStats cleanStats)
+        static DirectionStats? GetBestDirectionStat(List<DirectionStats> stats, PointerDirection pointerDirections)
         {
-            for (int i=stats.Count-1; i>=0; i--)
-            {
-                var s = stats[i];
-                if (s.BorderSize.Width < cleanStats.BorderSize.Width || s.BorderSize.Height < cleanStats.BorderSize.Height)
-                    stats.RemoveAt(i);
-            }
+            if (stats.Where(s=> (s.PointerDirection & pointerDirections) > 0).ToList() is List<DirectionStats> acceptable && acceptable.Any())
+                return GetBestDirectionStat(acceptable);
+            return null;
+        }
+
+        static DirectionStats? GetBestDirectionStat(List<DirectionStats> stats)
+        {
             if (stats.Count == 1)
                 return stats[0];
             if (stats.Count > 1)
@@ -1375,7 +1396,7 @@ namespace P42.Uno.Controls
         {
             //System.Diagnostics.Debug.WriteLine(GetType() + ".GetRectangleBorderStatsForDirection cleanStat:["+cleanStat+"]");
             var stats = new List<DirectionStats>();
-            if (pointerDirection.LeftAllowed() && (availableSpace.Right - cleanStat.BorderSize.Width) >= PointerLength)
+            if (pointerDirection.LeftAllowed() && (availableSpace.Right - cleanStat.BorderSize.Width) >= PointerLength && availableSpace.Vertical() > cleanStat.BorderSize.Height)
             {
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Left;
@@ -1388,7 +1409,7 @@ namespace P42.Uno.Controls
                 }
             }
 
-            if (pointerDirection.RightAllowed() && (availableSpace.Left - cleanStat.BorderSize.Width) >= PointerLength)
+            if (pointerDirection.RightAllowed() && (availableSpace.Left - cleanStat.BorderSize.Width) >= PointerLength && availableSpace.Vertical() > cleanStat.BorderSize.Height)
             {
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Right;
@@ -1401,7 +1422,7 @@ namespace P42.Uno.Controls
                 }
             }
 
-            if (pointerDirection.UpAllowed() && (availableSpace.Bottom - cleanStat.BorderSize.Height) >= PointerLength)
+            if (pointerDirection.UpAllowed() && (availableSpace.Bottom - cleanStat.BorderSize.Height) >= PointerLength && availableSpace.Horizontal() > cleanStat.BorderSize.Width)
             {
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Up;
@@ -1414,7 +1435,7 @@ namespace P42.Uno.Controls
                 }
             }
 
-            if (pointerDirection.DownAllowed() && (availableSpace.Top - cleanStat.BorderSize.Height) >= PointerLength)
+            if (pointerDirection.DownAllowed() && (availableSpace.Top - cleanStat.BorderSize.Height) >= PointerLength && availableSpace.Horizontal() > cleanStat.BorderSize.Width)
             {
                 var stat = cleanStat;
                 stat.PointerDirection = PointerDirection.Down;
@@ -1515,12 +1536,35 @@ namespace P42.Uno.Controls
 
             var width = available.Width;
             var height = available.Height;
+
+            if (Content is null)
+            {
+                if (this.HasPrescribedWidth())
+                    width = Width;
+                else if (this.HasMinWidth())
+                    width = MinWidth;
+                else
+                    width = Math.Min(MinWidth * 2, MaxWidth);
+
+                if (this.HasPrescribedHeight())
+                    height = Height;
+                else if (this.HasMinHeight())
+                    height = MinHeight;
+                else
+                    height = Math.Min(MinHeight * 2, MaxHeight);
+
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureCleanBorder : IS EMPTY  [{width}, {height}]");
+                return new Size(width, height);
+            }
+
+
             if (this.HasPrescribedWidth())
             {
                 System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureCleanBorder HasPrescribedWidth");
                 //width = Math.Min(Width, width);
                 width = Width;
             }
+            
             if (this.HasPrescribedHeight())
             {
                 System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureCleanBorder HasPrescribedHeight");
@@ -1542,12 +1586,6 @@ namespace P42.Uno.Controls
                 height = Math.Min(height, MaxHeight);
 
             //System.Diagnostics.Debug.WriteLine($"TargetedPopup.MeasureCleanBorder width[{width}][{height}]");
-
-            if (Content is null)
-            {
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.MeasureCleanBorder : IS EMPTY ");
-                return new Size(width, height);
-            }
 
             if (HorizontalAlignment == HorizontalAlignment.Stretch && VerticalAlignment == VerticalAlignment.Stretch)
             {
