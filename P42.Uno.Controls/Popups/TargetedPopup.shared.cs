@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Shapes;
 using Microsoft.UI;
 using Windows.UI.ViewManagement;
+using P42.Utils;
 
 namespace P42.Uno.Controls
 {
@@ -86,11 +87,12 @@ namespace P42.Uno.Controls
         #endregion VerticalAlignment Property
 
         #region Background Property
+        [Obsolete("Use BackgroundColor, instead")]
         public static readonly new DependencyProperty BackgroundProperty = DependencyProperty.Register(
             nameof(Background),
             typeof(Brush),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(Brush))
+            new PropertyMetadata(default)
         );
         [Obsolete("Use BackgroundColor, instead")]
         public new Brush Background
@@ -111,9 +113,13 @@ namespace P42.Uno.Controls
             nameof(BackgroundColor),
             typeof(Color),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(Color))
+            new PropertyMetadata(SkiaBubble.DefaultFillColor)
         );
+#if __IOS__
+        public new Color BackgroundColor
+#else
         public Color BackgroundColor
+#endif
         {
             get => (Color)GetValue(BackgroundColorProperty);
             set => SetValue(BackgroundColorProperty, value);
@@ -121,11 +127,12 @@ namespace P42.Uno.Controls
         #endregion BackgroundColor Property
 
         #region BorderBrush Property
+        [Obsolete("Use BorderColor, instead")]
         public static readonly new DependencyProperty BorderBrushProperty = DependencyProperty.Register(
             nameof(BorderBrush),
             typeof(Brush),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(Brush))
+            new PropertyMetadata(default)
         );
         [Obsolete("Use BorderColor, instead")]
         public new Brush BorderBrush
@@ -146,7 +153,7 @@ namespace P42.Uno.Controls
             nameof(BorderColor),
             typeof(Color),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(Color))
+            new PropertyMetadata(SkiaBubble.DefaultBorderColor)
         );
         public Color BorderColor
         {
@@ -156,11 +163,12 @@ namespace P42.Uno.Controls
         #endregion BorderColor Property
 
         #region BorderThickness Property
+        [Obsolete("Use BorderWidth instead")]
         public static readonly new DependencyProperty BorderThicknessProperty = DependencyProperty.Register(
             nameof(BorderThickness),
             typeof(Thickness),
             typeof(TargetedPopup),
-            new PropertyMetadata(default(Thickness))
+            new PropertyMetadata(new Thickness(SkiaBubble.DefaultBorderWidth))
         );
         [Obsolete("Use BorderWidth instead")]
         public new Thickness BorderThickness
@@ -179,7 +187,7 @@ namespace P42.Uno.Controls
             nameof(BorderWidth),
             typeof(double),
             typeof(TargetedPopup),
-            new PropertyMetadata(1.0)
+            new PropertyMetadata(SkiaBubble.DefaultBorderWidth)
         );
         public double BorderWidth
         {
@@ -193,7 +201,7 @@ namespace P42.Uno.Controls
             nameof(CornerRadius),
             typeof(double),
             typeof(TargetedPopup),
-            new PropertyMetadata(6.0)
+            new PropertyMetadata(SkiaBubble.DefaultCornerRadius)
         );
         public new double CornerRadius
         {
@@ -638,13 +646,11 @@ namespace P42.Uno.Controls
             {
                 if (BorderWidth <= 0)
                     return false;
-                if (BorderBrush is Brush brush)
-                {
-                    if (brush is SolidColorBrush solidBrush)
-                        return solidBrush.Color.A > 0;
-                    return true;
-                }
-                return false;
+                if (BorderColor == default(Color))
+                    return SkiaBubble.DefaultBorderColor.A > 0;
+
+                return BorderColor.A > 0;
+
             }
         }
         #endregion

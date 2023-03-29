@@ -23,11 +23,29 @@ namespace P42.Uno.Controls
         public static TElement Detail<TElement>(this TElement presenter, FrameworkElement element = null) where TElement : ElementType
         { presenter.Detail = element; return presenter; }
 
-        public static TElement DetailBackground<TElement>(this TElement presenter, Brush brush) where TElement : ElementType
-        { presenter.DetailBackground = brush; return presenter; }
+        public static TElement DetailBackgroundColor<TElement>(this TElement presenter, Windows.UI.Color color) where TElement : ElementType
+        { presenter.DetailBackgroundColor = color; return presenter; }
 
-        public static TElement DetailBackground<TElement>(this TElement presenter, Windows.UI.Color color) where TElement : ElementType
-        { presenter.DetailBackground = new SolidColorBrush(color); return presenter; }
+        public static TElement DetailBackgroundColor<TElement>(this TElement presenter, uint hexColor) where TElement : ElementType
+        { presenter.DetailBackgroundColor = ColorExtensions.ColorFromUint(hexColor); return presenter; }
+
+        public static TElement DetailBackgroundColor<TElement>(this TElement presenter, string color) where TElement : ElementType
+        { presenter.DetailBackgroundColor = ColorExtensions.ColorFromString(color); return presenter; }
+
+        public static TElement DetailBorderColor<TElement>(this TElement presenter, Windows.UI.Color color) where TElement : ElementType
+        { presenter.DetailBorderColor = color; return presenter; }
+
+        public static TElement DetailBorderColor<TElement>(this TElement presenter, uint hexColor) where TElement : ElementType
+        { presenter.DetailBorderColor = ColorExtensions.ColorFromUint(hexColor); return presenter; }
+
+        public static TElement DetailBorderColor<TElement>(this TElement presenter, string color) where TElement : ElementType
+        { presenter.DetailBorderColor = ColorExtensions.ColorFromString(color); return presenter; }
+
+        public static TElement DetailBorderWidth<TElement>(this TElement presenter, double value) where TElement : ElementType
+        { presenter.DetailBorderWidth = value; return presenter; }
+
+        public static TElement DetailCornerRadius<TElement>(this TElement presenter, double value) where TElement : ElementType
+        { presenter.DetailCornerRadius = value; return presenter; }
 
         public static TElement DetailAspectRatio<TElement>(this TElement presenter, double aspect) where TElement : ElementType
         { presenter.DetailAspectRatio = aspect; return presenter; }

@@ -39,8 +39,8 @@ namespace P42.Uno.Controls
                 .AddTappedHandler(OnDismissPointerPressed);
 
             _detailDrawer = new Border()
-                .Bind(Border.BorderBrushProperty, this, nameof(DetailBorderBrush))
-                .Bind(Border.BackgroundProperty, this, nameof(DetailBackground));
+                .Bind(Border.BorderBrushProperty, this, nameof(DetailBorderColor), converter: P42.Uno.Markup.SolidBrushConverter.Instance)
+                .Bind(Border.BackgroundProperty, this, nameof(DetailBackgroundColor), converter: P42.Uno.Markup.SolidBrushConverter.Instance);
 
             _targetedPopup = new TargetedPopup()
                 .Padding(0)
@@ -55,15 +55,14 @@ namespace P42.Uno.Controls
                 .Bind(TargetedPopup.TargetProperty, this, nameof(Target))
                 .Bind(TargetedPopup.WidthProperty, this, nameof(PopupWidth))
                 .Bind(TargetedPopup.HeightProperty, this, nameof(PopupHeight))
-                .Bind(TargetedPopup.BorderBrushProperty, this, nameof(DetailBorderBrush))
-                .Bind(TargetedPopup.BackgroundProperty, this, nameof(DetailBackground))
+                .Bind(TargetedPopup.BorderColorProperty, this, nameof(DetailBorderColor))
+                .Bind(TargetedPopup.BackgroundColorProperty, this, nameof(DetailBackgroundColor))
+                .Bind(TargetedPopup.CornerRadiusProperty, this, nameof(DetailCornerRadius))
                 .AddPoppedHandler(OnTargetedPopupPopped)
                 ;
 
             PageOverlayBrush = Colors.Black.WithAlpha(0.01).ToBrush();
-            DetailBorderThickness = new Thickness(1);
-            DetailBackground = SystemTeachingTipBrushes.Background;
-            DetailBorderBrush = SystemTeachingTipBrushes.Border;
+            
 
         }
 

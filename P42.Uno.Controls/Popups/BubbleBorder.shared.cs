@@ -32,7 +32,7 @@ namespace P42.Uno.Controls
             nameof(BackgroundColor),
             typeof(Color),
             typeof(BubbleBorder),
-            new PropertyMetadata(default(Color))
+            new PropertyMetadata(SkiaBubble.DefaultFillColor)
         );
         public Color BackgroundColor
         {
@@ -46,7 +46,7 @@ namespace P42.Uno.Controls
             nameof(BorderColor),
             typeof(Color),
             typeof(BubbleBorder),
-            new PropertyMetadata(default(Color))
+            new PropertyMetadata(SkiaBubble.DefaultBorderColor)
         );
         public Color BorderColor
         {
@@ -60,7 +60,7 @@ namespace P42.Uno.Controls
             nameof(BorderWidth),
             typeof(double),
             typeof(BubbleBorder),
-            new PropertyMetadata(1.0, OnBorderWidthChanged)
+            new PropertyMetadata(SkiaBubble.DefaultBorderWidth, OnBorderWidthChanged)
         );
         private static void OnBorderWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -80,11 +80,12 @@ namespace P42.Uno.Controls
 
         #region Background Property
 
+        [Obsolete("Use BackgroundColor, instead")]
         public static readonly new DependencyProperty BackgroundProperty = DependencyProperty.Register(
             nameof(Background),
             typeof(Brush),
             typeof(BubbleBorder),
-            new PropertyMetadata(SystemTeachingTipBrushes.Background)
+            new PropertyMetadata(default)
         );
         
         [Obsolete("Use BackgroundColor, instead")]
@@ -132,11 +133,12 @@ namespace P42.Uno.Controls
         */
 
         #region BorderBrush Property
+        [Obsolete("Use BorderWidth, instead")]
         public static readonly new DependencyProperty BorderBrushProperty = DependencyProperty.Register(
             nameof(BorderBrush),
             typeof(Brush),
             typeof(BubbleBorder),
-            new PropertyMetadata(SystemTeachingTipBrushes.Border)
+            new PropertyMetadata(default)
         );
         [Obsolete("Use BorderWidth, instead")]
         public new Brush BorderBrush
@@ -227,7 +229,7 @@ namespace P42.Uno.Controls
             nameof(CornerRadius),
             typeof(double),
             typeof(BubbleBorder),
-            new PropertyMetadata(4.0)
+            new PropertyMetadata(SkiaBubble.DefaultCornerRadius)
         );
         public new double CornerRadius
         {

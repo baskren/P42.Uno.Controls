@@ -20,6 +20,11 @@ namespace P42.Uno.Controls
     public partial class SkiaBubble : SkiaSharp.Views.Windows.SKXamlCanvas
     {
 
+        internal static readonly Color DefaultBorderColor = SystemColors.BaseMedium;
+        internal static readonly Color DefaultFillColor = SystemColors.AltHigh;
+        internal const double DefaultBorderWidth = 1.0;
+        internal const double DefaultCornerRadius = 5.0;
+
         #region Properties
 
         void Redraw([CallerMemberName] string caller = null)
@@ -36,7 +41,7 @@ namespace P42.Uno.Controls
             nameof(BackgroundColor),
             typeof(Color),
             typeof(SkiaBubble),
-            new PropertyMetadata(default(Color),(d,e) => ((SkiaBubble)d).Redraw(nameof(BackgroundColor)))
+            new PropertyMetadata(DefaultFillColor,(d,e) => ((SkiaBubble)d).Redraw(nameof(BackgroundColor)))
         );
 
 #if __IOS__
@@ -56,7 +61,7 @@ namespace P42.Uno.Controls
             nameof(BorderColor),
             typeof(Color),
             typeof(SkiaBubble),
-            new PropertyMetadata(default(Color), (d, e) => ((SkiaBubble)d).Redraw(nameof(BorderColor)))
+            new PropertyMetadata(DefaultBorderColor, (d, e) => ((SkiaBubble)d).Redraw(nameof(BorderColor)))
         );
         public Color BorderColor
         {
@@ -71,7 +76,7 @@ namespace P42.Uno.Controls
             nameof(BorderWidth),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(1.0, (d, e) => ((SkiaBubble)d).Redraw(nameof(BorderWidth)))
+            new PropertyMetadata(DefaultBorderWidth, (d, e) => ((SkiaBubble)d).Redraw(nameof(BorderWidth)))
         );
         public double BorderWidth
         {
@@ -86,7 +91,7 @@ namespace P42.Uno.Controls
             nameof(CornerRadius),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(4.0, (d, e) => ((SkiaBubble)d).Redraw(nameof(CornerRadius)))
+            new PropertyMetadata(DefaultCornerRadius, (d, e) => ((SkiaBubble)d).Redraw(nameof(CornerRadius)))
         );
         public double CornerRadius
         {
@@ -195,10 +200,10 @@ namespace P42.Uno.Controls
 
         #region Private Properties
         Color WorkingBackgroundColor => BackgroundColor == default
-            ? SystemColors.AltHigh
+            ? DefaultFillColor
             : BackgroundColor;
         Color WorkingBorderColor => BorderColor == default
-            ? SystemColors.BaseMedium
+            ? DefaultBorderColor
             : BorderColor;
         #endregion
 
@@ -216,7 +221,10 @@ namespace P42.Uno.Controls
 #if __IOS__
             ((UIKit.UIView)this).BackgroundColor = UIKit.UIColor.Clear;
 #endif
+
         }
+
+
 
         protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
         {

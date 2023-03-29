@@ -91,57 +91,47 @@ namespace P42.Uno.Controls
         }
         #endregion Detail Property
 
-        #region DetailBackground Property
-        public static readonly DependencyProperty DetailBackgroundProperty = DependencyProperty.Register(
-            nameof(DetailBackground),
-            typeof(Brush),
+        #region DetailBackgroundColor Property
+        public static readonly DependencyProperty DetailBackgroundColorProperty = DependencyProperty.Register(
+            nameof(DetailBackgroundColor),
+            typeof(Color),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(SystemColors.BaseLow.ToBrush())
+            new PropertyMetadata(SkiaBubble.DefaultFillColor)
         );
-        public Brush DetailBackground
+        public Color DetailBackgroundColor
         {
-            get => (Brush)GetValue(DetailBackgroundProperty);
-            set => SetValue(DetailBackgroundProperty, value);
+            get => (Color)GetValue(DetailBackgroundColorProperty);
+            set => SetValue(DetailBackgroundColorProperty, value);
         }
-        #endregion DetailBackground Property
+        #endregion DetailBackgroundColor Property
 
-        #region DetailBorderThickness Property
-        public static readonly DependencyProperty DetailBorderThicknessProperty = DependencyProperty.Register(
-            nameof(DetailBorderThickness),
-            typeof(Thickness),
+        #region DetailBorderWidth Property
+        public static readonly DependencyProperty DetailBorderWidthProperty = DependencyProperty.Register(
+            nameof(DetailBorderWidth),
+            typeof(double),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(default(Thickness),(d,e) => ((ContentAndDetailPresenter)d).OnDetailBorderThicknessChanged(e))
+            new PropertyMetadata(SkiaBubble.DefaultBorderWidth)
         );
-
-        private void OnDetailBorderThicknessChanged(DependencyPropertyChangedEventArgs e)
+        public double DetailBorderWidth
         {
-            _detailDrawer.BorderThickness = new Thickness(
-                DrawerOrientation == Orientation.Horizontal ? DetailBorderThickness.Left : 0,
-                DrawerOrientation == Orientation.Vertical ? DetailBorderThickness.Top : 0,
-                0, 0);
-            _targetedPopup.BorderWidth = DetailBorderThickness.Max();
+            get => (double)GetValue(DetailBorderWidthProperty);
+            set => SetValue(DetailBorderWidthProperty, value);
         }
-        public Thickness DetailBorderThickness
-        {
-            get => (Thickness)GetValue(DetailBorderThicknessProperty);
-            set => SetValue(DetailBorderThicknessProperty, value);
-        }
-        #endregion DetailBorderThickness Property
+        #endregion DetailBorderWidth Property
 
-        #region DetailBorderBrush Property
-        public static readonly DependencyProperty DetailBorderBrushProperty = DependencyProperty.Register(
-            nameof(DetailBorderBrush),
-            typeof(Brush),
+        #region DetailBorderColor Property
+        public static readonly DependencyProperty DetailBorderColorProperty = DependencyProperty.Register(
+            nameof(DetailBorderColor),
+            typeof(Color),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(default(Brush))
+            new PropertyMetadata(SkiaBubble.DefaultBorderColor)
         );
-        public Brush DetailBorderBrush
+        public Color DetailBorderColor
         {
-            get => (Brush)GetValue(DetailBorderBrushProperty);
-            set => SetValue(DetailBorderBrushProperty, value);
+            get => (Color)GetValue(DetailBorderColorProperty);
+            set => SetValue(DetailBorderColorProperty, value);
         }
-        #endregion DetailBorderBrush Property
-
+        #endregion DetailBorderColor Property
 
         #region DetailAspectRatio Property
         public static readonly DependencyProperty DetailAspectRatioProperty = DependencyProperty.Register(
@@ -161,6 +151,21 @@ namespace P42.Uno.Controls
             set => SetValue(DetailAspectRatioProperty, value);
         }
         #endregion DetailAspectRatio Property
+
+        #region DetailCornerRadius Property
+        public static readonly DependencyProperty DetailCornerRadiusProperty = DependencyProperty.Register(
+            nameof(DetailCornerRadius),
+            typeof(double),
+            typeof(ContentAndDetailPresenter),
+            new PropertyMetadata(SkiaBubble.DefaultCornerRadius)
+        );
+        public double DetailCornerRadius
+        {
+            get => (double)GetValue(DetailCornerRadiusProperty);
+            set => SetValue(DetailCornerRadiusProperty, value);
+        }
+        #endregion DetailCornerRadius Property
+
 
         #endregion
 
@@ -392,6 +397,8 @@ namespace P42.Uno.Controls
                     Grid.SetRow(_detailDrawer, 0);
                     Grid.SetRowSpan(_detailDrawer, 2);
                     Grid.SetColumn(_detailDrawer, 1);
+                    _detailDrawer.BorderThickness = new Thickness(DetailBorderWidth, 0, 0, 0);
+                    _detailDrawer.CornerRadius = new CornerRadius(DetailCornerRadius, 0, 0, DetailCornerRadius);
                 }
                 else
                 {
@@ -399,6 +406,8 @@ namespace P42.Uno.Controls
                     Grid.SetRow(_detailDrawer, 2);
                     Grid.SetRowSpan(_detailDrawer, 1);
                     Grid.SetColumn(_detailDrawer, 0);
+                    _detailDrawer.BorderThickness = new Thickness(0, DetailBorderWidth, 0, 0);
+                    _detailDrawer.CornerRadius = new CornerRadius(DetailCornerRadius, DetailCornerRadius, 0, 0);
                 }
 
             }

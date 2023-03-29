@@ -154,7 +154,7 @@ namespace P42.Uno.Controls
 
         public PathBubble()
         {
-            Fill = new SolidColorBrush(SystemColors.ColorButtonFace);
+            Fill = new SolidColorBrush(SystemColors.ButtonFace);
             Stroke = new SolidColorBrush(SystemColors.ChromeDisabledHigh);
 
             SizeChanged += OnSizeChanged;
