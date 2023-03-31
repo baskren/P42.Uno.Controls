@@ -33,7 +33,7 @@ namespace P42.Uno.Controls
                 .Stretch()
                 .Bind(Rectangle.FillProperty, this, nameof(PageOverlayBrush))
                 .Bind(Rectangle.IsHitTestVisibleProperty, this, nameof(IsPageOverlayHitTestVisible))
-                .Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: P42.Utils.Uno.VisibilityExtensions.VisibilityConverter)
+                .Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: VisibilityConverter.Instance)
                 .AddTappedHandler(OnPageOverlayTapped);
             
             ContentBorder = new BubbleBorder()
@@ -56,7 +56,7 @@ namespace P42.Uno.Controls
                 .AddSizeChangedHandler(OnBorderSizeChanged);
 
             ShadowBorder = new SkiaBubble()
-                .Bind(SkiaBubble.VisibilityProperty, this, nameof(HasShadow), converter: P42.Utils.Uno.VisibilityExtensions.VisibilityConverter)
+                .Bind(SkiaBubble.VisibilityProperty, this, nameof(HasShadow), converter: VisibilityConverter.Instance)
                 .Bind(SkiaBubble.PointerCornerRadiusProperty, ContentBorder, nameof(BubbleBorder.PointerCornerRadius))
                 .Bind(SkiaBubble.PointerDirectionProperty, ContentBorder, nameof(BubbleBorder.PointerDirection))
                 .Bind(SkiaBubble.PointerLengthProperty, ContentBorder, nameof(BubbleBorder.PointerLength))

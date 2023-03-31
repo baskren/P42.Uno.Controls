@@ -35,12 +35,12 @@ namespace P42.Uno.Controls
                 .RowSpan(2)
                 .Bind(Rectangle.FillProperty, this, nameof(PageOverlayBrush))
                 .Bind(Rectangle.IsHitTestVisibleProperty, this, nameof(IsPageOverlayHitTestVisible))
-                .Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: P42.Utils.Uno.VisibilityExtensions.VisibilityConverter)
+                .Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: VisibilityConverter.Instance)
                 .AddTappedHandler(OnDismissPointerPressed);
 
             _detailDrawer = new Border()
-                .Bind(Border.BorderBrushProperty, this, nameof(DetailBorderColor), converter: P42.Uno.Markup.SolidBrushConverter.Instance)
-                .Bind(Border.BackgroundProperty, this, nameof(DetailBackgroundColor), converter: P42.Uno.Markup.SolidBrushConverter.Instance);
+                .Bind(Border.BorderBrushProperty, this, nameof(DetailBorderColor), converter: SolidBrushConverter.Instance)
+                .Bind(Border.BackgroundProperty, this, nameof(DetailBackgroundColor), converter: SolidBrushConverter.Instance);
 
             _targetedPopup = new TargetedPopup()
                 .Padding(0)

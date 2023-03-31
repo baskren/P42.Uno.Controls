@@ -1208,7 +1208,7 @@ namespace P42.Uno.Controls
         DirectionStats BestFit(Thickness availableSpace, Size cleanSize, Thickness safeMargin)
         {
 
-            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit(available:[{availableSpace}], clean:[{cleanSize}], safe:[{safeMargin}]) ");
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit(available:[{availableSpace}], clean:[{cleanSize}], safe:[{safeMargin}]) ");
 
             // given the amount of free space, determine if the borderSize will fit 
             var windowSize = AppWindow.Size(this);
@@ -1290,7 +1290,7 @@ namespace P42.Uno.Controls
                     var availR = windowBounds.Width - Margin.Right - safeMargin.Right - target.Right;
                     var availT = target.Top - Margin.Top - safeMargin.Top;
                     var availB = windowBounds.Height - target.Bottom - Margin.Bottom - safeMargin.Bottom;
-
+                    /*
                     var maxWidth = MaxWidth;
                     if (Width > 0 && Width < maxWidth)
                         maxWidth = Width;
@@ -1308,7 +1308,7 @@ namespace P42.Uno.Controls
                         availT = Math.Min(availT, maxHeight);
                         availB = Math.Min(availB, maxHeight);
                     }
-
+                    */
                     return new Thickness(availL, availT, availR, availB);
                 }
             }
@@ -1321,7 +1321,7 @@ namespace P42.Uno.Controls
 
         List<DirectionStats> GetRectangleBorderStatsForDirection(PointerDirection pointerDirection, DirectionStats cleanStat, Thickness availableSpace)
         {
-            //System.Diagnostics.Debug.WriteLine(GetType() + ".GetRectangleBorderStatsForDirection cleanStat:["+cleanStat+"]");
+            System.Diagnostics.Debug.WriteLine(GetType() + ".GetRectangleBorderStatsForDirection cleanStat:["+cleanStat+"]");
             var stats = new List<DirectionStats>();
             if (pointerDirection.LeftAllowed() && (availableSpace.Right - cleanStat.BorderSize.Width) >= PointerLength && availableSpace.Vertical() > cleanStat.BorderSize.Height)
             {

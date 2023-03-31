@@ -12,7 +12,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Text;
 using ElementType = P42.Uno.Controls.BubbleBorder;
-using System.Runtime.CompilerServices;
 using P42.Uno.Markup;
 
 namespace P42.Uno.Controls
@@ -383,24 +382,22 @@ namespace P42.Uno.Controls
 
 
         #region BorderBrush
-        public static TElement BorderBrush<TElement>(this TElement element, Brush value) where TElement : ElementType
-        { element.BorderBrush = value; return element; }
-
-        public static TElement BorderBrush<TElement>(this TElement element, Color value) where TElement : ElementType
-        { element.BorderBrush = new SolidColorBrush(value); return element; }
+        public static TElement BorderColor<TElement>(this TElement element, Color value) where TElement : ElementType
+        { element.BorderColor = value; return element; }
 
         public static TElement BorderBrush<TElement>(this TElement element, string color) where TElement : ElementType
-        { element.BorderBrush = new SolidColorBrush(ColorExtensions.ColorFromString(color)); return element; }
+        { element.BorderColor = ColorExtensions.ColorFromString(color); return element; }
 
         public static TElement BorderBrush<TElement>(this TElement element, uint hex) where TElement : ElementType
-        { element.BorderBrush = new SolidColorBrush(ColorExtensions.ColorFromUint(hex)); return element; }
+        { element.BorderColor = ColorExtensions.ColorFromUint(hex); return element; }
         #endregion
 
+        /*
         #region BindBorder
 
         public static TElement BindBorder<TElement>(this TElement target, Control source, BindingMode bindingMode = BindingMode.OneWay) where TElement : ElementType
         {
-            target.Bind(ElementType.BorderBrushProperty, source, nameof(Control.BorderBrush), bindingMode);
+            target.Bind(ElementType.BorderColorProperty, source, nameof(Control.BorderBrush), bindingMode, converter: ColorConverter.);
             target.Bind(ElementType.BorderThicknessProperty, source, nameof(Control.BorderThickness), bindingMode);
             target.Bind(ElementType.CornerRadiusProperty, source, nameof(Control.CornerRadius), bindingMode);
             return target;
@@ -421,21 +418,18 @@ namespace P42.Uno.Controls
         }
 
         #endregion
-
+        */
         #endregion
 
         #region Background
-        public static TElement Background<TElement>(this TElement element, Brush brush) where TElement : ElementType
-        { element.Background = brush; return element; }
+        public static TElement BackgroundColor<TElement>(this TElement element, Color color) where TElement : ElementType
+        { element.BackgroundColor = color; return element; }
 
-        public static TElement Background<TElement>(this TElement element, Color color) where TElement : ElementType
-        { element.Background = new SolidColorBrush(color); return element; }
+        public static TElement BackgroundColor<TElement>(this TElement element, string color) where TElement : ElementType
+        { element.BackgroundColor = ColorExtensions.ColorFromString(color); return element; }
 
-        public static TElement Background<TElement>(this TElement element, string color) where TElement : ElementType
-        { element.Background = new SolidColorBrush(ColorExtensions.ColorFromString(color)); return element; }
-
-        public static TElement Background<TElement>(this TElement element, uint hex) where TElement : ElementType
-        { element.Background = new SolidColorBrush(ColorExtensions.ColorFromUint(hex)); return element; }
+        public static TElement BackgroundColor<TElement>(this TElement element, uint hex) where TElement : ElementType
+        { element.BackgroundColor = ColorExtensions.ColorFromUint(hex); return element; }
         public static TElement BackgroundTransition<TElement>(this TElement element, BrushTransition brushTransition) where TElement : ElementType
         { element.BackgroundTransition = brushTransition; return element; }
 

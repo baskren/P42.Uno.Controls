@@ -11,6 +11,7 @@ using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
 using Microsoft.UI.Xaml.Input;
+using Windows.Devices.Sensors;
 
 namespace P42.Uno.Controls
 {
@@ -471,7 +472,14 @@ namespace P42.Uno.Controls
                 return false;
 
             var measurements = _targetedPopup.GetAlignmentMarginsAndPointerMeasurements(Detail);
-            return !measurements.PointerDirection.IsVertical();
+
+            if (measurements.PointerDirection.IsVertical() || measurements.PointerDirection.IsHorizontal())
+                return false;
+
+            if (availableSize.Width - measurements.Size.Width > 100 && availableSize.Height - measurements.Size.Height > 100)
+                return false;
+
+            return true; 
         }
 
         double AspectRatio(Size size)

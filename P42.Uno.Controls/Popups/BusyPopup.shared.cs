@@ -58,7 +58,7 @@ namespace P42.Uno.Controls
         /// <param name="messageContent"></param>
         /// <param name="popAfter"></param>
         /// <returns></returns>
-        public static new async Task<BusyPopup> CreateAsync(object messageContent, TimeSpan popAfter = default)
+        public static async Task<BusyPopup> CreateAsync(object messageContent, TimeSpan popAfter = default)
         {
             var result = new BusyPopup {Message = messageContent, PopAfter = popAfter, };
             await result.PushAsync();
@@ -70,9 +70,9 @@ namespace P42.Uno.Controls
         /// </summary>
         /// <param name="titleContent"></param>
         /// <param name="messageContent"></param>
-        /// <param name="popAfter">Will dissappear after popAfter TimeSpan</param>
+        /// <param name="popAfter">Will disappear after popAfter TimeSpan</param>
         /// <returns></returns>
-        public static new async Task<BusyPopup> CreateAsync(object titleContent, object messageContent, TimeSpan popAfter = default)
+        public static async Task<BusyPopup> CreateAsync(object titleContent, object messageContent, TimeSpan popAfter = default)
         {
             var result = new BusyPopup { TitleContent = titleContent, Message = messageContent, PopAfter = popAfter, };
             await result.PushAsync();
@@ -87,7 +87,7 @@ namespace P42.Uno.Controls
         /// <param name="messageContent"></param>
         /// <param name="popAfter"></param>
         /// <returns></returns>
-        public static new async Task<BusyPopup> CreateAsync(UIElement target, object title,  object messageContent, TimeSpan popAfter = default)
+        public static async Task<BusyPopup> CreateAsync(UIElement target, object title,  object messageContent, TimeSpan popAfter = default)
         {
             var result = new BusyPopup { Target = target, TitleContent = title, Message = messageContent, PopAfter = popAfter, };
             await result.PushAsync();

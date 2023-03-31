@@ -16,7 +16,7 @@ namespace P42.Uno.Controls
         public static Visibility Visibility
         {
             get => RootFrame.Grid.Visibility;
-            set => RootFrame.Grid.Visibility = Visibility;
+            set => RootFrame.Grid.Visibility = value;
         }
 
         public static void Show()
@@ -28,25 +28,24 @@ namespace P42.Uno.Controls
         internal static void Add(TargetedPopup popup)
         {
 
-            if (!RootFrame.Grid.Children.Contains(popup.ContentBorder))
-            {
-                Stack.Add(popup);
+            if (!RootFrame.Grid.Children.Contains(popup.PageOverlay))
                 RootFrame.Grid.Children.Add(popup.PageOverlay);
+            if (!RootFrame.Grid.Children.Contains(popup.ShadowBorder))
                 RootFrame.Grid.Children.Add(popup.ShadowBorder);
-                RootFrame.Grid.Children.Add(popup.ContentBorder);
-            }
+            if (!RootFrame.Grid.Children.Contains(popup.ContentBorder))
+                RootFrame.Grid.Children.Add(popup.ContentBorder);            
+            Stack.Add(popup);
         }
 
         internal static void Remove(TargetedPopup popup)
         {
-            if (RootFrame.Grid.Children.Contains(popup.ContentBorder))
-            {
-                Stack.Remove(popup);
+            if (RootFrame.Grid.Children.Contains(popup.PageOverlay))
                 RootFrame.Grid.Children.Remove(popup.PageOverlay);
+            if (RootFrame.Grid.Children.Contains(popup.ShadowBorder))
                 RootFrame.Grid.Children.Remove(popup.ShadowBorder);
+            if (RootFrame.Grid.Children.Contains(popup.ContentBorder))
                 RootFrame.Grid.Children.Remove(popup.ContentBorder);
-            }
-
+            Stack.Remove(popup);
         }
 
         internal static void OnRootFrameSizeChanged(object sender, SizeChangedEventArgs args)
@@ -54,14 +53,24 @@ namespace P42.Uno.Controls
 
         public static async Task<bool> TryPopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled)
         {
+            System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : Visibility [{Visibility}]");
+            System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : last [{Stack.LastOrDefault()?.GetType()}]");
             if (Visibility == Visibility.Collapsed)
-                return false;
-
-            if (Stack.LastOrDefault() is TargetedPopup popup)
             {
-                await popup.PopAsync(cause);
+                System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : return false");
+                return false;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : Stack.Count [{Stack.Count}]");
+            if (Stack.LastOrDefault() is TargetedPopup last)
+            {
+                System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : last [{last.GetType()}]");
+                await last.PopAsync(cause);
+                System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : return TRUE");
                 return true;
             }
+
+            System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : return false");
             return false;
         }
 
