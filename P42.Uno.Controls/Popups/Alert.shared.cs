@@ -76,8 +76,15 @@ namespace P42.Uno.Controls
             nameof(OkButtonForeground),
             typeof(Brush),
             typeof(Alert),
-            new PropertyMetadata(((Color)Application.Current.Resources["SystemColorHighlightTextColor"]).ToBrush())
+            new PropertyMetadata(default, OnButtonForegroundChanged)
         );
+
+        private static void OnButtonForegroundChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+        {
+            if (dependencyObject is Alert alert)
+                alert._okButton.Foreground = alert.OkButtonForeground;
+        }
+
         /// <summary>
         /// Foreground for OK Button
         /// </summary>
@@ -94,8 +101,15 @@ namespace P42.Uno.Controls
             nameof(OkButtonBackground),
             typeof(Brush),
             typeof(Alert),
-            new PropertyMetadata(((Color)Application.Current.Resources["SystemColorHighlightColor"]).ToBrush())
+            new PropertyMetadata(default, OnButtonBackgroundChanged)
         );
+
+        private static void OnButtonBackgroundChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+        {
+            if (dependencyObject is Alert alert)
+                alert._okButton.Background = alert.OkButtonBackground;
+        }
+
         /// <summary>
         /// Background for OK button
         /// </summary>

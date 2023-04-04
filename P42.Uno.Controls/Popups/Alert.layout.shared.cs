@@ -22,9 +22,8 @@ namespace P42.Uno.Controls
                 .Stretch()
                 .CornerRadius(2)
                 .Height(40)
-                .Bind(Button.ContentProperty, this, nameof(OkButtonContent))
-                .Bind(Button.BackgroundProperty, this, nameof(OkButtonBackground))
-                .Bind(Button.ForegroundProperty, this, nameof(OkButtonForeground));
+                .Style(StaticResources.TryGetAs<Style>(Application.Current.Resources, "AccentButtonStyle"))
+                .Bind(Button.ContentProperty, this, nameof(OkButtonContent));
 
             _bubbleContentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             _bubbleContentGrid.Children.Add(_okButton);
