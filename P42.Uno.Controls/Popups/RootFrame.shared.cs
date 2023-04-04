@@ -150,6 +150,7 @@ namespace P42.Uno.Controls
         static RootFrame _current;
         internal static RootFrame Current => _current ??= Inject();
 
+        internal static bool Initiated { get; private set; }
         #endregion
 
 
@@ -164,12 +165,14 @@ namespace P42.Uno.Controls
             DefaultStyleKey = typeof(RootFrame);
             _current = this;
             SizeChanged += Popups.OnRootFrameSizeChanged;
+            Initiated = true;
         }
 
-        public RootFrame(Frame innerFrame) : this()
+        private RootFrame(Frame innerFrame) : this()
         {
             InnerFrame = innerFrame;
         }
+
         #endregion
 
 

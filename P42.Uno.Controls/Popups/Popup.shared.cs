@@ -20,13 +20,23 @@ namespace P42.Uno.Controls
         }
 
         public static void Show()
-            => Visibility = Visibility.Visible;
+        {
+            if (!RootFrame.Initiated)
+                throw new Exception("P42.Uno.Controls popups require using P42.Uno.Controls.RootFrame as the application's window's Content");
+            Visibility = Visibility.Visible;
+        }
 
         public static void Hide()
-            => Visibility = Visibility.Collapsed;
+        {
+            if (!RootFrame.Initiated)
+                throw new Exception("P42.Uno.Controls popups require using P42.Uno.Controls.RootFrame as the application's window's Content");
+            Visibility = Visibility.Collapsed;
+        }
 
         internal static void Add(TargetedPopup popup)
         {
+            if (!RootFrame.Initiated)
+                throw new Exception("P42.Uno.Controls popups require using P42.Uno.Controls.RootFrame as the application's window's Content");
 
             if (!RootFrame.Grid.Children.Contains(popup.PageOverlay))
                 RootFrame.Grid.Children.Add(popup.PageOverlay);
@@ -39,6 +49,8 @@ namespace P42.Uno.Controls
 
         internal static void Remove(TargetedPopup popup)
         {
+            if (!RootFrame.Initiated)
+                throw new Exception("P42.Uno.Controls popups require using P42.Uno.Controls.RootFrame as the application's window's Content");
             if (RootFrame.Grid.Children.Contains(popup.PageOverlay))
                 RootFrame.Grid.Children.Remove(popup.PageOverlay);
             if (RootFrame.Grid.Children.Contains(popup.ShadowBorder))
@@ -53,6 +65,9 @@ namespace P42.Uno.Controls
 
         public static async Task<bool> TryPopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled)
         {
+            if (!RootFrame.Initiated)
+                throw new Exception("P42.Uno.Controls popups require using P42.Uno.Controls.RootFrame as the application's window's Content");
+
             System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : Visibility [{Visibility}]");
             System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : last [{Stack.LastOrDefault()?.GetType()}]");
             if (Visibility == Visibility.Collapsed)
