@@ -883,6 +883,7 @@ namespace P42.Uno.Controls
 
                 PushPopState = PushPopState.Pushed;
                 await OnPushEndAsync();
+                await Task.Delay(50);
                 Pushed?.Invoke(this, EventArgs.Empty);
                 _pushCompletionSource?.TrySetResult(true);
             }
@@ -929,6 +930,7 @@ namespace P42.Uno.Controls
                 await animator.RunAsync();
             }
 
+            await Task.Delay(50);
             CompletePop(PoppedCause, PoppedTrigger);
             await OnPopEndAsync();
         }
