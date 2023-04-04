@@ -38,26 +38,43 @@ namespace P42.Uno.Controls
             if (!RootFrame.Initiated)
                 throw new Exception("P42.Uno.Controls popups require using P42.Uno.Controls.RootFrame as the application's window's Content");
 
+            if (RootFrame.Current?.IsLoaded ?? false    )
+            {
+                InnerAdd(popup);
+                Stack.Add(popup);
+            }
+        }
+
+        static void InnerAdd(TargetedPopup popup)
+        {
             if (!RootFrame.Grid.Children.Contains(popup.PageOverlay))
                 RootFrame.Grid.Children.Add(popup.PageOverlay);
             if (!RootFrame.Grid.Children.Contains(popup.ShadowBorder))
                 RootFrame.Grid.Children.Add(popup.ShadowBorder);
             if (!RootFrame.Grid.Children.Contains(popup.ContentBorder))
-                RootFrame.Grid.Children.Add(popup.ContentBorder);            
-            Stack.Add(popup);
+                RootFrame.Grid.Children.Add(popup.ContentBorder);
         }
 
         internal static void Remove(TargetedPopup popup)
         {
             if (!RootFrame.Initiated)
                 throw new Exception("P42.Uno.Controls popups require using P42.Uno.Controls.RootFrame as the application's window's Content");
+
+            if (RootFrame.Current?.IsLoaded ?? false)
+            {
+                InnerRemove(popup);
+                Stack.Remove(popup);
+            }
+        }
+
+        static void InnerRemove(TargetedPopup popup)
+        {
             if (RootFrame.Grid.Children.Contains(popup.PageOverlay))
                 RootFrame.Grid.Children.Remove(popup.PageOverlay);
             if (RootFrame.Grid.Children.Contains(popup.ShadowBorder))
                 RootFrame.Grid.Children.Remove(popup.ShadowBorder);
             if (RootFrame.Grid.Children.Contains(popup.ContentBorder))
                 RootFrame.Grid.Children.Remove(popup.ContentBorder);
-            Stack.Remove(popup);
         }
 
         internal static void OnRootFrameSizeChanged(object sender, SizeChangedEventArgs args)
