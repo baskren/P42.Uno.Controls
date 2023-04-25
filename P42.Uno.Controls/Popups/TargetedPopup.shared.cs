@@ -625,33 +625,6 @@ namespace P42.Uno.Controls
 
         #endregion Push/Pop Properties
 
-        #region CanShrinkContentHorizontally Property
-        public static readonly DependencyProperty CanShrinkContentHorizontallyProperty = DependencyProperty.RegisterAttached(
-            "CanShrinkContentHorizontallyProperty",
-            typeof(bool),
-            typeof(TargetedPopup),
-            new PropertyMetadata(default(bool))
-        );
-        public static void SetCanShrinkHorizontally(UIElement element, bool value)
-             => element?.SetValue(CanShrinkContentHorizontallyProperty, value);
-        public static bool GetCanShrinkHorizontally(UIElement element)
-             => (bool)(element?.GetValue(CanShrinkContentHorizontallyProperty) ?? false);
-
-        #endregion CanShrinkContentHorizontally Property
-
-        #region CanShrinkContentVertically Property
-        public static readonly DependencyProperty CanShrinkContentVerticallyProperty = DependencyProperty.RegisterAttached(
-            "CanShrinkContentVerticallyProperty",
-            typeof(bool),
-            typeof(TargetedPopup),
-            new PropertyMetadata(default(bool))
-        );
-        public static void SetCanShrinkVertically(UIElement element, bool value)
-             => element?.SetValue(CanShrinkContentVerticallyProperty, value);
-        public static bool GetCanShrinkVertically(UIElement element)
-             => (bool)(element?.GetValue(CanShrinkContentVerticallyProperty) ?? false);
-        #endregion CanShrinkContentVertically Property
-
 
         static int _pushingCount = 0;
         public static bool IsPushing
