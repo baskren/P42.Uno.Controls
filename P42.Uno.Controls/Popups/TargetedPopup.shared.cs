@@ -1114,7 +1114,7 @@ namespace P42.Uno.Controls
 
 
             var safeMargin = AppWindow.SafeMargin(this);
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer windowSize:[{windowSize}] Margin:[{Margin}] safeMargin:[{safeMargin}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer windowSize:[{windowSize}] Margin:[{Margin}] safeMargin:[{safeMargin}]");
 
             var availableWindowWidth = windowSize.Width - Margin.Horizontal() - safeMargin.Horizontal();
             var availableWindowHeight = windowSize.Height - Margin.Vertical() - safeMargin.Vertical();
@@ -1122,7 +1122,7 @@ namespace P42.Uno.Controls
 
             content ??= ContentBorder.Content as UIElement;
             var cleanSize = MeasureCleanBorder(new Size(availableWindowWidth, availableWindowHeight), content: content);
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer cleanSize:[{cleanSize}] : [{availableWindowWidth},{availableWindowHeight}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer cleanSize:[{cleanSize}] : [{availableWindowWidth},{availableWindowHeight}]");
 
             if (PreferredPointerDirection == PointerDirection.None || Target is null)
                 return new AlignmentMarginsAndPointer(cleanSize, HorizontalAlignment, VerticalAlignment, Margin.Add(safeMargin), PointerDirection.None);
@@ -1137,11 +1137,11 @@ namespace P42.Uno.Controls
 #endif
 
 
-            System.Diagnostics.Debug.WriteLine(GetType() + ".AlignmentMarginsAndPointer targetBounds:[" + targetBounds+"]");
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".AlignmentMarginsAndPointer targetBounds:[" + targetBounds+"]");
             var availableSpace = AvailableSpace(targetBounds.Grow(PointerMargin), safeMargin);
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer availableSpace:[{availableSpace}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer availableSpace:[{availableSpace}]");
             var stats = BestFit(availableSpace, cleanSize, safeMargin);
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer stats:[{stats}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer stats:[{stats}]");
 
             if (stats.PointerDirection == PointerDirection.None)
             {
@@ -1207,8 +1207,8 @@ namespace P42.Uno.Controls
                     margin.Top = windowSize.Height - Margin.Bottom - stats.BorderSize.Height;
 
                 var shortest = Math.Min(stats.BorderSize.Height, Target.ActualSize.Y);
-                System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : stats.Border.Height:[{stats.BorderSize.Height}] target.Height:[{Target.ActualSize.Y}] shortest [{shortest}]");
-                System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : PointerBias:[{PointerBias}]");
+                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : stats.Border.Height:[{stats.BorderSize.Height}] target.Height:[{Target.ActualSize.Y}] shortest [{shortest}]");
+                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : PointerBias:[{PointerBias}]");
                 if (VerticalAlignment == VerticalAlignment.Top)
                     axialPosition = shortest * PointerBias;
                 else if (VerticalAlignment == VerticalAlignment.Bottom)
@@ -1218,7 +1218,7 @@ namespace P42.Uno.Controls
                 else
                     axialPosition = stats.BorderSize.Height * PointerBias;
 
-                System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : PointerAxialPosition:[{axialPosition}]");
+                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : PointerAxialPosition:[{axialPosition}]");
             }
             else
             {
@@ -1234,7 +1234,7 @@ namespace P42.Uno.Controls
                     if (VerticalAlignment != VerticalAlignment.Stretch)
                         vtAlign = VerticalAlignment.Bottom;
                 }
-                System.Diagnostics.Debug.WriteLine("TargetedPopup.AlignmentMarginsAndPointer margin: " + margin);
+                //System.Diagnostics.Debug.WriteLine("TargetedPopup.AlignmentMarginsAndPointer margin: " + margin);
 
                 if (HorizontalAlignment == HorizontalAlignment.Left)
                     margin.Left = Math.Max(Margin.Left, targetBounds.Left);
@@ -1250,8 +1250,8 @@ namespace P42.Uno.Controls
                     margin.Left = windowSize.Width - Margin.Right - stats.BorderSize.Width;
 
                 var shortest = Math.Min(stats.BorderSize.Width, Target.ActualSize.X);
-                System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : stats.Border.Height:[{stats.BorderSize.Height}] target.Height:[{Target.ActualSize.Y}] shortest [{shortest}]");
-                System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : PointerBias:[{PointerBias}]");
+                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : stats.Border.Height:[{stats.BorderSize.Height}] target.Height:[{Target.ActualSize.Y}] shortest [{shortest}]");
+                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : PointerBias:[{PointerBias}]");
                 if (HorizontalAlignment == HorizontalAlignment.Left)
                     axialPosition = shortest * PointerBias;
                 else if (HorizontalAlignment == HorizontalAlignment.Right)
@@ -1261,7 +1261,7 @@ namespace P42.Uno.Controls
                 else
                     axialPosition = stats.BorderSize.Width * PointerBias;
 
-                System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : PointerAxialPosition:[{axialPosition}]");
+                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : PointerAxialPosition:[{axialPosition}]");
             }
 
             return new AlignmentMarginsAndPointer(stats.BorderSize, hzAlign, vtAlign, margin, actualPointerDirection, axialPosition);

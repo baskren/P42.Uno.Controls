@@ -371,20 +371,13 @@ namespace P42.Uno.Controls
         #region Layout
 
         void OnSizeChanged(object sender, SizeChangedEventArgs args)
-        {
-            /*
-            var ΔHeight = args.NewSize.Height - args.PreviousSize.Height;
-            var ΔWidth = args.NewSize.Width - args.PreviousSize.Width;
-            if (ΔWidth <= 0 && ΔWidth > -1 && ΔHeight <= 0 && ΔHeight > -1)
-                return;
-            */
-            LayoutDetailAndOverlay(args.NewSize, DetailPushPopState == PushPopState.Pushed ? 1 : 0);
-        }
+            => LayoutDetailAndOverlay(args.NewSize, DetailPushPopState == PushPopState.Pushed ? 1 : 0);
 
         void OpenDrawer(double percentOpen)
         {
             if (DrawerOrientation == Orientation.Horizontal)
             {
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.OpenDrawer : HORIZONTAL");
                 _drawerColumnDefinition.Width = new GridLength(percentOpen * DrawerSize.Width);
                 Grid.SetRow(_detailDrawer, 0);
                 Grid.SetRowSpan(_detailDrawer, 2);
@@ -394,6 +387,7 @@ namespace P42.Uno.Controls
             }
             else
             {
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.OpenDrawer : VERTICAL");
                 _drawerRowDefinition.Height = new GridLength(percentOpen * DrawerSize.Height);
                 Grid.SetRow(_detailDrawer, 2);
                 Grid.SetRowSpan(_detailDrawer, 1);
@@ -401,7 +395,6 @@ namespace P42.Uno.Controls
                 _detailDrawer.BorderThickness = new Thickness(0, DetailBorderWidth, 0, 0);
                 _detailDrawer.CornerRadius = new CornerRadius(DetailCornerRadius, DetailCornerRadius, 0, 0);
             }
-
         }
 
         static object popupToDrawerResizeTrigger = new();
@@ -414,8 +407,11 @@ namespace P42.Uno.Controls
             if (double.IsNaN(size.Height))
                 return;
 
-            if (LocalIsInDrawerMode(size))
+            var drawerMode = LocalIsInDrawerMode(size);
+
+            if (drawerMode)
             {
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LayoutDetailAndOverlay : DRAWER");
                 if (percentOpen > 0 && _targetedPopup.PushPopState == PushPopState.Pushed)
                     _targetedPopup.PopAsync(trigger: popupToDrawerResizeTrigger).Forget();
                 _targetedPopup.Content = null;
@@ -425,7 +421,8 @@ namespace P42.Uno.Controls
             }
             else
             {
-                OpenDrawer(0);
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LayoutDetailAndOverlay : POPUP");
+                _drawerRowDefinition.Height = GridLength.Auto;
                 _targetedPopup.Opacity = percentOpen;
                 _detailDrawer.Child = null;
                 //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LayoutDetailAndOverlay _targetedPopup.Size:[{_targetedPopup.Width},{_targetedPopup.Height}]");
@@ -445,8 +442,10 @@ namespace P42.Uno.Controls
 
                 if (!Children.Contains(_overlay))
                     Children.Add(_overlay);
-                if (LocalIsInDrawerMode(size) && !Children.Contains(_detailDrawer))
+                if (drawerMode && !Children.Contains(_detailDrawer))
                     Children.Add(_detailDrawer);
+                if (!drawerMode && Children.Contains(_detailDrawer))
+                    Children.Remove(_detailDrawer);
             }
             else
             {
@@ -483,14 +482,15 @@ namespace P42.Uno.Controls
             if (Detail is null)
                 return false;
 
-            System.Diagnostics.Debug.WriteLine($" : ");
-            System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode({availableSize}) : ============= ENTER ================");
+            //System.Diagnostics.Debug.WriteLine($" : ");
+            //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode({availableSize}) : ============= ENTER ================");
             var measurements = _targetedPopup.GetAlignmentMarginsAndPointerMeasurements(Detail);
-            System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : Measurements: {measurements}");
+            //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : Measurements: {measurements}");
 
             if (measurements.PointerDirection.IsVertical() || measurements.PointerDirection.IsHorizontal())
             {
-                System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [FALSE] A ================");
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [FALSE] A ================");
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : false");
                 return false;
             }
 
@@ -501,11 +501,13 @@ namespace P42.Uno.Controls
 
             if (aspect > 1.5 * DrawerAspectRatio)
             {
-                System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [TRUE] B================");
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [TRUE] B================");
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : true");
                 return true;
             }
 
-            System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [FALSE] C ================");
+            //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [FALSE] C ================");
+            //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : false");
             return false; 
         }
 
