@@ -1146,12 +1146,13 @@ namespace P42.Uno.Controls
             if (stats.PointerDirection == PointerDirection.None)
             {
                 // Doesn't fit 
-                var pointerDirection = PointerDirection.None;
+                var pointerDirection = PreferredPointerDirection | FallbackPointerDirection;
+                /*
                 if (GetCanShrinkHorizontally(content))
                     pointerDirection |= (PreferredPointerDirection | FallbackPointerDirection) & PointerDirection.Horizontal;
                 if (GetCanShrinkVertically(content))
                     pointerDirection |= (PreferredPointerDirection | FallbackPointerDirection) & PointerDirection.Vertical;
-
+                */
                 if (pointerDirection != PointerDirection.None)
                 {
                     var cleanStat = CreateCleanStats(cleanSize, safeMargin);
@@ -1511,7 +1512,7 @@ namespace P42.Uno.Controls
 
             if (pointerDirection.UpAllowed())
             {
-                if (!IsTooSmall(availableWindowSpace.Width, availableSpace.Top - PointerLength))
+                if (!IsTooSmall(availableWindowSpace.Width, availableSpace.Bottom - PointerLength))
                 {
                     var size = new Size(availableWindowSpace.Width, availableSpace.Bottom);
                     var borderSize = MeasureCleanBorder(size, cleanStat.BorderSize);
@@ -1529,7 +1530,7 @@ namespace P42.Uno.Controls
 
             if (pointerDirection.DownAllowed())
             {
-                if (!IsTooSmall(availableWindowSpace.Width, availableSpace.Bottom - PointerLength))
+                if (!IsTooSmall(availableWindowSpace.Width, availableSpace.Top - PointerLength))
                 {
                     var size = new Size(availableWindowSpace.Width, availableSpace.Top);
                     var borderSize = MeasureCleanBorder(size, cleanStat.BorderSize);
