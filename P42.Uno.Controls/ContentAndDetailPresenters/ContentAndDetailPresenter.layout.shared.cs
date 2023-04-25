@@ -53,11 +53,11 @@ namespace P42.Uno.Controls
                 .PageOverlay(Colors.Transparent)
                 .PageOverlayHitTestVisible(false)
                 .Bind(TargetedPopup.TargetProperty, this, nameof(Target))
-                .Bind(TargetedPopup.WidthProperty, this, nameof(PopupWidth))
-                .Bind(TargetedPopup.HeightProperty, this, nameof(PopupHeight))
                 .Bind(TargetedPopup.BorderColorProperty, this, nameof(DetailBorderColor))
                 .Bind(TargetedPopup.BackgroundColorProperty, this, nameof(DetailBackgroundColor))
                 .Bind(TargetedPopup.CornerRadiusProperty, this, nameof(DetailCornerRadius))
+                .Bind(TargetedPopup.MinHeightProperty, this, nameof(PopupMinHeight))
+                .Bind(TargetedPopup.MinWidthProperty, this, nameof(PopupMinWidth))
                 .AddPoppedHandler(OnTargetedPopupPopped)
                 ;
 

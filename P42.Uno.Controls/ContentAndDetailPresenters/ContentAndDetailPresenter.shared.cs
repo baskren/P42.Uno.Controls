@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
 using Microsoft.UI.Xaml.Input;
 using Windows.Devices.Sensors;
+using P42.Utils;
 
 namespace P42.Uno.Controls
 {
@@ -134,25 +135,6 @@ namespace P42.Uno.Controls
         }
         #endregion DetailBorderColor Property
 
-        #region DetailAspectRatio Property
-        public static readonly DependencyProperty DetailAspectRatioProperty = DependencyProperty.Register(
-            nameof(DetailAspectRatio),
-            typeof(double),
-            typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(1.0, new PropertyChangedCallback((d, e) => ((ContentAndDetailPresenter)d).OnDetailAspectRatioChanged(e)))
-        );
-        protected virtual void OnDetailAspectRatioChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (DetailAspectRatio < 2.0 / 3.0 || DetailAspectRatio > 3.0 / 2.0)
-                throw new Exception("Invalid DetailAspectRatio [" + DetailAspectRatio + "].  Must be between 2/3 and 3/2");
-        }
-        public double DetailAspectRatio
-        {
-            get => (double)GetValue(DetailAspectRatioProperty);
-            set => SetValue(DetailAspectRatioProperty, value);
-        }
-        #endregion DetailAspectRatio Property
-
         #region DetailCornerRadius Property
         public static readonly DependencyProperty DetailCornerRadiusProperty = DependencyProperty.Register(
             nameof(DetailCornerRadius),
@@ -167,9 +149,30 @@ namespace P42.Uno.Controls
         }
         #endregion DetailCornerRadius Property
 
-
         #endregion
 
+        #region Drawer Properties
+
+        #region DrawerAspectRatio Property
+        public static readonly DependencyProperty DrawerAspectRatioProperty = DependencyProperty.Register(
+            nameof(DrawerAspectRatio),
+            typeof(double),
+            typeof(ContentAndDetailPresenter),
+            new PropertyMetadata(1.0, new PropertyChangedCallback((d, e) => ((ContentAndDetailPresenter)d).OnDetailAspectRatioChanged(e)))
+        );
+        protected virtual void OnDetailAspectRatioChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if (DrawerAspectRatio < 2.0 / 3.0 || DrawerAspectRatio > 3.0 / 2.0)
+                throw new Exception("Invalid DrawerAspectRatio [" + DrawerAspectRatio + "].  Must be between 2/3 and 3/2");
+        }
+        public double DrawerAspectRatio
+        {
+            get => (double)GetValue(DrawerAspectRatioProperty);
+            set => SetValue(DrawerAspectRatioProperty, value);
+        }
+        #endregion DrawerAspectRatio Property
+
+        #endregion
 
         #region PopupProperties
 
@@ -192,34 +195,34 @@ namespace P42.Uno.Controls
         }
         #endregion Target Property
 
-        #region PopupWidth Property
-        public static readonly DependencyProperty PopupWidthProperty = DependencyProperty.Register(
-            nameof(PopupWidth),
+        #region PopupMinWidth Property
+        public static readonly DependencyProperty PopupMinWidthProperty = DependencyProperty.Register(
+            nameof(PopupMinWidth),
             typeof(double),
             typeof(ContentAndDetailPresenter),
             new PropertyMetadata(300.0)
         );
-        public double PopupWidth
+        public double PopupMinWidth
         {
-            get => (double)GetValue(PopupWidthProperty);
-            set => SetValue(PopupWidthProperty, value);
+            get => (double)GetValue(PopupMinWidthProperty);
+            set => SetValue(PopupMinWidthProperty, value);
         }
 
-        #endregion PopupWidth Property
+        #endregion PopupMinWidth Property
 
-        #region PopupHeight Property
-        public static readonly DependencyProperty PopupHeightProperty = DependencyProperty.Register(
-            nameof(PopupHeight),
+        #region PopupMinHeight Property
+        public static readonly DependencyProperty PopupMinHeightProperty = DependencyProperty.Register(
+            nameof(PopupMinHeight),
             typeof(double),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(double.NaN)
+            new PropertyMetadata(40)
         );
-        public double PopupHeight
+        public double PopupMinHeight
         {
-            get => (double)GetValue(PopupHeightProperty);
-            set => SetValue(PopupHeightProperty, value);
+            get => (double)GetValue(PopupMinHeightProperty);
+            set => SetValue(PopupMinHeightProperty, value);
         }
-        #endregion PopupHeight Property
+        #endregion PopupMinHeight Property
 
         #region PopupHorizontalAlignment Property
         public static readonly DependencyProperty PopupHorizontalAlignmentProperty = DependencyProperty.Register(
@@ -378,6 +381,30 @@ namespace P42.Uno.Controls
             LayoutDetailAndOverlay(args.NewSize, DetailPushPopState == PushPopState.Pushed ? 1 : 0);
         }
 
+        void OpenDrawer(double percentOpen)
+        {
+            if (DrawerOrientation == Orientation.Horizontal)
+            {
+                _drawerColumnDefinition.Width = new GridLength(percentOpen * DrawerSize.Width);
+                Grid.SetRow(_detailDrawer, 0);
+                Grid.SetRowSpan(_detailDrawer, 2);
+                Grid.SetColumn(_detailDrawer, 1);
+                _detailDrawer.BorderThickness = new Thickness(DetailBorderWidth, 0, 0, 0);
+                _detailDrawer.CornerRadius = new CornerRadius(DetailCornerRadius, 0, 0, DetailCornerRadius);
+            }
+            else
+            {
+                _drawerRowDefinition.Height = new GridLength(percentOpen * DrawerSize.Height);
+                Grid.SetRow(_detailDrawer, 2);
+                Grid.SetRowSpan(_detailDrawer, 1);
+                Grid.SetColumn(_detailDrawer, 0);
+                _detailDrawer.BorderThickness = new Thickness(0, DetailBorderWidth, 0, 0);
+                _detailDrawer.CornerRadius = new CornerRadius(DetailCornerRadius, DetailCornerRadius, 0, 0);
+            }
+
+        }
+
+        static object popupToDrawerResizeTrigger = new();
         void LayoutDetailAndOverlay(Size size, double percentOpen)
         {
             if (size.IsZero())
@@ -389,38 +416,23 @@ namespace P42.Uno.Controls
 
             if (LocalIsInDrawerMode(size))
             {
+                if (percentOpen > 0 && _targetedPopup.PushPopState == PushPopState.Pushed)
+                    _targetedPopup.PopAsync(trigger: popupToDrawerResizeTrigger).Forget();
                 _targetedPopup.Content = null;
                 _detailDrawer.Child = Detail;
                 _detailDrawer.Opacity = percentOpen;
-                if (DrawerOrientation == Orientation.Horizontal)
-                {
-                    _drawerColumnDefinition.Width = new GridLength(percentOpen * DrawerSize.Width);
-                    Grid.SetRow(_detailDrawer, 0);
-                    Grid.SetRowSpan(_detailDrawer, 2);
-                    Grid.SetColumn(_detailDrawer, 1);
-                    _detailDrawer.BorderThickness = new Thickness(DetailBorderWidth, 0, 0, 0);
-                    _detailDrawer.CornerRadius = new CornerRadius(DetailCornerRadius, 0, 0, DetailCornerRadius);
-                }
-                else
-                {
-                    _drawerRowDefinition.Height = new GridLength(percentOpen * DrawerSize.Height);
-                    Grid.SetRow(_detailDrawer, 2);
-                    Grid.SetRowSpan(_detailDrawer, 1);
-                    Grid.SetColumn(_detailDrawer, 0);
-                    _detailDrawer.BorderThickness = new Thickness(0, DetailBorderWidth, 0, 0);
-                    _detailDrawer.CornerRadius = new CornerRadius(DetailCornerRadius, DetailCornerRadius, 0, 0);
-                }
-
+                OpenDrawer(percentOpen);
             }
             else
             {
+                OpenDrawer(0);
                 _targetedPopup.Opacity = percentOpen;
                 _detailDrawer.Child = null;
-                _targetedPopup.Width = PopupWidth;
-                _targetedPopup.Height = PopupHeight;
                 //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LayoutDetailAndOverlay _targetedPopup.Size:[{_targetedPopup.Width},{_targetedPopup.Height}]");
                 _targetedPopup.Content = Detail;
 
+                if (percentOpen > 0 && _targetedPopup.PushPopState == PushPopState.Popped)
+                    _targetedPopup.PushAsync().Forget();
                 //while (RowDefinitions.Count > 2)
                 //    RowDefinitions.RemoveAt(RowDefinitions.Count - 1);
                 //while (ColumnDefinitions.Count > 1)
@@ -457,9 +469,9 @@ namespace P42.Uno.Controls
             {
                 var size = new Size(ActualWidth, ActualHeight);
                 if (size.Width / size.Height > 1)
-                    size.Width = size.Height / DetailAspectRatio;
+                    size.Width = Math.Min(300, size.Height / DrawerAspectRatio);
                 else
-                    size.Height = size.Width * DetailAspectRatio;
+                    size.Height = size.Width * DrawerAspectRatio;
 
                 return size;
             }
@@ -471,15 +483,30 @@ namespace P42.Uno.Controls
             if (Detail is null)
                 return false;
 
+            System.Diagnostics.Debug.WriteLine($" : ");
+            System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode({availableSize}) : ============= ENTER ================");
             var measurements = _targetedPopup.GetAlignmentMarginsAndPointerMeasurements(Detail);
+            System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : Measurements: {measurements}");
 
             if (measurements.PointerDirection.IsVertical() || measurements.PointerDirection.IsHorizontal())
+            {
+                System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [FALSE] A ================");
                 return false;
+            }
 
-            if (availableSize.Width - measurements.Size.Width > 100 && availableSize.Height - measurements.Size.Height > 100)
-                return false;
 
-            return true; 
+            var aspect = AspectRatio(availableSize);
+            if (aspect < 1.0)
+                aspect = 1.0 / aspect;
+
+            if (aspect > 1.5 * DrawerAspectRatio)
+            {
+                System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [TRUE] B================");
+                return true;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [FALSE] C ================");
+            return false; 
         }
 
         double AspectRatio(Size size)
@@ -569,6 +596,9 @@ namespace P42.Uno.Controls
 
         async void OnTargetedPopupPopped(object sender, PopupPoppedEventArgs e)
         {
+            if (e.Trigger == popupToDrawerResizeTrigger)
+                return;
+
             if (PopOnPageOverlayTouch)
             {
                 if (e.Cause == PopupPoppedCause.HardwareBackButtonPressed ||

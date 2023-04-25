@@ -47,17 +47,17 @@ namespace P42.Uno.Controls
         public static TElement DetailCornerRadius<TElement>(this TElement presenter, double value) where TElement : ElementType
         { presenter.DetailCornerRadius = value; return presenter; }
 
-        public static TElement DetailAspectRatio<TElement>(this TElement presenter, double aspect) where TElement : ElementType
-        { presenter.DetailAspectRatio = aspect; return presenter; }
+        public static TElement DrawerAspectRatio<TElement>(this TElement presenter, double aspect) where TElement : ElementType
+        { presenter.DrawerAspectRatio = aspect; return presenter; }
 
         public static TElement Target<TElement>(this TElement presenter, FrameworkElement element) where TElement : ElementType
         { presenter.Target = element; return presenter; }
 
         public static TElement PopupWidth<TElement>(this TElement presenter, double width) where TElement : ElementType
-        { presenter.PopupWidth = width; return presenter; }
+        { presenter.PopupMinWidth = width; return presenter; }
 
         public static TElement PopupHeight<TElement>(this TElement presenter, double height) where TElement : ElementType
-        { presenter.PopupHeight = height; return presenter; }
+        { presenter.PopupMinHeight = height; return presenter; }
 
         public static TElement PopupHorizontalAlignment<TElement>(this TElement presenter, HorizontalAlignment alignment) where TElement : ElementType
         { presenter.PopupHorizontalAlignment = alignment; return presenter; }

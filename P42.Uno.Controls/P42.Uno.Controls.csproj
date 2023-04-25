@@ -49,7 +49,6 @@
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
   </ItemGroup>
   <ItemGroup Condition="! $(Bc3Source.ToLower.Contains('nuget')) ">
-    <ProjectReference Include="..\P42.Utils\P42.Utils\P42.Utils.csproj" />
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
   </ItemGroup>
