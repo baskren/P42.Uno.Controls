@@ -384,7 +384,7 @@ namespace P42.Uno.Controls
         );
 
         /// <summary>
-        /// How much space between popup pointer and Target?
+        /// How much direction between popup pointer and Target?
         /// </summary>
         public double PointerMargin
         {
@@ -1280,7 +1280,7 @@ namespace P42.Uno.Controls
 
             //System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit(available:[{availableSpaceAroundTarget}], clean:[{modalSize}], safe:[{safeMargin}]) ");
 
-            // given the amount of free space, determine if the borderSize will fit 
+            // given the amount of free direction, determine if the borderSize will fit 
             var cleanStat = CreateDirectionStats(modalSize);
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit : cleanStat=[{cleanStat}]");
 
@@ -1306,22 +1306,22 @@ namespace P42.Uno.Controls
             {
                 var availableWindowSpace = AvailableWindowSpace;
 
-                var candidates = new Dictionary<double, PointerDirection>
+                var candidates = new Dictionary<PointerDirection, double>
                 {
-                    { availableSpaceSpaceAroundTarget.Left, PointerDirection.Right },
-                    { availableSpaceSpaceAroundTarget.Top, PointerDirection.Down },
-                    { availableSpaceSpaceAroundTarget.Right, PointerDirection.Left },
-                    { availableSpaceSpaceAroundTarget.Bottom, PointerDirection.Up }
+                    { PointerDirection.Right, availableSpaceSpaceAroundTarget.Left },
+                    { PointerDirection.Down , availableSpaceSpaceAroundTarget.Top },
+                    { PointerDirection.Left , availableSpaceSpaceAroundTarget.Right },
+                    { PointerDirection.Up , availableSpaceSpaceAroundTarget.Bottom }
                 };
                 var shrunkStats = new List<DirectionStats>();
 
                 var spaces = candidates.Keys.ToArray().OrderDescending().ToArray();
                
-                foreach (var space in spaces)
+                foreach (var direction in spaces)
                 {
                     var size = availableWindowSpace;
                     var withPointerSize = size;
-                    var direction = candidates[space];
+                    var space = candidates[direction];
                     if ((direction & (PreferredPointerDirection|FallbackPointerDirection)) > 0)
                     {
                         if (direction.IsHorizontal())
