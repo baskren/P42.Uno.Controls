@@ -15,7 +15,6 @@ namespace P42.Uno.Controls
         {
             P42.Utils.Uno.Platform.Init(application, window);
             AssembliesToInclude.Add(typeof(Platform).Assembly);
-
         }
     }
 }

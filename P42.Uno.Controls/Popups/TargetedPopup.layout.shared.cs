@@ -84,6 +84,8 @@ namespace P42.Uno.Controls
 
         protected virtual void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
         {
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.OnBorderSizechanged : {args.NewSize}");
+            UpdateMarginAndAlignment();
             if (HasShadow)
             {
                 var ΔHeight = args.NewSize.Height - (ShadowBorder.Height + ShadowBorder.BlurSigma * 4);
