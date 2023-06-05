@@ -16,8 +16,9 @@ namespace P42.Uno.Controls
     public static class TargetedPopupExtensions
 
     {
-		public static TElement Content<TElement>(this TElement element, object value) where TElement : ElementType
-		{ element.Content = value; return element; }
+        // Redundant with P42.Uno.Markup.ContentControl?
+		//public static TElement Content<TElement>(this TElement element, object value) where TElement : ElementType
+		//{ element.Content = value; return element; }
 
         #region Override Properties
 
@@ -93,8 +94,9 @@ namespace P42.Uno.Controls
         public static TElement BorderWidth<TElement>(this TElement element, double value) where TElement : ElementType
         { element.BorderWidth = value; return element; }
 
-        public static TElement CornerRadius<TElement>(this TElement element, double value) where TElement : ElementType
-        { element.CornerRadius = value; return element; }
+        // redundant with P42.Uno.Markup.ControlExtensions
+        //public static TElement CornerRadius<TElement>(this TElement element, double value) where TElement : ElementType
+        //{ element.CornerRadius = value; return element; }
 
         #endregion
 

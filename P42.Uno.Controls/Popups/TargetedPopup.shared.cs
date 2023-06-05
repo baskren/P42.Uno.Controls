@@ -710,7 +710,12 @@ namespace P42.Uno.Controls
         public TargetedPopup()
         {
             Build();
+            RegisterPropertyChangedCallback(ContentControl.CornerRadiusProperty, OnBaseCornerRadiusChanged);
         }
+
+        private void OnBaseCornerRadiusChanged(DependencyObject sender, DependencyProperty dp)
+            =>  CornerRadius = base.CornerRadius.Average();
+        
 
         /// <summary>
         /// Constructor
