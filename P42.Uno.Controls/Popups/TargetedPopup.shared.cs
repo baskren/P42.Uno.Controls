@@ -1089,7 +1089,7 @@ namespace P42.Uno.Controls
             ContentBorder.InvalidateOutline();
 #endif
 
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.PointerAxialPosition [{ContentBorder.PointerAxialPosition}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.PointerAxialPosition [{ContentBorder.PointerAxialPosition}]");
         }
 
 
@@ -1205,14 +1205,18 @@ namespace P42.Uno.Controls
                     margin.Top = windowSize.Height - Margin.Bottom - stats.BorderSize.Height;
 
                 var pointerTarget = targetBounds.Top + targetBounds.Height * PointerBias;
-                var popupLeft = margin.Top;
+                var popupTop = margin.Top;
                 if (VerticalAlignment == VerticalAlignment.Bottom)
-                    popupLeft = margin.Bottom - stats.BorderSize.Height;
+                    popupTop = margin.Bottom - stats.BorderSize.Height;
                 else if (VerticalAlignment == VerticalAlignment.Center)
-                    popupLeft = targetBounds.CenterY() - stats.BorderSize.Height / 2.0;
-                axialPosition = Math.Min(Math.Max(pointerTarget - popupLeft, 0), stats.BorderSize.Height);
+                {
+                    var targetCenter = targetBounds.CenterY();
+                    popupTop = targetCenter - stats.BorderSize.Height / 2.0;
+                }
 
-                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : PointerAxialPosition:[{axialPosition}]");
+                popupTop = Math.Max(popupTop, margin.Top);
+                popupTop = Math.Min(popupTop, windowSize.Height - Margin.Bottom - stats.BorderSize.Height);
+                axialPosition = Math.Min(Math.Max(pointerTarget - popupTop, 0), stats.BorderSize.Height);
             }
             else
             {
@@ -1234,7 +1238,7 @@ namespace P42.Uno.Controls
                     margin.Left = Math.Max(Margin.Left, targetBounds.Left);
                 else if (HorizontalAlignment == HorizontalAlignment.Center)
                 {
-                    System.Diagnostics.Debug.WriteLine($"TargetedPopup. : stats.BorderSize.Width [{stats.BorderSize.Width}]");
+                    //System.Diagnostics.Debug.WriteLine($"TargetedPopup. : stats.BorderSize.Width [{stats.BorderSize.Width}]");
                     margin.Left = Math.Max(Margin.Left, (targetBounds.Left + targetBounds.Right) / 2.0 - stats.BorderSize.Width / 2.0);
                     hzAlign = HorizontalAlignment.Left;
                 }
@@ -1253,9 +1257,10 @@ namespace P42.Uno.Controls
                     var targetCenter = targetBounds.CenterX();
                     popupLeft = targetCenter - stats.BorderSize.Width / 2.0;
                 }
-                axialPosition = Math.Min(Math.Max(pointerTarget - popupLeft, 0), stats.BorderSize.Width);
 
-                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer : PointerAxialPosition:[{axialPosition}]");
+                popupLeft = Math.Max(popupLeft, margin.Left);
+                popupLeft = Math.Min(popupLeft, windowSize.Width - Margin.Right - stats.BorderSize.Width);
+                axialPosition = Math.Min(Math.Max(pointerTarget - popupLeft, 0), stats.BorderSize.Width);
             }
 
             return new AlignmentMarginsAndPointer(stats.BorderSize, hzAlign, vtAlign, margin, actualPointerDirection, axialPosition);
@@ -1287,21 +1292,21 @@ namespace P42.Uno.Controls
 
             // given the amount of free direction, determine if the borderSize will fit 
             var cleanStat = CreateDirectionStats(modalSize);
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit : cleanStat=[{cleanStat}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit : cleanStat=[{cleanStat}]");
 
 
             // Check if clean border fits in preferred pointer quadrants
             var cleanStats = GetCleanStatsForDirection(PreferredPointerDirection | FallbackPointerDirection, cleanStat, availableSpaceSpaceAroundTarget);
             if (GetBestDirectionStat(cleanStats, PreferredPointerDirection) is DirectionStats stats1)
             {
-                System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit : stats1=[{stats1}]");
+                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit : stats1=[{stats1}]");
                 return stats1;
             }
 
             // Check if clean border fits in unchecked fallback pointer quadrants
             if (GetBestDirectionStat(cleanStats, FallbackPointerDirection) is DirectionStats stats2)
             {
-                System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit : stats2=[{stats2}]");
+                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit : stats2=[{stats2}]");
                 return stats2;
             }
 
@@ -1592,6 +1597,7 @@ namespace P42.Uno.Controls
 
             return false;
         }
+
         bool IsTooSmall(double measuredWidth, double measuredHeight)
         {
             if (!double.IsNaN(MinWidth) && MinWidth > 0)
