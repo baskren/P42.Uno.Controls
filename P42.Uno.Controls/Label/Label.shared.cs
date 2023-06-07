@@ -19,7 +19,8 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace P42.Uno.Controls
 {
-	[ContentProperty(Name = "Text")]
+    [Microsoft.UI.Xaml.Data.Bindable]
+    [ContentProperty(Name = "Text")]
 	public partial class Label : UserControl
 	{
 

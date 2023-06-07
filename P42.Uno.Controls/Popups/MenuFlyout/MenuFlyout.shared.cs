@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Markup;
 
 namespace P42.Uno.Controls
 {
+    [Microsoft.UI.Xaml.Data.Bindable]
     public partial class MenuFlyout : DependencyObject
     {
         #region Properties

@@ -13,6 +13,7 @@ using P42.Utils.Uno;
 
 namespace P42.Uno.Controls
 {
+    [Microsoft.UI.Xaml.Data.Bindable]
     public partial class RootFrame : Frame
     {
         #region Frame Properties

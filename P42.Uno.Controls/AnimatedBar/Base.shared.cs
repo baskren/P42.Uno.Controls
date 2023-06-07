@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml;
 
 namespace P42.Uno.Controls.AnimateBar
 {
+    [Microsoft.UI.Xaml.Data.Bindable]
     public partial class Base : Grid, IDisposable
     {
         #region Properties

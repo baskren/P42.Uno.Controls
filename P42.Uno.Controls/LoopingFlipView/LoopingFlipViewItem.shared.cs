@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
+    [Microsoft.UI.Xaml.Data.Bindable]
     internal partial class LoopingFlipViewItem : Grid
     {
         internal UIElement Child;
