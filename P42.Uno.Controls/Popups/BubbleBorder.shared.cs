@@ -705,62 +705,24 @@ namespace P42.Uno.Controls
 
                         .Bind(ContentPresenter.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
                         .Bind(ContentPresenter.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
-#if __ANDROID__
-                        //.AddSizeChangedHandler(OnContentSizeChanged)
-#endif
 
                 );
 
             UpdateConetntPresenterMarginAndCorners();
-#if __ANDROID__
-            SizeChanged += OnFESizeChanged;
-            RegisterPropertyChangedCallback(OpacityProperty, OnOpacityChanged);
-#endif
-
             //RegisterPropertyChangedCallback(MarginProperty, OnMarginChanged);
         }
 
-        /*
-        private void OnMarginChanged(DependencyObject sender, DependencyProperty dp)
-        {
-            if (sender is BubbleBorder border)
-            System.Diagnostics.Debug.WriteLine($"BubbleBorder.OnMarginChanged : [{border.Margin}]");
-
-        }
-        */
 
 #if __MOBILE__
         private void OnContentSizeChanged(object sender, SizeChangedEventArgs args)
         {
 
-            //System.Diagnostics.Debug.WriteLine($"BubbleBorder.OnContentSizeChanged : [{args.PreviousSize}] => [{args.NewSize}]");
+            System.Diagnostics.Debug.WriteLine($"BubbleBorder.OnContentSizeChanged : [{args.PreviousSize}] => [{args.NewSize}]");
             //InvalidateMeasure();
             InvalidateArrange();
         }
 #endif
 
-#if __ANDROID__
-        private void OnOpacityChanged(DependencyObject sender, DependencyProperty dp)
-        {
-            //UpdateConetntPresenterMarginAndCorners();
-        }
-        private void OnFESizeChanged(object sender, SizeChangedEventArgs args)
-        {
-            //UpdateConetntPresenterMarginAndCorners();
-            //_bubble.InvalidateMeasure();
-            //_contentPresenter.Invalidate();
-            //_contentPresenter.InvalidateArrange();
-            //_contentPresenter.InvalidateMeasure();
-        }
-        /*
-        private void OnContentSizeChanged(object sender, SizeChangedEventArgs args)
-        {
-            //UpdateConetntPresenterMarginAndCorners();
-            //_bubble.InvalidateMeasure();
-            //_bubble.Invalidate();
-        }
-        */
-#endif
 
 #endregion
 
@@ -821,10 +783,6 @@ namespace P42.Uno.Controls
         }
 #endregion
 
-
-#if __ANDROID__
-
-#endif
 
     }
 }

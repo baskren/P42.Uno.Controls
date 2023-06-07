@@ -1065,7 +1065,7 @@ namespace P42.Uno.Controls
             }
         }
 
-        void SetAlignmentMarginsAndPointer(AlignmentMarginsAndPointer value)
+        void SetAlignmentMarginsAndPointer(AlignmentMarginsAndPointer value, Size bubbleSize = default)
         {
             ContentBorder.HorizontalAlignment = ShadowBorder.HorizontalAlignment = value.HorizontalAlignment;
             ContentBorder.VerticalAlignment = ShadowBorder.VerticalAlignment = value.VerticalAlignment;
@@ -1076,27 +1076,32 @@ namespace P42.Uno.Controls
             ContentBorder.PointerAxialPosition = value.PointerAxialPosition;
             ShadowBorder.PointerAxialPosition = ContentBorder.PointerAxialPosition + ShadowBorder.BlurSigma * 2;
 
-#if HAS_UNO
+#if __IOS__ || __MACCATALYST__
             ContentBorder.InvalidateMeasure();
 #endif
 
 #if __ANDROID__
-            ContentBorder.Invalidate();
-            ContentBorder.InvalidateArrange();
-            ContentBorder.InvalidateMeasure();
-            //ContentBorder.InvalidateDrawable();
-            ContentBorder.InvalidateOutline();
+            // As god as my witness, I curse the former CEO of Android with the passion of a thousand suns.
+            if (bubbleSize != default && (bubbleSize.Width < value.Size.Width || bubbleSize.Height < value.Size.Height))
+            {
+
+                var content = ContentBorder.Content;
+                ContentBorder.Content = null;
+                ContentBorder.Content = content;
+            }
 #endif
 
-            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.HorizontalAlignment [{ContentBorder.HorizontalAlignment}]");
-            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.VerticalAlignment [{ContentBorder.VerticalAlignment}]");
-            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.Margin [{ContentBorder.Margin}]");
-            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.PointerAxialPosition [{ContentBorder.PointerAxialPosition}]");
-            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ActualPointerDirection [{ActualPointerDirection}]");
+            /*
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.HorizontalAlignment [{ContentBorder.HorizontalAlignment}]");
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.VerticalAlignment [{ContentBorder.VerticalAlignment}]");
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.Margin [{ContentBorder.Margin}]");
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.PointerAxialPosition [{ContentBorder.PointerAxialPosition}]");
+            System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ActualPointerDirection [{ActualPointerDirection}]");
+            */
         }
 
 
-        void UpdateMarginAndAlignment()
+        void UpdateMarginAndAlignment(Size newSize = default)
         {
 
             //System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment : ENTER");
@@ -1107,7 +1112,7 @@ namespace P42.Uno.Controls
                 return;
             }
 
-            SetAlignmentMarginsAndPointer(GetAlignmentMarginsAndPointerMeasurements());
+            SetAlignmentMarginsAndPointer(GetAlignmentMarginsAndPointerMeasurements(), newSize);
             //System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment : EXIT");
         }
 
@@ -1272,19 +1277,19 @@ namespace P42.Uno.Controls
                 popupLeft = Math.Min(popupLeft, windowSize.Width - Margin.Right - stats.BorderSize.Width);
                 axialPosition = Math.Min(Math.Max(pointerTarget - popupLeft, 0), stats.BorderSize.Width);
 
+                /*
+                System.Diagnostics.Debug.WriteLine($"==================================================================================================== : ");
 
-                //System.Diagnostics.Debug.WriteLine($"==================================================================================================== : ");
-
-                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : HorizontalAlignment [{HorizontalAlignment}]");
-                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : targetBounds [{targetBounds}]");
-                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : PointerBias [{PointerBias}]");
-                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : pointerTarget [{pointerTarget}]");
-                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : Margin [{Margin}]");
-                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : stats.BorderSize [{stats.BorderSize}]");
-                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : margin [{margin}]");
-                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : popupLeft [{popupLeft}]");
-                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : axialPosition [{axialPosition}]");
-
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : HorizontalAlignment [{HorizontalAlignment}]");
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : targetBounds [{targetBounds}]");
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : PointerBias [{PointerBias}]");
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : pointerTarget [{pointerTarget}]");
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : Margin [{Margin}]");
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : stats.BorderSize [{stats.BorderSize}]");
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : margin [{margin}]");
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : popupLeft [{popupLeft}]");
+                System.Diagnostics.Debug.WriteLine($"TargetedPopup.GetAlignmentMarginsAndPointerMeasurements : axialPosition [{axialPosition}]");
+                */
 
             }
 
