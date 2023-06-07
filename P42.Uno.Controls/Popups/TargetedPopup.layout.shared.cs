@@ -5,12 +5,12 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
 using P42.Uno.Markup;
 using P42.Utils.Uno;
-using Microsoft.UI.Xaml.Input;
 using System;
 using Microsoft.UI;
 
 namespace P42.Uno.Controls
 {
+    [Microsoft.UI.Xaml.Data.Bindable]
     public partial class TargetedPopup : ContentControl
     {
         #region Defaults

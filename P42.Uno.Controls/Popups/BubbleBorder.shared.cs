@@ -34,12 +34,16 @@ namespace P42.Uno.Controls
             typeof(BubbleBorder),
             new PropertyMetadata(SkiaBubble.DefaultFillColor)
         );
+#if __IOS__ || __MACCATALYST__
+        public new Color BackgroundColor
+#else
         public Color BackgroundColor
+#endif
         {
             get => (Color)GetValue(BackgroundColorProperty);
             set => SetValue(BackgroundColorProperty, value);
         }
-        #endregion BackgroundColor Property
+#endregion BackgroundColor Property
 
         #region BorderColor Property
         public static readonly DependencyProperty BorderColorProperty = DependencyProperty.Register(
@@ -74,7 +78,7 @@ namespace P42.Uno.Controls
         }
         #endregion BorderWidth Property
 
-        #endregion
+#endregion
 
         #region ContentPresenter Properties
 
@@ -173,8 +177,20 @@ namespace P42.Uno.Controls
             nameof(Content),
             typeof(object),
             typeof(BubbleBorder),
-            new PropertyMetadata(null)
+            new PropertyMetadata(null, (d,p) => ((BubbleBorder)d).OnContentChanged(p))
         );
+
+        private void OnContentChanged(DependencyPropertyChangedEventArgs p)
+        {
+#if __MOBILE__
+            if (p.OldValue is FrameworkElement oldContent)
+                oldContent.SizeChanged -= OnContentSizeChanged;
+            if (p.NewValue is FrameworkElement newContent)
+                newContent.SizeChanged += OnContentSizeChanged;
+#endif
+        }
+
+
         public object Content
         {
             get => (object)GetValue(ContentProperty);
@@ -584,7 +600,7 @@ namespace P42.Uno.Controls
 
         #endregion
 
-        #endregion
+#endregion
 
 
         #region Private Properties
@@ -603,7 +619,7 @@ namespace P42.Uno.Controls
 
         #region Fields
         internal ContentPresenter _contentPresenter;
-        SkiaBubble _bubble;
+        //SkiaBubble _bubble;
         #endregion
 
 
@@ -623,7 +639,7 @@ namespace P42.Uno.Controls
                 .Children
                 (
                     new SkiaBubble()
-                        .Assign(out _bubble)
+                        //.Assign(out _bubble)
                         .Margin(0)
                         .Bind(SkiaBubble.BackgroundColorProperty, this, nameof(BackgroundColor))
                         .Bind(SkiaBubble.BorderColorProperty, this, nameof(BorderColor))
@@ -701,8 +717,27 @@ namespace P42.Uno.Controls
             RegisterPropertyChangedCallback(OpacityProperty, OnOpacityChanged);
 #endif
 
+            //RegisterPropertyChangedCallback(MarginProperty, OnMarginChanged);
         }
 
+        /*
+        private void OnMarginChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            if (sender is BubbleBorder border)
+            System.Diagnostics.Debug.WriteLine($"BubbleBorder.OnMarginChanged : [{border.Margin}]");
+
+        }
+        */
+
+#if __MOBILE__
+        private void OnContentSizeChanged(object sender, SizeChangedEventArgs args)
+        {
+
+            //System.Diagnostics.Debug.WriteLine($"BubbleBorder.OnContentSizeChanged : [{args.PreviousSize}] => [{args.NewSize}]");
+            //InvalidateMeasure();
+            InvalidateArrange();
+        }
+#endif
 
 #if __ANDROID__
         private void OnOpacityChanged(DependencyObject sender, DependencyProperty dp)
@@ -717,16 +752,17 @@ namespace P42.Uno.Controls
             //_contentPresenter.InvalidateArrange();
             //_contentPresenter.InvalidateMeasure();
         }
-
+        /*
         private void OnContentSizeChanged(object sender, SizeChangedEventArgs args)
         {
             //UpdateConetntPresenterMarginAndCorners();
             //_bubble.InvalidateMeasure();
             //_bubble.Invalidate();
         }
+        */
 #endif
 
-        #endregion
+#endregion
 
 
         #region Private Methods
