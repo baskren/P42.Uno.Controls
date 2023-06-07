@@ -16,7 +16,6 @@ using Microsoft.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
-    [Microsoft.UI.Xaml.Data.Bindable]
     [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     [ContentProperty(Name = "Items")]
     public partial class MenuFlyout : IDisposable
