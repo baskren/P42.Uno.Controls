@@ -108,7 +108,7 @@ namespace P42.Uno.Controls
             var fillRect = e.Info.Rect;
 
             workingCanvas.Clear();
-            if (_skSvg is null)
+            if (_skSvg?.Picture is null)
                 return;
             workingCanvas.Save();
 
