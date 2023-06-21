@@ -14,7 +14,8 @@ namespace P42.Uno.Controls
                 .RowSpan(2)
                 .Width(40)
                 .Height(40)
-                .Margin(10);
+                .Margin(10)
+                .Bind(ProgressRing.IsActiveProperty, this, nameof(IsPushed));
 
 //#if NETSTANDARD
 //            _progressRing.Collapsed();

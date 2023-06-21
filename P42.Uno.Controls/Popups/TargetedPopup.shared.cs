@@ -592,7 +592,21 @@ namespace P42.Uno.Controls
 
         protected virtual void OnPushPopStateChanged(DependencyPropertyChangedEventArgs e)
         {
-            
+            if (e.NewValue is PushPopState state)
+            {
+                IsPushing = false;
+                IsPushed = false;
+                IsPopping = false;
+                IsPopped = false;
+
+                switch (state)
+                {
+                    case PushPopState.Pushing: IsPushing = true; break;
+                    case PushPopState.Pushed: IsPushed = true; break;
+                    case PushPopState.Popping: IsPopping = true; break;
+                    case PushPopState.Popped: IsPopped = true; break;
+                }
+            }
         }
 
         /// <summary>
@@ -604,6 +618,64 @@ namespace P42.Uno.Controls
             internal set => SetValue(PushPopStateProperty, value);
         }
         #endregion PushPopState Property
+
+        
+        #region IsPushing Property
+        public static readonly DependencyProperty IsPushingProperty = DependencyProperty.Register(
+            nameof(IsPushing),
+            typeof(bool),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(bool))
+        );
+        public bool IsPushing
+        {
+            get => (bool)GetValue(IsPushingProperty);
+            set => SetValue(IsPushingProperty, value);
+        }
+        #endregion IsPushing Property
+
+        #region IsPushed Property
+        public static readonly DependencyProperty IsPushedProperty = DependencyProperty.Register(
+            nameof(IsPushed),
+            typeof(bool),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(bool))
+        );
+        public bool IsPushed
+        {
+            get => (bool)GetValue(IsPushedProperty);
+            set => SetValue(IsPushedProperty, value);
+        }
+        #endregion IsPushed Property
+
+        #region IsPopping Property
+        public static readonly DependencyProperty IsPoppingProperty = DependencyProperty.Register(
+            nameof(IsPopping),
+            typeof(bool),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(bool))
+        );
+        public bool IsPopping
+        {
+            get => (bool)GetValue(IsPoppingProperty);
+            set => SetValue(IsPoppingProperty, value);
+        }
+        #endregion IsPopping Property
+
+        #region IsPopped Property
+        public static readonly DependencyProperty IsPoppedProperty = DependencyProperty.Register(
+            nameof(IsPopped),
+            typeof(bool),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(bool))
+        );
+        public bool IsPopped
+        {
+            get => (bool)GetValue(IsPoppedProperty);
+            set => SetValue(IsPoppedProperty, value);
+        }
+        #endregion IsPopped Property
+
 
         #region AnimationDuration Property
         public static readonly DependencyProperty AnimationDurationProperty = DependencyProperty.Register(
@@ -624,17 +696,6 @@ namespace P42.Uno.Controls
 
         #endregion Push/Pop Properties
 
-
-        static int _pushingCount = 0;
-        public static bool IsPushing
-        {
-            get => _pushingCount > 0;
-            private set
-            {
-                _pushingCount += value ? 1 : -1;
-            }
-
-        }
 
         #endregion
 
@@ -881,7 +942,7 @@ namespace P42.Uno.Controls
 
                 UpdateOpacity(0.0);
                 Popups.Add(this);
-                await Task.Delay(50);
+                await Task.Delay(150);
 
                 await Feedback.PlayAsync(PushEffect, PushEffectMode);
                 if (animated)
