@@ -27,6 +27,8 @@ namespace P42.Uno.Controls
 
             _bubbleContentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             _bubbleContentGrid.Children.Add(_okButton);
+
+            this.DisableAlternativeCancel(); 
         }
 
     }

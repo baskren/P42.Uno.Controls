@@ -23,6 +23,8 @@ namespace P42.Uno.Controls
                 .Bind(CheckBox.ContentProperty, this, nameof(CheckContent));
 
             _bubbleContentGrid.Children.Add(_checkBox);
+
+            this.DisableAlternativeCancel(false);
         }
 
     }
