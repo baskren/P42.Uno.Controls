@@ -11,20 +11,14 @@
    
     <Version>4.9.26</Version>
     <PackageId Condition=" $(P42_TargetOnlyThisPlatform.ToLower.Contains('wasm')) ">$(MSBuildProjectName).Wasm</PackageId>
-    <!--
-    Force all projects of this folder to use a different output
-    path to avoid intermediate output collisions
-    -->
-  	<BaseOutputPath>bin\$(MSBuildProjectName)</BaseOutputPath>
-  	<BaseIntermediateOutputPath>obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
-  	<DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
-  
+
   	<PublishRepositoryUrl>true</PublishRepositoryUrl>
   	<EmbedUntrackedSources>true</EmbedUntrackedSources>
   	<IncludeSymbols>true</IncludeSymbols>
   	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
-    <LangVersion>9.0</LangVersion>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally> 
+
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Ben Askren</Authors>
     <Company>42nd Parallel, LLC</Company>
@@ -33,10 +27,11 @@
     <PackageProjectUrl>https://github.com/baskren/P42.Uno.Controls</PackageProjectUrl>
     <RepositoryUrl>https://github.com/baskren/P42.Uno.Controls</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>Inital Public Release</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageIcon>P42.icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>WinUI Uno.Platform Uno Widgets</PackageTags>
   </PropertyGroup>
 
 
@@ -47,6 +42,7 @@
 		<None Include="..\README.md" Pack="true" PackagePath="\" />
 		<None Include="..\LICENSE" Pack="true" PackagePath="\" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
+    <PackageReference Include="Uno.WinUI" Version="4.9.26" />
   </ItemGroup>
   <ItemGroup Condition="! $(Bc3Source.ToLower.Contains('nuget')) ">
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
@@ -90,7 +86,7 @@
   <ItemGroup Condition=" !$(TargetFramework.Contains('windows')) ">
     <PackageReference Include="Uno.WinUI.Lottie" Version="4.9.26" />
     <PackageReference Condition="! $(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) " Include="Uno.WinUI.Svg" Version="4.9.26" />
-    <PackageReference Include="Svg.Skia" Version="0.5.16" />
+    <PackageReference Include="Svg.Skia" Version="0.5.18" />
 	  <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
   </ItemGroup>
 
