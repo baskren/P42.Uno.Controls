@@ -34,7 +34,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
     <PackageReference Include="Uno.Core.Extensions.Logging.Singleton" Version="4.0.1" />
-    <PackageReference Include="Uno.WinUI" Version="4.9.17" />
+    <PackageReference Include="Uno.WinUI" Version="4.9.26" />
     <PackageReference Include="Uno.Toolkit.WinUI" Version="2.4.2" />
   </ItemGroup>
 
@@ -55,7 +55,7 @@
   <ItemGroup Condition="'$(TargetFramework)'!='net7.0-windows10.0.19041'">
     <PackageReference Include="Uno.CommunityToolkit.WinUI" Version="7.1.100" />
     <PackageReference Include="Uno.CommunityToolkit.WinUI.UI" Version="7.1.100" />
-    <PackageReference Include="Uno.WinUI.Lottie" Version="4.9.17" />
+    <PackageReference Include="Uno.WinUI.Lottie" Version="4.9.26" />
     <Content Include="Assets\**" />
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     <ApplicationDefinition Include="App.xaml" Condition="exists('App.xaml')" />
@@ -65,7 +65,7 @@
   </ItemGroup>
 
 	<ItemGroup Condition=" $(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) ">
-		<PackageReference Include="Uno.WinUI.WebAssembly" Version="4.9.17" />
+		<PackageReference Include="Uno.WinUI.WebAssembly" Version="4.9.26" />
 	</ItemGroup>
 
 
