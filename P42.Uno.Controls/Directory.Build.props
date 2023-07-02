@@ -132,7 +132,6 @@
 
   <!-- Not Windows -->
   <ItemGroup Condition=" !$(TargetFramework.Contains('windows')) ">
-    <PackageReference Include="Uno.WinUI" Version="4.9.26" />
     <Compile Condition="$(P42_PlatformSpecificFiles)" Include="**\*.uno.cs" />
     <Content Include="Assets\**" />
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />

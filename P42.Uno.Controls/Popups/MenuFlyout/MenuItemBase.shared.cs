@@ -14,10 +14,10 @@ using Windows.UI;
 
 namespace P42.Uno.Controls
 {
-    [Microsoft.UI.Xaml.Data.Bindable]
     /// <summary>
     /// Item for Popup Menu
     /// </summary>
+    [Microsoft.UI.Xaml.Data.Bindable]
     public partial class MenuItemBase : DependencyObject 
     {
         #region Properties 

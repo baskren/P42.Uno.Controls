@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
+#pragma warning disable CA1422 // Validate platform compatibility
 namespace P42.Uno.Controls
 {
     class NativeHapticPlayer : INativeHapticPlayer
@@ -124,3 +125,4 @@ namespace P42.Uno.Controls
         }
     }
 }
+#pragma warning restore CA1422 // Validate platform compatibility

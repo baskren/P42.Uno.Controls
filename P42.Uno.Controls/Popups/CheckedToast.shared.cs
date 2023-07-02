@@ -7,10 +7,10 @@ using Windows.UI;
 
 namespace P42.Uno.Controls
 {
-    [Microsoft.UI.Xaml.Data.Bindable]
     /// <summary>
     /// Alert with "Do not notify me again" check box
     /// </summary>
+    [Microsoft.UI.Xaml.Data.Bindable]
     public partial class CheckedToast : Alert
     {
         #region Properties
