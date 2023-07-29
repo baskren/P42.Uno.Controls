@@ -85,24 +85,24 @@ namespace P42.Uno.Controls
             if (!RootFrame.Initiated)
                 throw new Exception("P42.Uno.Controls popups require using P42.Uno.Controls.RootFrame as the application's window's Content");
 
-            System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : Visibility [{Visibility}]");
-            System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : last [{Stack.LastOrDefault()?.GetType()}]");
+            //System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : Visibility [{Visibility}]");
+            //System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : last [{Stack.LastOrDefault()?.GetType()}]");
             if (Visibility == Visibility.Collapsed)
             {
-                System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : return false");
+                //System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : return false");
                 return false;
             }
 
-            System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : Stack.Count [{Stack.Count}]");
+            //System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : Stack.Count [{Stack.Count}]");
             if (Stack.LastOrDefault() is TargetedPopup last)
             {
-                System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : last [{last.GetType()}]");
+                //System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : last [{last.GetType()}]");
                 await last.PopAsync(cause);
-                System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : return TRUE");
+                //System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : return TRUE");
                 return true;
             }
 
-            System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : return false");
+            //System.Diagnostics.Debug.WriteLine($"Popups.TryPopAsync : return false");
             return false;
         }
 

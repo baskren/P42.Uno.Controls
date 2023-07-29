@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Shapes;
 namespace P42.Uno.Controls
 {
     [Microsoft.UI.Xaml.Data.Bindable]
-    public partial class SegmentedControl : Grid
+    public partial class SegmentedControl : UserControl
     {
         #region Properties
 
@@ -265,6 +265,7 @@ namespace P42.Uno.Controls
         readonly List<Rectangle> Backgrounds = new List<Rectangle>();
         readonly CollectionSelectionTracker<string> SelectionTracker = new CollectionSelectionTracker<string>();
         readonly TextBlock _testTextBlock = new TextBlock().FontSize(16);
+        readonly Grid grid = new Grid();
         #endregion
 
 
@@ -274,6 +275,8 @@ namespace P42.Uno.Controls
         /// </summary>
         public SegmentedControl()
         {
+            Content = grid;
+
             _testTextBlock
                 .Bind(TextBlock.MarginProperty, this, nameof(Padding));
 
@@ -290,16 +293,61 @@ namespace P42.Uno.Controls
             SelectionTracker.SelectionChanged += OnSelectionTracker_SelectionChanged;
 
 #if !HAS_UNO
-
-            RegisterPropertyChangedCallback(Grid.BorderThicknessProperty, OnBorderThicknessChanged);
+            RegisterPropertyChangedCallback(UserControl.BorderThicknessProperty, OnBorderThicknessChanged);
 #endif
+            RegisterPropertyChangedCallback(UserControl.IsEnabledProperty, OnIsEnabledChanged);
+
+            grid.Bind(Grid.CornerRadiusProperty, this, nameof(CornerRadius));
+            grid.Bind(Grid.BorderBrushProperty, this, nameof(BorderBrush));
+            grid.Bind(Grid.BorderThicknessProperty, this, nameof(BorderThickness));
+        }
+
+        #endregion
+
+
+        #region Programmatic Selection
+        public void SelectLabel(string label)
+        {
+            if (!Labels.Contains(label))
+                return;
+
+            foreach(var child in grid.Children)
+            {
+                if (child is not TextBlock textBlock)
+                    continue;
+
+                if (textBlock.Text == label)
+                {
+                    OnSegmentTapped(label, new TappedRoutedEventArgs());
+                    return;
+                }
+            }
+        }
+
+        public void SelectIndex(int index)
+        {
+            if (index < 0 || index >= Labels.Count) return;
+
+            SelectLabel(Labels[index]);
         }
         #endregion
 
 
         #region Gesture Handlers
+        private void OnIsEnabledChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            if (IsLoaded)
+            {
+                for (int i = 0; i < Labels.Count; i++)
+                    SetDefaultElementColors(i);
+            }
+        }
+
         void OnSegmentTapped(object sender, TappedRoutedEventArgs e)
         {
+            if (!IsEnabled)
+                return;
+
             if (sender is FrameworkElement d)
             {
                 var index = (int)d.GetValue(Grid.ColumnProperty);
@@ -313,6 +361,9 @@ namespace P42.Uno.Controls
 
         void OnSegmentPointerEntered(object sender, PointerRoutedEventArgs e)
         {
+            if (!IsEnabled) 
+                return; 
+
             if (sender is FrameworkElement d)
             {
                 var index = (int)d.GetValue(Grid.ColumnProperty);
@@ -322,6 +373,8 @@ namespace P42.Uno.Controls
 
         void OnSegmentPointerExited(object sender, PointerRoutedEventArgs e)
         {
+            if (!IsEnabled) return;
+
             if (sender is FrameworkElement d)
             {
                 var index = (int)d.GetValue(Grid.ColumnProperty);
@@ -340,20 +393,20 @@ namespace P42.Uno.Controls
 
                 var background = Backgrounds[index];
                 background.Fill = SelectedIndexes.Contains(index)
-                    ? BorderBrush.AssureGesturable() 
-                    : SystemToggleButtonBrushes.Background.AssureGesturable();
+                    ? BorderBrush.AsGesterableEnabled(IsEnabled) 
+                    : SystemToggleButtonBrushes.Background.AsGesterableEnabled(IsEnabled);
                 var textBlock = TextBlocks[index];
                 textBlock.Foreground = selected
-                    ? SystemToggleButtonBrushes.CheckedForeground
-                    : SystemToggleButtonBrushes.Foreground;
+                    ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
+                    : SystemToggleButtonBrushes.Foreground.AsGesterableEnabled(IsEnabled);
                 if (index < Separators.Count)
                 {
                     var separator = Separators[index];
                     var nextSelected = SelectedIndexes.Contains(index + 1);
                     separator.Visible(selected == nextSelected);
                     separator.Fill = selected
-                        ? SystemToggleButtonBrushes.CheckedForeground
-                        : BorderBrush;
+                        ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
+                        : BorderBrush.AsGesterableEnabled(IsEnabled);
                 }
             }
         }
@@ -498,10 +551,10 @@ namespace P42.Uno.Controls
                 );
 
         void AddNewColumn()
-            => ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            => grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
         void RemoveLastColumn()
-            => ColumnDefinitions.RemoveAt(ColumnDefinitions.Count - 1);
+            => grid.ColumnDefinitions.RemoveAt(grid.ColumnDefinitions.Count - 1);
         #endregion
 
 
@@ -531,13 +584,13 @@ namespace P42.Uno.Controls
         {
             var columns = Labels.Count;
 
-            while (columns > ColumnDefinitions.Count)
+            while (columns > grid.ColumnDefinitions.Count)
                 AddNewColumn();
-            while (columns < ColumnDefinitions.Count)
+            while (columns < grid.ColumnDefinitions.Count)
                 RemoveLastColumn();
 
             if (IsOverflowed)
-                Children.Clear();
+                grid.Children.Clear();
             else
             {
                 while (TextBlocks.Count < columns)
@@ -551,19 +604,19 @@ namespace P42.Uno.Controls
                 {
                     TextBlocks[i].Text(Labels[i]);
 
-                    if (!Children.Contains(TextBlocks[i]))
-                        Children.Add(TextBlocks[i]);
-                    if (i < columns - 1 && !Children.Contains(Separators[i]))
-                        Children.Add(Separators[i]);
-                    if (!Children.Contains(Backgrounds[i]))
-                        Children.Insert(0, Backgrounds[i]);
+                    if (!grid.Children.Contains(TextBlocks[i]))
+                        grid.Children.Add(TextBlocks[i]);
+                    if (i < columns - 1 && !grid.Children.Contains(Separators[i]))
+                        grid.Children.Add(Separators[i]);
+                    if (!grid.Children.Contains(Backgrounds[i]))
+                        grid.Children.Insert(0, Backgrounds[i]);
                 }
 
-                var remove = Children.Where(c => (int)c.GetValue(Grid.ColumnProperty) >= columns);
-                Children.RemoveRange(remove);
+                var remove = grid.Children.Where(c => (int)c.GetValue(Grid.ColumnProperty) >= columns);
+                grid.Children.RemoveRange(remove);
 
-                remove = Children.Where(c => (int)c.GetValue(Grid.ColumnSpanProperty) > 1 && (int)c.GetValue(Grid.ColumnProperty) >= columns - 1);
-                Children.RemoveRange(remove);
+                remove = grid.Children.Where(c => (int)c.GetValue(Grid.ColumnSpanProperty) > 1 && (int)c.GetValue(Grid.ColumnProperty) >= columns - 1);
+                grid.Children.RemoveRange(remove);
 
                 DisplaySelections();
             }

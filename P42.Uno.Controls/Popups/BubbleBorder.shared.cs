@@ -717,7 +717,7 @@ namespace P42.Uno.Controls
         private void OnContentSizeChanged(object sender, SizeChangedEventArgs args)
         {
 
-            System.Diagnostics.Debug.WriteLine($"BubbleBorder.OnContentSizeChanged : [{args.PreviousSize}] => [{args.NewSize}]");
+            //System.Diagnostics.Debug.WriteLine($"BubbleBorder.OnContentSizeChanged : [{args.PreviousSize}] => [{args.NewSize}]");
             //InvalidateMeasure();
             InvalidateArrange();
         }

@@ -58,6 +58,7 @@ namespace P42.Uno.Controls
 #if __IOS__
             Opaque = false;
 #endif
+
         }
 
         public EmbeddedSvgImage(string resourceId, Assembly assembly = null) : this()
@@ -92,6 +93,7 @@ namespace P42.Uno.Controls
                 {
                     _skSvg = new SkiaSharp.Extended.Svg.SKSvg();
                     _skSvg.Load(stream);
+                    Invalidate();
                 }
             }
         }

@@ -38,6 +38,9 @@ namespace P42.Uno.Controls
         public static Element Labels(this Element element, params string[] labels)
         { element.Labels = labels; return element; }
 
+        public static Element Labels(this Element element, IList<string> labels)
+        { element.Labels = labels; return element; }
+
         public static Element BorderWidth(this Element element, double width)
         { element.BorderWidth = width; return element; }
 
