@@ -9,7 +9,7 @@
   <!-- NUGET PACKAGE GENERATION -->
 	<PropertyGroup Condition=" $(P42_LocalNuGetFolderPath) != '' AND  '$(OS)' == 'Windows_NT'  AND !$(P42_TargetOnlyThisPlatform.ToLower().Contains('android')) AND !$(P42_TargetOnlyThisPlatform.ToLower().Contains('ios')) AND !$(P42_TargetOnlyThisPlatform.ToLower().Contains('mac')) AND !$(P42_TargetOnlyThisPlatform.ToLower().Contains('windows')) AND !$(P42_TargetOnlyThisPlatform.ToLower().Contains('tizen')) ">
    
-    <Version>4.9.26</Version>
+    <Version>4.9.42</Version>
     <PackageId Condition=" $(P42_TargetOnlyThisPlatform.ToLower.Contains('wasm')) ">$(MSBuildProjectName).Wasm</PackageId>
 
   	<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -42,19 +42,19 @@
 		<None Include="..\README.md" Pack="true" PackagePath="\" />
 		<None Include="..\LICENSE" Pack="true" PackagePath="\" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
-    <PackageReference Include="Uno.WinUI" Version="4.9.26" />
+    <PackageReference Include="Uno.WinUI" Version="4.9.42" />
   </ItemGroup>
   <ItemGroup Condition="! $(Bc3Source.ToLower.Contains('nuget')) ">
     <ProjectReference Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
   </ItemGroup>
   <ItemGroup Condition=" $(Bc3Source.ToLower.Contains('nuget')) AND $(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) ">
-    <PackageReference Include="P42.Utils.Uno.Wasm" Version="4.9.26" />
-    <PackageReference Include="P42.Uno.Markup.Wasm" Version="4.9.26" />
+    <PackageReference Include="P42.Utils.Uno.Wasm" Version="4.9.42" />
+    <PackageReference Include="P42.Uno.Markup.Wasm" Version="4.9.42" />
   </ItemGroup>
   <ItemGroup Condition=" $(Bc3Source.ToLower.Contains('nuget')) AND !$(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) ">
-    <PackageReference Include="P42.Utils.Uno" Version="4.9.26" />
-    <PackageReference Include="P42.Uno.Markup" Version="4.9.26" />
+    <PackageReference Include="P42.Utils.Uno" Version="4.9.42" />
+    <PackageReference Include="P42.Uno.Markup" Version="4.9.42" />
   </ItemGroup>
 
   <!-- ANDROID -->
@@ -84,8 +84,8 @@
 
   <!-- NOT Windows -->
   <ItemGroup Condition=" !$(TargetFramework.Contains('windows')) ">
-    <PackageReference Include="Uno.WinUI.Lottie" Version="4.9.26" />
-    <PackageReference Condition="! $(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) " Include="Uno.WinUI.Svg" Version="4.9.26" />
+    <PackageReference Include="Uno.WinUI.Lottie" Version="4.9.42" />
+    <PackageReference Condition="! $(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) " Include="Uno.WinUI.Svg" Version="4.9.42" />
     <PackageReference Include="Svg.Skia" Version="0.5.18" />
 	  <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
   </ItemGroup>
@@ -97,7 +97,7 @@
 	<!-- WASM -->
 	<ItemGroup Condition=" $(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) ">
     <!-- THIS WILL CAUSE ASSETS TO NOT BE ADDED TO BUILD FILES.  FORTUNATELY, WASM CALLS STILL WORK SINCE THIS PACKAGE IS REFERENCED IN P42.Utils.Uno
-		<PackageReference Include="Uno.WinUI.WebAssembly" Version="4.9.26" />
+		<PackageReference Include="Uno.WinUI.WebAssembly" Version="4.9.42" />
     -->
 		<EmbeddedResource Include="LinkerConfig.Wasm.xml">
 			<LogicalName>P42.Uno.Controls.Wasm.xml</LogicalName>
