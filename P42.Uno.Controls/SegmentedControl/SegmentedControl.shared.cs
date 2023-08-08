@@ -306,29 +306,96 @@ namespace P42.Uno.Controls
 
 
         #region Programmatic Selection
-        public void SelectLabel(string label)
+        public SegmentedControl SelectLabel(string label)
         {
             if (!Labels.Contains(label))
-                return;
+                return this;
 
             foreach(var child in grid.Children)
             {
                 if (child is not TextBlock textBlock)
                     continue;
 
-                if (textBlock.Text == label)
+                if (textBlock.Text == label && !SelectedLabels.Contains(label))
                 {
                     OnSegmentTapped(label, new TappedRoutedEventArgs());
-                    return;
+                    return this;
                 }
             }
+
+            return this;
         }
 
-        public void SelectIndex(int index)
+        public SegmentedControl DeselectLabel(string label)
         {
-            if (index < 0 || index >= Labels.Count) return;
+            if (!Labels.Contains(label))
+                return this;
+
+            foreach (var child in grid.Children)
+            {
+                if (child is not TextBlock textBlock)
+                    continue;
+
+                if (textBlock.Text == label && SelectedLabels.Contains(label))
+                {
+                    OnSegmentTapped(label, new TappedRoutedEventArgs());
+                    return this;
+                }
+            }
+
+            return this;
+        }
+
+        public SegmentedControl SelectIndex(int index)
+        {
+            if (index < 0 || index >= Labels.Count) return this;
 
             SelectLabel(Labels[index]);
+
+            return this;
+        }
+
+        public SegmentedControl DeselectIndex(int index)
+        {
+            if (index < 0 || index >= Labels.Count) return this;
+
+            DeselectLabel(Labels[index]);
+
+            return this;
+        }
+
+        public SegmentedControl SelectAll()
+        {
+            foreach (var child in grid.Children)
+            {
+                if (child is not TextBlock textBlock)
+                    continue;
+
+                if (!SelectedLabels.Contains(textBlock.Text))
+                {
+                    OnSegmentTapped(textBlock.Text, new TappedRoutedEventArgs());
+                    return this;
+                }
+            }
+
+            return this;
+        }
+
+        public SegmentedControl DeselectAll()
+        {
+            foreach (var child in grid.Children)
+            {
+                if (child is not TextBlock textBlock)
+                    continue;
+
+                if (SelectedLabels.Contains(textBlock.Text))
+                {
+                    OnSegmentTapped(textBlock.Text, new TappedRoutedEventArgs());
+                    return this;
+                }
+            }
+
+            return this;
         }
         #endregion
 
