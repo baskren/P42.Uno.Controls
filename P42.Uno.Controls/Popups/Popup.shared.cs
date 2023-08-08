@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Shapes;
 
 namespace P42.Uno.Controls
 {
@@ -21,11 +22,9 @@ namespace P42.Uno.Controls
             {
                 if (_visibility != value)
                 {
-                    foreach (var child in RootFrame.PopupGrid.Children)
-                    {
-                        child.Visibility = value;
-                    }
                     _visibility = value;
+                    foreach (var popup in Stack)
+                        popup.Visibility = _visibility;
                 }
             }
         }
@@ -58,6 +57,7 @@ namespace P42.Uno.Controls
 
         static void InnerAdd(TargetedPopup popup)
         {
+            popup.Visibility = Visibility;
             if (!RootFrame.PopupGrid.Children.Contains(popup.PageOverlay))
                 RootFrame.PopupGrid.Children.Add(popup.PageOverlay);
             if (!RootFrame.PopupGrid.Children.Contains(popup.ShadowBorder))
