@@ -13,10 +13,21 @@ namespace P42.Uno.Controls
 
         internal static event SizeChangedEventHandler FrameSizeChanged;
 
+        static Visibility _visibility = Visibility.Visible;
         public static Visibility Visibility
         {
-            get => RootFrame.Grid.Visibility;
-            set => RootFrame.Grid.Visibility = value;
+            get => _visibility;
+            set
+            {
+                if (_visibility != value)
+                {
+                    foreach (var child in RootFrame.PopupGrid.Children)
+                    {
+                        child.Visibility = value;
+                    }
+                    _visibility = value;
+                }
+            }
         }
 
         public static void Show()
@@ -47,12 +58,12 @@ namespace P42.Uno.Controls
 
         static void InnerAdd(TargetedPopup popup)
         {
-            if (!RootFrame.Grid.Children.Contains(popup.PageOverlay))
-                RootFrame.Grid.Children.Add(popup.PageOverlay);
-            if (!RootFrame.Grid.Children.Contains(popup.ShadowBorder))
-                RootFrame.Grid.Children.Add(popup.ShadowBorder);
-            if (!RootFrame.Grid.Children.Contains(popup.ContentBorder))
-                RootFrame.Grid.Children.Add(popup.ContentBorder);
+            if (!RootFrame.PopupGrid.Children.Contains(popup.PageOverlay))
+                RootFrame.PopupGrid.Children.Add(popup.PageOverlay);
+            if (!RootFrame.PopupGrid.Children.Contains(popup.ShadowBorder))
+                RootFrame.PopupGrid.Children.Add(popup.ShadowBorder);
+            if (!RootFrame.PopupGrid.Children.Contains(popup.ContentBorder))
+                RootFrame.PopupGrid.Children.Add(popup.ContentBorder);
         }
 
         internal static void Remove(TargetedPopup popup)
@@ -69,12 +80,12 @@ namespace P42.Uno.Controls
 
         static void InnerRemove(TargetedPopup popup)
         {
-            if (RootFrame.Grid.Children.Contains(popup.PageOverlay))
-                RootFrame.Grid.Children.Remove(popup.PageOverlay);
-            if (RootFrame.Grid.Children.Contains(popup.ShadowBorder))
-                RootFrame.Grid.Children.Remove(popup.ShadowBorder);
-            if (RootFrame.Grid.Children.Contains(popup.ContentBorder))
-                RootFrame.Grid.Children.Remove(popup.ContentBorder);
+            if (RootFrame.PopupGrid.Children.Contains(popup.PageOverlay))
+                RootFrame.PopupGrid.Children.Remove(popup.PageOverlay);
+            if (RootFrame.PopupGrid.Children.Contains(popup.ShadowBorder))
+                RootFrame.PopupGrid.Children.Remove(popup.ShadowBorder);
+            if (RootFrame.PopupGrid.Children.Contains(popup.ContentBorder))
+                RootFrame.PopupGrid.Children.Remove(popup.ContentBorder);
         }
 
         internal static void OnRootFrameSizeChanged(object sender, SizeChangedEventArgs args)

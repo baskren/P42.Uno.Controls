@@ -145,8 +145,8 @@ namespace P42.Uno.Controls
 
 
         #region Private Properties
-        static Grid _grid;
-        internal static Grid Grid => _grid ??= (Grid)Current.FindChildByName("PopupGrid");
+        static Grid _popupGrid;
+        internal static Grid PopupGrid => _popupGrid ??= (Grid)Current.FindChildByName("PopupGrid");
 
         static RootFrame _current;
         internal static RootFrame Current => _current ??= Inject();
