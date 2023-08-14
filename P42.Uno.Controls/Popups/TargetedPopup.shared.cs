@@ -771,10 +771,7 @@ namespace P42.Uno.Controls
         {
             Build();
             RegisterPropertyChangedCallback(ContentControl.CornerRadiusProperty, OnBaseCornerRadiusChanged);
-
-#if WINDOWS
             RegisterPropertyChangedCallback(ContentControl.VisibilityProperty, OnVisibilityChanged);
-#endif
         }
 
         private void OnBaseCornerRadiusChanged(DependencyObject sender, DependencyProperty dp)
@@ -791,17 +788,12 @@ namespace P42.Uno.Controls
                 Target = target;
         }
 
-#if WINDOWS
-#else
-        protected override void OnVisibilityChanged(Visibility oldValue, Visibility newValue)
+        private void OnVisibilityChanged(DependencyObject sender, DependencyProperty dp)
         {
-            base.OnVisibilityChanged(oldValue, newValue);
-
-            PageOverlay?.Visibility(newValue);
-            ShadowBorder?.Visibility(newValue);
-            ContentBorder?.Visibility(newValue);
+            PageOverlay?.Visibility(Visibility);
+            ShadowBorder?.Visibility(Visibility);
+            ContentBorder?.Visibility(Visibility);
         }
-#endif
 
 
         #endregion
