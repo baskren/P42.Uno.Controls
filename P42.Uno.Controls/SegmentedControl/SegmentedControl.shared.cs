@@ -465,7 +465,7 @@ namespace P42.Uno.Controls
                 var textBlock = TextBlocks[index];
                 textBlock.Foreground = selected
                     ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
-                    : SystemToggleButtonBrushes.Foreground.AsGesterableEnabled(IsEnabled);
+                    : Foreground; // SystemToggleButtonBrushes.Foreground.AsGesterableEnabled(IsEnabled);
                 if (index < Separators.Count)
                 {
                     var separator = Separators[index];
