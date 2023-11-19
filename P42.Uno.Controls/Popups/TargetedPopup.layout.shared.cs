@@ -7,6 +7,7 @@ using P42.Uno.Markup;
 using P42.Utils.Uno;
 using System;
 using Microsoft.UI;
+using Windows.Foundation;
 
 namespace P42.Uno.Controls
 {
@@ -88,6 +89,10 @@ namespace P42.Uno.Controls
         protected virtual void OnBorderSizeChanged(object sender, SizeChangedEventArgs args)
         {
             //System.Diagnostics.Debug.WriteLine($"TargetedPopup.OnBorderSizechanged : {args.PreviousSize} => {args.NewSize}");
+
+            if (Math.Abs(args.PreviousSize.Width - args.NewSize.Width) < 1 && Math.Abs(args.PreviousSize.Height - args.NewSize.Height) < 1)
+                return;
+
             if (args.PreviousSize == default)
                 return;
 
