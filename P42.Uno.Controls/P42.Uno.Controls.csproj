@@ -86,7 +86,7 @@
   <ItemGroup Condition=" !$(TargetFramework.Contains('windows')) ">
     <PackageReference Include="Uno.WinUI.Lottie" Version="5.0.48" />
     <PackageReference Condition="! $(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) " Include="Uno.WinUI.Svg" Version="5.0.48" />
-    <PackageReference Include="Svg.Skia" Version="1.0.0.3" />
+    <PackageReference Include="Svg.Skia" Version="1.0.0.4" />
 	  <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.6" />
   </ItemGroup>
 
