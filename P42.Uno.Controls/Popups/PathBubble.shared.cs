@@ -10,6 +10,7 @@ using SkiaSharp.Views.Windows;
 using Microsoft.UI;
 using System.Runtime.CompilerServices;
 using P42.Utils.Uno;
+using System.Collections;
 
 namespace P42.Uno.Controls
 {
@@ -215,10 +216,11 @@ namespace P42.Uno.Controls
                 (float)PointerCornerRadius);
             var data = path.ToSvgPathData();
 
-#if __P42WASM__
+#if __WASM__
             //System.Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            var x = this.GetFirstHtmlDescendent();
-            x.SetHtmlContent($"<path fill-rule=\"even-odd\" d=\"{data}\"></path>");
+            //var x = this.GetFirstHtmlDescendent();
+            if (GetEnumerator() is IEnumerator enumerator && enumerator.MoveNext() && enumerator.Current is FrameworkElement x)
+                x.SetHtmlContent($"<path fill-rule=\"even-odd\" d=\"{data}\"></path>");
 #else
             //System.Console.WriteLine($"BubbleBorder.RegeneratePath [{data}]");
             Data = P42.Utils.Uno.StringToPathGeometryConverter.Current.Convert(data);

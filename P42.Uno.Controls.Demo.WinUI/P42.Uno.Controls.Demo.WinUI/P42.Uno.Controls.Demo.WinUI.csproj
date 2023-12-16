@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup Condition=" !$(SolutionName.ToLower().Contains('.wasm')) AND !$(P42_TargetOnlyThisPlatform.ToLower.Contains('wasm')) ">
+  <PropertyGroup Condition=" !$(SolutionName.ToLower().Contains('.wasm')) AND !$(MSBuildProjectName.ToLower.Contains('wasm')) ">
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows')) or '$(EnableWindowsTargeting)' == 'true'">$(TargetFrameworks);net7.0-windows10.0.19041</TargetFrameworks>
 		<TargetFrameworks>$(TargetFrameworks);net7.0</TargetFrameworks><!-- 
 			This condition is used when building under Linux. If you're not building under
@@ -20,10 +20,10 @@
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" $(SolutionName.ToLower().Contains('.wasm')) OR $(P42_TargetOnlyThisPlatform.ToLower.Contains('wasm')) ">
+  <PropertyGroup Condition=" $(SolutionName.ToLower().Contains('.wasm')) OR $(MSBuildProjectName.ToLower.Contains('wasm')) ">
     <TargetFrameworks>net7.0</TargetFrameworks>
     <DefineConstants>__WASM__;$(DefineConstants);</DefineConstants>
-    <P42_TargetOnlyThisPlatform>wasm</P42_TargetOnlyThisPlatform>
+    <MSBuildProjectName>wasm</MSBuildProjectName>
 		<DefaultLanguage>en</DefaultLanguage>
   </PropertyGroup>
 
@@ -64,7 +64,7 @@
     </Compile>
   </ItemGroup>
 
-	<ItemGroup Condition=" $(P42_TargetOnlyThisPlatform.ToLower().Contains('wasm')) ">
+	<ItemGroup Condition=" $(MSBuildProjectName.ToLower().Contains('wasm')) ">
 		<PackageReference Include="Uno.WinUI.WebAssembly" Version="5.0.64" />
 	</ItemGroup>
 

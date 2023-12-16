@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.UI.Xaml.Controls;
@@ -111,7 +111,7 @@ namespace P42.Uno.Controls.AnimateBar
             System.GC.SuppressFinalize(this);
         }
 
-#elif NETSTANDARD || NET7_0
+#elif !WINDOWS
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
