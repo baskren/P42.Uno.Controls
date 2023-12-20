@@ -3,7 +3,7 @@
 
   <!-- SHARED ITEMS -->
   <ItemGroup>
-    <PackageReference Include="Svg.Skia" Version="1.0.0.7" />
+    <PackageReference Include="Svg.Skia" Version="1.0.0.9" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
   </ItemGroup>
