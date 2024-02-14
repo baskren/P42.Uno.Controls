@@ -84,55 +84,15 @@ namespace P42.Uno.Controls.AnimateBar
         }
 
 
-#if __ANDROID__
+#if ANDROID
         protected override void Dispose(bool disposing)
         {
             _disposed |= disposing;
             base.Dispose(disposing);
         }
-#elif __IOS__ || __MACOS__
-        protected new void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                }
 
-                _disposed = true;
-                base.Dispose(disposing);
-            }
-        }
 
-        public new void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            System.GC.SuppressFinalize(this);
-        }
-
-#elif !WINDOWS
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                }
-
-                _disposed = true;
-            }
-        }
-
-        public virtual new void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            System.GC.SuppressFinalize(this);
-            base.Dispose();
-        }
-
-#else
+#elif WINDOWS
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
