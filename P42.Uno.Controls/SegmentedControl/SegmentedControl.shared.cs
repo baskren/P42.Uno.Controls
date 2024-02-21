@@ -308,6 +308,8 @@ namespace P42.Uno.Controls
         #region Programmatic Selection
         public SegmentedControl SelectLabel(string label)
         {
+            return SelectIndex(Labels.IndexOf(label));
+            /*
             if (!Labels.Contains(label))
                 return this;
 
@@ -322,12 +324,14 @@ namespace P42.Uno.Controls
                     return this;
                 }
             }
-
             return this;
+            */
         }
 
         public SegmentedControl DeselectLabel(string label)
         {
+            return DeselectIndex(Labels.IndexOf(label));
+            /*
             if (!Labels.Contains(label))
                 return this;
 
@@ -342,15 +346,18 @@ namespace P42.Uno.Controls
                     return this;
                 }
             }
-
             return this;
+            */
+
         }
 
         public SegmentedControl SelectIndex(int index)
         {
             if (index < 0 || index >= Labels.Count) return this;
 
-            SelectLabel(Labels[index]);
+            //SelectLabel(Labels[index]);
+            if (!SelectionTracker.SelectedIndexes.Contains(index))
+                SelectionTracker.SelectIndex(index);
 
             return this;
         }
@@ -359,13 +366,16 @@ namespace P42.Uno.Controls
         {
             if (index < 0 || index >= Labels.Count) return this;
 
-            DeselectLabel(Labels[index]);
+            //DeselectLabel(Labels[index]);
+            if (SelectionTracker.SelectedIndexes.Contains(index))
+                SelectionTracker.UnselectIndex(index);
 
             return this;
         }
 
         public SegmentedControl SelectAll()
         {
+            /*
             foreach (var child in grid.Children)
             {
                 if (child is not TextBlock textBlock)
@@ -377,12 +387,16 @@ namespace P42.Uno.Controls
                     return this;
                 }
             }
+            */
+            for (int i = 0; i < Labels.Count; i++)
+                SelectIndex(i);
 
             return this;
         }
 
         public SegmentedControl DeselectAll()
         {
+            /*
             foreach (var child in grid.Children)
             {
                 if (child is not TextBlock textBlock)
@@ -394,6 +408,10 @@ namespace P42.Uno.Controls
                     return this;
                 }
             }
+            */
+
+            for (int i = 0; i < Labels.Count; i++)
+                DeselectIndex(i);
 
             return this;
         }
@@ -406,7 +424,7 @@ namespace P42.Uno.Controls
             if (IsLoaded)
             {
                 for (int i = 0; i < Labels.Count; i++)
-                    SetDefaultElementColors(i);
+                    UpdateElementColors(i);
             }
         }
 
@@ -425,6 +443,7 @@ namespace P42.Uno.Controls
                     SelectionTracker.SelectIndex(index);
             }
         }
+
 
         void OnSegmentPointerEntered(object sender, PointerRoutedEventArgs e)
         {
@@ -445,31 +464,33 @@ namespace P42.Uno.Controls
             if (sender is FrameworkElement d)
             {
                 var index = (int)d.GetValue(Grid.ColumnProperty);
-                SetDefaultElementColors(index);
+                UpdateElementColors(index);
             }
         }
 
-        void SetDefaultElementColors(int index)
+        public void UpdateElementColors(int index)
         {
             if (index >= 0 && index < Labels.Count && index < TextBlocks.Count && index < Backgrounds.Count)
             {
-                var selected = SelectedIndexes.Contains(index);
-
                 if (_tapProcessing == index)
                     return;
 
+                var selected = SelectedIndexes.Contains(index);
+                var nextSelected = SelectedIndexes.Contains(index + 1);
+
                 var background = Backgrounds[index];
-                background.Fill = SelectedIndexes.Contains(index)
+                background.Fill = selected
                     ? BorderBrush.AsGesterableEnabled(IsEnabled) 
                     : SystemToggleButtonBrushes.Background.AsGesterableEnabled(IsEnabled);
+
                 var textBlock = TextBlocks[index];
                 textBlock.Foreground = selected
                     ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
                     : Foreground; // SystemToggleButtonBrushes.Foreground.AsGesterableEnabled(IsEnabled);
+
                 if (index < Separators.Count)
                 {
                     var separator = Separators[index];
-                    var nextSelected = SelectedIndexes.Contains(index + 1);
                     separator.Visible(selected == nextSelected);
                     separator.Fill = selected
                         ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
@@ -537,7 +558,7 @@ namespace P42.Uno.Controls
             if (IsLoaded)
             {
                 for (int i=0; i< Labels.Count;i++)
-                    SetDefaultElementColors(i);
+                    UpdateElementColors(i);
             }
         }
 

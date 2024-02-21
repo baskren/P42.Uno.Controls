@@ -12,7 +12,7 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Uno.WinUI" Version="5.0.64" />
+    <PackageReference Include="Uno.WinUI" Version="5.0.118" />
   </ItemGroup>
 
 
@@ -55,6 +55,12 @@
 
   <ItemGroup>
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Include="EnhancedSegmentedControl\EnhanceddSegmentedControl.layout.cs" />
+    <Compile Include="EnhancedSegmentedControl\EnhancedSegmentedControl.cs" />
   </ItemGroup>
 
   
