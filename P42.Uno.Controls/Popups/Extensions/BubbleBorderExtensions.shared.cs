@@ -374,8 +374,8 @@ namespace P42.Uno.Controls
 
         #region Border
 
-        public static TElement CornerRadius<TElement>(this TElement element, double value) where TElement : ElementType
-        { element.CornerRadius = value; return element; }
+        //public static TElement CornerRadius<TElement>(this TElement element, double value) where TElement : ElementType
+        //{ element.CornerRadius = value; return element; }
 
         public static TElement BorderWidth<TElement>(this TElement element, double value) where TElement : ElementType
         { element.BorderWidth = value; return element; }

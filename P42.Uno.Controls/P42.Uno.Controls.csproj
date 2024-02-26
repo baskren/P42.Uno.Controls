@@ -59,8 +59,12 @@
 
 
   <ItemGroup>
-    <Compile Include="EnhancedSegmentedControl\EnhanceddSegmentedControl.layout.cs" />
-    <Compile Include="EnhancedSegmentedControl\EnhancedSegmentedControl.cs" />
+    <Compile Remove="EnhancedSegmentedControl\**" />
+    <Content Remove="EnhancedSegmentedControl\**" />
+    <None Remove="EnhancedSegmentedControl\**" />
+    <Page Remove="EnhancedSegmentedControl\**" />
+    <PRIResource Remove="EnhancedSegmentedControl\**" />
+    <UpToDateCheckInput Remove="EnhancedSegmentedControl\**" />
   </ItemGroup>
 
   

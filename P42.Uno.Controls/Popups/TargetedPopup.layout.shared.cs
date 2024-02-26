@@ -1,4 +1,4 @@
-﻿using Windows.UI;
+using Windows.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -50,7 +50,7 @@ namespace P42.Uno.Controls
                 .Bind(BubbleBorder.BackgroundColorProperty, this, nameof(BackgroundColor))
                 .Bind(BubbleBorder.BorderColorProperty, this, nameof(BorderColor))
                 .Bind(BubbleBorder.BorderWidthProperty, this, nameof(BorderWidth))
-                .Bind(BubbleBorder.CornerRadiusProperty, this, nameof(CornerRadius))
+                //.Bind(BubbleBorder.CornerRadiusProperty, this, nameof(CornerRadius))
                 .Bind(BubbleBorder.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
                 .Bind(BubbleBorder.PointerLengthProperty, this, nameof(PointerLength))
                 .Bind(BubbleBorder.PointerTipRadiusProperty, this, nameof(PointerTipRadius))

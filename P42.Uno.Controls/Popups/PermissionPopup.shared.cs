@@ -1,4 +1,4 @@
-﻿using P42.Utils.Uno;
+using P42.Utils.Uno;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -145,7 +145,7 @@ namespace P42.Uno.Controls
         /// <summary>
         /// Constructor
         /// </summary>
-        public PermissionPopup()
+        public PermissionPopup(UIElement target = null) : base(target)
         {
             Build();
         }

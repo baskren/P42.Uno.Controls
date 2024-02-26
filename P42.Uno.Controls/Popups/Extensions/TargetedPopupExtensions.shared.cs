@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -95,8 +95,8 @@ namespace P42.Uno.Controls
         { element.BorderWidth = value; return element; }
 
         // redundant with P42.Uno.Markup.ControlExtensions
-        //public static TElement CornerRadius<TElement>(this TElement element, double value) where TElement : ElementType
-        //{ element.CornerRadius = value; return element; }
+        public static TElement CornerRadius<TElement>(this TElement element, double value) where TElement : ElementType
+        { element.CornerRadius = value; return element; }
 
         #endregion
 

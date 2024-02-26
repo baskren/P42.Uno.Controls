@@ -89,7 +89,12 @@ namespace P42.Uno.Controls
         /// <returns></returns>
         public static async Task<BusyPopup> CreateAsync(UIElement target, object title,  object messageContent, TimeSpan popAfter = default)
         {
-            var result = new BusyPopup { Target = target, TitleContent = title, Message = messageContent, PopAfter = popAfter, };
+            var result = new BusyPopup(target) 
+            { 
+                TitleContent = title, 
+                Message = messageContent, 
+                PopAfter = popAfter
+            };
             await result.PushAsync();
             return result;
         }
@@ -100,7 +105,7 @@ namespace P42.Uno.Controls
         /// <summary>
         /// Construction
         /// </summary>
-        public BusyPopup()
+        public BusyPopup(UIElement target = null) : base(target)
         {
             Build();
         }

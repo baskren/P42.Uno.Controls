@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -246,9 +246,8 @@ namespace P42.Uno.Controls
         /// <returns></returns>
         public static async Task<Toast> CreateAsync(UIElement target, object titleContent, object messageContent, TimeSpan popAfter = default, Effect effect = Effect.Info, EffectMode effectMode = EffectMode.Default)
         {
-            var result = new Toast 
+            var result = new Toast(target)
             { 
-                Target = target, 
                 TitleContent = titleContent, 
                 Message = messageContent,
                 PopAfter = popAfter,
@@ -265,7 +264,7 @@ namespace P42.Uno.Controls
         /// <summary>
         /// Constructor
         /// </summary>
-        public Toast()
+        public Toast(UIElement target = null) : base(target) 
         {
             Build();
 

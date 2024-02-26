@@ -86,9 +86,8 @@ namespace P42.Uno.Controls
         /// <returns></returns>
         public static new async Task<CheckedToast> CreateAsync(UIElement target, object titleContent, object messageContent, object okButtonContent = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
         {
-            var popup = new CheckedToast() 
+            var popup = new CheckedToast(target) 
             { 
-                Target = target, 
                 TitleContent = titleContent, 
                 Message = messageContent, 
                 OkButtonContent = okButtonContent ?? "OK" ,
@@ -106,7 +105,7 @@ namespace P42.Uno.Controls
         /// <summary>
         /// Construction
         /// </summary>
-        public CheckedToast() : base()
+        public CheckedToast(UIElement target = null) : base(target)
         {
             Build();
         }

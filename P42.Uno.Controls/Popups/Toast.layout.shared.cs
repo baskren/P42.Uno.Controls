@@ -1,4 +1,4 @@
-﻿using P42.Uno.Markup;
+using P42.Uno.Markup;
 using P42.Utils.Uno;
 using System;
 using Windows.UI;
@@ -17,8 +17,6 @@ namespace P42.Uno.Controls
         protected ContentPresenter _iconPresenter;
         protected ContentPresenter _messageBlock;
         protected ScrollViewer scrollViewer;
-        protected RowDefinition _contentRowDefinition;
-        protected RowDefinition _titleRowDefinition;
 
         void Build()
         {
@@ -27,11 +25,8 @@ namespace P42.Uno.Controls
                 .ColumnSpacing(0)
                 .Margin(0)
                 .Padding(0)
-                .Rows(
-                    new RowDefinition { Height = GridLength.Auto }.Assign(out _titleRowDefinition),
-                    new RowDefinition { Height = GridLength.Auto }.Assign(out _contentRowDefinition)
-                    )
-                .Columns(GridRowsColumns.Auto, GridRowsColumns.Star)
+                .Rows('a', '*')
+                .Columns('a', '*')
                 .Children(
                     new ContentPresenter()
                         .Assign(out _iconPresenter)

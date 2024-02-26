@@ -1,4 +1,4 @@
-﻿using P42.Utils.Uno;
+using P42.Utils.Uno;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -165,9 +165,8 @@ namespace P42.Uno.Controls
         /// <returns></returns>
         public static async Task<Alert> CreateAsync(UIElement target, object titleContent, object messageContent, object okButtonContent = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
         {
-            var popup = new Alert() 
+            var popup = new Alert(target) 
             {
-                Target = target, 
                 TitleContent = titleContent, 
                 Message = messageContent, 
                 OkButtonContent = okButtonContent ?? "OK",
@@ -185,7 +184,7 @@ namespace P42.Uno.Controls
         /// <summary>
         /// Constructor
         /// </summary>
-        public Alert() : base()
+        public Alert(UIElement target = null) : base(target)
         {
             Build();
         }

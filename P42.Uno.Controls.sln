@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P42.Uno.Markup", "P42.Uno.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P42.Uno.Controls", "P42.Uno.Controls\P42.Uno.Controls.csproj", "{E7ACAB8A-9E14-496F-B18D-A76D4F87D1BE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{DF878357-DC60-4F47-9497-18AFDDA5ED1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
