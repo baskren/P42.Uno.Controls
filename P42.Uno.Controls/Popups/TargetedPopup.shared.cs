@@ -221,21 +221,35 @@ namespace P42.Uno.Controls
         #region Target Properties
 
         #region Target Property
-        public static readonly DependencyProperty TargetProperty = DependencyProperty.Register(
-            nameof(Target),
-            typeof(UIElement),
-            typeof(TargetedPopup),
-            new PropertyMetadata(default(UIElement), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
-        );
         /// <summary>
         /// The UIElement the popup will point at (no pointer if Target is null or not found)
         /// </summary>
         public UIElement Target
         {
-            get => (UIElement)GetValue(TargetProperty);
-            set => SetValue(TargetProperty, value);
+            get
+            {
+                if (WeakTarget?.TryGetTarget(out var target) ?? false)
+                    return target;
+                return null;
+            }
+            set => WeakTarget = new WeakReference<UIElement>(value);
         }
         #endregion Target Property
+
+        #region WeakTarget Property
+        public static readonly DependencyProperty WeakTargetProperty = DependencyProperty.Register(
+            nameof(WeakTarget),
+            typeof(WeakReference<UIElement>),
+            typeof(TargetedPopup),
+            new PropertyMetadata(default(WeakReference<UIElement>))
+        );
+        public WeakReference<UIElement> WeakTarget
+        {
+            get => (WeakReference<UIElement>)GetValue(WeakTargetProperty);
+            set => SetValue(WeakTargetProperty, value);
+        }
+        #endregion WeakTarget Property
+
 
         #region TargetRect Property
         public static readonly DependencyProperty TargetRectProperty = DependencyProperty.Register(
@@ -408,12 +422,12 @@ namespace P42.Uno.Controls
             nameof(PageOverlayBrush),
             typeof(Brush),
             typeof(TargetedPopup),
-            new PropertyMetadata(new SolidColorBrush(Colors.Transparent))
+            new PropertyMetadata(new SolidColorBrush(Colors.Gray.WithAlpha(0.4)))
         );
         public Brush PageOverlayBrush
         {
             get => (Brush)GetValue(PageOverlayBrushProperty);
-            set => SetValue(PageOverlayBrushProperty, value);
+            set => SetValue(PageOverlayBrushProperty, value ?? new SolidColorBrush(Colors.Gray.WithAlpha(0.4)));
         }
         #endregion PageOverlayBrush Property
 
@@ -785,6 +799,136 @@ namespace P42.Uno.Controls
             RegisterPropertyChangedCallback(TargetedPopup.HeightProperty, OnHeightChanged);
 
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.ctr : Width[{Width}]");
+
+            // PAGE OVERLAY BINDINGS
+            RegisterPropertyChangedCallback(TargetedPopup.PageOverlayBrushProperty, OnPageOverlayBrushChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.IsPageOverlayHitTestVisibleProperty, OnPageOverlayBrushChanged);
+
+
+            // CONTENT BORDER BINDINGS
+            //RegisterPropertyChangedCallback(TargetedPopup.ContentProperty, OnContentChanged);
+            //RegisterPropertyChangedCallback(TargetedPopup.ContentTemplateProperty, OnContentTemplateChanged);
+            //RegisterPropertyChangedCallback(TargetedPopup.ContentTemplateSelectorProperty, OnContentTemplateSelectorhanged);
+            RegisterPropertyChangedCallback(TargetedPopup.ContentTransitionsProperty, OnContentTransitionsChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.CharacterSpacingProperty, OnCharacterSpacingChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.FontFamilyProperty, OnFontFamilyChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.FontSizeProperty, OnFontSizeChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.FontStretchProperty, OnFontStretchChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.FontStyleProperty, OnFontStyleChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.FontWeightProperty, OnFontWeightChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.ForegroundProperty, OnForegroundChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.HorizontalContentAlignmentProperty, OnHorizontalContentAlignmenChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.VerticalContentAlignmentProperty, OnVerticalContentAlignmentChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.PaddingProperty, OnPaddingChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.BackgroundColorProperty, OnBackgroundColorChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.BorderColorProperty, OnBorderColorChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.BorderWidthProperty, OnBorderWidthChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.PointerCornerRadiusProperty, OnPointerCornerRadiushChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.PointerLengthProperty, OnPointerLengthChanged);
+            RegisterPropertyChangedCallback(TargetedPopup.PointerTipRadiusProperty, OnPointerTipRadiusChanged);
+
+            // SHADOW BORDER BINDINGS
+            RegisterPropertyChangedCallback(TargetedPopup.HasShadowProperty, OnHasShadowChanged);
+            ContentBorder.RegisterPropertyChangedCallback(BubbleBorder.PointerCornerRadiusProperty, OnContentPointerCornerRadiusChanged);
+            ContentBorder.RegisterPropertyChangedCallback(BubbleBorder.PointerDirectionProperty, OnContentPointerDirectionChanged);
+            ContentBorder.RegisterPropertyChangedCallback(BubbleBorder.PointerLengthProperty, OnContentPointerLengthChanged);
+            ContentBorder.RegisterPropertyChangedCallback(BubbleBorder.PointerTipRadiusProperty, OnContentPointerTipRadiusChanged);
+        }
+
+        private void OnPageOverlayBrushChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            PageOverlay.Fill = PageOverlayBrush;
+            PageOverlay.IsHitTestVisible = IsPageOverlayHitTestVisible;
+            PageOverlay.Visibility = (Visibility)VisibilityConverter.Instance.Convert(PageOverlayBrush, typeof(Visibility), null, null);
+        }
+
+        private void OnContentPointerTipRadiusChanged(DependencyObject sender, DependencyProperty dp)
+            => ShadowBorder.PointerTipRadius = ContentBorder.PointerTipRadius;
+
+        private void OnContentPointerLengthChanged(DependencyObject sender, DependencyProperty dp)
+            => ShadowBorder.PointerLength = ContentBorder.PointerLength;
+
+        private void OnContentPointerDirectionChanged(DependencyObject sender, DependencyProperty dp)
+            => ShadowBorder.PointerDirection = ContentBorder.PointerDirection;
+
+        private void OnContentPointerCornerRadiusChanged(DependencyObject sender, DependencyProperty dp)
+            => ShadowBorder.PointerCornerRadius = ContentBorder.PointerCornerRadius;
+
+        private void OnHasShadowChanged(DependencyObject sender, DependencyProperty dp)
+            => ShadowBorder.Visible(HasShadow);
+
+        private void OnPointerTipRadiusChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.PointerTipRadius = PointerTipRadius;
+
+        private void OnPointerLengthChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.PointerLength = PointerLength;
+
+        private void OnPointerCornerRadiushChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.PointerCornerRadius = PointerCornerRadius;
+
+
+
+
+        private void OnBorderWidthChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.BorderWidth = BorderWidth;
+
+        private void OnBorderColorChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.BorderColor = BorderColor;
+
+        private void OnBackgroundColorChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.BackgroundColor = BackgroundColor;
+
+        private void OnPaddingChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.Padding = Padding;
+
+        private void OnVerticalContentAlignmentChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.VerticalContentAlignment = VerticalContentAlignment;
+
+        private void OnHorizontalContentAlignmenChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.HorizontalContentAlignment = HorizontalContentAlignment;
+
+
+        private void OnForegroundChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.Foreground = Foreground;
+
+        private void OnCharacterSpacingChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.CharacterSpacing = CharacterSpacing;
+
+        private void OnFontWeightChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.FontWeight = FontWeight;
+
+        private void OnFontStyleChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.FontStyle = FontStyle;
+
+        private void OnFontStretchChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.FontStretch = FontStretch;
+
+        private void OnFontSizeChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.FontSize = FontSize;
+
+        private void OnFontFamilyChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.FontFamily = FontFamily;
+
+        private void OnContentTransitionsChanged(DependencyObject sender, DependencyProperty dp)
+            => ContentBorder.ContentTransitions = ContentTransitions;
+        
+
+        protected override void OnContentTemplateSelectorChanged(DataTemplateSelector oldContentTemplateSelector, DataTemplateSelector newContentTemplateSelector)
+        {
+            base.OnContentTemplateSelectorChanged(oldContentTemplateSelector, newContentTemplateSelector);
+            ContentBorder.ContentTemplateSelector = ContentTemplateSelector;
+        }
+
+        protected override void OnContentTemplateChanged(DataTemplate oldContentTemplate, DataTemplate newContentTemplate)
+        {
+            base.OnContentTemplateChanged(oldContentTemplate, newContentTemplate);
+            ContentBorder.ContentTemplate = ContentTemplate;
+        }
+
+        protected override void OnContentChanged(object oldContent, object newContent)
+        {
+            base.OnContentChanged(oldContent, newContent);
+            ContentBorder.Content = Content;
         }
 
         private void OnBaseCornerRadiusChanged(DependencyObject sender, DependencyProperty dp)

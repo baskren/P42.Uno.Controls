@@ -41,8 +41,13 @@ namespace P42.Uno.Controls
             nameof(BackgroundColor),
             typeof(Color),
             typeof(SkiaBubble),
-            new PropertyMetadata(DefaultFillColor,(d,e) => ((SkiaBubble)d).Redraw(nameof(BackgroundColor)))
+            new PropertyMetadata(DefaultFillColor,(d,e) => ((SkiaBubble)d).OnBackgroundColorChanged(e)) //.Redraw(nameof(BackgroundColor)))
         );
+
+        private void OnBackgroundColorChanged(DependencyPropertyChangedEventArgs e)
+        {
+            Redraw(nameof(BackgroundColor));
+        }
 
 #if __IOS__
         public new Color BackgroundColor
@@ -214,10 +219,13 @@ namespace P42.Uno.Controls
         #region Fields
         internal float BlurSigma = 6f;
         internal bool ApplyBlur = false;
+        static long _instances;
+        long _instance;
         #endregion
 
         public SkiaBubble()
         {
+            _instance = _instances++;
 #if __IOS__
             ((UIKit.UIView)this).BackgroundColor = UIKit.UIColor.Clear;
 #endif

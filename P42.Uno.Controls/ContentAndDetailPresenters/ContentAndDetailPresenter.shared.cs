@@ -1,4 +1,4 @@
-﻿using P42.Uno.Markup;
+using P42.Uno.Markup;
 using P42.Utils.Uno;
 using System;
 using System.Threading.Tasks;
@@ -177,23 +177,35 @@ namespace P42.Uno.Controls
         #region PopupProperties
 
         #region Target Property
-        public static readonly DependencyProperty TargetProperty = DependencyProperty.Register(
-            nameof(Target),
-            typeof(UIElement),
-            typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(default(UIElement), new PropertyChangedCallback(OnTargetChanged))
-        );
-        protected static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is ContentAndDetailPresenter view)
-                view._targetedPopup.Target = e.NewValue as UIElement;
-        }
+        /// <summary>
+        /// The UIElement the popup will point at (no pointer if Target is null or not found)
+        /// </summary>
         public UIElement Target
         {
-            get => (UIElement)GetValue(TargetProperty);
-            set => SetValue(TargetProperty, value);
+            get
+            {
+                if (WeakTarget?.TryGetTarget(out var target) ?? false)
+                    return target;
+                return null;
+            }
+            set => WeakTarget = new WeakReference<UIElement>(value);
         }
         #endregion Target Property
+
+        #region WeakTarget Property
+        public static readonly DependencyProperty WeakTargetProperty = DependencyProperty.Register(
+            nameof(WeakTarget),
+            typeof(WeakReference<UIElement>),
+            typeof(ContentAndDetailPresenter),
+            new PropertyMetadata(default(WeakReference<UIElement>))
+        );
+        public WeakReference<UIElement> WeakTarget
+        {
+            get => (WeakReference<UIElement>)GetValue(WeakTargetProperty);
+            set => SetValue(WeakTargetProperty, value);
+        }
+        #endregion WeakTarget Property
+
 
         #region PopupMinWidth Property
         public static readonly DependencyProperty PopupMinWidthProperty = DependencyProperty.Register(

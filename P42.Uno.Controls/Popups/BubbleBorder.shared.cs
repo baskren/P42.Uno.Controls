@@ -32,8 +32,14 @@ namespace P42.Uno.Controls
             nameof(BackgroundColor),
             typeof(Color),
             typeof(BubbleBorder),
-            new PropertyMetadata(SkiaBubble.DefaultFillColor)
+            new PropertyMetadata(SkiaBubble.DefaultFillColor, (d,e) => ((BubbleBorder)d).OnBackgroundColorChanged(e))
         );
+
+        private void OnBackgroundColorChanged(DependencyPropertyChangedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine($"BubbleBorder.OnBackgroundColorChanged : [{e.NewValue}] ");
+            
+        }
 #if __IOS__ || __MACCATALYST__
         public new Color BackgroundColor
 #else
@@ -98,9 +104,9 @@ namespace P42.Uno.Controls
             get => BackgroundColor.ToBrush();
             set
             {
-                if (value is SolidColorBrush brush)
-                    BackgroundColor = brush.Color;
-                else
+                //if (value is SolidColorBrush brush)
+                //    BackgroundColor = brush.Color;
+                //else
                     throw new Exception("Only SolidColorBrush will work");
             }
         }

@@ -224,25 +224,27 @@ namespace P42.Uno.Controls
         }
         #endregion
 
-        #region IsOverflowed
-        bool _isOverflowed;
-        /// <summary>
-        /// Does the segment's label exceed the available space?
-        /// </summary>
+
+        #region IsOverflowed Property
+        public static readonly DependencyProperty IsOverflowedProperty = DependencyProperty.Register(
+            nameof(IsOverflowed),
+            typeof(bool),
+            typeof(SegmentedControl),
+            new PropertyMetadata(default(bool), (d,e) => ((SegmentedControl)d).OnIsOverflowedChanged(e))
+        );
+
+        private void OnIsOverflowedChanged(DependencyPropertyChangedEventArgs e)
+        {
+            UpdateBorder();
+            IsOverflowedChanged?.Invoke(this, IsOverflowed);
+        }
+
         public bool IsOverflowed
         {
-            get => _isOverflowed;
-            private set
-            {
-                if (_isOverflowed != value)
-                {
-                    _isOverflowed = value;
-                    UpdateBorder();
-                    IsOverflowedChanged?.Invoke(this, value);
-                }
-            }
+            get => (bool)GetValue(IsOverflowedProperty);
+            set => SetValue(IsOverflowedProperty, value);
         }
-        #endregion
+        #endregion IsOverflowed Property
 
         #endregion
 
