@@ -1,4 +1,4 @@
-﻿using P42.Uno.Markup;
+using P42.Uno.Markup;
 using P42.Utils.Uno;
 using System;
 using System.Threading.Tasks;
@@ -52,7 +52,7 @@ namespace P42.Uno.Controls
                 .FallbackPointerDirection(PointerDirection.Any)
                 .PageOverlay(Colors.Transparent)
                 .PageOverlayHitTestVisible(false)
-                .Bind(TargetedPopup.TargetProperty, this, nameof(Target))
+                .Bind(TargetedPopup.WeakTargetProperty, this, nameof(WeakTarget))
                 .Bind(TargetedPopup.BorderColorProperty, this, nameof(DetailBorderColor))
                 .Bind(TargetedPopup.BackgroundColorProperty, this, nameof(DetailBackgroundColor))
                 .Bind(TargetedPopup.CornerRadiusProperty, this, nameof(DetailCornerRadius))
