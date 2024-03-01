@@ -935,8 +935,6 @@ namespace P42.Uno.Controls
             =>  CornerRadius = base.CornerRadius.Average();
         
 
-        /// <summary>
-
         private void OnHeightChanged(DependencyObject sender, DependencyProperty dp)
         {
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.OnHeightChanged : Height[{Height}]");
@@ -1320,11 +1318,11 @@ namespace P42.Uno.Controls
 #endif
 
             
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.HorizontalAlignment [{ContentBorder.HorizontalAlignment}]");
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.VerticalAlignment [{ContentBorder.VerticalAlignment}]");
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.Margin [{ContentBorder.Margin}]");
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.PointerAxialPosition [{ContentBorder.PointerAxialPosition}]");
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ActualPointerDirection [{ActualPointerDirection}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.HorizontalAlignment [{ContentBorder.HorizontalAlignment}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.VerticalAlignment [{ContentBorder.VerticalAlignment}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.Margin [{ContentBorder.Margin}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ContentBorder.PointerAxialPosition [{ContentBorder.PointerAxialPosition}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ActualPointerDirection [{ActualPointerDirection}]");
             
         }
 
@@ -1332,16 +1330,16 @@ namespace P42.Uno.Controls
         void UpdateMarginAndAlignment(Size newSize = default)
         {
 
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment : ENTER");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment : ENTER");
 
             if (PushPopState == PushPopState.Popped || PushPopState == PushPopState.Popping)
             {
-                System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment : EXIT - Popped || Popping");
+                //System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment : EXIT - Popped || Popping");
                 return;
             }
 
             SetAlignmentMarginsAndPointer(GetAlignmentMarginsAndPointerMeasurements(), newSize);
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment : EXIT");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment : EXIT");
         }
 
         internal AlignmentMarginsAndPointer GetAlignmentMarginsAndPointerMeasurements(UIElement content = null)
@@ -1354,7 +1352,7 @@ namespace P42.Uno.Controls
             var availableWindowSpace = AvailableWindowSpace;
             
 
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer availableWindowSpace[{availableWindowSpace}] windowSize:[{windowSize}] Margin:[{Margin}] safeMargin:[{safeMargin}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer availableWindowSpace[{availableWindowSpace}] windowSize:[{windowSize}] Margin:[{Margin}] safeMargin:[{safeMargin}]");
 
             //var availableWindowWidth = windowSize.Width - Margin.Horizontal() - safeMargin.Horizontal();
             //var availableWindowHeight = windowSize.Height - Margin.Vertical() - safeMargin.Vertical();
@@ -1362,7 +1360,7 @@ namespace P42.Uno.Controls
             
             content ??= ContentBorder.Content as UIElement;
             var cleanSize = MeasureCleanBorder(availableWindowSpace, content: content);
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup. : AlignmentMarginsAndPointer cleanSize:[{cleanSize}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup. : AlignmentMarginsAndPointer cleanSize:[{cleanSize}]");
             //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer modalSize:[{modalSize}] : [{availableWindowWidth},{availableWindowHeight}]");
 
             if (PreferredPointerDirection == PointerDirection.None || Target is null)
@@ -1378,11 +1376,11 @@ namespace P42.Uno.Controls
 #endif
 
 
-            System.Diagnostics.Debug.WriteLine(GetType() + ".AlignmentMarginsAndPointer targetBounds:[" + targetBounds+"]");
+            //System.Diagnostics.Debug.WriteLine(GetType() + ".AlignmentMarginsAndPointer targetBounds:[" + targetBounds+"]");
             var availableSpaceAroundTarget = AvailableSpaceAroundTarget(targetBounds.Grow(PointerMargin), safeMargin);
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer availableSpaceAroundTarget:[{availableSpaceAroundTarget}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer availableSpaceAroundTarget:[{availableSpaceAroundTarget}]");
             var stats = BestFit(availableSpaceAroundTarget, cleanSize, safeMargin);
-            System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer stats:[{stats}]");
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.AlignmentMarginsAndPointer stats:[{stats}]");
 
             if (stats.PointerDirection == PointerDirection.None)
             {
@@ -1879,8 +1877,8 @@ namespace P42.Uno.Controls
 
         Size MeasureCleanBorder(Size available, Size failSize = default, UIElement content = null)
         {
-            System.Diagnostics.Debug.WriteLine("\n");
-            System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder({available})");
+            //System.Diagnostics.Debug.WriteLine("\n");
+            //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder({available})");
 
             var width = available.Width;
             var height = available.Height;
@@ -1903,21 +1901,21 @@ namespace P42.Uno.Controls
                 else
                     height = Math.Min(MinHeight * 2, MaxHeight);
 
-                System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder : IS EMPTY  [{width}, {height}]");
+                //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder : IS EMPTY  [{width}, {height}]");
                 return new Size(width, height);
             }
 
 
             if (this.HasPrescribedWidth())
             {
-                System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder HasPrescribedWidth  [{Width}]");
+                //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder HasPrescribedWidth  [{Width}]");
                 //width = Math.Min(Width, width);
                 width = Width;
             }
             
             if (this.HasPrescribedHeight())
             {
-                System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder HasPrescribedHeight [{Height}]");
+                //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder HasPrescribedHeight [{Height}]");
                 //height = Math.Min(Height, height);
                 height = Height;
             }
@@ -1935,25 +1933,25 @@ namespace P42.Uno.Controls
             if (this.HasMaxHeight())
                 height = Math.Min(height, MaxHeight);
 
-            System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder width[{width}] height[{height}]");
+            //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder width[{width}] height[{height}]");
 
             if (HorizontalAlignment == HorizontalAlignment.Stretch && VerticalAlignment == VerticalAlignment.Stretch)
             {
-                System.Diagnostics.Debug.WriteLine("\tTargetedPopup.MeasureCleanBorder : STRETCH ");
+                //System.Diagnostics.Debug.WriteLine("\tTargetedPopup.MeasureCleanBorder : STRETCH ");
                 return new Size(width, height);
             }
 
             var border = BorderWidth * (HasBorder ? 1 : 0) * 2;
             var availableWidth = width - (Padding.Horizontal() + border + 1);
             var availableHeight = height - (Padding.Vertical() + border + 1);
-            System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder borderSize:[{border}] Padding:[{Padding}]  availableWidth:[" + availableWidth+"] availableHeight:["+availableHeight+"]");
+            //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder borderSize:[{border}] Padding:[{Padding}]  availableWidth:[" + availableWidth+"] availableHeight:["+availableHeight+"]");
             if (availableWidth > 0 && availableHeight > 0)
             {
                 content.Measure(new Size(Math.Floor(availableWidth), Math.Floor(availableHeight)));
                 var result = content.DesiredSize;
-                System.Diagnostics.Debug.WriteLine("\tTargetedPopup.MeasureCleanBorder  _contentPresenter.RenderSize:[" + content.RenderSize + "]");
-                System.Diagnostics.Debug.WriteLine("\tTargetedPopup.MeasureCleanBorder  _contentPresenter.DesiredSize:[" + content.DesiredSize + "]");
-                System.Diagnostics.Debug.WriteLine("\tTargetedPopup.MeasureCleanBorder  _contentPresenter.ActualSize:[" + content.ActualSize + "]");
+                //System.Diagnostics.Debug.WriteLine("\tTargetedPopup.MeasureCleanBorder  _contentPresenter.RenderSize:[" + content.RenderSize + "]");
+                //System.Diagnostics.Debug.WriteLine("\tTargetedPopup.MeasureCleanBorder  _contentPresenter.DesiredSize:[" + content.DesiredSize + "]");
+                //System.Diagnostics.Debug.WriteLine("\tTargetedPopup.MeasureCleanBorder  _contentPresenter.ActualSize:[" + content.ActualSize + "]");
 
                 result.Width += Padding.Horizontal() + border + 1;
                 result.Height += Padding.Vertical() + border + 1;
@@ -1965,17 +1963,17 @@ namespace P42.Uno.Controls
                         ? height : result.Height)
                     );
 
-                System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder : resultSize: {resultSize}");
+                //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder : resultSize: {resultSize}");
                 return resultSize;
             }
 
             if (failSize == default)
             {
-                System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder : failSize == default: {width},{height}");
+                //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder : failSize == default: {width},{height}");
                 return new Size(width, height);
             }
 
-            System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder : failSize: {failSize}");
+            //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder : failSize: {failSize}");
             return failSize;
         }
 
