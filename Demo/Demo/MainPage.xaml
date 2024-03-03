@@ -3,19 +3,12 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:Demo"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-  <StackPanel
+  <StackPanel x:Name="StackPanel"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch">
     <TextBlock AutomationProperties.AutomationId="HelloTextBlock"
           Margin="20"
           Text="Hello Uno Platform"
           HorizontalAlignment="Stretch" />
-    <ListView ItemsSource="{x:Bind Items}">
-      <ListView.ItemTemplate>
-        <DataTemplate x:DataType="local:Item">
-          <local:UserControl1/>
-        </DataTemplate>
-      </ListView.ItemTemplate>
-    </ListView>
   </StackPanel>
 </Page>

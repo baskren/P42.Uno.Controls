@@ -20,13 +20,6 @@
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" $(SolutionName.ToLower().Contains('.wasm')) OR $(MSBuildProjectName.ToLower.Contains('wasm')) ">
-    <TargetFrameworks>net7.0</TargetFrameworks>
-    <DefineConstants>__WASM__;$(DefineConstants);</DefineConstants>
-    <MSBuildProjectName>wasm</MSBuildProjectName>
-		<DefaultLanguage>en</DefaultLanguage>
-  </PropertyGroup>
-
   <PropertyGroup>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
