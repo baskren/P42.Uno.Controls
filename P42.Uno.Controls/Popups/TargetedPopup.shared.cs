@@ -1260,6 +1260,11 @@ namespace P42.Uno.Controls
         #region Layout
         void UpdateOpacity(double value = -1)
         {
+            if (ContentBorder is null ||
+                ShadowBorder is null ||
+                PageOverlay is null)
+                return;
+
             if (value < 0)
                 value = Opacity;
 
