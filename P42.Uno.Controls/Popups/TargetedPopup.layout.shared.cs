@@ -22,22 +22,22 @@ namespace P42.Uno.Controls
         #endregion
 
         #region Visual Elements
-        internal SkiaBubble ShadowBorder;
-        internal BubbleBorder ContentBorder;
-        internal Rectangle PageOverlay;
+        internal readonly SkiaBubble ShadowBorder = new();
+        internal readonly BubbleBorder ContentBorder = new();
+        internal readonly Rectangle PageOverlay = new();
         #endregion
 
         void Build()
         {
             
-            PageOverlay = new Rectangle()
+            PageOverlay
                 .Stretch()
                 //.Bind(Rectangle.FillProperty, this, nameof(PageOverlayBrush))
                 //.Bind(Rectangle.IsHitTestVisibleProperty, this, nameof(IsPageOverlayHitTestVisible))
                 //.Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: VisibilityConverter.Instance)
                 .AddTappedHandler(OnPageOverlayTapped);
             
-            ContentBorder = new BubbleBorder()
+            ContentBorder
                 .HitTestVisible(true)
                 // WHY ISN"T BINDING CONSISTENTLY WORKING!?!?
                 //.Bind(BubbleBorder.ContentProperty, this, nameof(Content))
@@ -57,7 +57,7 @@ namespace P42.Uno.Controls
                 //.Bind(BubbleBorder.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
                 .AddSizeChangedHandler(OnBorderSizeChanged);
 
-            ShadowBorder = new SkiaBubble()
+            ShadowBorder
                 //.Bind(SkiaBubble.VisibilityProperty, this, nameof(HasShadow), converter: VisibilityConverter.Instance)
                 //.Bind(SkiaBubble.PointerCornerRadiusProperty, ContentBorder, nameof(BubbleBorder.PointerCornerRadius))
                 //.Bind(SkiaBubble.PointerDirectionProperty, ContentBorder, nameof(BubbleBorder.PointerDirection))
