@@ -232,7 +232,14 @@ namespace P42.Uno.Controls
                     return target;
                 return null;
             }
-            set => WeakTarget = new WeakReference<UIElement>(value);
+            set
+            {
+                if (Target != value)
+                {
+                    WeakTarget = new WeakReference<UIElement>(value);
+                    UpdateMarginAndAlignment();
+                }
+            }
         }
         #endregion Target Property
 
@@ -1330,7 +1337,6 @@ namespace P42.Uno.Controls
             //System.Diagnostics.Debug.WriteLine($"TargetedPopup.SetAlignmentMarginsAndPinter : ActualPointerDirection [{ActualPointerDirection}]");
             
         }
-
 
         void UpdateMarginAndAlignment(Size newSize = default)
         {
