@@ -29,12 +29,12 @@ namespace P42.Uno.Controls
 
         void Build()
         {
-            
+
             PageOverlay
                 .Stretch()
-                //.Bind(Rectangle.FillProperty, this, nameof(PageOverlayBrush))
-                //.Bind(Rectangle.IsHitTestVisibleProperty, this, nameof(IsPageOverlayHitTestVisible))
-                //.Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: VisibilityConverter.Instance)
+                .Bind(Rectangle.FillProperty, this, nameof(PageOverlayBrush))
+                .Bind(Rectangle.IsHitTestVisibleProperty, this, nameof(IsPageOverlayHitTestVisible))
+                .Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: VisibilityConverter.Instance)
                 .AddTappedHandler(OnPageOverlayTapped);
             
             ContentBorder

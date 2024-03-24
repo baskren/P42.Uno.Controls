@@ -808,8 +808,8 @@ namespace P42.Uno.Controls
             System.Diagnostics.Debug.WriteLine($"TargetedPopup.ctr : Width[{Width}]");
 
             // PAGE OVERLAY BINDINGS
-            RegisterPropertyChangedCallback(TargetedPopup.PageOverlayBrushProperty, OnPageOverlayBrushChanged);
-            RegisterPropertyChangedCallback(TargetedPopup.IsPageOverlayHitTestVisibleProperty, OnPageOverlayBrushChanged);
+            //RegisterPropertyChangedCallback(TargetedPopup.PageOverlayBrushProperty, OnPageOverlayBrushChanged);
+            //RegisterPropertyChangedCallback(TargetedPopup.IsPageOverlayHitTestVisibleProperty, OnPageOverlayBrushChanged);
 
 
             // CONTENT BORDER BINDINGS
