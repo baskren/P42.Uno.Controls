@@ -1032,6 +1032,8 @@ public partial class TargetedPopup : ITargetedPopup
             }
 
 
+            Popups.FrameSizeChanged += OnPopupFrameSizeChanged;
+
             PushPopState = PushPopState.Pushed;
             await OnPushEndAsync();
             await Task.Delay(50);
@@ -1090,6 +1092,8 @@ public partial class TargetedPopup : ITargetedPopup
     {
         UpdateOpacity(0.001);
         Popups.Remove(this);
+
+        Popups.FrameSizeChanged -= OnPopupFrameSizeChanged;
 
         PushPopState = PushPopState.Popped;
         var result = new PopupPoppedEventArgs(poppedCause, poppedTrigger);
@@ -1887,15 +1891,4 @@ public partial class TargetedPopup : ITargetedPopup
 
     #endregion
 
-    protected override Size MeasureOverride(Size availableSize)
-    {
-        var result = base.MeasureOverride(availableSize);
-
-        return result;
-    }
-
-    protected override Size ArrangeOverride(Size finalSize)
-    {
-        return base.ArrangeOverride(finalSize);
-    }
 }

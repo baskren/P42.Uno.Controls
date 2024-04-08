@@ -32,9 +32,10 @@ namespace P42.Uno.Controls
 
             PageOverlay
                 .Stretch()
+                //.Fill(Colors.Pink.WithAlpha(0.5))
                 .WBind(Rectangle.FillProperty, this, PageOverlayBrushProperty)
                 .WBind(Rectangle.IsHitTestVisibleProperty, this, IsPageOverlayHitTestVisibleProperty)
-                .WBindVisible( this, PageOverlayVisibleProperty)
+                //.WBindVisible( this, PageOverlayVisibleProperty)
                 .AddTappedHandler(OnPageOverlayTapped);
 
             ContentBorder
@@ -44,7 +45,7 @@ namespace P42.Uno.Controls
                 .WBind(BubbleBorder.ContentTemplateProperty, this, ContentTemplateProperty)
                 .WBind(BubbleBorder.ContentTemplateSelectorProperty, this, ContentTemplateSelectorProperty)
                 .WBind(BubbleBorder.ContentTransitionsProperty, this, ContentTransitionsProperty)
-                .BindFont(this)
+                .WBindFont(this)
                 .WBind(BubbleBorder.HorizontalContentAlignmentProperty, this, HorizontalContentAlignmentProperty)
                 .WBind(BubbleBorder.VerticalContentAlignmentProperty, this, VerticalContentAlignmentProperty)
                 .WBind(BubbleBorder.PaddingProperty, this, PaddingProperty)
@@ -65,8 +66,6 @@ namespace P42.Uno.Controls
                 .WBind(SkiaBubble.PointerTipRadiusProperty, ContentBorder, BubbleBorder.PointerTipRadiusProperty)
                 .IsShadow();
 
-
-            Popups.FrameSizeChanged += OnPopupFrameSizeChanged;
 
             ActualPointerDirection = PointerDirection.None;
             //Background = SystemTeachingTipBrushes.Background;
@@ -100,13 +99,16 @@ namespace P42.Uno.Controls
 
             if (HasShadow)
             {
+                /*
                 var ΔHeight = args.NewSize.Height - (ShadowBorder.Height + ShadowBorder.BlurSigma * 4);
                 var ΔWidth = args.NewSize.Width - (ShadowBorder.Width + ShadowBorder.BlurSigma * 4);
                 if (ΔWidth <= 0 && ΔWidth > -2 && ΔHeight <= 0 && ΔHeight > -2)
                     return;
+                */
+                ShadowBorder.Height = args.NewSize.Height + ShadowBorder.BlurSigma * 4;
+                ShadowBorder.Width = args.NewSize.Width+ ShadowBorder.BlurSigma * 4;
 
-                ShadowBorder.Height = ContentBorder.ActualHeight + ShadowBorder.BlurSigma * 4;
-                ShadowBorder.Width = ContentBorder.ActualWidth + ShadowBorder.BlurSigma * 4;
+                System.Diagnostics.Debug.WriteLine($"OnBorderSizeChanged: [{args.NewSize}] [{ShadowBorder.Width}, {ShadowBorder.Height}]");
             }
         }
 

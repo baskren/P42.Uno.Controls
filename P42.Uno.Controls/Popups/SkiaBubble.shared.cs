@@ -230,9 +230,15 @@ namespace P42.Uno.Controls
             ((UIKit.UIView)this).BackgroundColor = UIKit.UIColor.Clear;
 #endif
 
+            //RegisterPropertyChangedCallback(MarginProperty, OnMarginChanged);
         }
 
+        private void OnMarginChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            Invalidate();
 
+            System.Diagnostics.Debug.WriteLine($"SkiaBubble.OnMarginChanged: {Margin}");
+        }
 
         protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
         {

@@ -33,14 +33,14 @@ namespace P42.Uno.Controls
             _overlay = new Rectangle()
                 .Row(0)
                 .RowSpan(2)
-                .Bind(Rectangle.FillProperty, this, nameof(PageOverlayBrush))
-                .Bind(Rectangle.IsHitTestVisibleProperty, this, nameof(IsPageOverlayHitTestVisible))
-                .Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: VisibilityConverter.Instance)
+                .WBind(Rectangle.FillProperty, this, PageOverlayBrushProperty)
+                .WBind(Rectangle.IsHitTestVisibleProperty, this, IsPageOverlayHitTestVisibleProperty)
+                .WBind(Rectangle.VisibilityProperty, this, PageOverlayBrushProperty, converter: VisibilityConverter.Instance)
                 .AddTappedHandler(OnDismissPointerPressed);
 
             _detailDrawer = new Border()
-                .Bind(Border.BorderBrushProperty, this, nameof(DetailBorderColor), converter: SolidBrushConverter.Instance)
-                .Bind(Border.BackgroundProperty, this, nameof(DetailBackgroundColor), converter: SolidBrushConverter.Instance);
+                .WBind(Border.BorderBrushProperty, this, DetailBorderColorProperty, converter: SolidBrushConverter.Instance)
+                .WBind(Border.BackgroundProperty, this, DetailBackgroundColorProperty, converter: SolidBrushConverter.Instance);
 
             _targetedPopup = new TargetedPopup()
                 .Padding(0)
@@ -52,12 +52,12 @@ namespace P42.Uno.Controls
                 .FallbackPointerDirection(PointerDirection.Any)
                 .PageOverlay(Colors.Transparent)
                 .PageOverlayHitTestVisible(false)
-                .Bind(TargetedPopup.WeakTargetProperty, this, nameof(WeakTarget))
-                .Bind(TargetedPopup.BorderColorProperty, this, nameof(DetailBorderColor))
-                .Bind(TargetedPopup.BackgroundColorProperty, this, nameof(DetailBackgroundColor))
-                .Bind(TargetedPopup.CornerRadiusProperty, this, nameof(DetailCornerRadius))
-                .Bind(TargetedPopup.MinHeightProperty, this, nameof(PopupMinHeight))
-                .Bind(TargetedPopup.MinWidthProperty, this, nameof(PopupMinWidth))
+                .WBind(TargetedPopup.WeakTargetProperty, this, WeakTargetProperty)
+                .WBind(TargetedPopup.BorderColorProperty, this, DetailBorderColorProperty)
+                .WBind(TargetedPopup.BackgroundColorProperty, this, DetailBackgroundColorProperty)
+                .WBind(TargetedPopup.CornerRadiusProperty, this, DetailCornerRadiusProperty)
+                .WBind(TargetedPopup.MinHeightProperty, this, PopupMinHeightProperty)
+                .WBind(TargetedPopup.MinWidthProperty, this, PopupMinWidthProperty)
                 .AddPoppedHandler(OnTargetedPopupPopped)
                 ;
 

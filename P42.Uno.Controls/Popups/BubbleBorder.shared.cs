@@ -647,15 +647,15 @@ namespace P42.Uno.Controls
                     new SkiaBubble()
                         //.Assign(out _bubble)
                         .Margin(0)
-                        .Bind(SkiaBubble.BackgroundColorProperty, this, nameof(BackgroundColor))
-                        .Bind(SkiaBubble.BorderColorProperty, this, nameof(BorderColor))
-                        .Bind(SkiaBubble.BorderWidthProperty, this, nameof(BorderWidth))
-                        .Bind(SkiaBubble.CornerRadiusProperty, this, nameof(CornerRadius))
-                        .Bind(SkiaBubble.PointerLengthProperty, this, nameof(PointerLength))
-                        .Bind(SkiaBubble.PointerAxialPositionProperty, this, nameof(PointerAxialPosition))
-                        .Bind(SkiaBubble.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
-                        .Bind(SkiaBubble.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
-                        .Bind(SkiaBubble.PointerDirectionProperty, this, nameof(PointerDirection)),
+                        .WBind(SkiaBubble.BackgroundColorProperty, this, BackgroundColorProperty)
+                        .WBind(SkiaBubble.BorderColorProperty, this, BorderColorProperty)
+                        .WBind(SkiaBubble.BorderWidthProperty, this, BorderWidthProperty)
+                        .WBind(SkiaBubble.CornerRadiusProperty, this, CornerRadiusProperty)
+                        .WBind(SkiaBubble.PointerLengthProperty, this, PointerLengthProperty)
+                        .WBind(SkiaBubble.PointerAxialPositionProperty, this, PointerAxialPositionProperty)
+                        .WBind(SkiaBubble.PointerTipRadiusProperty, this, PointerTipRadiusProperty)
+                        .WBind(SkiaBubble.PointerCornerRadiusProperty, this, PointerCornerRadiusProperty)
+                        .WBind(SkiaBubble.PointerDirectionProperty, this, PointerDirectionProperty),
 
                     /* Does not work in Android - perhaps a bug with Shape.Path in Android?
                         new PathBubble()
@@ -683,34 +683,34 @@ namespace P42.Uno.Controls
                         //BackgroundSizing
                         //BorderBrush
                         //BorderThickness
-                        .Bind(ContentPresenter.MinHeightProperty, this, nameof(MinHeight))
-                        .Bind(ContentPresenter.MaxHeightProperty, this, nameof(MaxHeight))
-                        .Bind(ContentPresenter.MinWidthProperty, this, nameof(MinWidth))
-                        .Bind(ContentPresenter.MaxWidthProperty, this, nameof(MaxWidth))
+                        .WBind(ContentPresenter.MinHeightProperty, this, MinHeightProperty)
+                        .WBind(ContentPresenter.MaxHeightProperty, this, MaxHeightProperty)
+                        .WBind(ContentPresenter.MinWidthProperty, this, MinWidthProperty)
+                        .WBind(ContentPresenter.MaxWidthProperty, this, MaxWidthProperty)
 
-                        .Bind(ContentPresenter.ContentProperty, this, nameof(Content))
-                        .Bind(ContentPresenter.ContentTemplateProperty, this, nameof(ContentTemplate))
-                        .Bind(ContentPresenter.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
-                        .Bind(ContentPresenter.ContentTransitionsProperty, this, nameof(ContentTransitions))
+                        .WBind(ContentPresenter.ContentProperty, this, ContentProperty)
+                        .WBind(ContentPresenter.ContentTemplateProperty, this, ContentTemplateProperty)
+                        .WBind(ContentPresenter.ContentTemplateSelectorProperty, this, ContentTemplateSelectorProperty)
+                        .WBind(ContentPresenter.ContentTransitionsProperty, this, ContentTransitionsProperty)
                         //CornerRadius
 
-                        .Bind(ContentPresenter.CharacterSpacingProperty, this, nameof(CharacterSpacing))
-                        .Bind(ContentPresenter.FontFamilyProperty, this, nameof(FontFamily))
-                        .Bind(ContentPresenter.FontSizeProperty, this, nameof(FontSize))
-                        .Bind(ContentPresenter.FontStretchProperty, this, nameof(FontStretch))
-                        .Bind(ContentPresenter.FontStyleProperty, this, nameof(FontStyle))
-                        .Bind(ContentPresenter.FontWeightProperty, this, nameof(FontWeight))
-                        .Bind(ContentPresenter.ForegroundProperty, this, nameof(Foreground))
-                        .Bind(ContentPresenter.IsTextScaleFactorEnabledProperty, this, nameof(IsTextScaleFactorEnabled))
-                        .Bind(ContentPresenter.LineHeightProperty, this, nameof(LineHeight))
-                        .Bind(ContentPresenter.LineStackingStrategyProperty, this, nameof(LineStackingStrategy))
-                        .Bind(ContentPresenter.MaxLinesProperty, this, nameof(MaxLines))
-                        .Bind(ContentPresenter.OpticalMarginAlignmentProperty, this, nameof(OpticalMarginAlignment))
-                        .Bind(ContentPresenter.TextLineBoundsProperty, this, nameof(TextLineBounds))
-                        .Bind(ContentPresenter.TextWrappingProperty, this, nameof(TextWrapping))
+                        .WBind(ContentPresenter.CharacterSpacingProperty, this, CharacterSpacingProperty)
+                        .WBind(ContentPresenter.FontFamilyProperty, this, FontFamilyProperty)
+                        .WBind(ContentPresenter.FontSizeProperty, this, FontSizeProperty)
+                        .WBind(ContentPresenter.FontStretchProperty, this, FontStretchProperty)
+                        .WBind(ContentPresenter.FontStyleProperty, this, FontStyleProperty)
+                        .WBind(ContentPresenter.FontWeightProperty, this, FontWeightProperty)
+                        .WBind(ContentPresenter.ForegroundProperty, this, ForegroundProperty)
+                        .WBind(ContentPresenter.IsTextScaleFactorEnabledProperty, this, IsTextScaleFactorEnabledProperty)
+                        .WBind(ContentPresenter.LineHeightProperty, this, LineHeightProperty)
+                        .WBind(ContentPresenter.LineStackingStrategyProperty, this, LineStackingStrategyProperty)
+                        .WBind(ContentPresenter.MaxLinesProperty, this, MaxLinesProperty)
+                        .WBind(ContentPresenter.OpticalMarginAlignmentProperty, this, OpticalMarginAlignmentProperty)
+                        .WBind(ContentPresenter.TextLineBoundsProperty, this, TextLineBoundsProperty)
+                        .WBind(ContentPresenter.TextWrappingProperty, this, TextWrappingProperty)
 
-                        .Bind(ContentPresenter.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
-                        .Bind(ContentPresenter.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
+                        .WBind(ContentPresenter.HorizontalContentAlignmentProperty, this, HorizontalContentAlignmentProperty)
+                        .WBind(ContentPresenter.VerticalContentAlignmentProperty, this, VerticalContentAlignmentProperty)
 
                 );
 

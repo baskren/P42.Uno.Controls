@@ -280,7 +280,7 @@ namespace P42.Uno.Controls
             Content = grid;
 
             _testTextBlock
-                .Bind(TextBlock.MarginProperty, this, nameof(Padding));
+                .WBind(TextBlock.MarginProperty, this, PaddingProperty);
 
             SizeChanged += SegmentedControl_SizeChanged;
             BorderBrush = SystemToggleButtonBrushes.Border;
@@ -299,9 +299,9 @@ namespace P42.Uno.Controls
 #endif
             RegisterPropertyChangedCallback(UserControl.IsEnabledProperty, OnIsEnabledChanged);
 
-            grid.Bind(Grid.CornerRadiusProperty, this, nameof(CornerRadius));
-            grid.Bind(Grid.BorderBrushProperty, this, nameof(BorderBrush));
-            grid.Bind(Grid.BorderThicknessProperty, this, nameof(BorderThickness));
+            grid.WBind(Grid.CornerRadiusProperty, this, CornerRadiusProperty);
+            grid.WBind(Grid.BorderBrushProperty, this, BorderBrushProperty);
+            grid.WBind(Grid.BorderThicknessProperty, this, BorderThicknessProperty);
         }
 
         #endregion
@@ -604,7 +604,7 @@ namespace P42.Uno.Controls
 
         void AddNewLabel()
             => TextBlocks.Add(new TextBlock()
-                .Bind(TextBlock.MarginProperty, this, nameof(Padding))
+                .WBind(TextBlock.MarginProperty, this, PaddingProperty)
                 .Foreground(SystemToggleButtonBrushes.Foreground)
                 .Center()
                 .FontSize(16)
@@ -623,7 +623,7 @@ namespace P42.Uno.Controls
                 .Width(1)
                 .StretchVertical().CenterHorizontal()
                 .ColumnSpan(2).Column(Separators.Count)
-                .Bind(Rectangle.FillProperty, this, nameof(BorderBrush))
+                .WBind(Rectangle.FillProperty, this, BorderBrushProperty)
                 );
 
         void AddNewBackground()

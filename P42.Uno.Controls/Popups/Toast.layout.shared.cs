@@ -33,8 +33,8 @@ namespace P42.Uno.Controls
                         .RowSpan(2)
                         .Margin(3)
                         .Center()
-                        .Bind(ContentPresenter.ContentProperty, this, nameof(IconElement))
-                        .BindNullCollapse(),
+                        .WBind(ContentPresenter.ContentProperty, this, IconElementProperty)
+                        .WBindNullCollapse(),
 
                     new ContentPresenter()
                         .Assign(out _titleBlock)
@@ -42,9 +42,9 @@ namespace P42.Uno.Controls
                         .CenterVertical()
                         .VerticalContentAlignment(VerticalAlignment.Center)
                         .TextWrapping(Microsoft.UI.Xaml.TextWrapping.WrapWholeWords)
-                        .BindFont(this, except: nameof(FontWeight))
+                        .WBindFont(this, except: nameof(FontWeight))
                         .FontWeight(FontWeights.Bold)
-                        .BindNullCollapse()
+                        .WBindNullCollapse()
                         ,
 
                     new ScrollViewer()
@@ -58,8 +58,8 @@ namespace P42.Uno.Controls
                             .CenterVertical()
                             .VerticalContentAlignment(VerticalAlignment.Center)
                             .TextWrapping(Microsoft.UI.Xaml.TextWrapping.WrapWholeWords)
-                            .BindFont(this)
-                            .BindNullCollapse()
+                            .WBindFont(this)
+                            .WBindNullCollapse()
                         )
                         //.Bind(ScrollViewer.MaxHeightProperty, _contentRowDefinition, nameof(ActualHeight))
                 );

@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using P42.Uno.Markup;
 
@@ -15,7 +15,7 @@ namespace P42.Uno.Controls
                 .Width(40)
                 .Height(40)
                 .Margin(10)
-                .Bind(ProgressRing.IsActiveProperty, this, nameof(IsPushed));
+                .WBind(ProgressRing.IsActiveProperty, this, IsPushedProperty);
 
 //#if NETSTANDARD
 //            _progressRing.Collapsed();

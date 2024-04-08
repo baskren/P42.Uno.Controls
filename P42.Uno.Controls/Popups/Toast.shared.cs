@@ -54,7 +54,7 @@ namespace P42.Uno.Controls
                 if (_titleBlock.IsVisible())
                 {
                     _titleBlock.Content = new TextBlock()
-                        .BindFont(_titleBlock)
+                        .WBindFont(_titleBlock)
                         .WrapWords()
                         .SetHtml(text);
                 }
@@ -109,7 +109,7 @@ namespace P42.Uno.Controls
                 if (_messageBlock.IsVisible())
                 {
                     _messageBlock.Content = new TextBlock()
-                        .BindFont(_messageBlock)
+                        .WBindFont(_messageBlock)
                         .WrapWords()
                         .SetHtml(text);
                 }
