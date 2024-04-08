@@ -15,10 +15,10 @@ namespace P42.Uno.Controls
     public partial class TargetedPopup : ContentControl
     {
         #region Defaults
-        const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Center;
-        const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Center;
-        const double DefaultBorderThickness = 1;
-        const double DefaultCornerRadius = 4;
+        //const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Center;
+        //const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Center;
+        //const double DefaultBorderThickness = 1;
+        //const double DefaultCornerRadius = 4;
         #endregion
 
         #region Visual Elements
@@ -34,38 +34,35 @@ namespace P42.Uno.Controls
                 .Stretch()
                 .WBind(Rectangle.FillProperty, this, PageOverlayBrushProperty)
                 .WBind(Rectangle.IsHitTestVisibleProperty, this, IsPageOverlayHitTestVisibleProperty)
-                .WBind(Rectangle.VisibilityProperty, this, PageOverlayBrushProperty, converter: VisibilityConverter.Instance)
-                //.Bind(Rectangle.FillProperty, this, nameof(PageOverlayBrush))
-                //.Bind(Rectangle.IsHitTestVisibleProperty, this, nameof(IsPageOverlayHitTestVisible))
-                //.Bind(Rectangle.VisibilityProperty, this, nameof(PageOverlayBrush), converter: VisibilityConverter.Instance)
+                .WBindVisible( this, PageOverlayVisibleProperty)
                 .AddTappedHandler(OnPageOverlayTapped);
-            
+
             ContentBorder
                 .HitTestVisible(true)
-                // WHY ISN"T BINDING CONSISTENTLY WORKING!?!?
-                //.Bind(BubbleBorder.ContentProperty, this, nameof(Content))
-                //.Bind(BubbleBorder.ContentTemplateProperty, this, nameof(ContentTemplate))
-                //.Bind(BubbleBorder.ContentTemplateSelectorProperty, this, nameof(ContentTemplateSelector))
-                //.Bind(BubbleBorder.ContentTransitionsProperty, this, nameof(ContentTransitions))
-                //.BindFont(this)
-                //.Bind(BubbleBorder.HorizontalContentAlignmentProperty, this, nameof(HorizontalContentAlignment))
-                //.Bind(BubbleBorder.VerticalContentAlignmentProperty, this, nameof(VerticalContentAlignment))
-                //.Bind(BubbleBorder.PaddingProperty, this, nameof(Padding))
-                //.Bind(BubbleBorder.BackgroundColorProperty, this, nameof(BackgroundColor))
-                //.Bind(BubbleBorder.BorderColorProperty, this, nameof(BorderColor))
-                //.Bind(BubbleBorder.BorderWidthProperty, this, nameof(BorderWidth))
-                //.Bind(BubbleBorder.CornerRadiusProperty, this, nameof(CornerRadius))
-                //.Bind(BubbleBorder.PointerCornerRadiusProperty, this, nameof(PointerCornerRadius))
-                //.Bind(BubbleBorder.PointerLengthProperty, this, nameof(PointerLength))
-                //.Bind(BubbleBorder.PointerTipRadiusProperty, this, nameof(PointerTipRadius))
+                .WBindVisible(this, VisibilityProperty)
+                .WBind(BubbleBorder.ContentProperty, this, ContentProperty)
+                .WBind(BubbleBorder.ContentTemplateProperty, this, ContentTemplateProperty)
+                .WBind(BubbleBorder.ContentTemplateSelectorProperty, this, ContentTemplateSelectorProperty)
+                .WBind(BubbleBorder.ContentTransitionsProperty, this, ContentTransitionsProperty)
+                .BindFont(this)
+                .WBind(BubbleBorder.HorizontalContentAlignmentProperty, this, HorizontalContentAlignmentProperty)
+                .WBind(BubbleBorder.VerticalContentAlignmentProperty, this, VerticalContentAlignmentProperty)
+                .WBind(BubbleBorder.PaddingProperty, this, PaddingProperty)
+                .WBind(BubbleBorder.BackgroundColorProperty, this, BackgroundColorProperty)
+                .WBind(BubbleBorder.BorderColorProperty, this, BorderColorProperty)
+                .WBind(BubbleBorder.BorderWidthProperty, this, BorderWidthProperty)
+                .WBind(BubbleBorder.CornerRadiusProperty, this, CornerRadiusProperty)
+                .WBind(BubbleBorder.PointerCornerRadiusProperty, this, PointerCornerRadiusProperty)
+                .WBind(BubbleBorder.PointerLengthProperty, this, PointerLengthProperty)
+                .WBind(BubbleBorder.PointerTipRadiusProperty, this, PointerTipRadiusProperty)
                 .AddSizeChangedHandler(OnBorderSizeChanged);
 
             ShadowBorder
-                //.Bind(SkiaBubble.VisibilityProperty, this, nameof(HasShadow), converter: VisibilityConverter.Instance)
-                //.Bind(SkiaBubble.PointerCornerRadiusProperty, ContentBorder, nameof(BubbleBorder.PointerCornerRadius))
-                //.Bind(SkiaBubble.PointerDirectionProperty, ContentBorder, nameof(BubbleBorder.PointerDirection))
-                //.Bind(SkiaBubble.PointerLengthProperty, ContentBorder, nameof(BubbleBorder.PointerLength))
-                //.Bind(SkiaBubble.PointerTipRadiusProperty, ContentBorder, nameof(BubbleBorder.PointerTipRadius))
+                .WBindVisible(this, ShadowVisibleProperty)
+                .WBind(SkiaBubble.PointerCornerRadiusProperty, ContentBorder, BubbleBorder.PointerCornerRadiusProperty)
+                .WBind(SkiaBubble.PointerDirectionProperty, ContentBorder, BubbleBorder.PointerDirectionProperty)
+                .WBind(SkiaBubble.PointerLengthProperty, ContentBorder, BubbleBorder.PointerLengthProperty)
+                .WBind(SkiaBubble.PointerTipRadiusProperty, ContentBorder, BubbleBorder.PointerTipRadiusProperty)
                 .IsShadow();
 
 
