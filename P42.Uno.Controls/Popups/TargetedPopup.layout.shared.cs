@@ -32,10 +32,9 @@ namespace P42.Uno.Controls
 
             PageOverlay
                 .Stretch()
-                //.Fill(Colors.Pink.WithAlpha(0.5))
                 .WBind(Rectangle.FillProperty, this, PageOverlayBrushProperty)
                 .WBind(Rectangle.IsHitTestVisibleProperty, this, IsPageOverlayHitTestVisibleProperty)
-                //.WBindVisible( this, PageOverlayVisibleProperty)
+                .WBindVisible( this, PageOverlayVisibleProperty)
                 .AddTappedHandler(OnPageOverlayTapped);
 
             ContentBorder
