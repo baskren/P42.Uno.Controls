@@ -92,10 +92,8 @@ namespace P42.Uno.Controls
             if (Math.Abs(args.PreviousSize.Width - args.NewSize.Width) < 1 && Math.Abs(args.PreviousSize.Height - args.NewSize.Height) < 1)
                 return;
 
-            if (args.PreviousSize == default)
-                return;
-
-            UpdateMarginAndAlignment(args.NewSize);
+            //if (args.PreviousSize != default)
+            //    UpdateMarginAndAlignment(args.NewSize);
 
             if (HasShadow)
             {
