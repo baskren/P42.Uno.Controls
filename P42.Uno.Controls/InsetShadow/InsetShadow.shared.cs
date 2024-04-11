@@ -51,7 +51,7 @@ namespace P42.Uno.Controls
                 new Rectangle()  // header shadow
                     .Height(5)
                     .Stretch().Top()
-                    .Bind<Rectangle, Orientation, Visibility>(Rectangle.VisibilityProperty, this, nameof(Orientation), convert:VerticalVisible) 
+                    .WBind<Rectangle, Orientation, Visibility>(Rectangle.VisibilityProperty, this, OrientationProperty, convert:VerticalVisible) 
                     .Fill(new LinearGradientBrush
                     {
                         StartPoint = new Windows.Foundation.Point(0.5, 0),
@@ -65,7 +65,7 @@ namespace P42.Uno.Controls
                 new Rectangle()  // footer shadow
                     .Height(5)
                     .Stretch().Bottom()
-                    .Bind<Rectangle, Orientation, Visibility>(Rectangle.VisibilityProperty, this, nameof(Orientation), convert: VerticalVisible)
+                    .WBind<Rectangle, Orientation, Visibility>(Rectangle.VisibilityProperty, this, OrientationProperty, convert: VerticalVisible)
                     .Fill(new LinearGradientBrush
                     {
                         StartPoint = new Windows.Foundation.Point(0.5, 0),
@@ -80,7 +80,7 @@ namespace P42.Uno.Controls
                 new Rectangle()  // left shadow
                     .Width(5)
                     .Stretch().Left()
-                    .Bind<Rectangle, Orientation, Visibility>(Rectangle.VisibilityProperty, this, nameof(Orientation), convert: HorizontalVisible)
+                    .WBind<Rectangle, Orientation, Visibility>(Rectangle.VisibilityProperty, this, OrientationProperty, convert: HorizontalVisible)
                     .Fill(new LinearGradientBrush
                     {
                         StartPoint = new Windows.Foundation.Point(0.5, 0),
@@ -94,7 +94,7 @@ namespace P42.Uno.Controls
                 new Rectangle()  // right shadow
                     .Height(5)
                     .Stretch().Right()
-                    .Bind<Rectangle, Orientation, Visibility>(Rectangle.VisibilityProperty, this, nameof(Orientation), convert: HorizontalVisible)
+                    .WBind<Rectangle, Orientation, Visibility>(Rectangle.VisibilityProperty, this, OrientationProperty, convert: HorizontalVisible)
                     .Fill(new LinearGradientBrush
                     {
                         StartPoint = new Windows.Foundation.Point(0.5, 0),

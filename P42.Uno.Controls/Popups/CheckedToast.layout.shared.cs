@@ -19,8 +19,8 @@ namespace P42.Uno.Controls
                 .Row(2).Column(1).Margin(0)
                 .StretchHorizontal()
                 .HorizontalContentAlignment(HorizontalAlignment.Left)
-                .Bind(CheckBox.IsCheckedProperty, this, nameof(IsChecked), Microsoft.UI.Xaml.Data.BindingMode.TwoWay)
-                .Bind(CheckBox.ContentProperty, this, nameof(CheckContent));
+                .WBind(CheckBox.IsCheckedProperty, this, IsCheckedProperty, Microsoft.UI.Xaml.Data.BindingMode.TwoWay)
+                .WBind(CheckBox.ContentProperty, this, CheckContentProperty);
 
             _bubbleContentGrid.Children.Add(_checkBox);
 

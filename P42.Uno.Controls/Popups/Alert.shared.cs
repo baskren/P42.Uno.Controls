@@ -46,7 +46,7 @@ namespace P42.Uno.Controls
                 if (_okButton.IsVisible())
                 {
                     _okButton.Content = new TextBlock()
-                        .BindFont(_okButton)
+                        .WBindFont(_okButton)
                         .WrapWords()
                         .SetHtml(text);
                 }

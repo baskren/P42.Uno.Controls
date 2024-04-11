@@ -398,7 +398,7 @@ namespace P42.Uno.Controls
 			// FontStretch : Not implemented in Uno
 			Register(UserControl.FontStyleProperty, OnFontStyleChanged);
 			Register(UserControl.FontWeightProperty, OnFontWeightChanged);
-			_textBlock.Bind(TextBlock.ForegroundProperty, this, nameof(Foreground));
+			_textBlock.WBind(TextBlock.ForegroundProperty, this, ForegroundProperty);
             // HorizontalTextAlignment : Not implemented because redundant with TextAlignment
             // InLines : local
             // IsColorFontEnabled : Not implemented in Uno
@@ -426,12 +426,12 @@ namespace P42.Uno.Controls
 
 
             // Control Property Implementations
-            _grid.Bind(Grid.BackgroundProperty, this, nameof(Background));
-			_grid.Bind(Grid.BackgroundSizingProperty, this, nameof(BackgroundSizing));
-			_grid.Bind(Grid.BorderBrushProperty, this, nameof(BorderBrush));
-			_grid.Bind(Grid.BorderThicknessProperty, this, nameof(BorderThickness));
+            _grid.WBind(Grid.BackgroundProperty, this, BackgroundProperty);
+			_grid.WBind(Grid.BackgroundSizingProperty, this, BackgroundSizingProperty);
+			_grid.WBind(Grid.BorderBrushProperty, this, BorderBrushProperty);
+			_grid.WBind(Grid.BorderThicknessProperty, this, BorderThicknessProperty);
 			// CharacterSpacing : above
-			_grid.Bind(Grid.CornerRadiusProperty, this, nameof(CornerRadiusProperty));
+			_grid.WBind(Grid.CornerRadiusProperty, this, CornerRadiusProperty);
 			// DefaultKeyStyle : not implemented
 			// DefaultStyleResourceUri : not implemented
 			// ElementSoundMode : not implemented
@@ -461,7 +461,7 @@ namespace P42.Uno.Controls
 			// XYFocusUp : not implemented
 
 			// FrameworkElement
-			_textBlock.Bind(TextBlock.DataContextProperty, this, nameof(DataContext));
+			_textBlock.WBind(TextBlock.DataContextProperty, this, DataContextProperty);
 
 			OnTextWrappingChanged();
 			OnTextChanged();

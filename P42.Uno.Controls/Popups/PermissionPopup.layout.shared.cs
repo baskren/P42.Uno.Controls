@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using P42.Uno.Markup;
 using P42.Utils.Uno;
 
@@ -21,9 +21,9 @@ namespace P42.Uno.Controls
                 .Margin(0)
                 .Stretch()
                 .CornerRadius(2)
-                //.Bind(Button.ForegroundProperty, this, nameof(CancelButtonForeground))
-                //.Bind(Button.BackgroundProperty, this, nameof(CancelButtonBackground))
-                .Bind(Button.ContentProperty, this, nameof(CancelButtonContent));
+                .WBind(Button.ForegroundProperty, this, CancelButtonForegroundProperty)
+                .WBind(Button.BackgroundProperty, this, CancelButtonBackgroundProperty)
+                .WBind(Button.ContentProperty, this, CancelButtonContentProperty);
                 
             new Grid()
                 .Assign(out _buttonBar)

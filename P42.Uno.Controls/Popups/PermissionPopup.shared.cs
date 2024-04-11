@@ -46,7 +46,7 @@ namespace P42.Uno.Controls
                 if (_cancelButton.IsVisible())
                 {
                     _cancelButton.Content = new TextBlock()
-                        .BindFont(_cancelButton)
+                        .WBindFont(_cancelButton)
                         .WrapWords()
                         .SetHtml(text);
                 }
@@ -76,15 +76,8 @@ namespace P42.Uno.Controls
             nameof(CancelButtonForeground),
             typeof(Brush),
             typeof(PermissionPopup),
-            new PropertyMetadata(default(Brush), OnCancelButtonForegroundChanged)
+            new PropertyMetadata(default(Brush))
         );
-
-        private static void OnCancelButtonForegroundChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
-        {
-            if (dependencyObject is PermissionPopup p)
-                p._cancelButton.Foreground = args.NewValue as Brush;
-        }
-
         /// <summary>
         /// Foreground Brush for Cancel button
         /// </summary>
@@ -101,14 +94,8 @@ namespace P42.Uno.Controls
             nameof(CancelButtonBackground),
             typeof(Brush),
             typeof(PermissionPopup),
-            new PropertyMetadata(null, OnCancelButtonBackgroundChanged)
+            new PropertyMetadata(null)
         );
-
-        private static void OnCancelButtonBackgroundChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
-        {
-            if (dependencyObject is PermissionPopup p)
-                p._cancelButton.Background = args.NewValue as Brush;
-        }
         /// <summary>
         /// Background Brush for Cancel button
         /// </summary>

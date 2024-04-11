@@ -85,6 +85,8 @@ public partial class TargetedPopup : ITargetedPopup
     }
     #endregion VerticalAlignment Property
 
+    #region Border Properties
+
     #region Background Property
     [Obsolete("Use BackgroundColor, instead")]
     public static readonly new DependencyProperty BackgroundProperty = DependencyProperty.Register(
@@ -215,6 +217,8 @@ public partial class TargetedPopup : ITargetedPopup
         set => SetValue(CornerRadiusProperty, value);
     }
     #endregion CornerRadius Property
+
+    #endregion
 
     #endregion
 
@@ -498,7 +502,7 @@ public partial class TargetedPopup : ITargetedPopup
     }
     #endregion ShadowVisible Property
 
-    #endregion Shadow Properties
+    #endregion
 
     #region Push/Pop Properties
 
@@ -754,7 +758,6 @@ public partial class TargetedPopup : ITargetedPopup
 
     #endregion Push/Pop Properties
 
-
     #endregion
 
 
@@ -823,19 +826,15 @@ public partial class TargetedPopup : ITargetedPopup
     /// <summary>
     /// Constructor
     /// </summary>
-    public TargetedPopup(UIElement target = null)
+    public TargetedPopup()
+    {
+        Build();
+        RegisterPropertyChangedCallback(ContentControl.VisibilityProperty, OnVisibilityChanged);
+        RegisterPropertyChangedCallback(ContentControl.CornerRadiusProperty, OnBaseCornerRadiusChanged);
+    }
+    public TargetedPopup(UIElement target) : this()
     {
         Target = target;
-
-        Build();
-        RegisterPropertyChangedCallback(ContentControl.CornerRadiusProperty, OnBaseCornerRadiusChanged);
-        RegisterPropertyChangedCallback(ContentControl.VisibilityProperty, OnVisibilityChanged);
-
-        System.Diagnostics.Debug.WriteLine($"TargetedPopup.ctr : Width[{Width}]");
-
-        //RegisterPropertyChangedCallback(TargetedPopup.HorizontalContentAlignmentProperty, OnHorizontalContentAlignmenChanged);
-        //RegisterPropertyChangedCallback(TargetedPopup.VerticalContentAlignmentProperty, OnVerticalContentAlignmentChanged);
-        //RegisterPropertyChangedCallback(TargetedPopup.PaddingProperty, OnPaddingChanged);
     }
 
     private void OnBaseCornerRadiusChanged(DependencyObject sender, DependencyProperty dp)
@@ -853,39 +852,10 @@ public partial class TargetedPopup : ITargetedPopup
     void UpdateShadowVisibility()
         => ShadowVisible = Visibility.Equals(Visibility.Visible) && HasShadow;
 
-
-
-
-/*
-    private void OnPaddingChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.Padding = Padding;
-
-    private void OnVerticalContentAlignmentChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.VerticalContentAlignment = VerticalContentAlignment;
-
-    private void OnHorizontalContentAlignmenChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.HorizontalContentAlignment = HorizontalContentAlignment;
-
-
-
-
-    protected override void OnContentTemplateSelectorChanged(DataTemplateSelector oldContentTemplateSelector, DataTemplateSelector newContentTemplateSelector)
-    {
-        base.OnContentTemplateSelectorChanged(oldContentTemplateSelector, newContentTemplateSelector);
-        ContentBorder.ContentTemplateSelector = ContentTemplateSelector;
-    }
-
-    protected override void OnContentTemplateChanged(DataTemplate oldContentTemplate, DataTemplate newContentTemplate)
-    {
-        base.OnContentTemplateChanged(oldContentTemplate, newContentTemplate);
-        ContentBorder.ContentTemplate = ContentTemplate;
-    }
-*/
-
     protected override void OnContentChanged(object oldContent, object newContent)
     {
         base.OnContentChanged(oldContent, newContent);
-        ContentBorder.Content = Content;
+        //ContentBorder.Content = Content;
     }
 
     #endregion
@@ -1063,6 +1033,7 @@ public partial class TargetedPopup : ITargetedPopup
                 });
             }
 
+            Popups.FrameSizeChanged += OnPopupFrameSizeChanged;
 
             PushPopState = PushPopState.Pushed;
             await OnPushEndAsync();
@@ -1122,6 +1093,8 @@ public partial class TargetedPopup : ITargetedPopup
     {
         UpdateOpacity(0.001);
         Popups.Remove(this);
+
+        Popups.FrameSizeChanged -= OnPopupFrameSizeChanged;
 
         PushPopState = PushPopState.Popped;
         var result = new PopupPoppedEventArgs(poppedCause, poppedTrigger);
@@ -1919,15 +1892,4 @@ public partial class TargetedPopup : ITargetedPopup
 
     #endregion
 
-    protected override Size MeasureOverride(Size availableSize)
-    {
-        var result = base.MeasureOverride(availableSize);
-
-        return result;
-    }
-
-    protected override Size ArrangeOverride(Size finalSize)
-    {
-        return base.ArrangeOverride(finalSize);
-    }
 }
