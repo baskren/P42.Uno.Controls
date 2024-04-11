@@ -429,7 +429,7 @@ public partial class TargetedPopup : ITargetedPopup
         nameof(PageOverlayBrush),
         typeof(Brush),
         typeof(TargetedPopup),
-        new PropertyMetadata(new SolidColorBrush(Colors.Gray.WithAlpha(0.4)))
+        new PropertyMetadata(new SolidColorBrush(Colors.Gray.WithAlpha(0.4)), (d,e)=>((TargetedPopup)d).UpdatePageOverlayVisibility())
     );
     public Brush PageOverlayBrush
     {
@@ -452,14 +452,30 @@ public partial class TargetedPopup : ITargetedPopup
     }
     #endregion IsPageOverlayHitTestVisible Property
 
+    #region PageOverlayVisible Property
+    static readonly DependencyProperty PageOverlayVisibleProperty = DependencyProperty.Register(
+        nameof(PageOverlayVisible),
+        typeof(bool),
+        typeof(TargetedPopup),
+        new PropertyMetadata(true)
+    );
+    bool PageOverlayVisible
+    {
+        get => (bool)GetValue(PageOverlayVisibleProperty);
+        set => SetValue(PageOverlayVisibleProperty, value);
+    }
+    #endregion PageOverlayVisible Property
+
     #endregion PageOverlay properties
+
+    #region Shadow Properties
 
     #region HasShadow Property
     public static readonly DependencyProperty HasShadowProperty = DependencyProperty.Register(
         nameof(HasShadow),
         typeof(bool),
         typeof(TargetedPopup),
-        new PropertyMetadata(true)
+        new PropertyMetadata(true, (d, e) => ((TargetedPopup)d).UpdateShadowVisibility())
     );
     public bool HasShadow
     {
@@ -467,6 +483,22 @@ public partial class TargetedPopup : ITargetedPopup
         set => SetValue(HasShadowProperty, value);
     }
     #endregion HasShadow Property
+
+    #region ShadowVisible Property
+    static readonly DependencyProperty ShadowVisibleProperty = DependencyProperty.Register(
+        nameof(ShadowVisible),
+        typeof(bool),
+        typeof(TargetedPopup),
+        new PropertyMetadata(true)
+    );
+    bool ShadowVisible
+    {
+        get => (bool)GetValue(ShadowVisibleProperty);
+        set => SetValue(ShadowVisibleProperty, value);
+    }
+    #endregion ShadowVisible Property
+
+    #endregion Shadow Properties
 
     #region Push/Pop Properties
 
@@ -647,7 +679,6 @@ public partial class TargetedPopup : ITargetedPopup
     }
     #endregion PushPopState Property
 
-    
     #region IsPushing Property
     public static readonly DependencyProperty IsPushingProperty = DependencyProperty.Register(
         nameof(IsPushing),
@@ -704,7 +735,6 @@ public partial class TargetedPopup : ITargetedPopup
     }
     #endregion IsPopped Property
 
-
     #region AnimationDuration Property
     public static readonly DependencyProperty AnimationDurationProperty = DependencyProperty.Register(
         nameof(AnimationDuration),
@@ -739,7 +769,6 @@ public partial class TargetedPopup : ITargetedPopup
                 return SkiaBubble.DefaultBorderColor.A > 0;
 
             return BorderColor.A > 0;
-
         }
     }
 
@@ -802,89 +831,32 @@ public partial class TargetedPopup : ITargetedPopup
         RegisterPropertyChangedCallback(ContentControl.CornerRadiusProperty, OnBaseCornerRadiusChanged);
         RegisterPropertyChangedCallback(ContentControl.VisibilityProperty, OnVisibilityChanged);
 
-        RegisterPropertyChangedCallback(TargetedPopup.WidthProperty, OnWidthChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.HeightProperty, OnHeightChanged);
-
         System.Diagnostics.Debug.WriteLine($"TargetedPopup.ctr : Width[{Width}]");
 
-        // PAGE OVERLAY BINDINGS
-        //RegisterPropertyChangedCallback(TargetedPopup.PageOverlayBrushProperty, OnPageOverlayBrushChanged);
-        //RegisterPropertyChangedCallback(TargetedPopup.IsPageOverlayHitTestVisibleProperty, OnPageOverlayBrushChanged);
-
-
-        // CONTENT BORDER BINDINGS
-        //RegisterPropertyChangedCallback(TargetedPopup.ContentProperty, OnContentChanged);
-        //RegisterPropertyChangedCallback(TargetedPopup.ContentTemplateProperty, OnContentTemplateChanged);
-        //RegisterPropertyChangedCallback(TargetedPopup.ContentTemplateSelectorProperty, OnContentTemplateSelectorhanged);
-        RegisterPropertyChangedCallback(TargetedPopup.ContentTransitionsProperty, OnContentTransitionsChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.CharacterSpacingProperty, OnCharacterSpacingChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.FontFamilyProperty, OnFontFamilyChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.FontSizeProperty, OnFontSizeChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.FontStretchProperty, OnFontStretchChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.FontStyleProperty, OnFontStyleChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.FontWeightProperty, OnFontWeightChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.ForegroundProperty, OnForegroundChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.HorizontalContentAlignmentProperty, OnHorizontalContentAlignmenChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.VerticalContentAlignmentProperty, OnVerticalContentAlignmentChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.PaddingProperty, OnPaddingChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.BackgroundColorProperty, OnBackgroundColorChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.BorderColorProperty, OnBorderColorChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.BorderWidthProperty, OnBorderWidthChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.PointerCornerRadiusProperty, OnPointerCornerRadiushChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.PointerLengthProperty, OnPointerLengthChanged);
-        RegisterPropertyChangedCallback(TargetedPopup.PointerTipRadiusProperty, OnPointerTipRadiusChanged);
-
-        // SHADOW BORDER BINDINGS
-        RegisterPropertyChangedCallback(TargetedPopup.HasShadowProperty, OnHasShadowChanged);
-        ContentBorder.RegisterPropertyChangedCallback(BubbleBorder.PointerCornerRadiusProperty, OnContentPointerCornerRadiusChanged);
-        ContentBorder.RegisterPropertyChangedCallback(BubbleBorder.PointerDirectionProperty, OnContentPointerDirectionChanged);
-        ContentBorder.RegisterPropertyChangedCallback(BubbleBorder.PointerLengthProperty, OnContentPointerLengthChanged);
-        ContentBorder.RegisterPropertyChangedCallback(BubbleBorder.PointerTipRadiusProperty, OnContentPointerTipRadiusChanged);
+        //RegisterPropertyChangedCallback(TargetedPopup.HorizontalContentAlignmentProperty, OnHorizontalContentAlignmenChanged);
+        //RegisterPropertyChangedCallback(TargetedPopup.VerticalContentAlignmentProperty, OnVerticalContentAlignmentChanged);
+        //RegisterPropertyChangedCallback(TargetedPopup.PaddingProperty, OnPaddingChanged);
     }
 
-    private void OnPageOverlayBrushChanged(DependencyObject sender, DependencyProperty dp)
+    private void OnBaseCornerRadiusChanged(DependencyObject sender, DependencyProperty dp)
+        =>  CornerRadius = base.CornerRadius.Average();
+
+    private void OnVisibilityChanged(DependencyObject sender, DependencyProperty dp)
     {
-        PageOverlay.Fill = PageOverlayBrush;
-        PageOverlay.IsHitTestVisible = IsPageOverlayHitTestVisible;
-        PageOverlay.Visibility = (Visibility)VisibilityConverter.Instance.Convert(PageOverlayBrush, typeof(Visibility), null, null);
+        UpdatePageOverlayVisibility();
+        UpdateShadowVisibility();
     }
 
-    private void OnContentPointerTipRadiusChanged(DependencyObject sender, DependencyProperty dp)
-        => ShadowBorder.PointerTipRadius = ContentBorder.PointerTipRadius;
+    void UpdatePageOverlayVisibility()
+        => PageOverlayVisible = Visibility.Equals(Visibility.Visible) && (bool)BooleanConverter.Instance.Convert(PageOverlayBrush);
 
-    private void OnContentPointerLengthChanged(DependencyObject sender, DependencyProperty dp)
-        => ShadowBorder.PointerLength = ContentBorder.PointerLength;
-
-    private void OnContentPointerDirectionChanged(DependencyObject sender, DependencyProperty dp)
-        => ShadowBorder.PointerDirection = ContentBorder.PointerDirection;
-
-    private void OnContentPointerCornerRadiusChanged(DependencyObject sender, DependencyProperty dp)
-        => ShadowBorder.PointerCornerRadius = ContentBorder.PointerCornerRadius;
-
-    private void OnHasShadowChanged(DependencyObject sender, DependencyProperty dp)
-        => ShadowBorder.Visible(HasShadow);
-
-    private void OnPointerTipRadiusChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.PointerTipRadius = PointerTipRadius;
-
-    private void OnPointerLengthChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.PointerLength = PointerLength;
-
-    private void OnPointerCornerRadiushChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.PointerCornerRadius = PointerCornerRadius;
+    void UpdateShadowVisibility()
+        => ShadowVisible = Visibility.Equals(Visibility.Visible) && HasShadow;
 
 
 
 
-    private void OnBorderWidthChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.BorderWidth = BorderWidth;
-
-    private void OnBorderColorChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.BorderColor = BorderColor;
-
-    private void OnBackgroundColorChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.BackgroundColor = BackgroundColor;
-
+/*
     private void OnPaddingChanged(DependencyObject sender, DependencyProperty dp)
         => ContentBorder.Padding = Padding;
 
@@ -895,30 +867,7 @@ public partial class TargetedPopup : ITargetedPopup
         => ContentBorder.HorizontalContentAlignment = HorizontalContentAlignment;
 
 
-    private void OnForegroundChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.Foreground = Foreground;
 
-    private void OnCharacterSpacingChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.CharacterSpacing = CharacterSpacing;
-
-    private void OnFontWeightChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.FontWeight = FontWeight;
-
-    private void OnFontStyleChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.FontStyle = FontStyle;
-
-    private void OnFontStretchChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.FontStretch = FontStretch;
-
-    private void OnFontSizeChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.FontSize = FontSize;
-
-    private void OnFontFamilyChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.FontFamily = FontFamily;
-
-    private void OnContentTransitionsChanged(DependencyObject sender, DependencyProperty dp)
-        => ContentBorder.ContentTransitions = ContentTransitions;
-    
 
     protected override void OnContentTemplateSelectorChanged(DataTemplateSelector oldContentTemplateSelector, DataTemplateSelector newContentTemplateSelector)
     {
@@ -931,34 +880,13 @@ public partial class TargetedPopup : ITargetedPopup
         base.OnContentTemplateChanged(oldContentTemplate, newContentTemplate);
         ContentBorder.ContentTemplate = ContentTemplate;
     }
+*/
 
     protected override void OnContentChanged(object oldContent, object newContent)
     {
         base.OnContentChanged(oldContent, newContent);
         ContentBorder.Content = Content;
     }
-
-    private void OnBaseCornerRadiusChanged(DependencyObject sender, DependencyProperty dp)
-        =>  CornerRadius = base.CornerRadius.Average();
-    
-
-    private void OnHeightChanged(DependencyObject sender, DependencyProperty dp)
-    {
-        System.Diagnostics.Debug.WriteLine($"TargetedPopup.OnHeightChanged : Height[{Height}]");
-    }
-
-    private void OnWidthChanged(DependencyObject sender, DependencyProperty dp)
-    {
-        System.Diagnostics.Debug.WriteLine($"TargetedPopup.OnWidthChanged : Width[{Width}]");
-    }
-
-    private void OnVisibilityChanged(DependencyObject sender, DependencyProperty dp)
-    {
-        PageOverlay?.Visibility(Visibility);
-        ShadowBorder?.Visibility(Visibility);
-        ContentBorder?.Visibility(Visibility);
-    }
-
 
     #endregion
 
