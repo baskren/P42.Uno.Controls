@@ -105,7 +105,9 @@ namespace P42.Uno.Controls
         /// <summary>
         /// Construction
         /// </summary>
-        public BusyPopup(UIElement target = null) : base(target)
+        public BusyPopup() : this(null) {}
+
+        public BusyPopup(UIElement target) : base(target)
         {
             Build();
         }

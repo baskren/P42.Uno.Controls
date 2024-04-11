@@ -132,7 +132,10 @@ namespace P42.Uno.Controls
         /// <summary>
         /// Constructor
         /// </summary>
-        public PermissionPopup(UIElement target = null) : base(target)
+        
+        public PermissionPopup() : this(null) {}
+        
+        public PermissionPopup(UIElement target) : base(target)
         {
             Build();
         }

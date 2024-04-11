@@ -202,15 +202,8 @@ public partial class TargetedPopup : ITargetedPopup
         nameof(CornerRadius),
         typeof(double),
         typeof(TargetedPopup),
-        new PropertyMetadata(SkiaBubble.DefaultCornerRadius, (d,e) => ((TargetedPopup)d).OnCornerRadiusChanged(e))
+        new PropertyMetadata(SkiaBubble.DefaultCornerRadius)
     );
-
-    private void OnCornerRadiusChanged(DependencyPropertyChangedEventArgs e)
-    {
-        ContentBorder.CornerRadius = CornerRadius;
-        ShadowBorder.CornerRadius = CornerRadius;
-    }
-
     public new double CornerRadius
     {
         get => (double)GetValue(CornerRadiusProperty);
@@ -855,7 +848,7 @@ public partial class TargetedPopup : ITargetedPopup
     protected override void OnContentChanged(object oldContent, object newContent)
     {
         base.OnContentChanged(oldContent, newContent);
-        //ContentBorder.Content = Content;
+        ContentBorder.Content = Content;
     }
 
     #endregion

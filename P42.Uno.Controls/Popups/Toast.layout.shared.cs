@@ -12,15 +12,15 @@ namespace P42.Uno.Controls
 {
     public partial class Toast : TargetedPopup
     {
-        protected ContentPresenter _titleBlock;
-        protected Grid _bubbleContentGrid;
-        protected ContentPresenter _iconPresenter;
-        protected ContentPresenter _messageBlock;
-        protected ScrollViewer scrollViewer;
+        protected readonly ContentPresenter _titleBlock = new();
+        protected readonly Grid _bubbleContentGrid = new();
+        protected readonly ContentPresenter _iconPresenter = new();
+        protected readonly ContentPresenter _messageBlock = new();
+        protected readonly ScrollViewer scrollViewer = new();
 
         void Build()
         {
-            Content = _bubbleContentGrid = new Grid()
+            Content = _bubbleContentGrid
                 .RowSpacing(3)
                 .ColumnSpacing(0)
                 .Margin(0)
@@ -28,16 +28,14 @@ namespace P42.Uno.Controls
                 .Rows('a', '*')
                 .Columns('a', '*')
                 .Children(
-                    new ContentPresenter()
-                        .Assign(out _iconPresenter)
+                    _iconPresenter
                         .RowSpan(2)
                         .Margin(3)
                         .Center()
                         .WBind(ContentPresenter.ContentProperty, this, IconElementProperty)
                         .WBindNullCollapse(),
 
-                    new ContentPresenter()
-                        .Assign(out _titleBlock)
+                    _titleBlock
                         .RowCol(0,1)
                         .CenterVertical()
                         .VerticalContentAlignment(VerticalAlignment.Center)
@@ -47,13 +45,11 @@ namespace P42.Uno.Controls
                         .WBindNullCollapse()
                         ,
 
-                    new ScrollViewer()
+                    scrollViewer
                         .RowCol(1,1)
-                        .Assign(out scrollViewer)
                         .MaxHeight(300)
                         .Content(
-                        new ContentPresenter()
-                            .Assign(out _messageBlock)
+                        _messageBlock
                             .RowCol(1,1)
                             .CenterVertical()
                             .VerticalContentAlignment(VerticalAlignment.Center)

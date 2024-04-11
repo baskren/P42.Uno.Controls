@@ -184,7 +184,9 @@ namespace P42.Uno.Controls
         /// <summary>
         /// Constructor
         /// </summary>
-        public Alert(UIElement target = null) : base(target)
+        public Alert() : this(null) {}
+        
+        public Alert(UIElement target) : base(target)
         {
             Build();
         }

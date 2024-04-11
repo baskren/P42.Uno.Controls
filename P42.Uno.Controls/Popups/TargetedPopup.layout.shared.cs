@@ -59,6 +59,7 @@ public partial class TargetedPopup : ContentControl
 
         ShadowBorder
             .WBindVisible(this, ShadowVisibleProperty)
+            .WBind(SkiaBubble.CornerRadiusProperty, this, CornerRadiusProperty)
             .WBind(SkiaBubble.PointerCornerRadiusProperty, ContentBorder, BubbleBorder.PointerCornerRadiusProperty)
             .WBind(SkiaBubble.PointerDirectionProperty, ContentBorder, BubbleBorder.PointerDirectionProperty)
             .WBind(SkiaBubble.PointerLengthProperty, ContentBorder, BubbleBorder.PointerLengthProperty)
@@ -91,18 +92,17 @@ public partial class TargetedPopup : ContentControl
         if (Math.Abs(args.PreviousSize.Width - args.NewSize.Width) < 1 && Math.Abs(args.PreviousSize.Height - args.NewSize.Height) < 1)
             return;
 
-        if (args.PreviousSize == default)
-            return;
-
-        UpdateMarginAndAlignment(args.NewSize);
+        //if (args.PreviousSize != default)
+        //    UpdateMarginAndAlignment(args.NewSize);
 
         if (HasShadow)
         {
+            /*
             var ΔHeight = args.NewSize.Height - (ShadowBorder.Height + ShadowBorder.BlurSigma * 4);
             var ΔWidth = args.NewSize.Width - (ShadowBorder.Width + ShadowBorder.BlurSigma * 4);
             if (ΔWidth <= 0 && ΔWidth > -2 && ΔHeight <= 0 && ΔHeight > -2)
                 return;
-
+            */
             ShadowBorder.Height = ContentBorder.ActualHeight + ShadowBorder.BlurSigma * 4;
             ShadowBorder.Width = ContentBorder.ActualWidth + ShadowBorder.BlurSigma * 4;
         }

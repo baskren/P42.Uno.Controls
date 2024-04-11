@@ -105,11 +105,13 @@ namespace P42.Uno.Controls
         /// <summary>
         /// Construction
         /// </summary>
-        public CheckedToast(UIElement target = null) : base(target)
+
+        public CheckedToast() : this(null) {}
+
+        public CheckedToast(UIElement target) : base(target)
         {
             Build();
         }
-
         #endregion
 
 

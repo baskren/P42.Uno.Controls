@@ -264,10 +264,12 @@ namespace P42.Uno.Controls
         /// <summary>
         /// Constructor
         /// </summary>
-        public Toast(UIElement target = null) : base(target) 
+         
+        public Toast() : this(null) {}
+
+        public Toast(UIElement target) : base(target) 
         {
             Build();
-
             Loaded += OnLoaded;
         }
 
