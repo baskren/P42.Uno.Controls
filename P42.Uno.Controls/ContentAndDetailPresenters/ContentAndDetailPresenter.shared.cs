@@ -301,22 +301,6 @@ namespace P42.Uno.Controls
 
         public PushPopState DetailPushPopState { get; private set; } = PushPopState.Popped;
 
-
-        #region IsAnimated Property
-        public static readonly DependencyProperty IsAnimatedProperty = DependencyProperty.Register(
-            nameof(IsAnimated),
-            typeof(bool),
-            typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(true)
-        );
-        public bool IsAnimated
-        {
-            get => (bool)GetValue(IsAnimatedProperty);
-            set => SetValue(IsAnimatedProperty, value);
-        }
-        #endregion IsAnimated Property
-
-
         #region PageOverlay Properties
 
         #region PopOnPageOverlayTouch Property
@@ -410,7 +394,7 @@ namespace P42.Uno.Controls
         }
 
         static object popupToDrawerResizeTrigger = new();
-        void LayoutDetailAndOverlay(Size size, double percentOpen)
+        void LayoutDetailAndOverlay(Size size, double percentOpen, bool? knownDrawerMode = null)
         {
             if (size.IsZero())
                 return;
@@ -419,7 +403,7 @@ namespace P42.Uno.Controls
             if (double.IsNaN(size.Height))
                 return;
 
-            var drawerMode = LocalIsInDrawerMode(size);
+            var drawerMode = knownDrawerMode ?? LocalIsInDrawerMode(size);
 
             if (drawerMode)
             {
@@ -435,13 +419,19 @@ namespace P42.Uno.Controls
             {
                 //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LayoutDetailAndOverlay : POPUP");
                 _drawerRowDefinition.Height = GridLength.Auto;
-                _targetedPopup.Opacity = percentOpen;
+                //_targetedPopup.Opacity = percentOpen;
                 _detailDrawer.Child = null;
                 //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LayoutDetailAndOverlay _targetedPopup.Size:[{_targetedPopup.Width},{_targetedPopup.Height}]");
                 _targetedPopup.Content = Detail;
 
+                //TODO: Is the following necessary?
+                /*
                 if (percentOpen > 0 && _targetedPopup.PushPopState == PushPopState.Popped)
                     _targetedPopup.PushAsync().Forget();
+                else if (percentOpen <=0 && _targetedPopup.PushPopState == PushPopState.Pushed)
+                    _targetedPopup.PopAsync().Forget();
+                */
+                
                 //while (RowDefinitions.Count > 2)
                 //    RowDefinitions.RemoveAt(RowDefinitions.Count - 1);
                 //while (ColumnDefinitions.Count > 1)
@@ -452,12 +442,16 @@ namespace P42.Uno.Controls
             {
                 _overlay.Opacity = percentOpen;
 
-                if (!Children.Contains(_overlay))
-                    Children.Add(_overlay);
                 if (drawerMode && !Children.Contains(_detailDrawer))
+                {
                     Children.Add(_detailDrawer);
+                    Children.Add(_overlay);
+                }
                 if (!drawerMode && Children.Contains(_detailDrawer))
+                {
                     Children.Remove(_detailDrawer);
+                    Children.Remove(_overlay);
+                }
             }
             else
             {
@@ -551,25 +545,30 @@ namespace P42.Uno.Controls
             _popCompletionSource = null;
 
             var size = new Size(ActualWidth, ActualHeight);
-
-            LayoutDetailAndOverlay(size, 0.11);
+            var drawerMode = LocalIsInDrawerMode(size);
+            LayoutDetailAndOverlay(size, 0.11, drawerMode);
             animation?.Invoke(0.11);
-
-            if (!LocalIsInDrawerMode(size))
-                await _targetedPopup.PushAsync(animated);
-            if (animated)
+            if (drawerMode)
             {
-                Action<double> action = percent =>
+                if (animated)
                 {
-                    animation?.Invoke(percent);
-                    LayoutDetailAndOverlay(size, percent);
-                };
-                var animator = new P42.Utils.Uno.ActionAnimator(0.11, 0.95, TimeSpan.FromMilliseconds(300), action);
-                await animator.RunAsync();
-            }
+                    Action<double> action = percent =>
+                    {
+                        animation?.Invoke(percent);
+                        LayoutDetailAndOverlay(size, percent, true);
+                    };
+                    var animator = new P42.Utils.Uno.ActionAnimator(0.11, 0.95, TimeSpan.FromMilliseconds(300), action);
+                    await animator.RunAsync();
+                }
 
-            LayoutDetailAndOverlay(size, 1);
-            animation?.Invoke(1);
+                LayoutDetailAndOverlay(size, 1, true);
+                animation?.Invoke(1);
+
+                if (Detail is IEventSubscriber subscriber)
+                    subscriber.EnableEvents();
+            }
+            else
+                await _targetedPopup.PushAsync(animated);
 
             DetailPushPopState = PushPopState.Pushed;
             _pushCompletionSource?.SetResult(true);
@@ -593,17 +592,23 @@ namespace P42.Uno.Controls
             _pushCompletionSource = null;
 
             var size = new Size(ActualWidth, ActualHeight);
-
-            if (IsAnimated)
+            var drawerMode = LocalIsInDrawerMode(size);
+            if (drawerMode)
             {
-                Action<double> action = percent => LayoutDetailAndOverlay(size, percent);
-                var animator = new P42.Utils.Uno.ActionAnimator(0.89, 0.11, TimeSpan.FromMilliseconds(300), action);
-                await animator.RunAsync();
-            }
-            LayoutDetailAndOverlay(size, 0);
-            if (!LocalIsInDrawerMode(size))
-                await _targetedPopup.PopAsync(PopupPoppedCause.MethodCalled, animated);
+                if (Detail is IEventSubscriber subscriber)
+                    subscriber.DisableEvents();
 
+                if (animated)
+                {
+                    Action<double> action = percent => LayoutDetailAndOverlay(size, percent, true);
+                    var animator = new P42.Utils.Uno.ActionAnimator(0.89, 0.11, TimeSpan.FromMilliseconds(300), action);
+                    await animator.RunAsync();
+                }
+            }
+            else
+                await _targetedPopup.PopAsync(PopupPoppedCause.MethodCalled, animated);                
+
+            LayoutDetailAndOverlay(size, 0, drawerMode);
             DetailPushPopState = PushPopState.Popped;
             _popCompletionSource?.SetResult(true);
         }

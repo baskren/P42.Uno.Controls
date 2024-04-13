@@ -254,7 +254,6 @@ public partial class TargetedPopup : ITargetedPopup
     }
     #endregion WeakTarget Property
 
-
     #region TargetRect Property
     public static readonly DependencyProperty TargetRectProperty = DependencyProperty.Register(
         nameof(TargetRect),
@@ -1027,6 +1026,8 @@ public partial class TargetedPopup : ITargetedPopup
             }
 
             Popups.FrameSizeChanged += OnPopupFrameSizeChanged;
+            if (Content is IEventSubscriber subscriber)
+                subscriber.EnableEvents();
 
             PushPopState = PushPopState.Pushed;
             await OnPushEndAsync();
@@ -1087,6 +1088,8 @@ public partial class TargetedPopup : ITargetedPopup
         UpdateOpacity(0.001);
         Popups.Remove(this);
 
+        if (Content is IEventSubscriber subscriber)
+            subscriber.DisableEvents();
         Popups.FrameSizeChanged -= OnPopupFrameSizeChanged;
 
         PushPopState = PushPopState.Popped;

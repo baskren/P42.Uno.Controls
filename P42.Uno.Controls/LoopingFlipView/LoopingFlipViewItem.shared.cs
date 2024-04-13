@@ -11,7 +11,7 @@ using Microsoft.UI.Xaml.Media;
 namespace P42.Uno.Controls
 {
     [Microsoft.UI.Xaml.Data.Bindable]
-    internal partial class LoopingFlipViewItem : Grid
+    internal partial class LoopingFlipViewItem : Grid, IEventSubscriber
     {
         internal UIElement Child;
 
@@ -43,6 +43,28 @@ namespace P42.Uno.Controls
                     else if (bar == RightBar)
                         flipView.SelectedIndex++;
                 }
+            }
+        }
+
+        public void EnableEvents()
+        {
+            if (Child is IEventSubscriber eventSubscriber)
+                eventSubscriber.EnableEvents();
+        }
+
+        public void DisableEvents()
+        {
+            if (Child is IEventSubscriber eventSubscriber)
+                eventSubscriber.DisableEvents();
+        }
+
+        public bool AreEventsEnabled
+        {
+            get
+            {
+                if (Child is IEventSubscriber subscriber)
+                    return subscriber.AreEventsEnabled;
+                return false;
             }
         }
     }

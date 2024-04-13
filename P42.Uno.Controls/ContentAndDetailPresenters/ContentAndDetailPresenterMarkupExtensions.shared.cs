@@ -65,9 +65,6 @@ namespace P42.Uno.Controls
         public static TElement PopupVerticalAlignment<TElement>(this TElement presenter, VerticalAlignment alignment) where TElement : ElementType
         { presenter.PopupVerticalAlignment = alignment; return presenter; }
 
-        public static TElement IsAnimated<TElement>(this TElement presenter, bool isAnimated) where TElement : ElementType
-        { presenter.IsAnimated = isAnimated; return presenter; }
-
         public static TElement PopOnPageOverlayTouch<TElement>(this TElement presenter, bool enabled = true) where TElement : ElementType
         { presenter.PopOnPageOverlayTouch = enabled; return presenter; }
 

@@ -341,13 +341,20 @@ namespace P42.Uno.Controls
                 if (oldItemSource is INotifyCollectionChanged notifiable)
                     notifiable.CollectionChanged -= OnItemsSourceCollectionChanged;
             }
+            foreach (var child in _grid.Children)
+                if (child is IEventSubscriber eventSubscriber)
+                    eventSubscriber.DisableEvents();
             _grid.Children.Clear();
             if (e.NewValue is IEnumerable<UIElement> newItemSource)
             {
                 if (newItemSource is INotifyCollectionChanged notifiable)
                     notifiable.CollectionChanged += OnItemsSourceCollectionChanged;
                 foreach (var child in newItemSource)
+                {
                     _grid.Children.Add(new LoopingFlipViewItem(child));
+                    if (child is IEventSubscriber eventSubscriber)
+                        eventSubscriber.EnableEvents();
+                }
             }
 
             LayoutChildren();
@@ -372,6 +379,9 @@ namespace P42.Uno.Controls
                     InsertNewItems(e.NewStartingIndex, e.OldItems);
                     break;
                 case NotifyCollectionChangedAction.Reset:
+                    foreach (var child in _grid.Children)
+                        if (child is IEventSubscriber eventSubscriber)
+                            eventSubscriber.DisableEvents();
                     _grid.Children.Clear();
                     break;
             }
@@ -381,7 +391,11 @@ namespace P42.Uno.Controls
         void RemoveItemsAt(int index, int count)
         {
             for (int i = 0; i < count; i++)
+            {
+                if (_grid.Children[index] is IEventSubscriber eventSubscriber)
+                    eventSubscriber.DisableEvents();
                 _grid.Children.RemoveAt(index);
+            }
         }
 
         void InsertNewItems(int index, IList items)
@@ -395,6 +409,8 @@ namespace P42.Uno.Controls
         {
             var xitem = new LoopingFlipViewItem(item);
             _grid.Children.Insert(index, xitem);
+            if (xitem is IEventSubscriber eventSubscriber)
+                eventSubscriber.EnableEvents();
         }
         #endregion
 

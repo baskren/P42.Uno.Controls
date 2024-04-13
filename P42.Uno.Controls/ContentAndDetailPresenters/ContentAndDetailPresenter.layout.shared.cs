@@ -58,6 +58,11 @@ namespace P42.Uno.Controls
                 .WBind(TargetedPopup.CornerRadiusProperty, this, DetailCornerRadiusProperty)
                 .WBind(TargetedPopup.MinHeightProperty, this, PopupMinHeightProperty)
                 .WBind(TargetedPopup.MinWidthProperty, this, PopupMinWidthProperty)
+                .WBind(TargetedPopup.PageOverlayBrushProperty, this, PageOverlayBrushProperty)
+                .WBind(TargetedPopup.IsPageOverlayHitTestVisibleProperty, this, IsPageOverlayHitTestVisibleProperty)
+                .WBind(TargetedPopup.PopOnPageOverlayTouchProperty, this, PopOnPageOverlayTouchProperty)
+                .WBind(TargetedPopup.HorizontalAlignmentProperty, this, PopupHorizontalAlignmentProperty)
+                .WBind(TargetedPopup.VerticalAlignmentProperty, this, PopupVerticalAlignmentProperty)
                 .AddPoppedHandler(OnTargetedPopupPopped)
                 ;
 
