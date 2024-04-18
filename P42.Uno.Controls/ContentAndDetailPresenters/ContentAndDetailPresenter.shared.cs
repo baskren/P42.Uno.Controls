@@ -1,6 +1,7 @@
 using P42.Uno.Markup;
 using P42.Utils.Uno;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
@@ -444,8 +445,8 @@ namespace P42.Uno.Controls
 
                 if (drawerMode && !Children.Contains(_detailDrawer))
                 {
-                    Children.Add(_detailDrawer);
                     Children.Add(_overlay);
+                    Children.Add(_detailDrawer);
                 }
                 if (!drawerMode && Children.Contains(_detailDrawer))
                 {
@@ -487,24 +488,35 @@ namespace P42.Uno.Controls
         {
             if (Detail is null)
                 return false;
+            
+            var minSide = Math.Min(availableSize.Width, availableSize.Height);
+            return minSide <= 600;
 
-            //System.Diagnostics.Debug.WriteLine($" : ");
-            //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode({availableSize}) : ============= ENTER ================");
-            var measurements = _targetedPopup.GetAlignmentMarginsAndPointerMeasurements(Detail);
-            //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : Measurements: {measurements}");
-
-            if (measurements.PointerDirection.IsVertical() || measurements.PointerDirection.IsHorizontal())
+            var maxSide = Math.Max(availableSize.Width, availableSize.Height);
+            var aspect = maxSide / minSide;
+            
+            
+            
+            /*
+            if (!isAndroid || )
             {
-                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [FALSE] A ================");
-                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : false");
-                return false;
+                //System.Diagnostics.Debug.WriteLine($" : ");
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode({availableSize}) : ============= ENTER ================");
+                var measurements = _targetedPopup.GetAlignmentMarginsAndPointerMeasurements(Detail);
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : Measurements: {measurements}");
+                
+                if (measurements.PointerDirection.IsVertical() || measurements.PointerDirection.IsHorizontal())
+                {
+                    //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [FALSE] A ================");
+                    //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : false");
+                    return false;
+                }
             }
-
-
-            var aspect = AspectRatio(availableSize);
-            if (aspect < 1.0)
-                aspect = 1.0 / aspect;
-
+            */
+            
+            
+            //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : aspect: {aspect}");
+            
             if (aspect > 1.5 * DrawerAspectRatio)
             {
                 //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [TRUE] B================");
