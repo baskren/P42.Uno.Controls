@@ -29,7 +29,8 @@ public partial class TargetedPopup : ContentControl
 
     void Build()
     {
-
+        this.Foreground(SystemColors.BaseHigh);
+        
         PageOverlay
             .Stretch()
             .WBind(Rectangle.FillProperty, this, PageOverlayBrushProperty)
