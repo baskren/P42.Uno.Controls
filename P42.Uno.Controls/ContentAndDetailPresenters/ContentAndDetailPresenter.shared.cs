@@ -492,6 +492,7 @@ namespace P42.Uno.Controls
             var minSide = Math.Min(availableSize.Width, availableSize.Height);
             return minSide <= 600;
 
+            /*
             var maxSide = Math.Max(availableSize.Width, availableSize.Height);
             var aspect = maxSide / minSide;
             
@@ -514,7 +515,7 @@ namespace P42.Uno.Controls
             }
             */
             
-            
+            /*
             //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : aspect: {aspect}");
             
             if (aspect > 1.5 * DrawerAspectRatio)
@@ -527,6 +528,7 @@ namespace P42.Uno.Controls
             //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [FALSE] C ================");
             //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : false");
             return false; 
+            */
         }
 
         double AspectRatio(Size size)
