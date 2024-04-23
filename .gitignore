@@ -200,3 +200,5 @@ FakesAssemblies/
 #VisualStudio Code
 .vscode/
 
+# JetBrains
+.idea
