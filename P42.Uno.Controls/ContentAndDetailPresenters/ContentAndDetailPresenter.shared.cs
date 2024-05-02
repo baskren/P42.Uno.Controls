@@ -267,8 +267,19 @@ namespace P42.Uno.Controls
 
         #endregion
 
-
-        public bool IsInDrawerMode => LocalIsInDrawerMode(ViewEstimatedSize);
+        #region IsInDrawerMode Property
+        public static readonly DependencyProperty IsInDrawerModeProperty = DependencyProperty.Register(
+            nameof(IsInDrawerMode),
+            typeof(bool),
+            typeof(ContentAndDetailPresenter),
+            new PropertyMetadata(default(bool))
+        );
+        public bool IsInDrawerMode
+        {
+            get => (bool)GetValue(IsInDrawerModeProperty);
+            private set => SetValue(IsInDrawerModeProperty, value);
+        }
+        #endregion IsInDrawerMode Property
 
         Size ViewEstimatedSize
         {
@@ -404,7 +415,7 @@ namespace P42.Uno.Controls
             if (double.IsNaN(size.Height))
                 return;
 
-            var drawerMode = knownDrawerMode ?? LocalIsInDrawerMode(size);
+            var drawerMode = knownDrawerMode ?? LocalUpdateIsInDrawerMode(size);
 
             if (drawerMode)
             {
@@ -484,13 +495,14 @@ namespace P42.Uno.Controls
         }
 
 
-        bool LocalIsInDrawerMode(Size availableSize)
+        bool LocalUpdateIsInDrawerMode(Size availableSize)
         {
             if (Detail is null)
                 return false;
             
             var minSide = Math.Min(availableSize.Width, availableSize.Height);
-            return minSide <= 600;
+            IsInDrawerMode = minSide <= 600;
+            return IsInDrawerMode;
 
             /*
             var maxSide = Math.Max(availableSize.Width, availableSize.Height);
@@ -502,31 +514,31 @@ namespace P42.Uno.Controls
             if (!isAndroid || )
             {
                 //System.Diagnostics.Debug.WriteLine($" : ");
-                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode({availableSize}) : ============= ENTER ================");
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalUpdateIsInDrawerMode({availableSize}) : ============= ENTER ================");
                 var measurements = _targetedPopup.GetAlignmentMarginsAndPointerMeasurements(Detail);
-                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : Measurements: {measurements}");
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalUpdateIsInDrawerMode : Measurements: {measurements}");
                 
                 if (measurements.PointerDirection.IsVertical() || measurements.PointerDirection.IsHorizontal())
                 {
-                    //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [FALSE] A ================");
-                    //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : false");
+                    //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalUpdateIsInDrawerMode : ============= EXIT [FALSE] A ================");
+                    //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalUpdateIsInDrawerMode : false");
                     return false;
                 }
             }
             */
             
             /*
-            //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : aspect: {aspect}");
+            //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalUpdateIsInDrawerMode : aspect: {aspect}");
             
             if (aspect > 1.5 * DrawerAspectRatio)
             {
-                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [TRUE] B================");
-                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : true");
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalUpdateIsInDrawerMode : ============= EXIT [TRUE] B================");
+                //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalUpdateIsInDrawerMode : true");
                 return true;
             }
 
-            //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : ============= EXIT [FALSE] C ================");
-            //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalIsInDrawerMode : false");
+            //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalUpdateIsInDrawerMode : ============= EXIT [FALSE] C ================");
+            //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LocalUpdateIsInDrawerMode : false");
             return false; 
             */
         }
@@ -559,7 +571,7 @@ namespace P42.Uno.Controls
             _popCompletionSource = null;
 
             var size = new Size(ActualWidth, ActualHeight);
-            var drawerMode = LocalIsInDrawerMode(size);
+            var drawerMode = LocalUpdateIsInDrawerMode(size);
             LayoutDetailAndOverlay(size, 0.11, drawerMode);
             animation?.Invoke(0.11);
             if (drawerMode)
@@ -606,7 +618,7 @@ namespace P42.Uno.Controls
             _pushCompletionSource = null;
 
             var size = new Size(ActualWidth, ActualHeight);
-            var drawerMode = LocalIsInDrawerMode(size);
+            var drawerMode = LocalUpdateIsInDrawerMode(size);
             if (drawerMode)
             {
                 if (Detail is IEventSubscriber subscriber)
