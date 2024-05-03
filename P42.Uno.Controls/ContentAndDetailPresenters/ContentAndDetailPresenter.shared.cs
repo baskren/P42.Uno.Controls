@@ -49,7 +49,6 @@ namespace P42.Uno.Controls
         }
         #endregion Content Property
 
-
         #region Footer Property
         public static readonly DependencyProperty FooterProperty = DependencyProperty.Register(
             nameof(Footer),
@@ -76,7 +75,6 @@ namespace P42.Uno.Controls
             set => SetValue(FooterProperty, value);
         }
         #endregion Footer Property
-
 
         #region Detail Properties
 
@@ -206,7 +204,6 @@ namespace P42.Uno.Controls
             set => SetValue(WeakTargetProperty, value);
         }
         #endregion WeakTarget Property
-
 
         #region PopupMinWidth Property
         public static readonly DependencyProperty PopupMinWidthProperty = DependencyProperty.Register(
@@ -436,13 +433,11 @@ namespace P42.Uno.Controls
                 //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LayoutDetailAndOverlay _targetedPopup.Size:[{_targetedPopup.Width},{_targetedPopup.Height}]");
                 _targetedPopup.Content = Detail;
 
-                //TODO: Is the following necessary?
-                /*
                 if (percentOpen > 0 && _targetedPopup.PushPopState == PushPopState.Popped)
                     _targetedPopup.PushAsync().Forget();
                 else if (percentOpen <=0 && _targetedPopup.PushPopState == PushPopState.Pushed)
                     _targetedPopup.PopAsync().Forget();
-                */
+                
                 
                 //while (RowDefinitions.Count > 2)
                 //    RowDefinitions.RemoveAt(RowDefinitions.Count - 1);
