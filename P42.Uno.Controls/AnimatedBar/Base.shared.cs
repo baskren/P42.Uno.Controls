@@ -12,20 +12,23 @@ using System.Linq;
 using Microsoft.UI.Xaml.Media;
 using System.Threading;
 using Microsoft.UI.Xaml;
+using P42.Uno.Markup;
 
 namespace P42.Uno.Controls.AnimateBar
 {
     [Microsoft.UI.Xaml.Data.Bindable]
     public partial class Base : Grid, IDisposable
     {
+        static Brush DefaultBrush = SystemColors.BaseHigh.ToBrush();
+
         #region Properties
 
         #region Brush Property
-        public static readonly DependencyProperty BrushProperty = DependencyProperty.Register(
-            nameof(Brush),
+        public static readonly DependencyProperty ForegroundProperty = DependencyProperty.Register(
+            nameof(Foreground),
             typeof(Brush),
             typeof(Base),
-            new PropertyMetadata(default(Brush), OnBrushPropertyChanged)
+            new PropertyMetadata(DefaultBrush, OnBrushPropertyChanged)
         );
 
         private static void OnBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -33,18 +36,16 @@ namespace P42.Uno.Controls.AnimateBar
             if (d is Base a)
             {
                 if (e.NewValue is Brush brush)
-                    //a.StaticRect.Fill =
                     a.DynamicRect.Fill =  brush;
                 else
-                    //a.StaticRect.Fill = 
                     a.DynamicRect.Fill = null;
             }
         }
 
-        public Brush Brush
+        public Brush Foreground
         {
-            get => (Brush)GetValue(BrushProperty);
-            set => SetValue(BrushProperty, value);
+            get => (Brush)GetValue(ForegroundProperty);
+            set => SetValue(ForegroundProperty, value);
         }
         #endregion Brush Property
 
@@ -74,10 +75,8 @@ namespace P42.Uno.Controls.AnimateBar
         #region Construction / Disposal
         public Base()
         {
-            //StaticRect.Fill =
-            DynamicRect.Fill = new SolidColorBrush(Colors.White); // SystemColors.BaseHigh.ToBrush();
+            DynamicRect.Fill = DefaultBrush; // SystemColors.BaseHigh.ToBrush();
             Children.Add(DynamicRect);
-            //Children.Add(StaticRect);
 
             Loaded += Base_Loaded;
             Background = new SolidColorBrush(Color.FromArgb(1, 1, 1, 1));

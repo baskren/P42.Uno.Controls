@@ -7,20 +7,41 @@ using Windows.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using P42.Uno.Markup;
 
 namespace P42.Uno.Controls
 {
     [Microsoft.UI.Xaml.Data.Bindable]
     internal partial class LoopingFlipViewItem : Grid, IEventSubscriber
     {
+        #region Foreground Property
+        public static readonly DependencyProperty ForegroundProperty = DependencyProperty.Register(
+            nameof(Foreground),
+            typeof(Brush),
+            typeof(LoopingFlipViewItem),
+            new PropertyMetadata(SystemColors.BaseHigh.ToBrush())
+        );
+        public Brush Foreground
+        {
+            get => (Brush)GetValue(ForegroundProperty);
+            set => SetValue(ForegroundProperty, value);
+        }
+        #endregion Foreground Property
+
+
+
         internal UIElement Child;
 
         AnimateBar.Left LeftBar = new AnimateBar.Left();
+            
 
         AnimateBar.Right RightBar = new AnimateBar.Right();
 
         public LoopingFlipViewItem(UIElement child)
         {
+            RightBar.WBind(AnimateBar.Base.ForegroundProperty, this, ForegroundProperty);
+            LeftBar.WBind(AnimateBar.Base.ForegroundProperty, this, ForegroundProperty);
+
             Child = child;
             Children.Add(child);
             Children.Add(RightBar);
