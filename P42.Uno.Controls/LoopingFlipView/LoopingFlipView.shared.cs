@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -104,29 +104,36 @@ namespace P42.Uno.Controls
 
 
         #region Fields
-        Grid _grid;
+        Grid ContentGrid = new Grid();
+        Grid OverlayGrid = new Grid();
         double _dx;
         bool _isDown;
         double _downX;
         PointerPoint _lastPoint;
         double _lastVelocity;
         CancellationTokenSource _cancellationTokenSource;
+        InsetShadow InsetShadow = new InsetShadow { Orientation = Orientation.Horizontal };
         #endregion
 
 
         #region Construction
         public LoopingFlipView()
         {
-            Content = _grid = new Grid()
-                .Background(Color.FromArgb(1,1,1,1));
+            Content = OverlayGrid
+                .Background(Color.FromArgb(1, 1, 1, 1))
+                .Children
+                (
+                    ContentGrid,
+                    InsetShadow
+                );
             // bind to user control properties here!
 
-            _grid.PointerPressed += PointerStart;
-            _grid.PointerMoved += PointerMove;
-            _grid.PointerExited += PointerEnd;
-            _grid.PointerCanceled += PointerEnd;
-            _grid.PointerCaptureLost += PointerEnd;
-            _grid.PointerReleased += PointerEnd;
+            OverlayGrid.PointerPressed += PointerStart;
+            OverlayGrid.PointerMoved += PointerMove;
+            OverlayGrid.PointerExited += PointerEnd;
+            OverlayGrid.PointerCanceled += PointerEnd;
+            OverlayGrid.PointerCaptureLost += PointerEnd;
+            OverlayGrid.PointerReleased += PointerEnd;
 
             SizeChanged += (s,e) => LayoutChildren();
         }
@@ -219,16 +226,16 @@ namespace P42.Uno.Controls
             if (double.IsNaN(ActualWidth) || double.IsNaN(ActualHeight) || ActualWidth < 1 || ActualHeight < 1)
                 return;
 
-            _grid.Clip = new RectangleGeometry { Rect = new Rect(0, 0, ActualWidth, ActualHeight) };
+            ContentGrid.Clip = new RectangleGeometry { Rect = new Rect(0, 0, ActualWidth, ActualHeight) };
 
-            switch (_grid.Children.Count)
+            switch (ContentGrid.Children.Count)
             {
                 case 0:
                     _dx = 0;
                     SelectedIndex = -1;
                     return;
                 case 1:
-                    _grid.Children[0].RenderTransform = new TranslateTransform { X = 0 };
+                    ContentGrid.Children[0].RenderTransform = new TranslateTransform { X = 0 };
                     _dx = 0;
                     SelectedIndex = 0;
                     return;
@@ -237,7 +244,7 @@ namespace P42.Uno.Controls
                         var indexes = new List<int>();
                         var selectedIndex = Math.Max(SelectedIndex, 0);
                         var index = selectedIndex;
-                        while (index < _grid.Children.Count)
+                        while (index < ContentGrid.Children.Count)
                             indexes.Add(index++);
                         index = 0;
                         while (index < selectedIndex)
@@ -245,19 +252,19 @@ namespace P42.Uno.Controls
 
                         var offset = ActualWidth + Spacing;
 
-                        var mid = _grid.Children.Count / 2;
+                        var mid = ContentGrid.Children.Count / 2;
                         var dx = _dx;
                         if (dx > 0)
                         {
                             for (int i = indexes.Count - 1; i >= mid; i--)
                             {
                                 dx -= offset;
-                                _grid.Children[indexes[i]].RenderTransform = new TranslateTransform { X = dx };
+                                ContentGrid.Children[indexes[i]].RenderTransform = new TranslateTransform { X = dx };
                             }
                             dx = _dx;
                             for (int i = 0; i < mid; i++)
                             {
-                                _grid.Children[indexes[i]].RenderTransform = new TranslateTransform { X = dx };
+                                ContentGrid.Children[indexes[i]].RenderTransform = new TranslateTransform { X = dx };
                                 dx += offset;
                             }
                         }
@@ -265,14 +272,14 @@ namespace P42.Uno.Controls
                         {
                             for (int i = 0; i <= mid; i++)
                             {
-                                _grid.Children[indexes[i]].RenderTransform = new TranslateTransform { X = dx };
+                                ContentGrid.Children[indexes[i]].RenderTransform = new TranslateTransform { X = dx };
                                 dx += offset;
                             }
                             dx = _dx;
                             for (int i = indexes.Count - 1; i > mid; i--)
                             {
                                 dx -= offset;
-                                _grid.Children[indexes[i]].RenderTransform = new TranslateTransform { X = dx };
+                                ContentGrid.Children[indexes[i]].RenderTransform = new TranslateTransform { X = dx };
                             }
 
                         }
@@ -303,12 +310,12 @@ namespace P42.Uno.Controls
 
         async void OnSelectedIndexChanged(DependencyPropertyChangedEventArgs e)
         {
-            var count = _grid.Children.Count;
+            var count = ContentGrid.Children.Count;
             var newIndex = (int)e.NewValue;
             if (newIndex < 0 || newIndex >= count)
                 return;
 
-            if (_grid.Children[newIndex].RenderTransform is TranslateTransform t)
+            if (ContentGrid.Children[newIndex].RenderTransform is TranslateTransform t)
             {
                 if (_cancellationTokenSource != null)
                     return;
@@ -317,7 +324,7 @@ namespace P42.Uno.Controls
 
                 var animator = new ActionAnimator(0, -t.X, TimeSpan.FromSeconds(0.4), (dx) =>
                 {
-                    foreach (var child in _grid.Children)
+                    foreach (var child in ContentGrid.Children)
                     {
                         if (child.RenderTransform is TranslateTransform tt)
                         {
@@ -348,22 +355,21 @@ namespace P42.Uno.Controls
                 if (oldItemSource is INotifyCollectionChanged notifiable)
                     notifiable.CollectionChanged -= OnItemsSourceCollectionChanged;
             }
-            foreach (var child in _grid.Children)
+            foreach (var child in ContentGrid.Children)
                 if (child is IEventSubscriber eventSubscriber)
                     eventSubscriber.DisableEvents();
-            _grid.Children.Clear();
+            ContentGrid.Children.Clear();
             if (e.NewValue is IEnumerable<UIElement> newItemSource)
             {
                 if (newItemSource is INotifyCollectionChanged notifiable)
                     notifiable.CollectionChanged += OnItemsSourceCollectionChanged;
                 foreach (var child in newItemSource)
                 {
-                    _grid.Children.Add(new LoopingFlipViewItem(child));
+                    ContentGrid.Children.Add(new LoopingFlipViewItem(child));
                     if (child is IEventSubscriber eventSubscriber)
                         eventSubscriber.EnableEvents();
                 }
             }
-
             LayoutChildren();
         }
 
@@ -386,10 +392,10 @@ namespace P42.Uno.Controls
                     InsertNewItems(e.NewStartingIndex, e.OldItems);
                     break;
                 case NotifyCollectionChangedAction.Reset:
-                    foreach (var child in _grid.Children)
+                    foreach (var child in ContentGrid.Children)
                         if (child is IEventSubscriber eventSubscriber)
                             eventSubscriber.DisableEvents();
-                    _grid.Children.Clear();
+                    ContentGrid.Children.Clear();
                     break;
             }
             LayoutChildren();
@@ -399,9 +405,9 @@ namespace P42.Uno.Controls
         {
             for (int i = 0; i < count; i++)
             {
-                if (_grid.Children[index] is IEventSubscriber eventSubscriber)
+                if (ContentGrid.Children[index] is IEventSubscriber eventSubscriber)
                     eventSubscriber.DisableEvents();
-                _grid.Children.RemoveAt(index);
+                ContentGrid.Children.RemoveAt(index);
             }
         }
 
@@ -415,10 +421,11 @@ namespace P42.Uno.Controls
         void InsertItem(int index, UIElement item)
         {
             var xitem = new LoopingFlipViewItem(item);
-            _grid.Children.Insert(index, xitem);
+            ContentGrid.Children.Insert(index, xitem);
             if (xitem is IEventSubscriber eventSubscriber)
                 eventSubscriber.EnableEvents();
         }
+
         #endregion
 
 

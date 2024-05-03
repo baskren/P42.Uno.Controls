@@ -36,8 +36,8 @@ namespace P42.Uno.Controls
             {
                 if (e.NewValue == null)
                 {
-                    if (item._label != null && item._grid.Children.Contains(item._label))
-                        item._grid.Children.Remove(item._label);
+                    if (item._label != null && item.ContentGrid.Children.Contains(item._label))
+                        item.ContentGrid.Children.Remove(item._label);
                 }
                 else
                 {
@@ -51,8 +51,8 @@ namespace P42.Uno.Controls
                     //item._label.Background(Colors.Pink);
 
 
-                    if (!item._grid.Children.Contains(item._label))
-                        item._grid.Children.Add(item._label);
+                    if (!item.ContentGrid.Children.Contains(item._label))
+                        item.ContentGrid.Children.Add(item._label);
 
                     item._label.Text = item.Text;
                 }
@@ -80,7 +80,7 @@ namespace P42.Uno.Controls
             {
                 if (e.OldValue is IconElement oldIcon)
                 {
-                    item._grid.Children.Remove(oldIcon);
+                    item.ContentGrid.Children.Remove(oldIcon);
                 }
                 if (e.NewValue is IconElement newIcon)
                 {
@@ -88,7 +88,7 @@ namespace P42.Uno.Controls
                         .Column(0)
                         .Center()
                         .Margin(0,0,10,0);
-                    item._grid.Children.Add(newIcon);
+                    item.ContentGrid.Children.Add(newIcon);
                 }
             }
         }
