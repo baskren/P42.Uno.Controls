@@ -290,7 +290,14 @@ namespace P42.Uno.Controls
 
         private void OnSelectedItemChanged(DependencyPropertyChangedEventArgs e)
         {
-            SelectedIndex = _grid.Children.IndexOf(e.NewValue as UIElement);
+            if (ItemsSource is null)
+            {
+                SelectedIndex = -1;
+                return;
+            }
+
+            var itemsSource = ItemsSource as IList<UIElement> ?? new List<UIElement>(ItemsSource);
+            SelectedIndex = itemsSource.IndexOf(SelectedItem);
             SelectedItemChanged?.Invoke(this, e.NewValue as UIElement);
         }
 
