@@ -26,6 +26,7 @@ namespace P42.Uno.Controls
     public partial class InsetShadow : Grid
     {
         #region Properties
+
         #region Orientation Property
         public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
             nameof(Orientation),
@@ -76,44 +77,49 @@ namespace P42.Uno.Controls
                             new GradientStop{ Offset=1.0, Color=P42.Uno.Markup.ColorExtensions.ColorFromHex("#8222")},
                         }
                     }),
-
+                
                 new Rectangle()  // left shadow
                     .Width(5)
                     .Stretch().Left()
                     .WBind<Rectangle, Orientation, Visibility>(Rectangle.VisibilityProperty, this, OrientationProperty, convert: HorizontalVisible)
                     .Fill(new LinearGradientBrush
                     {
-                        StartPoint = new Windows.Foundation.Point(0.5, 0),
-                        EndPoint = new Windows.Foundation.Point(0.5, 1),
+                        StartPoint = new Windows.Foundation.Point(0, 0.5),
+                        EndPoint = new Windows.Foundation.Point(1, 0.5),
                         GradientStops =
                         {
                             new GradientStop{ Offset=0.0, Color=P42.Uno.Markup.ColorExtensions.ColorFromHex("#8222")},
                             new GradientStop{ Offset=1.0, Color=P42.Uno.Markup.ColorExtensions.ColorFromHex("#0222")},
                         }
                     }),
+                    //.Fill(Colors.Pink),
                 new Rectangle()  // right shadow
-                    .Height(5)
+                    .Width(5)
                     .Stretch().Right()
-                    .WBind<Rectangle, Orientation, Visibility>(Rectangle.VisibilityProperty, this, OrientationProperty, convert: HorizontalVisible)
+                    .WBind<Rectangle, Orientation, Visibility>(Rectangle.VisibilityProperty, this, OrientationProperty, convert: HorizontalVisible)                    
                     .Fill(new LinearGradientBrush
                     {
-                        StartPoint = new Windows.Foundation.Point(0.5, 0),
-                        EndPoint = new Windows.Foundation.Point(0.5, 1),
+                        StartPoint = new Windows.Foundation.Point(0, 0.5),
+                        EndPoint = new Windows.Foundation.Point(1, 0.5),
                         GradientStops =
                         {
                             new GradientStop{ Offset=0.0, Color=P42.Uno.Markup.ColorExtensions.ColorFromHex("#0222")},
                             new GradientStop{ Offset=1.0, Color=P42.Uno.Markup.ColorExtensions.ColorFromHex("#8222")},
                         }
                     })
+                    //.Fill(Colors.Pink)
 
             );
         }
 
         private Visibility VerticalVisible(Orientation orientation)
             => orientation == Orientation.Vertical ? Visibility.Visible : Visibility.Collapsed;
-        
+
         private Visibility HorizontalVisible(Orientation orientation)
-            => orientation == Orientation.Horizontal ? Visibility.Visible : Visibility.Collapsed;
+        { 
+            var result = orientation == Orientation.Horizontal ? Visibility.Visible : Visibility.Collapsed;
+            return result;
+        }
 
         #endregion
     }

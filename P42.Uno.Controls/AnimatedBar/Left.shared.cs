@@ -12,7 +12,8 @@ namespace P42.Uno.Controls.AnimateBar
     {
         public Left()
         {
-            Height = 30;
+            //Height = 30;
+            VerticalAlignment = VerticalAlignment.Stretch;
             Margin = new Thickness(0, 5, 0, 5);
             HorizontalAlignment = HorizontalAlignment.Left;
 
