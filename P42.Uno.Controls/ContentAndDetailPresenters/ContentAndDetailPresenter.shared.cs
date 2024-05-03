@@ -262,6 +262,21 @@ namespace P42.Uno.Controls
         }
         #endregion PopupVerticalAlignment Property
 
+        #region PopupBorderWidth Property
+        public static readonly DependencyProperty PopupBorderWidthProperty = DependencyProperty.Register(
+            nameof(PopupBorderWidth),
+            typeof(double),
+            typeof(ContentAndDetailPresenter),
+            new PropertyMetadata(default(double))
+        );
+        public double PopupBorderWidth
+        {
+            get => (double)GetValue(PopupBorderWidthProperty);
+            set => SetValue(PopupBorderWidthProperty, value);
+        }
+        #endregion PopupBorderWidth Property
+
+
         #endregion
 
         #region IsInDrawerMode Property

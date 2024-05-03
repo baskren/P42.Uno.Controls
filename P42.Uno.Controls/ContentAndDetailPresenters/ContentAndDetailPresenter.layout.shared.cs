@@ -40,6 +40,7 @@ namespace P42.Uno.Controls
 
             _detailDrawer = new Border()
                 .WBind(Border.BorderBrushProperty, this, DetailBorderColorProperty, converter: SolidBrushConverter.Instance)
+                .WBind(Border.BorderThicknessProperty, this, BorderThicknessProperty)
                 .WBind(Border.BackgroundProperty, this, DetailBackgroundColorProperty, converter: SolidBrushConverter.Instance);
 
             _targetedPopup = new TargetedPopup()
@@ -55,6 +56,7 @@ namespace P42.Uno.Controls
                 .WBind(TargetedPopup.WeakTargetProperty, this, WeakTargetProperty)
                 .WBind(TargetedPopup.BorderColorProperty, this, DetailBorderColorProperty)
                 .WBind(TargetedPopup.BackgroundColorProperty, this, DetailBackgroundColorProperty)
+                .WBind(TargetedPopup.BorderWidthProperty, this, PopupBorderWidthProperty)
                 .WBind(TargetedPopup.CornerRadiusProperty, this, DetailCornerRadiusProperty)
                 .WBind(TargetedPopup.MinHeightProperty, this, PopupMinHeightProperty)
                 .WBind(TargetedPopup.MinWidthProperty, this, PopupMinWidthProperty)
