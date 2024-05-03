@@ -389,6 +389,8 @@ namespace P42.Uno.Controls
 
 
         #region Layout
+        public void UpdatePopupMarginAndAlignment()
+            => _targetedPopup?.UpdateMarginAndAlignment();
 
         void OnSizeChanged(object sender, SizeChangedEventArgs args)
             => LayoutDetailAndOverlay(args.NewSize, DetailPushPopState == PushPopState.Pushed ? 1 : 0);

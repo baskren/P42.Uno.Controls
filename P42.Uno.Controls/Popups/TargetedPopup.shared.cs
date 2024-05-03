@@ -1235,9 +1235,9 @@ public partial class TargetedPopup : ITargetedPopup
         
     }
 
-    void UpdateMarginAndAlignment(Size newSize = default)
+    public void UpdateMarginAndAlignment()
     {
-
+        Size newSize = default;
         //System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment : ENTER");
 
         if (PushPopState == PushPopState.Popped || PushPopState == PushPopState.Popping)
