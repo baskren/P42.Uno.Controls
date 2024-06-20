@@ -42,14 +42,18 @@ namespace P42.Uno.Controls.AnimateBar
             }
         }
 
+#if ANDROID
+        public new Brush Foreground
+#else
         public Brush Foreground
+#endif
         {
             get => (Brush)GetValue(ForegroundProperty);
             set => SetValue(ForegroundProperty, value);
         }
-        #endregion Brush Property
+#endregion Brush Property
 
-        #endregion
+#endregion
 
 
         #region Fields

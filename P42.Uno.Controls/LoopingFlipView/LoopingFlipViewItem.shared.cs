@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,12 +21,16 @@ namespace P42.Uno.Controls
             typeof(LoopingFlipViewItem),
             new PropertyMetadata(SystemColors.BaseHigh.ToBrush())
         );
+#if ANDROID
+        public new Brush Foreground 
+#else
         public Brush Foreground
+#endif
         {
             get => (Brush)GetValue(ForegroundProperty);
             set => SetValue(ForegroundProperty, value);
         }
-        #endregion Foreground Property
+#endregion Foreground Property
 
 
 
