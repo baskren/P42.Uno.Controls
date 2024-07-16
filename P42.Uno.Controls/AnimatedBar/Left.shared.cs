@@ -1,4 +1,4 @@
-﻿using P42.Utils.Uno;
+using P42.Utils.Uno;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -33,10 +33,17 @@ namespace P42.Uno.Controls.AnimateBar
             {
                 var animator = new NormalizedActionAnimator(ActionTime, x =>
                 {
-                    if (!_disposed)
+                    try
                     {
-                        DynamicRect.Opacity = 1 - x;
-                        DynamicRect.RenderTransform = new TranslateTransform { X = dir * (ActualWidth - 1) * x };
+                        if (!_disposed || !DynamicRect.IsLoaded)
+                        {
+                            DynamicRect.Opacity = 1 - x;
+                            DynamicRect.RenderTransform = new TranslateTransform { X = dir * (ActualWidth - 1) * x };
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine(ex.ToString());
                     }
 
                 }); //, new Microsoft.UI.Xaml.Media.Animation.ExponentialEase());
