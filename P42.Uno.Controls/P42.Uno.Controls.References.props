@@ -11,6 +11,7 @@
     <PackageReference Include="Svg.Skia" Version="1.0.0.18" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
     <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
+    <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Uno.Markup" Version="5.2.132" />
   </ItemGroup>
 
   <!-- PLATFORM SPECIFIC ITEMS -->
@@ -18,32 +19,9 @@
     <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.8" />
   </ItemGroup>
   <ItemGroup Condition=" !$(TargetFramework.Contains('windows')) ">
-    <PackageReference Include="Uno.WinUI.Lottie" Version="5.1.104" />
+    <PackageReference Include="Uno.WinUI.Lottie" Version="5.2.132" />
 	  <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
   </ItemGroup>
   
-  <Choose>
-    <When Condition="  $(MSBuildProjectName.ToLower().Contains('wasm'))  OR  $(P42_TargetPlatform.ToLower().Contains('wasm'))  OR  $(SolutionName.ToLower().Contains('wasm')) ">
-      <ItemGroup>
-        <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Uno.Markup.Wasm" Version="5.1.104" />
-        <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Utils.Uno.Wasm" Version="5.1.104" />
-      </ItemGroup>
-    </When>
-    <When Condition="  $(MSBuildProjectName.ToLower().Contains('skia'))  OR  $(P42_TargetPlatform.ToLower().Contains('skia'))  OR  $(SolutionName.ToLower().Contains('skia')) ">
-      <ItemGroup>
-        <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Uno.Markup.Skia" Version="5.1.104" />
-        <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Utils.Uno.Skia" Version="5.1.104" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Uno.Markup" Version="5.1.104" />
-        <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Utils.Uno" Version="5.1.104" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
-
-
-
 
 </Project>

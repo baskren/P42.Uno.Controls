@@ -804,13 +804,24 @@ public partial class TargetedPopup : ITargetedPopup
     /// <returns></returns>
     public static async Task<TargetedPopup> CreateAsync(UIElement target, UIElement bubbleContent, TimeSpan popAfter = default, Effect pushEffect = Effect.None, EffectMode effectMode = EffectMode.Default)
     {
+        if (bubbleContent is FrameworkElement element && element.Parent != null)
+        {
+            if (element.Parent is TargetedPopup popup)
+                popup.Content = null;
+            else if (element.Parent is ContentControl contentControl)
+                contentControl.Content = null;
+            else if (element.Parent is Panel panel)
+                panel.Children.Remove(element);
+
+        }
         var result = new TargetedPopup(target)
         {
-            Content = bubbleContent,
+            //Content = bubbleContent,
             PopAfter = popAfter,
             PushEffect = pushEffect,
             PushEffectMode = effectMode
         };
+        result.Content = bubbleContent;
         await result.PushAsync();
         return result;
     }
