@@ -263,13 +263,13 @@ namespace P42.Uno.Controls
         #region FontFamily Property
         public static readonly DependencyProperty FontFamilyProperty = DependencyProperty.Register(
             nameof(FontFamily),
-            typeof(FontFamily),
+            typeof(Microsoft.UI.Xaml.Media.FontFamily),
             typeof(BubbleBorder),
-            new PropertyMetadata(default(FontFamily))
+            new PropertyMetadata(default(Microsoft.UI.Xaml.Media.FontFamily))
         );
-        public FontFamily FontFamily
+        public Microsoft.UI.Xaml.Media.FontFamily FontFamily
         {
-            get => (FontFamily)GetValue(FontFamilyProperty);
+            get => (Microsoft.UI.Xaml.Media.FontFamily)GetValue(FontFamilyProperty);
             set => SetValue(FontFamilyProperty, value);
         }
         #endregion FontFamily Property
