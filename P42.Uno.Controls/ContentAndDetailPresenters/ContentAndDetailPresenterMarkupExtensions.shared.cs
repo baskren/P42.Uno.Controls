@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,10 +53,10 @@ namespace P42.Uno.Controls
         public static TElement Target<TElement>(this TElement presenter, FrameworkElement element) where TElement : ElementType
         { presenter.Target = element; return presenter; }
 
-        public static TElement PopupWidth<TElement>(this TElement presenter, double width) where TElement : ElementType
+        public static TElement PopupMinWidth<TElement>(this TElement presenter, double width) where TElement : ElementType
         { presenter.PopupMinWidth = width; return presenter; }
 
-        public static TElement PopupHeight<TElement>(this TElement presenter, double height) where TElement : ElementType
+        public static TElement PopupMinHeight<TElement>(this TElement presenter, double height) where TElement : ElementType
         { presenter.PopupMinHeight = height; return presenter; }
 
         public static TElement PopupHorizontalAlignment<TElement>(this TElement presenter, HorizontalAlignment alignment) where TElement : ElementType
