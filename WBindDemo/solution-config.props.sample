@@ -21,10 +21,10 @@
     <PropertyGroup>
         <!-- Uncomment each line for each platform that you want to build: -->
 
-        <!-- <OverrideTargetFramework Condition="''!='hint: Windows App Sdk (WinUI)'">$(DotNetVersion)-windows10.0.19041.0</OverrideTargetFramework> -->
-        <!-- <OverrideTargetFramework Condition="''!='hint: WASM, Skia'">$(DotNetVersion)</OverrideTargetFramework> -->
-        <!-- <OverrideTargetFramework Condition="''!='hint: iOS'">$(DotNetVersion)-ios</OverrideTargetFramework> -->
-        <!-- <OverrideTargetFramework Condition="''!='hint: Android'">$(DotNetVersion)-android</OverrideTargetFramework> -->
-        <!-- <OverrideTargetFramework Condition="''!='hint: MacCatalyst'">$(DotNetVersion)-maccatalyst</OverrideTargetFramework> -->
+        <!-- <OverrideTargetFramework Condition="''!='hint: Windows App Sdk (WinUI)'">net8.0-windows10.0.19041.0</OverrideTargetFramework> -->
+        <!-- <OverrideTargetFramework Condition="''!='hint: WASM, Skia'">net8.0</OverrideTargetFramework> -->
+        <!-- <OverrideTargetFramework Condition="''!='hint: iOS'">net8.0-ios</OverrideTargetFramework> -->
+        <!-- <OverrideTargetFramework Condition="''!='hint: Android'">net8.0-android</OverrideTargetFramework> -->
+        <!-- <OverrideTargetFramework Condition="''!='hint: MacCatalyst'">net8.0-maccatalyst</OverrideTargetFramework> -->
     </PropertyGroup>
 </Project>
