@@ -1,11 +1,6 @@
-using System;
 using System.Threading.Tasks;
 using Android.Content;
 using Android.Media;
-using Java.Interop;
-using Java.Security.Cert;
-using Windows.Storage;
-using Windows.UI.Notifications;
 
 namespace P42.Uno.Controls
 {

@@ -1,7 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using P42.Uno.Markup;
-using P42.Utils.Uno;
 
 namespace P42.Uno.Controls
 {

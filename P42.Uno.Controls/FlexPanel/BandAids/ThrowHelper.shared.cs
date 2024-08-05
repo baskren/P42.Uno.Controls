@@ -4,7 +4,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 #if !NETSTANDARD1_4
 using System.Runtime.InteropServices;

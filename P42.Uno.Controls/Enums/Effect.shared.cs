@@ -1,5 +1,4 @@
-﻿using System;
-namespace P42.Uno.Controls
+﻿namespace P42.Uno.Controls
 {
     /// <summary>
     /// System Sound Effects

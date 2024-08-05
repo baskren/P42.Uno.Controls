@@ -1,15 +1,7 @@
-using System;
-using Windows.Foundation;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using SkiaSharp;
 using Windows.UI;
 using P42.Uno.Markup;
-using SkiaSharp.Views.Windows;
 using Microsoft.UI;
 using ElementType = P42.Uno.Controls.SkiaBubble;
-using Microsoft.UI.Xaml.Documents;
 
 namespace P42.Uno.Controls
 {
@@ -85,7 +77,7 @@ namespace P42.Uno.Controls
         internal static TElement IsShadow<TElement>(this TElement element) where TElement : ElementType
         {
             element
-                .BackgroundColor(Colors.Black.WithAlpha(0.5))
+                .BackgroundColor(Microsoft.UI.Colors.Black.WithAlpha(0.5))
                 .HitTestVisible(false)
                 .Translate(element.BlurSigma, element.BlurSigma)
                 .BorderWidth(0);

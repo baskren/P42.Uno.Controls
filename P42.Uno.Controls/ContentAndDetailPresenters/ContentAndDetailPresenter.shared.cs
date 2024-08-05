@@ -1,7 +1,6 @@
 using P42.Uno.Markup;
 using P42.Utils.Uno;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
@@ -10,9 +9,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Shapes;
 using Microsoft.UI.Xaml.Input;
-using Windows.Devices.Sensors;
 using P42.Utils;
 
 namespace P42.Uno.Controls
@@ -360,7 +357,7 @@ namespace P42.Uno.Controls
             nameof(PageOverlayBrush),
             typeof(Brush),
             typeof(ContentAndDetailPresenter),
-            new PropertyMetadata(Colors.Black.WithAlpha(0.01).ToBrush())
+            new PropertyMetadata(Microsoft.UI.Colors.Black.WithAlpha(0.01).ToBrush())
         );
         public Brush PageOverlayBrush
         {

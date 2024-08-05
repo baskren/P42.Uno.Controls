@@ -11,9 +11,6 @@
 //  - Stephane Delcroix (.NET port)
 //  - Ben Askren (UWP/Uno port)
 //
-using System;
-using System.ComponentModel;
-using System.Globalization;
 
 namespace P42.Uno.Controls
 {

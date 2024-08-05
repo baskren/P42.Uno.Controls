@@ -12,15 +12,12 @@
 //  - Ben Askren (UWP/Uno port)
 //
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Toolkit.Diagnostics;
 using P42.Uno.Controls.InternalFlexPanelExtensions;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
 
 namespace P42.Uno.Controls
 {

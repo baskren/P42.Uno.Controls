@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace P42.Uno.Controls.AnimateBar
+﻿namespace P42.Uno.Controls.AnimateBar
 {
     public partial class Up : Down
     {

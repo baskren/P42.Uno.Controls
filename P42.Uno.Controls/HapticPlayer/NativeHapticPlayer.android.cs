@@ -1,9 +1,6 @@
 using Android.Content;
 using Android.Media;
 using Android.OS;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 #pragma warning disable CA1422 // Validate platform compatibility
 namespace P42.Uno.Controls

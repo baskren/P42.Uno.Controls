@@ -1,13 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using P42.Uno.Markup;
-using Windows.UI.ViewManagement;
 using ElementType = P42.Uno.Controls.ContentAndDetailPresenter;
 
 namespace P42.Uno.Controls

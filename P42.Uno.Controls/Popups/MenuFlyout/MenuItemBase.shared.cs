@@ -1,16 +1,6 @@
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Windows.Input;
-using Windows.Foundation;
-using Windows.Foundation.Metadata;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Markup;
-using P42.Uno.Markup;
-using System;
-using Windows.UI;
 
 namespace P42.Uno.Controls
 {
@@ -47,8 +37,8 @@ namespace P42.Uno.Controls
                                                         .Left()
                                                         .Margin(0, 5, 20, 5);
 
-                    item._label.Foreground(Colors.Black);
-                    //item._label.Background(Colors.Pink);
+                    item._label.Foreground(Microsoft.UI.Colors.Black);
+                    //item._label.Background(Microsoft.UI.Colors.Pink);
 
 
                     if (!item.ContentGrid.Children.Contains(item._label))

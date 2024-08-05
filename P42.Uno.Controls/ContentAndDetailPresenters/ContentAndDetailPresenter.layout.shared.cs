@@ -1,15 +1,7 @@
 using P42.Uno.Markup;
-using P42.Utils.Uno;
-using System;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.UI;
 using Microsoft.UI;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
-using Microsoft.UI.Xaml.Input;
 
 namespace P42.Uno.Controls
 {
@@ -51,7 +43,7 @@ namespace P42.Uno.Controls
                 .HasShadow()
                 .PreferredPointerDirection(PointerDirection.Up)
                 .FallbackPointerDirection(PointerDirection.Any)
-                .PageOverlay(Colors.Transparent)
+                .PageOverlay(Microsoft.UI.Colors.Transparent)
                 .PageOverlayHitTestVisible(false)
                 .WBind(TargetedPopup.WeakTargetProperty, this, WeakTargetProperty)
                 .WBind(TargetedPopup.BorderColorProperty, this, DetailBorderColorProperty)

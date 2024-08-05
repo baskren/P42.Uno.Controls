@@ -1,20 +1,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml;
 using System;
-using System.Collections;
 using Microsoft.UI.Xaml.Markup;
-using Microsoft.UI.Xaml.Media;
 using Windows.UI.Text;
 using Windows.Foundation;
-using Windows.UI.Input;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Automation.Peers;
 using P42.Uno.Markup;
-using P42.Utils.Uno;
 using Microsoft.UI.Xaml.Controls;
 
 namespace P42.Uno.Controls

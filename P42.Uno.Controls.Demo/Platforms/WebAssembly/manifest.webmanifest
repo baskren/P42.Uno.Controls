@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "P42.Uno.Controls.Demo",
+  "display": "standalone",
+  "name": "P42.Uno.Controls.Demo",
+  "short_name": "P42.Uno.Controls.Demo",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}

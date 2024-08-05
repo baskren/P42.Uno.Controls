@@ -1,18 +1,12 @@
 using System;
-using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using SkiaSharp;
 using Windows.UI;
 using P42.Uno.Markup;
-using SkiaSharp.Views.Windows;
-using Microsoft.UI;
 using P42.Utils.Uno;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.UI.Text;
-using Microsoft.UI.Xaml.Data;
-using Windows.UI.ViewManagement;
 
 namespace P42.Uno.Controls
 {
@@ -672,7 +666,7 @@ namespace P42.Uno.Controls
                         new Microsoft.UI.Xaml.Shapes.Rectangle()
                             .RowCol(1,1)
                             .Stretch()
-                            .Fill(Colors.Pink),
+                            .Fill(Microsoft.UI.Colors.Pink),
                         */
 
                     new ContentPresenter()

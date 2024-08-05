@@ -1,15 +1,8 @@
-﻿using System;
-using Windows.Foundation;
+﻿using Windows.Foundation;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using SkiaSharp;
-using Windows.UI;
 using P42.Uno.Markup;
-using SkiaSharp.Views.Windows;
-using Microsoft.UI;
 using System.Runtime.CompilerServices;
-using P42.Utils.Uno;
 using System.Collections;
 
 namespace P42.Uno.Controls

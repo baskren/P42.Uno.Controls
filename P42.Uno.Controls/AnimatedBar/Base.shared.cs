@@ -1,16 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.UI.Xaml.Controls;
 //using P42.Uno.Markup;
 using System.Threading.Tasks;
-using P42.Utils.Uno;
 using P42.Utils;
 using Windows.UI;
-using Microsoft.UI;
-using System.Linq;
 using Microsoft.UI.Xaml.Media;
-using System.Threading;
 using Microsoft.UI.Xaml;
 using P42.Uno.Markup;
 

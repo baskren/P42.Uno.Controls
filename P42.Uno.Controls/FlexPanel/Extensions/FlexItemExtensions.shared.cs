@@ -12,14 +12,8 @@
 //  - Ben Askren (UWP/Uno port)
 //
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using static P42.Uno.Controls.FlexPanel;
 
 namespace P42.Uno.Controls.InternalFlexPanelExtensions

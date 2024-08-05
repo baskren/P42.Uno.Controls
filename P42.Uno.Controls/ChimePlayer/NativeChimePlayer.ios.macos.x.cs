@@ -1,8 +1,5 @@
-using System;
 using System.Threading.Tasks;
 using Foundation;
-using P42.Utils;
-using Windows.Storage;
 
 namespace P42.Uno.Controls
 {

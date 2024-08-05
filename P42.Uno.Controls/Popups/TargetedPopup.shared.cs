@@ -9,14 +9,8 @@ using Windows.Foundation;
 using Windows.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Shapes;
 using Microsoft.UI;
-using Windows.UI.ViewManagement;
-using P42.Utils;
 
 namespace P42.Uno.Controls;
 
@@ -425,12 +419,12 @@ public partial class TargetedPopup : ITargetedPopup
         nameof(PageOverlayBrush),
         typeof(Brush),
         typeof(TargetedPopup),
-        new PropertyMetadata(new SolidColorBrush(Colors.Gray.WithAlpha(0.4)), (d,e)=>((TargetedPopup)d).UpdatePageOverlayVisibility())
+        new PropertyMetadata(new SolidColorBrush(Microsoft.UI.Colors.Gray.WithAlpha(0.4)), (d,e)=>((TargetedPopup)d).UpdatePageOverlayVisibility())
     );
     public Brush PageOverlayBrush
     {
         get => (Brush)GetValue(PageOverlayBrushProperty);
-        set => SetValue(PageOverlayBrushProperty, value ?? new SolidColorBrush(Colors.Gray.WithAlpha(0.4)));
+        set => SetValue(PageOverlayBrushProperty, value ?? new SolidColorBrush(Microsoft.UI.Colors.Gray.WithAlpha(0.4)));
     }
     #endregion PageOverlayBrush Property
 

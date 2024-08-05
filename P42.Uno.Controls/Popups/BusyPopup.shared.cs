@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using P42.Uno.Markup;
-using P42.Utils.Uno;
-using Windows.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -30,7 +25,7 @@ namespace P42.Uno.Controls
         );
         private static void OnSpinnerBrushChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is BusyPopup popup && popup._progressRing is ProgressRing ring)
+            if (d is BusyPopup popup && popup.ProgressRing is ProgressRing ring)
             {
                 if (e.NewValue is null)
                     ring.Foreground = new SolidColorBrush(P42.Uno.Markup.SystemColors.Accent);
@@ -118,7 +113,7 @@ namespace P42.Uno.Controls
         protected override void OnPushPopStateChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPushPopStateChanged(e);
-            _progressRing.IsActive = PushPopState == PushPopState.Pushed;
+            ProgressRing.IsActive = PushPopState == PushPopState.Pushed;
         }
 
         protected override void OnTitleChanged(DependencyPropertyChangedEventArgs args)
@@ -137,18 +132,18 @@ namespace P42.Uno.Controls
         {
             if (_titleBlock.IsVisible())
             {
-                _progressRing.RowCol(0, 0);
-                _progressRing.RowSpan(_messageBlock.IsVisible() ? 2 : 1);
+                ProgressRing.RowCol(0, 0);
+                ProgressRing.RowSpan(_messageBlock.IsVisible() ? 2 : 1);
             }
             else if (_messageBlock.IsVisible())
             {
-                _progressRing.RowCol(1, 0);
-                _progressRing.RowSpan(1);
+                ProgressRing.RowCol(1, 0);
+                ProgressRing.RowSpan(1);
             }
             else
             {
-                _progressRing.RowCol(0, 0);
-                _progressRing.RowSpan(1);
+                ProgressRing.RowCol(0, 0);
+                ProgressRing.RowSpan(1);
             }
 
         }

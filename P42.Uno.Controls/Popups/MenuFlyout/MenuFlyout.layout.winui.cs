@@ -195,7 +195,7 @@ namespace P42.Uno.Controls
 
     }
 
-    [Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
     public partial class MenuFlyoutCell : Grid
     {
         public MenuFlyoutCell()

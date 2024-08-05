@@ -1,24 +1,8 @@
 using P42.Uno.Markup;
-using P42.Utils.Uno;
-using P42.Utils;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Shapes;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI;
-using Microsoft.UI.Xaml.Documents;
 
 namespace P42.Uno.Controls
 {
@@ -92,7 +76,7 @@ namespace P42.Uno.Controls
                             new GradientStop{ Offset=1.0, Color=P42.Uno.Markup.ColorExtensions.ColorFromHex("#0222")},
                         }
                     }),
-                    //.Fill(Colors.Pink),
+                    //.Fill(Microsoft.UI.Colors.Pink),
                 new Rectangle()  // right shadow
                     .Width(5)
                     .Stretch().Right()
@@ -107,7 +91,7 @@ namespace P42.Uno.Controls
                             new GradientStop{ Offset=1.0, Color=P42.Uno.Markup.ColorExtensions.ColorFromHex("#8222")},
                         }
                     })
-                    //.Fill(Colors.Pink)
+                    //.Fill(Microsoft.UI.Colors.Pink)
 
             );
         }
