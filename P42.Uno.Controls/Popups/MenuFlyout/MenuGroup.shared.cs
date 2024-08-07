@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 namespace P42.Uno.Controls
 {
     [Microsoft.UI.Xaml.Data.Bindable]
+    [Obsolete("Use Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem")]
     [ContentProperty(Name = "Items")]
     public partial class MenuGroup : MenuItemBase
     {

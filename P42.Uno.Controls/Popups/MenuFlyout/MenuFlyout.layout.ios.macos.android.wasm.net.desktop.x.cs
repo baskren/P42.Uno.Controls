@@ -1,8 +1,10 @@
 #if HAS_UNO
 using P42.Utils.Uno;
 using System;
+using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using P42.Utils;
 
 namespace P42.Uno.Controls
 {
@@ -185,11 +187,29 @@ namespace P42.Uno.Controls
             }
             else if (itemBase is MenuGroup group)
             {
+
+                
+                
                 var winGroupItem = new Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem
                 {
                     Text = itemBase.Text,
                     Icon = itemBase.IconSource.AsIconElement(),
                 };
+                
+                winGroupItem.Items.Add(new Microsoft.UI.Xaml.Controls.MenuFlyoutItem
+                {
+                    Text = "PIZZA 1",
+                } );
+                winGroupItem.Items.Add(new Microsoft.UI.Xaml.Controls.MenuFlyoutItem
+                {
+                    Text = "PIZZA 2",
+                } );
+                winGroupItem.Items.Add(new Microsoft.UI.Xaml.Controls.MenuFlyoutItem
+                {
+                    Text = "PIZZA 3",
+                } );
+
+                return winGroupItem;
                 //var collectionChangedHandler = new ItemsCollectionChangeHandler(group.ObsvItems, winGroupItem.Items);
                 //winGroupItem.Tag = collectionChangedHandler;
                 //group.ObsvItems.CollectionChanged += collectionChangedHandler.OnItemsCollectionChanged;

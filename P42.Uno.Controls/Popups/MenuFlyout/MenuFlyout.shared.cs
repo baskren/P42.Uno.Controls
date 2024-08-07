@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml;
 namespace P42.Uno.Controls
 {
     [Microsoft.UI.Xaml.Data.Bindable]
+    [Obsolete("Use Microsoft.UI.Xaml.Controls.MenuFlyout")]
     public partial class MenuFlyout : DependencyObject
     {
         #region Properties
