@@ -45,25 +45,25 @@ namespace P42.Uno.Controls
         );
         private static void OnLabelsChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            if (dependencyObject is SegmentedControl control)
-            {
-                if (args.NewValue is IList<string> newList)
-                {
-                    if (args.OldValue is ObservableCollection<string> oldCollection)
-                        oldCollection.CollectionChanged -= control.Labels_CollectionChanged;
-                    control.SelectionTracker.Collection = newList;
-                    if (args.NewValue is ObservableCollection<string> newCollection)
-                        newCollection.CollectionChanged += control.Labels_CollectionChanged;
-                    control.Labels_CollectionChanged(null, null);
-                }
-                else
-                {
-                    control.SelectionTracker.Collection = null;
-                    control.Labels.Clear();
-                }
+            if (dependencyObject is not SegmentedControl control)
+                return;
 
-                control.UpdateChildren();
+            if (args.NewValue is IList<string> newList)
+            {
+                if (args.OldValue is ObservableCollection<string> oldCollection)
+                    oldCollection.CollectionChanged -= control.Labels_CollectionChanged;
+                control.SelectionTracker.Collection = newList;
+                if (args.NewValue is ObservableCollection<string> newCollection)
+                    newCollection.CollectionChanged += control.Labels_CollectionChanged;
+                control.Labels_CollectionChanged(null, null);
             }
+            else
+            {
+                control.SelectionTracker.Collection = null;
+                control.Labels.Clear();
+            }
+
+            control.UpdateChildren();
         }
         /// <summary>
         /// Segment labels
@@ -108,10 +108,8 @@ namespace P42.Uno.Controls
 
         private static void OnSelectedIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            if (d is SegmentedControl control && control._tapProcessing == int.MinValue)
-            {
+            if (d is SegmentedControl { _tapProcessing: int.MinValue } control)
                 control.SelectionTracker.SelectIndex((int)args.NewValue);
-            }
         }
         /// <summary>
         /// Index of selected segment
@@ -133,10 +131,8 @@ namespace P42.Uno.Controls
 
         private static void OnSelectedLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            if (d is SegmentedControl control && control._tapProcessing == int.MinValue)
-            {
+            if (d is SegmentedControl { _tapProcessing: int.MinValue } control)
                 control.SelectionTracker.SelectItem((string)args.NewValue);
-            }
         }
         /// <summary>
         /// Label text of selected segment
@@ -204,9 +200,7 @@ namespace P42.Uno.Controls
         private static void OnSelectionModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             if (d is SegmentedControl control)
-            {
                 control.SelectionTracker.SelectionMode = (SelectionMode)args.NewValue;
-            }
         }
         /// <summary>
         /// Selection Mode?
@@ -384,7 +378,7 @@ namespace P42.Uno.Controls
                 }
             }
             */
-            for (int i = 0; i < Labels.Count; i++)
+            for (var i = 0; i < Labels.Count; i++)
                 SelectIndex(i);
 
             return this;
@@ -406,7 +400,7 @@ namespace P42.Uno.Controls
             }
             */
 
-            for (int i = 0; i < Labels.Count; i++)
+            for (var i = 0; i < Labels.Count; i++)
                 DeselectIndex(i);
 
             return this;
@@ -417,118 +411,118 @@ namespace P42.Uno.Controls
         #region Gesture Handlers
         private void OnIsEnabledChanged(DependencyObject sender, DependencyProperty dp)
         {
-            if (IsLoaded)
-            {
-                for (int i = 0; i < Labels.Count; i++)
-                    UpdateElementColors(i);
-            }
+            if (!IsLoaded)
+                return;
+
+            for (var i = 0; i < Labels.Count; i++)
+                UpdateElementColors(i);
         }
 
-        void OnSegmentTapped(object sender, TappedRoutedEventArgs e)
+        private void OnSegmentTapped(object sender, TappedRoutedEventArgs e)
         {
             if (!IsEnabled)
                 return;
 
-            if (sender is FrameworkElement d)
-            {
-                var index = (int)d.GetValue(Grid.ColumnProperty);
-                SetTappedProcessingColors(index);
-                if (SelectionTracker.SelectedIndexes.Contains(index))
-                    SelectionTracker.UnselectIndex(index);
-                else
-                    SelectionTracker.SelectIndex(index);
-            }
+            if (sender is not FrameworkElement d)
+                return;
+
+            var index = (int)d.GetValue(Grid.ColumnProperty);
+            SetTappedProcessingColors(index);
+            if (SelectionTracker.SelectedIndexes.Contains(index))
+                SelectionTracker.UnselectIndex(index);
+            else
+                SelectionTracker.SelectIndex(index);
         }
 
 
-        void OnSegmentPointerEntered(object sender, PointerRoutedEventArgs e)
+        private void OnSegmentPointerEntered(object sender, PointerRoutedEventArgs e)
         {
             if (!IsEnabled) 
-                return; 
+                return;
 
-            if (sender is FrameworkElement d)
-            {
-                var index = (int)d.GetValue(Grid.ColumnProperty);
-                SetHoverOverColors(index);
-            }
+            if (sender is not FrameworkElement d)
+                return;
+
+            var index = (int)d.GetValue(Grid.ColumnProperty);
+            SetHoverOverColors(index);
         }
 
-        void OnSegmentPointerExited(object sender, PointerRoutedEventArgs e)
+        private void OnSegmentPointerExited(object sender, PointerRoutedEventArgs e)
         {
             if (!IsEnabled) return;
 
-            if (sender is FrameworkElement d)
-            {
-                var index = (int)d.GetValue(Grid.ColumnProperty);
-                UpdateElementColors(index);
-            }
+            if (sender is not FrameworkElement d)
+                return;
+
+            var index = (int)d.GetValue(Grid.ColumnProperty);
+            UpdateElementColors(index);
         }
 
-        public void UpdateElementColors(int index)
+        private void UpdateElementColors(int index)
         {
-            if (index >= 0 && index < Labels.Count && index < TextBlocks.Count && index < Backgrounds.Count)
-            {
-                if (_tapProcessing == index)
-                    return;
+            if (index < 0 || index >= Labels.Count || index >= TextBlocks.Count || index >= Backgrounds.Count)
+                return;
 
-                var selected = SelectedIndexes.Contains(index);
-                var nextSelected = SelectedIndexes.Contains(index + 1);
+            if (_tapProcessing == index)
+                return;
 
-                var background = Backgrounds[index];
-                background.Fill = selected
-                    ? BorderBrush.AsGesterableEnabled(IsEnabled) 
-                    : SystemToggleButtonBrushes.Background.AsGesterableEnabled(IsEnabled);
+            var selected = SelectedIndexes.Contains(index);
+            var nextSelected = SelectedIndexes.Contains(index + 1);
 
-                var textBlock = TextBlocks[index];
-                textBlock.Foreground = selected
-                    ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
-                    : Foreground; // SystemToggleButtonBrushes.Foreground.AsGesterableEnabled(IsEnabled);
+            var background = Backgrounds[index];
+            background.Fill = selected
+                ? BorderBrush.AsGesterableEnabled(IsEnabled) 
+                : SystemToggleButtonBrushes.Background.AsGesterableEnabled(IsEnabled);
 
-                if (index < Separators.Count)
-                {
-                    var separator = Separators[index];
-                    separator.Visible(selected == nextSelected);
-                    separator.Fill = selected
-                        ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
-                        : BorderBrush.AsGesterableEnabled(IsEnabled);
-                }
-            }
+            var textBlock = TextBlocks[index];
+            textBlock.Foreground = selected
+                ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
+                : Foreground; // SystemToggleButtonBrushes.Foreground.AsGesterableEnabled(IsEnabled);
+
+            if (index >= Separators.Count)
+                return;
+
+            var separator = Separators[index];
+            separator.Visible(selected == nextSelected);
+            separator.Fill = selected
+                ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
+                : BorderBrush.AsGesterableEnabled(IsEnabled);
         }
 
-        void SetTappedProcessingColors(int index)
+        private void SetTappedProcessingColors(int index)
         {
-            if (index >= 0 && index < TextBlocks.Count)
-            {
-                var background = Backgrounds[index];
-                background.Fill = SystemToggleButtonBrushes.BackgroundCheckedPressed;
-                var textBlock = TextBlocks[index];
-                textBlock.Foreground = SystemToggleButtonBrushes.ForegroundCheckedPressed;
-            }
+            if (index < 0 || index >= TextBlocks.Count)
+                return;
+
+            var background = Backgrounds[index];
+            background.Fill = SystemToggleButtonBrushes.BackgroundCheckedPressed;
+            var textBlock = TextBlocks[index];
+            textBlock.Foreground = SystemToggleButtonBrushes.ForegroundCheckedPressed;
         }
 
-        void SetHoverOverColors(int index)
+        private void SetHoverOverColors(int index)
         {
-            if (index >= 0 && index < TextBlocks.Count)
-            {
-                var selected = SelectedIndexes.Contains(index);
-                if (_tapProcessing == index)
-                    return;
-                var background = Backgrounds[index];
-                background.Fill = selected
-                    ? SystemToggleButtonBrushes.CheckedPointerOverBackground.AssureGesturable()
-                    : SystemButtonBrushes.BackgroundPointerOver.AssureGesturable();
-                var textBlock = TextBlocks[index];
-                textBlock.Foreground = selected
-                    ? SystemToggleButtonBrushes.ForegroundCheckedPointerOver
-                    : SystemButtonBrushes.ForegroundPointerOver;
-            }
+            if (index < 0 || index >= TextBlocks.Count)
+                return;
+ 
+            var selected = SelectedIndexes.Contains(index);
+            if (_tapProcessing == index)
+                return;
+            var background = Backgrounds[index];
+            background.Fill = selected
+                ? SystemToggleButtonBrushes.CheckedPointerOverBackground.AssureGesturable()
+                : SystemButtonBrushes.BackgroundPointerOver.AssureGesturable();
+            var textBlock = TextBlocks[index];
+            textBlock.Foreground = selected
+                ? SystemToggleButtonBrushes.ForegroundCheckedPointerOver
+                : SystemButtonBrushes.ForegroundPointerOver;
         }
         #endregion
 
 
         #region Change Handlers
-        int _tapProcessing = int.MinValue;
-        void OnSelectionTracker_SelectionChanged(object sender, CollectionSelectionTrackerSelectionChangedArguments<string> e)
+        private int _tapProcessing = int.MinValue;
+        private void OnSelectionTracker_SelectionChanged(object sender, CollectionSelectionTrackerSelectionChangedArguments<string> e)
         {
             // show processing position
             SetTappedProcessingColors(e.NewIndex);
@@ -543,52 +537,52 @@ namespace P42.Uno.Controls
             DisplaySelections();
         }
 
-        void OnSelectionTracker_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnSelectionTracker_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (_tapProcessing != int.MinValue)
                 DisplaySelections();
         }
 
-        void DisplaySelections()
+        private void DisplaySelections()
         {
-            if (IsLoaded)
-            {
-                for (int i=0; i< Labels.Count;i++)
-                    UpdateElementColors(i);
-            }
+            if (!IsLoaded)
+                return;
+
+            for (var i=0; i< Labels.Count;i++)
+                UpdateElementColors(i);
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (ActualWidth > 20)
-            {
-                IsOverflowed = CalculateOverflow(ActualSize.X);
-                UpdateChildren();
-            }
+            if (!(ActualWidth > 20))
+                return;
+
+            IsOverflowed = CalculateOverflow(ActualSize.X);
+            UpdateChildren();
         }
 
         private void SegmentedControl_SizeChanged(object sender, SizeChangedEventArgs args)
         {
-            if (IsLoaded)
-            {
-                IsOverflowed = CalculateOverflow(ActualSize.X);
-                UpdateChildren();
-            }
+            if (!IsLoaded)
+                return;
+
+            IsOverflowed = CalculateOverflow(ActualSize.X);
+            UpdateChildren();
         }
 
         private void Labels_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (IsLoaded)
-            {
-                IsOverflowed = CalculateOverflow(ActualSize.X);
-                UpdateChildren();
-            }
+            if (!IsLoaded)
+                return;
+
+            IsOverflowed = CalculateOverflow(ActualSize.X);
+            UpdateChildren();
         }
         #endregion
 
 
         #region Convenience Methods
-        void UpdateBorder()
+        private void UpdateBorder()
         {
             if (IsOverflowed || !Labels.Any())
                 this.BorderThickness(0);
@@ -596,7 +590,7 @@ namespace P42.Uno.Controls
                 this.BorderThickness(BorderWidth);
         }
 
-        void AddNewLabel()
+        private void AddNewLabel()
             => TextBlocks.Add(new TextBlock()
                 .WBind(TextBlock.MarginProperty, this, PaddingProperty)
                 .Foreground(SystemToggleButtonBrushes.Foreground)
@@ -610,17 +604,17 @@ namespace P42.Uno.Controls
                 .AddPointerCaptureLostHandler(OnSegmentPointerExited)
                 );
 
-        void AddNewSeparator()
+        private void AddNewSeparator()
             => Separators.Add(new Rectangle()
                 .Margin(0,5)
                 .Opacity(0.5)
                 .Width(1)
                 .StretchVertical().CenterHorizontal()
                 .ColumnSpan(2).Column(Separators.Count)
-                .WBind(Rectangle.FillProperty, this, BorderBrushProperty)
+                .WBind(Shape.FillProperty, this, BorderBrushProperty)
                 );
 
-        void AddNewBackground()
+        private void AddNewBackground()
             => Backgrounds.Add(new Rectangle()
                 .Fill(SystemToggleButtonBrushes.Background)
                 .Margin(-1)
@@ -634,25 +628,25 @@ namespace P42.Uno.Controls
                 // TODO: Add Tap Handler
                 );
 
-        void AddNewColumn()
+        private void AddNewColumn()
             => grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-        void RemoveLastColumn()
+        private void RemoveLastColumn()
             => grid.ColumnDefinitions.RemoveAt(grid.ColumnDefinitions.Count - 1);
         #endregion
 
 
         #region Layout
-        Size big = new Size(5000, 5000);
-        bool CalculateOverflow(double availableWidth)
+        private readonly Size big = new Size(5000, 5000);
+        private bool CalculateOverflow(double availableWidth)
         {
             if (!Labels.Any())
                 return true;
 
             var columns = Labels.Count;
-            double cellWidth = (availableWidth - 2 * BorderWidth - Margin.Horizontal())/(Math.Max(1, columns)) - BorderWidth - Padding.Horizontal();
+            var cellWidth = (availableWidth - 2 * BorderWidth - Margin.Horizontal())/(Math.Max(1, columns)) - BorderWidth - Padding.Horizontal();
 
-            for (int i=0; i<columns;i++)
+            for (var i=0; i<columns;i++)
             {
                 _testTextBlock.Text(Labels[i]).Measure(big);
 
@@ -664,7 +658,7 @@ namespace P42.Uno.Controls
             return false;
         }
 
-        void UpdateChildren()
+        private void UpdateChildren()
         {
             var columns = Labels.Count;
 
@@ -684,7 +678,7 @@ namespace P42.Uno.Controls
                 while (Backgrounds.Count < columns)
                     AddNewBackground();
 
-                for (int i = 0; i < Labels.Count; i++)
+                for (var i = 0; i < Labels.Count; i++)
                 {
                     TextBlocks[i].Text(Labels[i]);
 

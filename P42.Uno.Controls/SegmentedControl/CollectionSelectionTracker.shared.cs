@@ -77,7 +77,7 @@ namespace P42.Uno.Controls
             get
             {
                 var result = new List<T>();
-                for (int i = 0; i < Collection.Count; i++)
+                for (var i = 0; i < Collection.Count; i++)
                 {
                     if (_selectedIndexes.Contains(i))
                         result.Add(Collection[i]);
@@ -106,12 +106,22 @@ namespace P42.Uno.Controls
         {
             get
             {
-                if (_weakCollectionRef != null && _weakCollectionRef.TryGetTarget(out IList<T> target))
+                if (_weakCollectionRef != null && _weakCollectionRef.TryGetTarget(out var target))
                     return target;
-                return null;
+                target = new List<T>();
+                _weakCollectionRef = new WeakReference<IList<T>>(target);
+                return target;
             }
-            set => _weakCollectionRef = new WeakReference<IList<T>>(value);
-        }
+            set
+            {
+                var selections = SelectedItems.ToList();
+                SelectedIndexes.Clear();
+                value ??= new List<T>();
+                _weakCollectionRef = new WeakReference<IList<T>>(value);
+                foreach (var selection in selections.Where(selection => Collection.Contains(selection)))
+                    SelectedItems.Add(selection);
+            }
+        } 
 
         public bool AllowUnselectAll = false;
 
