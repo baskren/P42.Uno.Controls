@@ -174,7 +174,11 @@ namespace P42.Uno.Controls
         public List<int> SelectedIndexes
         {
             get => SelectionTracker.SelectedIndexes.Where(i => i < Labels.Count).ToList();
-            set => SelectionTracker.SelectedIndexes = value;
+            set
+            {
+                SelectionTracker.Clear();
+                SelectionTracker.SelectIndexes(value);
+            }
         }
         #endregion
 
@@ -343,6 +347,12 @@ namespace P42.Uno.Controls
 
         public SegmentedControl SelectIndex(int index)
         {
+            if (index < 0 && SelectionMode == SelectionMode.Radio)
+            {
+                SelectionTracker.Clear();
+                return this;
+            }
+            
             if (index < 0 || index >= Labels.Count) return this;
 
             //SelectLabel(Labels[index]);

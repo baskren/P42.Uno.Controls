@@ -15,11 +15,11 @@ namespace P42.Uno.Controls
             get => _selectionMode;
             set
             {
-                if (_selectionMode != value)
-                {
-                    _selectionMode = value;
-                    SelectIndex(SelectedIndex);
-                }
+                if (_selectionMode == value)
+                    return;
+
+                _selectionMode = value;
+                SelectIndex(SelectedIndex);
             }
         }
 
@@ -45,13 +45,13 @@ namespace P42.Uno.Controls
                         return collection[SelectedIndex];
                 }
 
-                if (SelectedItemWhenNoneSelected is null)
-                    return default;
-                return SelectedItemWhenNoneSelected();
+                return SelectedItemWhenNoneSelected is null 
+                    ? default 
+                    : SelectedItemWhenNoneSelected();
             }
         }
 
-        List<int> _selectedIndexes = new List<int>();
+        private readonly List<int> _selectedIndexes = [];
         public List<int> SelectedIndexes
         {
             get => _selectedIndexes;
@@ -89,9 +89,9 @@ namespace P42.Uno.Controls
                 switch (SelectionMode)
                 {
                     case SelectionMode.Radio:
-                        var index = value?.Any() ?? false
-                            ? Collection?.IndexOf(value.Last()) ?? -1
-                            : -1;
+                        var index = -1;
+                        if (Collection is not null && value is not null && value.Count != 0)
+                            index = Collection.IndexOf(value.First());
                         UpdateToSelectedRadio(index);
                         break;
                     case SelectionMode.Multi:
@@ -118,8 +118,11 @@ namespace P42.Uno.Controls
                 SelectedIndexes.Clear();
                 value ??= new List<T>();
                 _weakCollectionRef = new WeakReference<IList<T>>(value);
-                foreach (var selection in selections.Where(selection => Collection.Contains(selection)))
-                    SelectedItems.Add(selection);
+                foreach (var selection in selections)
+                {
+                    if (Collection.IndexOf(selection) is int index and > -1)
+                        SelectedIndexes.Add(index);
+                }
             }
         } 
 
