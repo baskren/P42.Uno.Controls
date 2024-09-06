@@ -172,6 +172,7 @@ namespace P42.Uno.Controls
             foreach (var index in indexes)
                 SelectIndex(index);
         }
+        
 
         public void SelectItems(IEnumerable<T> items)
         {

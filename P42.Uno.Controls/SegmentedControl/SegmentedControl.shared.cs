@@ -174,11 +174,7 @@ namespace P42.Uno.Controls
         public List<int> SelectedIndexes
         {
             get => SelectionTracker.SelectedIndexes.Where(i => i < Labels.Count).ToList();
-            set
-            {
-                SelectionTracker.Clear();
-                SelectionTracker.SelectIndexes(value);
-            }
+            set => SelectionTracker.SelectedIndexes = value;
         }
         #endregion
 
