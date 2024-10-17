@@ -769,7 +769,7 @@ public partial class TargetedPopup : ITargetedPopup
             if (windowSize.Width < 1 || windowSize.Height < 1)
                 return new Size(0,0);
 
-            var safeMargin = AppWindow.SafeMargin(this);
+            var safeMargin = AppWindow.VisibleMargin();
             var availableWindowWidth = windowSize.Width - Margin.Horizontal() - safeMargin.Horizontal();
             var availableWindowHeight = windowSize.Height - Margin.Vertical() - safeMargin.Vertical();
 
@@ -1261,7 +1261,7 @@ public partial class TargetedPopup : ITargetedPopup
         if (windowSize.Width < 1 || windowSize.Height < 1)
             return null;
 
-        var safeMargin = AppWindow.SafeMargin(this);
+        var safeMargin = AppWindow.VisibleMargin();
         var availableWindowSpace = AvailableWindowSpace;
         
 
