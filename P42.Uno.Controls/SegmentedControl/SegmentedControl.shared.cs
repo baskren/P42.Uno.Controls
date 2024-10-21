@@ -48,19 +48,21 @@ namespace P42.Uno.Controls
             if (dependencyObject is not SegmentedControl control)
                 return;
 
+            control.SelectedIndex = -1;
+            control.SelectedLabel = null;
+            control._selectionTracker.Collection = null;
+            
             if (args.NewValue is IList<string> newList)
             {
                 if (args.OldValue is ObservableCollection<string> oldCollection)
                     oldCollection.CollectionChanged -= control.Labels_CollectionChanged;
-                control.SelectionTracker.Collection = newList;
+                control._selectionTracker.Collection = newList;
                 if (args.NewValue is ObservableCollection<string> newCollection)
                     newCollection.CollectionChanged += control.Labels_CollectionChanged;
                 control.Labels_CollectionChanged(null, null);
             }
             else
             {
-                control.SelectionTracker.Collection = null;
-                control.Labels.Clear();
             }
 
             control.UpdateChildren();
@@ -109,7 +111,7 @@ namespace P42.Uno.Controls
         private static void OnSelectedIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             if (d is SegmentedControl { _tapProcessing: int.MinValue } control)
-                control.SelectionTracker.SelectIndex((int)args.NewValue);
+                control._selectionTracker.SelectIndex((int)args.NewValue);
         }
         /// <summary>
         /// Index of selected segment
@@ -132,7 +134,7 @@ namespace P42.Uno.Controls
         private static void OnSelectedLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             if (d is SegmentedControl { _tapProcessing: int.MinValue } control)
-                control.SelectionTracker.SelectItem((string)args.NewValue);
+                control._selectionTracker.SelectItem((string)args.NewValue);
         }
         /// <summary>
         /// Label text of selected segment
@@ -155,7 +157,7 @@ namespace P42.Uno.Controls
         private static void OnAllowUnselectAllChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             if (d is SegmentedControl control)
-                control.SelectionTracker.AllowUnselectAll = (bool)args.NewValue;
+                control._selectionTracker.AllowUnselectAll = (bool)args.NewValue;
         }
         /// <summary>
         /// Can we unselect all or not?
@@ -173,8 +175,8 @@ namespace P42.Uno.Controls
         /// </summary>
         public List<int> SelectedIndexes
         {
-            get => SelectionTracker.SelectedIndexes.Where(i => i < Labels.Count).ToList();
-            set => SelectionTracker.SelectedIndexes = value;
+            get => _selectionTracker.SelectedIndexes.Where(i => i < Labels.Count).ToList();
+            set => _selectionTracker.SelectedIndexes = value;
         }
         #endregion
 
@@ -184,8 +186,8 @@ namespace P42.Uno.Controls
         /// </summary>
         public List<string> SelectedLabels
         {
-            get => SelectionTracker.SelectedItems;
-            set => SelectionTracker.SelectedItems = value;
+            get => _selectionTracker.SelectedItems;
+            set => _selectionTracker.SelectedItems = value;
         }
         #endregion
 
@@ -200,7 +202,7 @@ namespace P42.Uno.Controls
         private static void OnSelectionModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             if (d is SegmentedControl control)
-                control.SelectionTracker.SelectionMode = (SelectionMode)args.NewValue;
+                control._selectionTracker.SelectionMode = (SelectionMode)args.NewValue;
         }
         /// <summary>
         /// Selection Mode?
@@ -250,12 +252,12 @@ namespace P42.Uno.Controls
 
 
         #region Fields
-        readonly List<TextBlock> TextBlocks = new List<TextBlock>();
-        readonly List<Rectangle> Separators = new List<Rectangle>();
-        readonly List<Rectangle> Backgrounds = new List<Rectangle>();
-        readonly CollectionSelectionTracker<string> SelectionTracker = new CollectionSelectionTracker<string>();
-        readonly TextBlock _testTextBlock = new TextBlock().FontSize(16);
-        readonly Grid grid = new Grid();
+        private readonly List<TextBlock> _textBlocks = [];
+        private readonly List<Rectangle> _separators = [];
+        private readonly List<Rectangle> _backgrounds = [];
+        private readonly CollectionSelectionTracker<string> _selectionTracker = new();
+        private readonly TextBlock _testTextBlock = new TextBlock().FontSize(16);
+        private readonly Grid _grid = new();
         #endregion
 
 
@@ -265,7 +267,7 @@ namespace P42.Uno.Controls
         /// </summary>
         public SegmentedControl()
         {
-            Content = grid;
+            Content = _grid;
 
             _testTextBlock
                 .WBind(TextBlock.MarginProperty, this, PaddingProperty);
@@ -279,17 +281,18 @@ namespace P42.Uno.Controls
 
             Labels = new ObservableCollection<string>();
 
-            SelectionTracker.CollectionChanged += OnSelectionTracker_CollectionChanged;
-            SelectionTracker.SelectionChanged += OnSelectionTracker_SelectionChanged;
+            _selectionTracker.CollectionChanged += OnSelectionTracker_CollectionChanged;
+            _selectionTracker.SelectionChanged += OnSelectionTracker_SelectionChanged;
 
 #if !HAS_UNO
             RegisterPropertyChangedCallback(UserControl.BorderThicknessProperty, OnBorderThicknessChanged);
 #endif
             RegisterPropertyChangedCallback(UserControl.IsEnabledProperty, OnIsEnabledChanged);
+            RegisterPropertyChangedCallback(UserControl.VisibilityProperty, OnSegmentControlVisibilityChanged);
 
-            grid.WBind(Grid.CornerRadiusProperty, this, CornerRadiusProperty);
-            grid.WBind(Grid.BorderBrushProperty, this, BorderBrushProperty);
-            grid.WBind(Grid.BorderThicknessProperty, this, BorderThicknessProperty);
+            _grid.WBind(Grid.CornerRadiusProperty, this, CornerRadiusProperty);
+            _grid.WBind(Grid.BorderBrushProperty, this, BorderBrushProperty);
+            _grid.WBind(Grid.BorderThicknessProperty, this, BorderThicknessProperty);
         }
 
         #endregion
@@ -345,15 +348,15 @@ namespace P42.Uno.Controls
         {
             if (index < 0 && SelectionMode == SelectionMode.Radio)
             {
-                SelectionTracker.Clear();
+                _selectionTracker.Clear();
                 return this;
             }
             
             if (index < 0 || index >= Labels.Count) return this;
 
             //SelectLabel(Labels[index]);
-            if (!SelectionTracker.SelectedIndexes.Contains(index))
-                SelectionTracker.SelectIndex(index);
+            if (!_selectionTracker.SelectedIndexes.Contains(index))
+                _selectionTracker.SelectIndex(index);
 
             return this;
         }
@@ -363,8 +366,8 @@ namespace P42.Uno.Controls
             if (index < 0 || index >= Labels.Count) return this;
 
             //DeselectLabel(Labels[index]);
-            if (SelectionTracker.SelectedIndexes.Contains(index))
-                SelectionTracker.UnselectIndex(index);
+            if (_selectionTracker.SelectedIndexes.Contains(index))
+                _selectionTracker.UnselectIndex(index);
 
             return this;
         }
@@ -434,10 +437,10 @@ namespace P42.Uno.Controls
 
             var index = (int)d.GetValue(Grid.ColumnProperty);
             SetTappedProcessingColors(index);
-            if (SelectionTracker.SelectedIndexes.Contains(index))
-                SelectionTracker.UnselectIndex(index);
+            if (_selectionTracker.SelectedIndexes.Contains(index))
+                _selectionTracker.UnselectIndex(index);
             else
-                SelectionTracker.SelectIndex(index);
+                _selectionTracker.SelectIndex(index);
         }
 
 
@@ -466,7 +469,7 @@ namespace P42.Uno.Controls
 
         private void UpdateElementColors(int index)
         {
-            if (index < 0 || index >= Labels.Count || index >= TextBlocks.Count || index >= Backgrounds.Count)
+            if (index < 0 || index >= Labels.Count || index >= _textBlocks.Count || index >= _backgrounds.Count)
                 return;
 
             if (_tapProcessing == index)
@@ -475,20 +478,20 @@ namespace P42.Uno.Controls
             var selected = SelectedIndexes.Contains(index);
             var nextSelected = SelectedIndexes.Contains(index + 1);
 
-            var background = Backgrounds[index];
+            var background = _backgrounds[index];
             background.Fill = selected
                 ? BorderBrush.AsGesterableEnabled(IsEnabled) 
                 : SystemToggleButtonBrushes.Background.AsGesterableEnabled(IsEnabled);
 
-            var textBlock = TextBlocks[index];
+            var textBlock = _textBlocks[index];
             textBlock.Foreground = selected
                 ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
                 : Foreground; // SystemToggleButtonBrushes.Foreground.AsGesterableEnabled(IsEnabled);
 
-            if (index >= Separators.Count)
+            if (index >= _separators.Count)
                 return;
 
-            var separator = Separators[index];
+            var separator = _separators[index];
             separator.Visible(selected == nextSelected);
             separator.Fill = selected
                 ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
@@ -497,28 +500,28 @@ namespace P42.Uno.Controls
 
         private void SetTappedProcessingColors(int index)
         {
-            if (index < 0 || index >= TextBlocks.Count)
+            if (index < 0 || index >= _textBlocks.Count)
                 return;
 
-            var background = Backgrounds[index];
+            var background = _backgrounds[index];
             background.Fill = SystemToggleButtonBrushes.BackgroundCheckedPressed;
-            var textBlock = TextBlocks[index];
+            var textBlock = _textBlocks[index];
             textBlock.Foreground = SystemToggleButtonBrushes.ForegroundCheckedPressed;
         }
 
         private void SetHoverOverColors(int index)
         {
-            if (index < 0 || index >= TextBlocks.Count)
+            if (index < 0 || index >= _textBlocks.Count)
                 return;
  
             var selected = SelectedIndexes.Contains(index);
             if (_tapProcessing == index)
                 return;
-            var background = Backgrounds[index];
+            var background = _backgrounds[index];
             background.Fill = selected
                 ? SystemToggleButtonBrushes.CheckedPointerOverBackground.AssureGesturable()
                 : SystemButtonBrushes.BackgroundPointerOver.AssureGesturable();
-            var textBlock = TextBlocks[index];
+            var textBlock = _textBlocks[index];
             textBlock.Foreground = selected
                 ? SystemToggleButtonBrushes.ForegroundCheckedPointerOver
                 : SystemButtonBrushes.ForegroundPointerOver;
@@ -534,7 +537,7 @@ namespace P42.Uno.Controls
             SetTappedProcessingColors(e.NewIndex);
 
             // fire events
-            _tapProcessing = SelectionTracker.SelectedIndex;
+            _tapProcessing = _selectionTracker.SelectedIndex;
             SetValue(SelectedIndexProperty, e.NewIndex);
             SetValue(SelectedLabelProperty, e.NewItem);
             SelectionChanged?.Invoke(this, (e.NewIndex, e.NewItem));
@@ -567,14 +570,27 @@ namespace P42.Uno.Controls
             UpdateChildren();
         }
 
+        private Size _lastSize = default;
         private void SegmentedControl_SizeChanged(object sender, SizeChangedEventArgs args)
         {
+            if (_lastSize == args.NewSize)
+                return;
+            
+            _lastSize = args.NewSize;
+
             if (!IsLoaded)
                 return;
 
             IsOverflowed = CalculateOverflow(ActualSize.X);
             UpdateChildren();
         }
+        
+        private void OnSegmentControlVisibilityChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            UpdateChildren();
+        }
+
+
 
         private void Labels_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -597,12 +613,12 @@ namespace P42.Uno.Controls
         }
 
         private void AddNewLabel()
-            => TextBlocks.Add(new TextBlock()
+            => _textBlocks.Add(new TextBlock()
                 .WBind(TextBlock.MarginProperty, this, PaddingProperty)
                 .Foreground(SystemToggleButtonBrushes.Foreground)
                 .Center()
                 .FontSize(16)
-                .Column(TextBlocks.Count)
+                .Column(_textBlocks.Count)
                 .AddTappedHandler(OnSegmentTapped)
                 .AddPointerEnteredHandler(OnSegmentPointerEntered)
                 .AddPointerExitedHandler(OnSegmentPointerExited)
@@ -611,21 +627,21 @@ namespace P42.Uno.Controls
                 );
 
         private void AddNewSeparator()
-            => Separators.Add(new Rectangle()
+            => _separators.Add(new Rectangle()
                 .Margin(0,5)
                 .Opacity(0.5)
                 .Width(1)
                 .StretchVertical().CenterHorizontal()
-                .ColumnSpan(2).Column(Separators.Count)
+                .ColumnSpan(2).Column(_separators.Count)
                 .WBind(Shape.FillProperty, this, BorderBrushProperty)
                 );
 
         private void AddNewBackground()
-            => Backgrounds.Add(new Rectangle()
+            => _backgrounds.Add(new Rectangle()
                 .Fill(SystemToggleButtonBrushes.Background)
                 .Margin(-1)
                 .Stretch()
-                .Column(Backgrounds.Count)
+                .Column(_backgrounds.Count)
                 .AddTappedHandler(OnSegmentTapped)
                 .AddPointerEnteredHandler(OnSegmentPointerEntered)
                 .AddPointerExitedHandler(OnSegmentPointerExited)
@@ -635,10 +651,10 @@ namespace P42.Uno.Controls
                 );
 
         private void AddNewColumn()
-            => grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            => _grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
         private void RemoveLastColumn()
-            => grid.ColumnDefinitions.RemoveAt(grid.ColumnDefinitions.Count - 1);
+            => _grid.ColumnDefinitions.RemoveAt(_grid.ColumnDefinitions.Count - 1);
         #endregion
 
 
@@ -668,39 +684,39 @@ namespace P42.Uno.Controls
         {
             var columns = Labels.Count;
 
-            while (columns > grid.ColumnDefinitions.Count)
+            while (columns > _grid.ColumnDefinitions.Count)
                 AddNewColumn();
-            while (columns < grid.ColumnDefinitions.Count)
+            while (columns < _grid.ColumnDefinitions.Count)
                 RemoveLastColumn();
 
             if (IsOverflowed)
-                grid.Children.Clear();
+                _grid.Children.Clear();
             else
             {
-                while (TextBlocks.Count < columns)
+                while (_textBlocks.Count < columns)
                     AddNewLabel();
-                while (Separators.Count < columns - 1)
+                while (_separators.Count < columns - 1)
                     AddNewSeparator();
-                while (Backgrounds.Count < columns)
+                while (_backgrounds.Count < columns)
                     AddNewBackground();
 
                 for (var i = 0; i < Labels.Count; i++)
                 {
-                    TextBlocks[i].Text(Labels[i]);
+                    _textBlocks[i].Text(Labels[i]);
 
-                    if (!grid.Children.Contains(TextBlocks[i]))
-                        grid.Children.Add(TextBlocks[i]);
-                    if (i < columns - 1 && !grid.Children.Contains(Separators[i]))
-                        grid.Children.Add(Separators[i]);
-                    if (!grid.Children.Contains(Backgrounds[i]))
-                        grid.Children.Insert(0, Backgrounds[i]);
+                    if (!_grid.Children.Contains(_textBlocks[i]))
+                        _grid.Children.Add(_textBlocks[i]);
+                    if (i < columns - 1 && !_grid.Children.Contains(_separators[i]))
+                        _grid.Children.Add(_separators[i]);
+                    if (!_grid.Children.Contains(_backgrounds[i]))
+                        _grid.Children.Insert(0, _backgrounds[i]);
                 }
 
-                var remove = grid.Children.Where(c => (int)c.GetValue(Grid.ColumnProperty) >= columns);
-                grid.Children.RemoveRange(remove);
+                var remove = _grid.Children.Where(c => (int)c.GetValue(Grid.ColumnProperty) >= columns);
+                _grid.Children.RemoveRange(remove);
 
-                remove = grid.Children.Where(c => (int)c.GetValue(Grid.ColumnSpanProperty) > 1 && (int)c.GetValue(Grid.ColumnProperty) >= columns - 1);
-                grid.Children.RemoveRange(remove);
+                remove = _grid.Children.Where(c => (int)c.GetValue(Grid.ColumnSpanProperty) > 1 && (int)c.GetValue(Grid.ColumnProperty) >= columns - 1);
+                _grid.Children.RemoveRange(remove);
 
                 DisplaySelections();
             }
