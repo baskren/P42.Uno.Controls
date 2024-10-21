@@ -390,7 +390,11 @@ namespace P42.Uno.Controls
             => _targetedPopup?.UpdateMarginAndAlignment();
 
         void OnSizeChanged(object sender, SizeChangedEventArgs args)
-            => LayoutDetailAndOverlay(args.NewSize, DetailPushPopState == PushPopState.Pushed ? 1 : 0);
+        {
+            IsInDrawerMode = LocalUpdateIsInDrawerMode(args.NewSize);
+            LayoutDetailAndOverlay(args.NewSize, DetailPushPopState == PushPopState.Pushed ? 1 : 0, IsInDrawerMode);
+        }
+            
 
         void OpenDrawer(double percentOpen)
         {
@@ -506,8 +510,8 @@ namespace P42.Uno.Controls
 
         bool LocalUpdateIsInDrawerMode(Size availableSize)
         {
-            if (Detail is null)
-                return false;
+            //if (Detail is null)
+            //    return false;
             
             var minSide = Math.Min(availableSize.Width, availableSize.Height);
             IsInDrawerMode = minSide <= 600;
