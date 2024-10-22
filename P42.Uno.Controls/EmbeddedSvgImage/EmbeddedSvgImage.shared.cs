@@ -38,9 +38,11 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
 
     #region Fields
 
-    private SkiaSharp.Extended.Svg.SKSvg _skSvg;
-    private double _imageAspect = 1.0;
-
+    private Svg.Skia.SKSvg _skSvg;
+    //private SkiaSharp.Extended.Svg.SKSvg _skSvg;
+    private double _canvasAspect = 1.0;
+    private float _canvasWidth = 0;
+    private float _canvasHeight = 0;
     #endregion
 
 
@@ -121,11 +123,21 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
     {
         if (stream is null)
             return;
-        _skSvg = new SkiaSharp.Extended.Svg.SKSvg();
+
+        _skSvg = new Svg.Skia.SKSvg();
+        //_skSvg = new SkiaSharp.Extended.Svg.SKSvg();
         _skSvg.Load(stream);
+        /*
         _imageAspect = _skSvg.CanvasSize.Width < 1 || _skSvg.CanvasSize.Height < 1 
             ? 1 
             : _skSvg.CanvasSize.Width / _skSvg.CanvasSize.Height;
+        */
+
+        _canvasWidth = _skSvg.Drawable.Bounds.Width;
+        _canvasHeight = _skSvg.Drawable.Bounds.Height;
+        _canvasAspect = _canvasWidth < 1 || _canvasHeight < 1
+            ? 1
+            : _canvasWidth / _canvasHeight;
         //Invalidate();
         InvalidateMeasure();
     }
@@ -143,28 +155,35 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
         var fillRect = e.Info.Rect;
         var fillRectAspect = (float)fillRect.Width / (float)fillRect.Height;
 
-        if (_skSvg.CanvasSize.Width <= 0 || _skSvg.CanvasSize.Height <= 0)
+        //if (_skSvg.CanvasSize.Width <= 0 || _skSvg.CanvasSize.Height <= 0)
+        if (_skSvg.Drawable.Bounds.Width <= 0 || _skSvg.Drawable.Bounds.Height <= 0)
         {
             Console.WriteLine("Cannot tile, scale or justify an SVG image with zero or negative Width or Height. Verify, in the SVG source, that the x, y, width, height, and viewBox attributes of the <SVG> tag are present and set correctly.");
         }
         else if (Stretch == Stretch.UniformToFill)
         {
-            var scale = _imageAspect > fillRectAspect 
-                ? fillRect.Height / _skSvg.CanvasSize.Height 
-                : fillRect.Width / _skSvg.CanvasSize.Width;
+            var scale = _canvasAspect > fillRectAspect
+                // ? fillRect.Height / _skSvg.CanvasSize.Height 
+                // : fillRect.Width / _skSvg.CanvasSize.Width;
+                ? fillRect.Height / _canvasHeight
+                : fillRect.Width / _canvasWidth;
             workingCanvas.Scale(scale, scale);
         }
         else if (Stretch == Stretch.Uniform)
         {
-            var scale = _imageAspect > fillRectAspect 
-                ? fillRect.Width / _skSvg.CanvasSize.Width 
-                : fillRect.Height / _skSvg.CanvasSize.Height;
+            var scale = _canvasAspect > fillRectAspect
+                // ? fillRect.Width / _skSvg.CanvasSize.Width 
+                // : fillRect.Height / _skSvg.CanvasSize.Height;
+                ? fillRect.Width / _canvasWidth
+                : fillRect.Height / _canvasHeight;
             workingCanvas.Scale(scale, scale);
         }
         else if (Stretch == Stretch.Fill)
         {
-            var scaleX = fillRect.Width / _skSvg.CanvasSize.Width;
-            var scaleY = fillRect.Height / _skSvg.CanvasSize.Height;
+            // var scaleX = fillRect.Width / _skSvg.CanvasSize.Width;
+            // var scaleY = fillRect.Height / _skSvg.CanvasSize.Height;
+            var scaleX = fillRect.Width / _canvasWidth;
+            var scaleY = fillRect.Height / _canvasHeight;
             workingCanvas.Scale(scaleX, scaleY);
         }
 
@@ -198,8 +217,8 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
             return base.MeasureOverride(availableSize);
             
         var result = double.IsInfinity(availableSize.Width) 
-            ? new Size(availableSize.Height  * _imageAspect, availableSize.Height) 
-            : new Size(availableSize.Width, availableSize.Width / _imageAspect);
+            ? new Size(availableSize.Height  * _canvasAspect, availableSize.Height) 
+            : new Size(availableSize.Width, availableSize.Width / _canvasAspect);
 
         return result;
     }
