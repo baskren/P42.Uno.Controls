@@ -67,6 +67,7 @@ namespace P42.Uno.Controls.AnimateBar
         protected TimeSpan LullTime = TimeSpan.FromSeconds(1);
         protected bool looping;
         protected bool _disposed;
+        protected bool _failed;
         #endregion
 
 

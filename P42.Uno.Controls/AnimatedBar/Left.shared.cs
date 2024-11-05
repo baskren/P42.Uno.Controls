@@ -33,14 +33,14 @@ namespace P42.Uno.Controls.AnimateBar
                 {
                     try
                     {
-                        if (!_disposed || !DynamicRect.IsLoaded)
-                        {
-                            DynamicRect.Opacity = 1 - x;
-                            DynamicRect.RenderTransform = new TranslateTransform { X = dir * (ActualWidth - 1) * x };
-                        }
+                        if (_failed || _disposed || !DynamicRect.IsLoaded) return;
+
+                        DynamicRect.Opacity = 1 - x;
+                        DynamicRect.RenderTransform = new TranslateTransform { X = dir * (ActualWidth - 1) * x };
                     }
                     catch (Exception ex)
                     {
+                        _failed = true;
                         System.Diagnostics.Debug.WriteLine(ex.ToString());
                     }
 
