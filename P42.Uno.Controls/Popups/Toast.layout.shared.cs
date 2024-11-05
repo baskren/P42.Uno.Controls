@@ -39,23 +39,27 @@ namespace P42.Uno.Controls
                         .WBindFont(this, except: nameof(FontWeight))
                         .FontWeight(FontWeights.Bold)
                         .WBindNullCollapse()
+                        .WBind(ContentPresenter.BackgroundProperty, this, TitleBackgroundProperty)
+                        .WBind(ContentPresenter.PaddingProperty, this, PaddingProperty)
                         ,
 
                     scrollViewer
                         .RowCol(1,1)
                         .MaxHeight(300)
                         .Content(
-                        _messageBlock
-                            .RowCol(1,1)
-                            .CenterVertical()
-                            .VerticalContentAlignment(VerticalAlignment.Center)
-                            .TextWrapping(Microsoft.UI.Xaml.TextWrapping.WrapWholeWords)
-                            .WBindFont(this)
-                            .WBindNullCollapse()
+                            _messageBlock
+                                .RowCol(1,1)
+                                .CenterVertical()
+                                .VerticalContentAlignment(VerticalAlignment.Center)
+                                .TextWrapping(Microsoft.UI.Xaml.TextWrapping.WrapWholeWords)
+                                .WBindFont(this)
+                                .WBindNullCollapse()
+                                .WBind(ContentPresenter.PaddingProperty, this, PaddingProperty)
                         )
-                        //.Bind(ScrollViewer.MaxHeightProperty, _contentRowDefinition, nameof(ActualHeight))
+
+                //.Bind(ScrollViewer.MaxHeightProperty, _contentRowDefinition, nameof(ActualHeight))
                 );
-            Padding = new Microsoft.UI.Xaml.Thickness(5);
+            //Padding = new Microsoft.UI.Xaml.Thickness(5);
 
             this.RegisterPropertyChangedCallback(PaddingProperty, OnPaddingPropertyChanged);
 

@@ -6,6 +6,7 @@ using P42.Utils.Uno;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
+using Microsoft.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
@@ -17,6 +18,22 @@ namespace P42.Uno.Controls
     [ContentProperty(Name = "Message")]
     public partial class Toast : TargetedPopup
     {
+        #region Padding Property
+        public static new readonly DependencyProperty PaddingProperty = DependencyProperty.Register(
+            nameof(Padding),
+            typeof(Thickness),
+            typeof(Toast),
+            new PropertyMetadata(new Thickness(5))
+        );
+        public new Thickness Padding
+        {
+            get => (Thickness)GetValue(PaddingProperty);
+            set => SetValue(PaddingProperty, value);
+        }
+        #endregion Padding Property
+
+
+
         #region Title Property
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
             nameof(TitleContent),
@@ -70,6 +87,27 @@ namespace P42.Uno.Controls
             set => SetValue(TitleProperty, value);
         }
         #endregion Title Property
+
+        #region TitleBackground Property
+        public static readonly DependencyProperty TitleBackgroundProperty = DependencyProperty.Register(
+            nameof(TitleBackground),
+            typeof(Brush),
+            typeof(Toast),
+            new PropertyMetadata(SystemColors.Accent.ToBrush(), (d,e) => ((Toast)d).OnTitleBackgroundChanged(e))
+        );
+
+        private void OnTitleBackgroundChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if (TitleBackground is null)
+                TitleBackground = SystemColors.Accent.ToBrush();
+        }
+
+        public Brush TitleBackground
+        {
+            get => (Brush)GetValue(TitleBackgroundProperty);
+            set => SetValue(TitleBackgroundProperty, value);
+        }
+        #endregion TitleBackground Property
 
 
         #region Message Property
