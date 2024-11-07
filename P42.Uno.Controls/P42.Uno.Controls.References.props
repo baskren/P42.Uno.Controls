@@ -8,7 +8,7 @@
 
   <!-- SHARED ITEMS -->
   <ItemGroup>
-    <PackageReference Include="Svg.Skia" Version="2.0.0.1" />
+    <PackageReference Include="Svg.Skia" Version="2.0.0.2" />
     <!--
     <PackageReference Include="Svg.Skia" Version="1.0.0.18" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
