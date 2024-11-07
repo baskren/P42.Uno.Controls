@@ -17,7 +17,7 @@ namespace P42.Uno.Controls
                 .Assign(out _okButton)
                 .Row(2)
                 .Column(1)
-                .Margin(0)
+                .Margin(3)
                 .Stretch()
                 .CornerRadius(2)
                 .Height(40)
