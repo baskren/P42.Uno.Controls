@@ -10,7 +10,7 @@ using Windows.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI;
+using Uno.Foundation;
 
 namespace P42.Uno.Controls;
 
@@ -1040,7 +1040,7 @@ public partial class TargetedPopup : ITargetedPopup
             Pushed?.Invoke(this, EventArgs.Empty);
             _pushCompletionSource?.TrySetResult(true);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             await InnerPop(PopupPoppedCause.Exception, animated);
         }
@@ -1099,6 +1099,41 @@ public partial class TargetedPopup : ITargetedPopup
 
         PushPopState = PushPopState.Popped;
         var result = new PopupPoppedEventArgs(poppedCause, poppedTrigger);
+        
+        #if __WASM__
+        // WORK AROUND FOR UNO BUG 
+        // TODO: Report this bug
+        
+        var candidates =
+            P42.Utils.Uno.UIElementExtensions.FindChildren<Microsoft.UI.Xaml.Controls.ItemsStackPanel>(null);
+        //System.Console.WriteLine($"CompletePop: Reseting Clip on {candidates.Count()} ItemsStackPanels");
+
+        var x = new ItemsStackPanel();
+        
+        foreach (var child in candidates)
+        {
+            System.Console.WriteLine($"child: Name:[{child.Name}] Clip:[{child.Clip}] Handle:[{child.Handle}] Tag:[{child.Tag}] CacheMode:[{child.CacheMode}] ");
+            child.Clip = null;
+            var script = @$"
+
+const element = document.getElementById('{child.Handle}');
+
+if (element) {{
+    console.log('Element found:', element);
+    console.log('Element clip:', element.style.clip);
+    element.style.clip = 'auto';
+    console.log('Element clip:', element.style.clip);
+}} else {{
+    console.log('Element not found');
+}}
+
+";
+            System.Console.WriteLine($"script:[{script}]");
+            WebAssemblyRuntime.InvokeJS(script);
+
+        }
+        #endif
+        
         Popped?.Invoke(this, result);
         _popCompletionSource?.TrySetResult(result);
     }
