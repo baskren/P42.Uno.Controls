@@ -48,6 +48,8 @@ namespace P42.Uno.Controls
             if (dependencyObject is not SegmentedControl control)
                 return;
 
+            var beforeLabel = control.SelectedLabel;
+            
             control.SelectedIndex = -1;
             control.SelectedLabel = null;
             control._selectionTracker.Collection = null;
@@ -57,6 +59,13 @@ namespace P42.Uno.Controls
                 if (args.OldValue is ObservableCollection<string> oldCollection)
                     oldCollection.CollectionChanged -= control.Labels_CollectionChanged;
                 control._selectionTracker.Collection = newList;
+
+                if (newList.Contains(beforeLabel))
+                {
+                    control.SelectedLabel = beforeLabel;
+                    control.SelectedIndex = newList.IndexOf(beforeLabel);
+                }
+
                 if (args.NewValue is ObservableCollection<string> newCollection)
                     newCollection.CollectionChanged += control.Labels_CollectionChanged;
                 control.Labels_CollectionChanged(null, null);
@@ -65,6 +74,8 @@ namespace P42.Uno.Controls
             {
             }
 
+            
+            
             control.UpdateChildren();
         }
         /// <summary>
@@ -111,7 +122,11 @@ namespace P42.Uno.Controls
         private static void OnSelectedIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             if (d is SegmentedControl { _tapProcessing: int.MinValue } control)
+            {
+                System.Diagnostics.Debug.WriteLine($"SegmentedControl[{control._instance}].OnSelectedIndexChanged SelectedIndex:{args.NewValue} : BEFORE : SelectedIndex=[{control.SelectedIndex}] SelectedLabel=[{control.SelectedLabel}] : _selectionTracker[{control._selectionTracker._instance}] .SelectedIndex[{control._selectionTracker.SelectedIndex}] .SelectedItem[{control._selectionTracker.SelectedItem}]");
                 control._selectionTracker.SelectIndex((int)args.NewValue);
+                System.Diagnostics.Debug.WriteLine($"SegmentedControl[{control._instance}].OnSelectedIndexChanged SelectedIndex:{args.NewValue} : AFTER  : SelectedIndex=[{control.SelectedIndex}] SelectedLabel=[{control.SelectedLabel}] : _selectionTracker[{control._selectionTracker._instance}] .SelectedIndex[{control._selectionTracker.SelectedIndex}] .SelectedItem[{control._selectionTracker.SelectedItem}]");
+            }
         }
         /// <summary>
         /// Index of selected segment
@@ -134,7 +149,11 @@ namespace P42.Uno.Controls
         private static void OnSelectedLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             if (d is SegmentedControl { _tapProcessing: int.MinValue } control)
+            {
+                System.Diagnostics.Debug.WriteLine($"SegmentedControl[{control._instance}].OnSelectedLabelChanged SelectedIndex:{args.NewValue} : BEFORE : SelectedIndex=[{control.SelectedIndex}] SelectedLabel=[{control.SelectedLabel}] : _selectionTracker[{control._selectionTracker._instance}] .SelectedIndex[{control._selectionTracker.SelectedIndex}] .SelectedItem[{control._selectionTracker.SelectedItem}]");
                 control._selectionTracker.SelectItem((string)args.NewValue);
+                System.Diagnostics.Debug.WriteLine($"SegmentedControl[{control._instance}].OnSelectedLabelChanged SelectedIndex:{args.NewValue} : AFTER  : SelectedIndex=[{control.SelectedIndex}] SelectedLabel=[{control.SelectedLabel}] : _selectionTracker[{control._selectionTracker._instance}] .SelectedIndex[{control._selectionTracker.SelectedIndex}] .SelectedItem[{control._selectionTracker.SelectedItem}]");
+            }
         }
         /// <summary>
         /// Label text of selected segment
@@ -258,6 +277,9 @@ namespace P42.Uno.Controls
         private readonly CollectionSelectionTracker<string> _selectionTracker = new();
         private readonly TextBlock _testTextBlock = new TextBlock().FontSize(16);
         private readonly Grid _grid = new();
+
+        private static int _instances;
+        internal readonly int _instance = _instances++;
         #endregion
 
 

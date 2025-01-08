@@ -137,6 +137,14 @@ namespace P42.Uno.Controls
         #endregion
 
 
+        #region Fields
+
+        private static int _instances;
+        internal readonly int _instance = _instances++;
+
+        #endregion
+
+        
         #region Constructor
         public CollectionSelectionTracker(IList<T> collection = null)
         {
@@ -373,17 +381,31 @@ namespace P42.Uno.Controls
 
         void UpdateToSelectedRadio(int newSelectedIndex)
         {
+            System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : ENTER : SelectedItem = [{SelectedItem}] SelectedIndex = [{SelectedIndex}]" );
             if (Collection is IList<T> collection)
             {
                 if (newSelectedIndex >= collection.Count)
+                {
+                    System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : newSelectedIndex beyond bounds [{collection.Count}] of collection " );
                     return;
+                }
             }
 
-            if (newSelectedIndex == SelectedIndex || newSelectedIndex >= (Collection?.Count ?? 0))
+            if (newSelectedIndex == SelectedIndex )
+            {
+                System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : newSelectedIndex == SelectedIndex " );
                 return;
+            }
+
+            if (newSelectedIndex >= (Collection?.Count ?? 0))
+            {
+                System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : Collection null [{Collection}] or newSelectedIndex beyond bounds [{Collection?.Count ?? 0}]" );
+                return;
+            }
 
             if (newSelectedIndex < 0)
             {
+                System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : newSelectedIndex < 0 " );
                 Clear();
                 return;
             }
@@ -428,6 +450,8 @@ namespace P42.Uno.Controls
                 CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedBefore, removedBeforeIndex));
             if (added.Any())
                 CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added));
+
+            System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : ENTER : SelectedItem = [{SelectedItem}] SelectedIndex = [{SelectedIndex}]" );
 
         }
 
