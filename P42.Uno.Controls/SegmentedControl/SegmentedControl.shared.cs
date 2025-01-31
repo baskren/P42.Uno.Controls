@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
@@ -121,12 +122,25 @@ namespace P42.Uno.Controls
 
         private static void OnSelectedIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            if (d is SegmentedControl { _tapProcessing: int.MinValue } control)
+            if (d is not SegmentedControl { _tapProcessing: int.MinValue } control)
+                return;
+
+            /*
+            if (control._instance == 13)
             {
-                System.Diagnostics.Debug.WriteLine($"SegmentedControl[{control._instance}].OnSelectedIndexChanged SelectedIndex:{args.NewValue} : BEFORE : SelectedIndex=[{control.SelectedIndex}] SelectedLabel=[{control.SelectedLabel}] : _selectionTracker[{control._selectionTracker._instance}] .SelectedIndex[{control._selectionTracker.SelectedIndex}] .SelectedItem[{control._selectionTracker.SelectedItem}]");
-                control._selectionTracker.SelectIndex((int)args.NewValue);
-                System.Diagnostics.Debug.WriteLine($"SegmentedControl[{control._instance}].OnSelectedIndexChanged SelectedIndex:{args.NewValue} : AFTER  : SelectedIndex=[{control.SelectedIndex}] SelectedLabel=[{control.SelectedLabel}] : _selectionTracker[{control._selectionTracker._instance}] .SelectedIndex[{control._selectionTracker.SelectedIndex}] .SelectedItem[{control._selectionTracker.SelectedItem}]");
+                System.Diagnostics.Debug.WriteLine(
+                    $"SegmentedControl[{control._instance}].OnSelectedIndexChanged SelectedIndex:{args.NewValue} : BEFORE : SelectedIndex=[{control.SelectedIndex}] SelectedLabel=[{control.SelectedLabel}] : _selectionTracker[{control._selectionTracker._instance}] .SelectedIndex[{control._selectionTracker.SelectedIndex}] .SelectedItem[{control._selectionTracker.SelectedItem}]");
+                System.Diagnostics.Debug.WriteLine(
+                    $"    SelectedIndexes:[{string.Join(',', control.SelectedIndexes)}] SelectedLabels:[{string.Join(',', control.SelectedLabels)}]");
             }
+            */
+
+            control._selectionTracker.SelectIndex((int)args.NewValue);
+            /*
+            control.DisplaySelections();
+            if (control._instance == 13)
+                System.Diagnostics.Debug.WriteLine($"SegmentedControl[{control._instance}].OnSelectedIndexChanged SelectedIndex:{args.NewValue} : AFTER  : SelectedIndex=[{control.SelectedIndex}] SelectedLabel=[{control.SelectedLabel}] : _selectionTracker[{control._selectionTracker._instance}] .SelectedIndex[{control._selectionTracker.SelectedIndex}] .SelectedItem[{control._selectionTracker.SelectedItem}]");
+                */
         }
         /// <summary>
         /// Index of selected segment
@@ -150,9 +164,9 @@ namespace P42.Uno.Controls
         {
             if (d is SegmentedControl { _tapProcessing: int.MinValue } control)
             {
-                System.Diagnostics.Debug.WriteLine($"SegmentedControl[{control._instance}].OnSelectedLabelChanged SelectedIndex:{args.NewValue} : BEFORE : SelectedIndex=[{control.SelectedIndex}] SelectedLabel=[{control.SelectedLabel}] : _selectionTracker[{control._selectionTracker._instance}] .SelectedIndex[{control._selectionTracker.SelectedIndex}] .SelectedItem[{control._selectionTracker.SelectedItem}]");
+                //System.Diagnostics.Debug.WriteLine($"SegmentedControl[{control._instance}].OnSelectedLabelChanged SelectedIndex:{args.NewValue} : BEFORE : SelectedIndex=[{control.SelectedIndex}] SelectedLabel=[{control.SelectedLabel}] : _selectionTracker[{control._selectionTracker._instance}] .SelectedIndex[{control._selectionTracker.SelectedIndex}] .SelectedItem[{control._selectionTracker.SelectedItem}]");
                 control._selectionTracker.SelectItem((string)args.NewValue);
-                System.Diagnostics.Debug.WriteLine($"SegmentedControl[{control._instance}].OnSelectedLabelChanged SelectedIndex:{args.NewValue} : AFTER  : SelectedIndex=[{control.SelectedIndex}] SelectedLabel=[{control.SelectedLabel}] : _selectionTracker[{control._selectionTracker._instance}] .SelectedIndex[{control._selectionTracker.SelectedIndex}] .SelectedItem[{control._selectionTracker.SelectedItem}]");
+                //System.Diagnostics.Debug.WriteLine($"SegmentedControl[{control._instance}].OnSelectedLabelChanged SelectedIndex:{args.NewValue} : AFTER  : SelectedIndex=[{control.SelectedIndex}] SelectedLabel=[{control.SelectedLabel}] : _selectionTracker[{control._selectionTracker._instance}] .SelectedIndex[{control._selectionTracker.SelectedIndex}] .SelectedItem[{control._selectionTracker.SelectedItem}]");
             }
         }
         /// <summary>
@@ -500,6 +514,12 @@ namespace P42.Uno.Controls
             var selected = SelectedIndexes.Contains(index);
             var nextSelected = SelectedIndexes.Contains(index + 1);
 
+            /*
+            if (_instance == 13)
+            System.Diagnostics.Debug.WriteLine(
+                $"\t UpdateElementColors[{_instance}]({index}:{Labels[index]}) Selected:{selected} ");
+            */
+            
             var background = _backgrounds[index];
             background.Fill = selected
                 ? BorderBrush.AsGesterableEnabled(IsEnabled) 
@@ -579,8 +599,26 @@ namespace P42.Uno.Controls
             if (!IsLoaded)
                 return;
 
+            /*
+            if (_instance == 13)
+            {
+                System.Diagnostics.Debug.WriteLine($"=== SegmentedContro[{_instance}] DISPLAY SELECTIONS : ENTER ===");
+                System.Diagnostics.Debug.WriteLine(
+                    $"    SelectedIndexes:[{string.Join(',', SelectedIndexes)}] SelectedLabels:[{string.Join(',', SelectedLabels)}]");
+            }
+            */
+
             for (var i=0; i< Labels.Count;i++)
                 UpdateElementColors(i);
+
+            /*
+            if (_instance == 13)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"    SelectedIndexes:[{string.Join(',', SelectedIndexes)}] SelectedLabels:[{string.Join(',', SelectedLabels)}]");
+                System.Diagnostics.Debug.WriteLine($"=== SegmentedContro[{_instance}] DISPLAY SELECTIONS : EXIT ===");
+            }
+            */
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

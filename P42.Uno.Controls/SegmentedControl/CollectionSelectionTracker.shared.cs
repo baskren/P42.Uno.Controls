@@ -386,7 +386,7 @@ namespace P42.Uno.Controls
             {
                 if (newSelectedIndex >= collection.Count)
                 {
-                    System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : newSelectedIndex beyond bounds [{collection.Count}] of collection " );
+                    System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : newSelectedIndex beyond bounds [{collection.Count}] of collection. [{string.Join(',',collection)}] " );
                     return;
                 }
             }
