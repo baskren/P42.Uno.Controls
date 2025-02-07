@@ -49,35 +49,42 @@ namespace P42.Uno.Controls
             if (dependencyObject is not SegmentedControl control)
                 return;
 
+            // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{control._instance}] OnLabelsChanged : ENTER Labels=[{string.Join(",",control.Labels)}]  SELECTEDINDEXES=[{string.Join(",",control.SelectedIndexes)}] SelectedLabel=[{control.SelectedLabel}]");
             var beforeLabel = control.SelectedLabel;
             
-            control.SelectedIndex = -1;
-            control.SelectedLabel = null;
-            control._selectionTracker.Collection = null;
+            //control.SelectedIndex = -1;
+            //control.SelectedLabel = null;
+            //control._selectionTracker.Collection = null;
             
+            // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{control._instance}] OnLabelsChanged : --A-- Labels=[{string.Join(",",control.Labels)}]  SELECTEDINDEXES=[{string.Join(",",control.SelectedIndexes)}] SelectedLabel=[{control.SelectedLabel}]");
             if (args.NewValue is IList<string> newList)
             {
                 if (args.OldValue is ObservableCollection<string> oldCollection)
                     oldCollection.CollectionChanged -= control.Labels_CollectionChanged;
                 control._selectionTracker.Collection = newList;
 
+                // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{control._instance}] OnLabelsChanged : --B-- Labels=[{string.Join(",",control.Labels)}]  SELECTEDINDEXES=[{string.Join(",",control.SelectedIndexes)}] SelectedLabel=[{control.SelectedLabel}]");
                 if (newList.Contains(beforeLabel))
                 {
                     control.SelectedLabel = beforeLabel;
                     control.SelectedIndex = newList.IndexOf(beforeLabel);
                 }
 
+                // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{control._instance}] OnLabelsChanged : --C-- Labels=[{string.Join(",",control.Labels)}]  SELECTEDINDEXES=[{string.Join(",",control.SelectedIndexes)}] SelectedLabel=[{control.SelectedLabel}]");
                 if (args.NewValue is ObservableCollection<string> newCollection)
                     newCollection.CollectionChanged += control.Labels_CollectionChanged;
                 control.Labels_CollectionChanged(null, null);
             }
             else
             {
+                // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{control._instance}] OnLabelsChanged : --D-- Labels=[{string.Join(",",control.Labels)}]  SELECTEDINDEXES=[{string.Join(",",control.SelectedIndexes)}] SelectedLabel=[{control.SelectedLabel}]");
+                control._selectionTracker.Collection = null;
+                control.SelectedIndex = -1;
             }
-
             
-            
+            // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{control._instance}] OnLabelsChanged : --E-- Labels=[{string.Join(",",control.Labels)}]  SELECTEDINDEXES=[{string.Join(",",control.SelectedIndexes)}] SelectedLabel=[{control.SelectedLabel}]");
             control.UpdateChildren();
+            // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{control._instance}] OnLabelsChanged : EXIT Labels=[{string.Join(",",control.Labels)}]  SELECTEDINDEXES=[{string.Join(",",control.SelectedIndexes)}] SelectedLabel=[{control.SelectedLabel}]");
         }
         /// <summary>
         /// Segment labels
@@ -85,7 +92,12 @@ namespace P42.Uno.Controls
         public IList<string> Labels
         {
             get => (IList<string>)GetValue(LabelsProperty);
-            set => SetValue(LabelsProperty, value);
+            set 
+            {
+                // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{_instance}] SETTING LABELS : BEFORE=[{string.Join(",",Labels ?? [])}] VALUE=[{string.Join(",",value)}]  SELECTEDINDEXES=[{string.Join(",",SelectedIndexes)}]");
+                SetValue(LabelsProperty, value);
+                // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{_instance}] SETTING LABELS : AFTER =[{string.Join(",",Labels)}]  SELECTEDINDEXES=[{string.Join(",",SelectedIndexes)}] ");
+            }
         }
         #endregion Segments Property
 
@@ -148,7 +160,12 @@ namespace P42.Uno.Controls
         public int SelectedIndex
         {
             get => Math.Min((int)GetValue(SelectedIndexProperty), Labels.Count-1);
-            set => SetValue(SelectedIndexProperty, value);
+            set
+            {
+                // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{_instance}] SETTING SELECTED INDEX : BEFORE=[{SelectedIndex}] VALUE=[{value}]   SELECTEDINDEXES=[{string.Join(",",SelectedIndexes)}]");
+                SetValue(SelectedIndexProperty, value);  
+                // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{_instance}] SETTING SELECTED INDEX : AFTER =[{SelectedIndex}]  SELECTEDINDEXES=[{string.Join(",",SelectedIndexes)}]");
+            } 
         }
         #endregion
 
@@ -209,7 +226,12 @@ namespace P42.Uno.Controls
         public List<int> SelectedIndexes
         {
             get => _selectionTracker.SelectedIndexes.Where(i => i < Labels.Count).ToList();
-            set => _selectionTracker.SelectedIndexes = value;
+            set
+            {
+                // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{_instance}] SETTING SELECTED INDEXES : BEFORE=[{string.Join(",",_selectionTracker.SelectedIndexes)}] VALUE=[{string.Join(",",value)}]");
+                _selectionTracker.SelectedIndexes = value;
+                // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{_instance}] SETTING SELECTED INDEXES : AFTER =[{string.Join(",",_selectionTracker.SelectedIndexes)}]");
+            }
         }
         #endregion
 
@@ -514,11 +536,11 @@ namespace P42.Uno.Controls
             var selected = SelectedIndexes.Contains(index);
             var nextSelected = SelectedIndexes.Contains(index + 1);
 
-            /*
-            if (_instance == 13)
-            System.Diagnostics.Debug.WriteLine(
-                $"\t UpdateElementColors[{_instance}]({index}:{Labels[index]}) Selected:{selected} ");
-            */
+            
+            // if (_instance == 13)
+            //System.Diagnostics.Debug.WriteLine(
+            //    $"\t UpdateElementColors[{_instance}]({index}:{Labels[index]}) Selected:{selected} SelectedIndexes=[{string.Join(",", SelectedIndexes)}]");
+            
             
             var background = _backgrounds[index];
             background.Fill = selected
@@ -742,6 +764,7 @@ namespace P42.Uno.Controls
 
         private void UpdateChildren()
         {
+            //System.Diagnostics.Debug.WriteLine($"SegmentedControl.UpdateChildren  : ENTER Labels=[{string.Join(",",Labels)}]  SELECTEDINDEXES=[{string.Join(",",SelectedIndexes)}] SelectedLabel=[{SelectedLabel}]");
             var columns = Labels.Count;
 
             while (columns > _grid.ColumnDefinitions.Count)
@@ -782,6 +805,7 @@ namespace P42.Uno.Controls
             }
 
             UpdateBorder();
+            //System.Diagnostics.Debug.WriteLine($"SegmentedControl.UpdateChildren  : EXIT  Labels=[{string.Join(",",Labels)}]  SELECTEDINDEXES=[{string.Join(",",SelectedIndexes)}] SelectedLabel=[{SelectedLabel}]");
         }
 
         private void OnBorderThicknessChanged(DependencyObject sender, DependencyProperty dp)

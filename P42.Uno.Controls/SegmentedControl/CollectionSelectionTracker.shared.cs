@@ -115,14 +115,16 @@ namespace P42.Uno.Controls
             set
             {
                 var selections = SelectedItems.ToList();
-                SelectedIndexes.Clear();
+                //SelectedIndexes.Clear();
                 value ??= new List<T>();
                 _weakCollectionRef = new WeakReference<IList<T>>(value);
+                /*
                 foreach (var selection in selections)
                 {
                     if (Collection.IndexOf(selection) is int index and > -1)
                         SelectedIndexes.Add(index);
                 }
+                */
             }
         } 
 
@@ -381,31 +383,31 @@ namespace P42.Uno.Controls
 
         void UpdateToSelectedRadio(int newSelectedIndex)
         {
-            System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : ENTER : SelectedItem = [{SelectedItem}] SelectedIndex = [{SelectedIndex}]" );
+            // System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : ENTER : SelectedItem = [{SelectedItem}] SelectedIndex = [{SelectedIndex}]" );
             if (Collection is IList<T> collection)
             {
                 if (newSelectedIndex >= collection.Count)
                 {
-                    System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : newSelectedIndex beyond bounds [{collection.Count}] of collection. [{string.Join(',',collection)}] " );
+                    // System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : newSelectedIndex beyond bounds [{collection.Count}] of collection. [{string.Join(',',collection)}] " );
                     return;
                 }
             }
 
             if (newSelectedIndex == SelectedIndex )
             {
-                System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : newSelectedIndex == SelectedIndex " );
+                // System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : newSelectedIndex == SelectedIndex " );
                 return;
             }
 
             if (newSelectedIndex >= (Collection?.Count ?? 0))
             {
-                System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : Collection null [{Collection}] or newSelectedIndex beyond bounds [{Collection?.Count ?? 0}]" );
+                // System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : Collection null [{Collection}] or newSelectedIndex beyond bounds [{Collection?.Count ?? 0}]" );
                 return;
             }
 
             if (newSelectedIndex < 0)
             {
-                System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : newSelectedIndex < 0 " );
+                // System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : newSelectedIndex < 0 " );
                 Clear();
                 return;
             }
@@ -451,7 +453,7 @@ namespace P42.Uno.Controls
             if (added.Any())
                 CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added));
 
-            System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : ENTER : SelectedItem = [{SelectedItem}] SelectedIndex = [{SelectedIndex}]" );
+            // System.Diagnostics.Debug.WriteLine($"CollectionSegmentTracker[{_instance}].UpdateToSelectedRadio({newSelectedIndex}) : EXIT : SelectedItem = [{SelectedItem}] SelectedIndex = [{SelectedIndex}]" );
 
         }
 
