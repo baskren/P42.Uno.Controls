@@ -27,6 +27,23 @@ namespace P42.Uno.Controls
             }
         }
 
+        public static TargetedPopup FindPopupParent(this FrameworkElement element)
+        {
+            var parent = element.Parent as FrameworkElement;
+            while (parent is not null)
+            {
+                //if (Stack.FirstOrDefault(p => p.ContentBorder == parent) is TargetedPopup popupParent)
+                //    return popupParent;
+                if (parent is BubbleBorder)
+                    foreach (var popup in Stack)
+                        if (popup.ContentBorder == parent)
+                            return popup;
+                parent = parent.Parent as FrameworkElement;
+            }
+
+            return null;
+        }
+
         public static void Show()
         {
             if (!RootFrame.Initiated)
