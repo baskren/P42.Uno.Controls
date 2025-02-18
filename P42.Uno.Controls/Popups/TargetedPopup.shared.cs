@@ -1034,8 +1034,16 @@ public partial class TargetedPopup : ITargetedPopup
                 subscriber.EnableEvents();
 
             PushPopState = PushPopState.Pushed;
+            if (HasShadow)
+            {
+                // FIX for shadow not consistently appearing
+                ShadowBorder.Visible(false);
+                await Task.Delay(10);
+                ShadowBorder.Visible(true);
+            }
+
             await OnPushEndAsync();
-            await Task.Delay(50);
+            await Task.Delay(10);
             Pushed?.Invoke(this, EventArgs.Empty);
             _pushCompletionSource?.TrySetResult(true);
         }
