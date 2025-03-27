@@ -3,39 +3,39 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Shapes;
 
-namespace P42.Uno.Controls
+namespace P42.Uno.Controls;
+
+public partial class ContentAndDetailPresenter : Grid
 {
-    public partial class ContentAndDetailPresenter : Grid
+    private TargetedPopup _targetedPopup;
+    private Border _detailDrawer;
+    private Rectangle _overlay;
+
+    private ColumnDefinition _drawerColumnDefinition = new ColumnDefinition().Auto();
+    private RowDefinition _drawerRowDefinition = new RowDefinition().Auto();
+
+    private const double popupMargin = 30;
+
+    private void Build()
     {
-        TargetedPopup _targetedPopup;
-        Border _detailDrawer;
-        Rectangle _overlay;
+        // r0,c0 : Content
+        // r1,c0 : Footer
+        this.Rows("*", _drawerRowDefinition);
+        this.Columns("*", _drawerColumnDefinition);
+        _overlay = new Rectangle()
+            .Row(0)
+            .RowSpan(2)
+            .WBind(Shape.FillProperty, this, PageOverlayBrushProperty)
+            .WBind(IsHitTestVisibleProperty, this, IsPageOverlayHitTestVisibleProperty)
+            .WBind(VisibilityProperty, this, PageOverlayBrushProperty, converter: VisibilityConverter.Instance)
+            .AddTappedHandler(OnDismissPointerPressed);
 
-        ColumnDefinition _drawerColumnDefinition = new ColumnDefinition().Auto();
-        RowDefinition _drawerRowDefinition = new RowDefinition().Auto();
+        _detailDrawer = new Border()
+            .WBind(Border.BorderBrushProperty, this, DetailBorderColorProperty, converter: SolidBrushConverter.Instance)
+            .WBind(Border.BorderThicknessProperty, this, BorderThicknessProperty)
+            .WBind(BackgroundProperty, this, DetailBackgroundColorProperty, converter: SolidBrushConverter.Instance);
 
-        const double popupMargin = 30;
-
-        void Build()
-        {
-            // r0,c0 : Content
-            // r1,c0 : Footer
-            this.Rows("*", _drawerRowDefinition);
-            this.Columns("*", _drawerColumnDefinition);
-            _overlay = new Rectangle()
-                .Row(0)
-                .RowSpan(2)
-                .WBind(Rectangle.FillProperty, this, PageOverlayBrushProperty)
-                .WBind(Rectangle.IsHitTestVisibleProperty, this, IsPageOverlayHitTestVisibleProperty)
-                .WBind(Rectangle.VisibilityProperty, this, PageOverlayBrushProperty, converter: VisibilityConverter.Instance)
-                .AddTappedHandler(OnDismissPointerPressed);
-
-            _detailDrawer = new Border()
-                .WBind(Border.BorderBrushProperty, this, DetailBorderColorProperty, converter: SolidBrushConverter.Instance)
-                .WBind(Border.BorderThicknessProperty, this, BorderThicknessProperty)
-                .WBind(Border.BackgroundProperty, this, DetailBackgroundColorProperty, converter: SolidBrushConverter.Instance);
-
-            _targetedPopup = new TargetedPopup()
+        _targetedPopup = new TargetedPopup()
                 .Padding(0)
                 .Opacity(0)
                 .Margin(popupMargin)
@@ -43,28 +43,27 @@ namespace P42.Uno.Controls
                 .HasShadow()
                 .PreferredPointerDirection(PointerDirection.Up)
                 .FallbackPointerDirection(PointerDirection.Any)
-                .PageOverlay(Microsoft.UI.Colors.Transparent)
+                .PageOverlay(Colors.Transparent)
                 .PageOverlayHitTestVisible(false)
                 .WBind(TargetedPopup.WeakTargetProperty, this, WeakTargetProperty)
                 .WBind(TargetedPopup.BorderColorProperty, this, DetailBorderColorProperty)
                 .WBind(TargetedPopup.BackgroundColorProperty, this, DetailBackgroundColorProperty)
                 .WBind(TargetedPopup.BorderWidthProperty, this, PopupBorderWidthProperty)
                 .WBind(TargetedPopup.CornerRadiusProperty, this, DetailCornerRadiusProperty)
-                .WBind(TargetedPopup.MinHeightProperty, this, PopupMinHeightProperty)
-                .WBind(TargetedPopup.MinWidthProperty, this, PopupMinWidthProperty)
+                .WBind(MinHeightProperty, this, PopupMinHeightProperty)
+                .WBind(MinWidthProperty, this, PopupMinWidthProperty)
                 .WBind(TargetedPopup.PageOverlayBrushProperty, this, PageOverlayBrushProperty)
                 .WBind(TargetedPopup.IsPageOverlayHitTestVisibleProperty, this, IsPageOverlayHitTestVisibleProperty)
                 .WBind(TargetedPopup.PopOnPageOverlayTouchProperty, this, PopOnPageOverlayTouchProperty)
                 .WBind(TargetedPopup.HorizontalAlignmentProperty, this, PopupHorizontalAlignmentProperty)
                 .WBind(TargetedPopup.VerticalAlignmentProperty, this, PopupVerticalAlignmentProperty)
                 .AddPoppedHandler(OnTargetedPopupPopped)
-                ;
+            ;
 
-            PageOverlayBrush = Colors.Black.WithAlpha(0.01).ToBrush();
+        PageOverlayBrush = Colors.Black.WithAlpha(0.01).ToBrush();
             
 
-        }
-
-
     }
+
+
 }

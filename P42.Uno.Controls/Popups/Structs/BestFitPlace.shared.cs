@@ -1,8 +1,7 @@
-﻿namespace P42.Uno.Controls
+﻿namespace P42.Uno.Controls;
+
+internal struct BestFitPlace
 {
-    internal struct BestFitPlace
-    {
-        public double Space;
-        public PointerDirection Direction;
-    }
+    public double Space;
+    public PointerDirection Direction;
 }

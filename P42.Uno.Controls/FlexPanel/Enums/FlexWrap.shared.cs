@@ -14,27 +14,26 @@
 
 using System.ComponentModel;
 
-namespace P42.Uno.Controls
+namespace P42.Uno.Controls;
+
+/// <summary>
+/// Values for <see cref="P:XamBc3arin.Flex.FlexItem.Wrap" />.
+/// </summary>
+[TypeConverter(typeof(FlexWrapTypeConverter))]
+public enum FlexWrap
 {
     /// <summary>
-    /// Values for <see cref="P:XamBc3arin.Flex.FlexItem.Wrap" />.
+    /// Whether items are laid out in a single line.
     /// </summary>
-    [TypeConverter(typeof(FlexWrapTypeConverter))]
-    public enum FlexWrap
-    {
-        /// <summary>
-        /// Whether items are laid out in a single line.
-        /// </summary>
-        NoWrap = 0,
+    NoWrap = 0,
 
-        /// <summary>
-        /// Whether items are laid out in multiple lines if needed.
-        /// </summary>
-        Wrap = 1,
+    /// <summary>
+    /// Whether items are laid out in multiple lines if needed.
+    /// </summary>
+    Wrap = 1,
 
-        /// <summary>
-        /// Like Wrap but in reverse order.
-        /// </summary>
-        Reverse = 2,
-    }
+    /// <summary>
+    /// Like Wrap but in reverse order.
+    /// </summary>
+    Reverse = 2,
 }

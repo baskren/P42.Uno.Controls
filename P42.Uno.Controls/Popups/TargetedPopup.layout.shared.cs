@@ -10,10 +10,11 @@ namespace P42.Uno.Controls;
 public partial class TargetedPopup : ContentControl
 {
     #region Defaults
-    const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Center;
-    const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Center;
-    const double DefaultBorderThickness = 1;
-    const double DefaultCornerRadius = 4;
+
+    private const HorizontalAlignment DefaultHorizontalAlignment = HorizontalAlignment.Center;
+    private const VerticalAlignment DefaultVerticalAlignment = VerticalAlignment.Center;
+    private const double DefaultBorderThickness = 1;
+    private const double DefaultCornerRadius = 4;
     #endregion
 
     #region Visual Elements
@@ -22,14 +23,14 @@ public partial class TargetedPopup : ContentControl
     internal readonly Rectangle PageOverlay = new();
     #endregion
 
-    void Build()
+    private void Build()
     {
         this.Foreground(SystemColors.BaseHigh);
         
         PageOverlay
             .Stretch()
-            .WBind(Rectangle.FillProperty, this, PageOverlayBrushProperty)
-            .WBind(Rectangle.IsHitTestVisibleProperty, this, IsPageOverlayHitTestVisibleProperty)
+            .WBind(Shape.FillProperty, this, PageOverlayBrushProperty)
+            .WBind(IsHitTestVisibleProperty, this, IsPageOverlayHitTestVisibleProperty)
             .WBindVisible( this, PageOverlayVisibleProperty)
             .AddTappedHandler(OnPageOverlayTapped);
         
@@ -104,7 +105,7 @@ public partial class TargetedPopup : ContentControl
         }
     }
 
-    async void OnPageOverlayTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+    private async void OnPageOverlayTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
     {
         if (PopOnPageOverlayTouch)
         {

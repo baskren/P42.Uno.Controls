@@ -24,7 +24,7 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
         nameof(Stretch),
         typeof(Stretch),
         typeof(EmbeddedSvgImage),
-        new PropertyMetadata(Microsoft.UI.Xaml.Media.Stretch.Uniform)
+        new PropertyMetadata(Stretch.Uniform)
     );
     public Stretch Stretch
     {
@@ -85,11 +85,11 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
             return;
         }
             
-        assembly = assembly ?? P42.Utils.Uno.EmbeddedResourceExtensions.FindAssemblyForResourceId(resourceId);
+        assembly ??= Utils.Uno.EmbeddedResourceExtensions.FindAssemblyForResourceId(resourceId);
         if (assembly == null)
             return;
 
-        using var stream = P42.Utils.Uno.EmbeddedResourceExtensions.FindStreamForResourceId(resourceId, assembly);
+        using var stream = Utils.Uno.EmbeddedResourceExtensions.FindStreamForResourceId(resourceId, assembly);
         if (stream is null)
         {
             var resources = assembly.GetManifestResourceNames();
@@ -167,11 +167,11 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
     
     private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
     {
-        if (e?.Surface?.Canvas is not SKCanvas workingCanvas)
+        if (e?.Surface?.Canvas is not { } workingCanvas)
             return;
 
         workingCanvas.Clear();
-        if (_skSvg?.Picture is not SKPicture picture)
+        if (_skSvg?.Picture is not { } picture)
             return;
         workingCanvas.Save();
 
@@ -232,7 +232,7 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
     
     protected override Size MeasureOverride(Size availableSize)
     {
-        if (_skSvg?.Picture is not SKPicture)
+        if (_skSvg?.Picture is not not null)
             return new Size(MinWidth, MinHeight);
         
         

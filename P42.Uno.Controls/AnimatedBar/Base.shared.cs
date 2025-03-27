@@ -8,78 +8,78 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml;
 using P42.Uno.Markup;
 
-namespace P42.Uno.Controls.AnimateBar
+namespace P42.Uno.Controls.AnimateBar;
+
+[Microsoft.UI.Xaml.Data.Bindable]
+public partial class Base : Grid, IDisposable
 {
-    [Microsoft.UI.Xaml.Data.Bindable]
-    public partial class Base : Grid, IDisposable
+    private static Brush DefaultBrush = SystemColors.BaseHigh.ToBrush();
+
+    #region Properties
+
+    #region Brush Property
+    public static readonly DependencyProperty ForegroundProperty = DependencyProperty.Register(
+        nameof(Foreground),
+        typeof(Brush),
+        typeof(Base),
+        new PropertyMetadata(DefaultBrush, OnBrushPropertyChanged)
+    );
+
+    private static void OnBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        static Brush DefaultBrush = SystemColors.BaseHigh.ToBrush();
-
-        #region Properties
-
-        #region Brush Property
-        public static readonly DependencyProperty ForegroundProperty = DependencyProperty.Register(
-            nameof(Foreground),
-            typeof(Brush),
-            typeof(Base),
-            new PropertyMetadata(DefaultBrush, OnBrushPropertyChanged)
-        );
-
-        private static void OnBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        if (d is Base a)
         {
-            if (d is Base a)
-            {
-                if (e.NewValue is Brush brush)
-                    a.DynamicRect.Fill =  brush;
-                else
-                    a.DynamicRect.Fill = null;
-            }
+            if (e.NewValue is Brush brush)
+                a.DynamicRect.Fill =  brush;
+            else
+                a.DynamicRect.Fill = null;
         }
+    }
 
 #if ANDROID
         public new Brush Foreground
 #else
-        public Brush Foreground
+    public Brush Foreground
 #endif
-        {
-            get => (Brush)GetValue(ForegroundProperty);
-            set => SetValue(ForegroundProperty, value);
-        }
-#endregion Brush Property
+    {
+        get => (Brush)GetValue(ForegroundProperty);
+        set => SetValue(ForegroundProperty, value);
+    }
+    #endregion Brush Property
 
-#endregion
-
-
-        #region Fields
-        protected Microsoft.UI.Xaml.Shapes.Rectangle DynamicRect = new Microsoft.UI.Xaml.Shapes.Rectangle
-        {
-            StrokeThickness = 0,
-        };
-        /*
-        protected Microsoft.UI.Xaml.Shapes.Rectangle StaticRect = new Microsoft.UI.Xaml.Shapes.Rectangle
-        {
-            StrokeThickness = 0,
-        };
-        */
-
-        protected int dir = 1;
-        protected TimeSpan ActionTime = TimeSpan.FromSeconds(0.5);
-        protected TimeSpan LullTime = TimeSpan.FromSeconds(1);
-        protected bool looping;
-        protected bool _disposed;
-        protected bool _failed;
-        #endregion
+    #endregion
 
 
-        #region Construction / Disposal
-        public Base()
-        {
-            DynamicRect.Fill = DefaultBrush; // SystemColors.BaseHigh.ToBrush();
-            Children.Add(DynamicRect);
+    #region Fields
+    protected Microsoft.UI.Xaml.Shapes.Rectangle DynamicRect = new()
+    {
+        StrokeThickness = 0,
+    };
+    /*
+    protected Microsoft.UI.Xaml.Shapes.Rectangle StaticRect = new Microsoft.UI.Xaml.Shapes.Rectangle
+    {
+        StrokeThickness = 0,
+    };
+    */
 
-            Loaded += Base_Loaded;
-            Background = new SolidColorBrush(Color.FromArgb(1, 1, 1, 1));
-        }
+    protected int dir = 1;
+    protected TimeSpan ActionTime = TimeSpan.FromSeconds(0.5);
+    protected TimeSpan LullTime = TimeSpan.FromSeconds(1);
+    protected bool looping;
+    protected bool _disposed;
+    protected bool _failed;
+    #endregion
+
+
+    #region Construction / Disposal
+    public Base()
+    {
+        DynamicRect.Fill = DefaultBrush; // SystemColors.BaseHigh.ToBrush();
+        Children.Add(DynamicRect);
+
+        Loaded += Base_Loaded;
+        Background = new SolidColorBrush(Color.FromArgb(1, 1, 1, 1));
+    }
 
 
 #if ANDROID
@@ -112,27 +112,26 @@ namespace P42.Uno.Controls.AnimateBar
 
 #endif
 
-        #endregion
+    #endregion
 
 
-        #region vitual methods
-        private void Base_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (looping)
-                return;
+    #region vitual methods
+    private void Base_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (looping)
+            return;
 
-            looping = true;
-            Loop(dir).Forget();
-        }
+        looping = true;
+        Loop(dir).Forget();
+    }
 
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        protected virtual async Task Loop(int dir)
+    protected virtual async Task Loop(int dir)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
-        {
-            throw new NotImplementedException();
-        }
-        #endregion
-
+    {
+        throw new NotImplementedException();
     }
+    #endregion
+
 }

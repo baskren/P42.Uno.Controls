@@ -1,7 +1,6 @@
-namespace P42.Uno.Controls
+namespace P42.Uno.Controls;
+
+internal interface INativeHapticPlayer
 {
-    interface INativeHapticPlayer
-    {
-        void Play(Effect effect, EffectMode mode);
-    }
+    void Play(Effect effect, EffectMode mode);
 }

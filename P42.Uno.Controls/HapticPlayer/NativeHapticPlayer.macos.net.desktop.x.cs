@@ -1,10 +1,9 @@
-namespace P42.Uno.Controls
+namespace P42.Uno.Controls;
+
+internal class NativeHapticPlayer : INativeHapticPlayer
 {
-    class NativeHapticPlayer : INativeHapticPlayer
+    public void Play(Effect effect, EffectMode mode)
     {
-        public void Play(Effect effect, EffectMode mode)
-        {
             
-        }
     }
 }

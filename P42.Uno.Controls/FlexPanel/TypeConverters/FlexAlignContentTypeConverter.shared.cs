@@ -16,55 +16,54 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace P42.Uno.Controls
+namespace P42.Uno.Controls;
+
+/// <summary>
+/// String to FlexAlignContent TypeConverter
+/// </summary>
+internal class FlexAlignContentTypeConverter : TypeConverter
 {
-        /// <summary>
-    /// String to FlexAlignContent TypeConverter
-    /// </summary>
-    internal class FlexAlignContentTypeConverter : TypeConverter
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
     {
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        if (sourceType == typeof(string))
         {
-            if (sourceType == typeof(string))
-            {
-                return true;
-            }
-
-            return base.CanConvertFrom(context, sourceType);
+            return true;
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        return base.CanConvertFrom(context, sourceType);
+    }
+
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+    {
+        if (value is string stringValue)
         {
-            if (value is string stringValue)
+            if (Enum.TryParse(stringValue, true, out FlexAlignContent aligncontent))
             {
-                if (Enum.TryParse(stringValue, true, out FlexAlignContent aligncontent))
-                {
-                    return aligncontent;
-                }
-
-                if (stringValue.Equals("flex-start", StringComparison.OrdinalIgnoreCase))
-                {
-                    return FlexAlignContent.Start;
-                }
-
-                if (stringValue.Equals("flex-end", StringComparison.OrdinalIgnoreCase))
-                {
-                    return FlexAlignContent.End;
-                }
-
-                if (stringValue.Equals("space-between", StringComparison.OrdinalIgnoreCase))
-                {
-                    return FlexAlignContent.SpaceBetween;
-                }
-
-                if (stringValue.Equals("space-around", StringComparison.OrdinalIgnoreCase))
-                {
-                    return FlexAlignContent.SpaceAround;
-                }
+                return aligncontent;
             }
 
-            ThrowHelper.ThrowInvalidOperationException(string.Format("Cannot convert \"{0}\" into {1}", value, typeof(FlexAlignContent)));
-            return null;
+            if (stringValue.Equals("flex-start", StringComparison.OrdinalIgnoreCase))
+            {
+                return FlexAlignContent.Start;
+            }
+
+            if (stringValue.Equals("flex-end", StringComparison.OrdinalIgnoreCase))
+            {
+                return FlexAlignContent.End;
+            }
+
+            if (stringValue.Equals("space-between", StringComparison.OrdinalIgnoreCase))
+            {
+                return FlexAlignContent.SpaceBetween;
+            }
+
+            if (stringValue.Equals("space-around", StringComparison.OrdinalIgnoreCase))
+            {
+                return FlexAlignContent.SpaceAround;
+            }
         }
+
+        ThrowHelper.ThrowInvalidOperationException(string.Format("Cannot convert \"{0}\" into {1}", value, typeof(FlexAlignContent)));
+        return null;
     }
 }

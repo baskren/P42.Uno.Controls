@@ -1,7 +1,6 @@
-﻿namespace P42.Uno.Controls
+﻿namespace P42.Uno.Controls;
+
+public class DismissPointerPressedEventArgs
 {
-    public class DismissPointerPressedEventArgs
-    {
-        public bool CancelDismiss { get; set; }
-    }
+    public bool CancelDismiss { get; set; }
 }

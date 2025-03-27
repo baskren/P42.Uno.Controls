@@ -1,10 +1,9 @@
-﻿namespace P42.Uno.Controls
+﻿namespace P42.Uno.Controls;
+
+public enum PanePlacement
 {
-    public enum PanePlacement
-    {
-        Left,
-        Right,
-        Top,
-        Bottom
-    }
+    Left,
+    Right,
+    Top,
+    Bottom
 }

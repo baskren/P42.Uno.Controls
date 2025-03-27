@@ -3,381 +3,344 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 
-namespace P42.Uno.Controls
+namespace P42.Uno.Controls;
+
+internal class CollectionSelectionTracker<T> : INotifyCollectionChanged 
 {
-    internal class CollectionSelectionTracker<T> : INotifyCollectionChanged 
+    #region Properties
+
+    private SelectionMode _selectionMode = SelectionMode.None;
+    public SelectionMode SelectionMode
     {
-        #region Properties
-        
-        SelectionMode _selectionMode = SelectionMode.None;
-        public SelectionMode SelectionMode
+        get => _selectionMode;
+        set
         {
-            get => _selectionMode;
-            set
-            {
-                if (_selectionMode == value)
-                    return;
+            if (_selectionMode == value)
+                return;
 
-                _selectionMode = value;
-                SelectIndex(SelectedIndex);
-            }
+            _selectionMode = value;
+            SelectIndex(SelectedIndex);
         }
+    }
 
-        public Func<T> SelectedItemWhenNoneSelected { get; set; }
+    public Func<T> SelectedItemWhenNoneSelected { get; set; }
 
-        public int SelectedIndex
+    public int SelectedIndex
+    {
+        get
         {
-            get
-            {
-                if (_selectedIndexes.Any())
-                    return _selectedIndexes.Last();
-                return -1;
-            }
+            if (_selectedIndexes.Any())
+                return _selectedIndexes.Last();
+            return -1;
         }
+    }
 
-        public T SelectedItem
+    public T SelectedItem
+    {
+        get
         {
-            get
+            if (Collection is { } collection)
             {
-                if (Collection is IList<T> collection)
-                {
-                    if (SelectedIndex > -1 && collection.Count > SelectedIndex)
-                        return collection[SelectedIndex];
-                }
-
-                return SelectedItemWhenNoneSelected is null 
-                    ? default 
-                    : SelectedItemWhenNoneSelected();
+                if (SelectedIndex > -1 && collection.Count > SelectedIndex)
+                    return collection[SelectedIndex];
             }
+
+            return SelectedItemWhenNoneSelected is null 
+                ? default 
+                : SelectedItemWhenNoneSelected();
         }
+    }
 
-        private readonly List<int> _selectedIndexes = [];
-        public List<int> SelectedIndexes
-        {
-            get => _selectedIndexes;
-            set
-            {
-                switch (SelectionMode)
-                {
-                    case SelectionMode.Radio:
-                        var index = value?.Any() ?? false
-                            ? value.Last()
-                            : -1;
-                        UpdateToSelectedRadio(index);
-                        break;
-                    case SelectionMode.Multi:
-                        SetSelectedIndexesMulti(value);
-                        break;
-                }
-            }
-        }
-
-        public List<T> SelectedItems
-        {
-            get
-            {
-                var result = new List<T>();
-                for (var i = 0; i < Collection.Count; i++)
-                {
-                    if (_selectedIndexes.Contains(i))
-                        result.Add(Collection[i]);
-                }
-                return result;
-            }
-            set
-            {
-                switch (SelectionMode)
-                {
-                    case SelectionMode.Radio:
-                        var index = -1;
-                        if (Collection is not null && value is not null && value.Count != 0)
-                            index = Collection.IndexOf(value.First());
-                        UpdateToSelectedRadio(index);
-                        break;
-                    case SelectionMode.Multi:
-                        SetSelectedItemsMulti(value);
-                        break;
-                }
-            }
-        }
-
-        WeakReference<IList<T>> _weakCollectionRef;
-        public IList<T> Collection
-        {
-            get
-            {
-                if (_weakCollectionRef != null && _weakCollectionRef.TryGetTarget(out var target))
-                    return target;
-                target = new List<T>();
-                _weakCollectionRef = new WeakReference<IList<T>>(target);
-                return target;
-            }
-            set
-            {
-                var selections = SelectedItems.ToList();
-                SelectedIndexes.Clear();
-                value ??= new List<T>();
-                _weakCollectionRef = new WeakReference<IList<T>>(value);
-                foreach (var selection in selections)
-                {
-                    if (Collection.IndexOf(selection) is int index and > -1)
-                        SelectedIndexes.Add(index);
-                }
-            }
-        } 
-
-        public bool AllowUnselectAll = false;
-
-        #endregion
-
-
-        #region Events
-        public event EventHandler<CollectionSelectionTrackerSelectionChangedArguments<T>> SelectionChanged;
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-        #endregion
-
-
-        #region Constructor
-        public CollectionSelectionTracker(IList<T> collection = null)
-        {
-            if (collection != null)
-                Collection = collection;
-        }
-        #endregion
-
-
-        #region Methods
-        public void SelectIndex(int index)
+    private readonly List<int> _selectedIndexes = [];
+    public List<int> SelectedIndexes
+    {
+        get => _selectedIndexes;
+        set
         {
             switch (SelectionMode)
             {
-                case SelectionMode.None:
-                    UpdateToSelectNone();
-                    break;
                 case SelectionMode.Radio:
+                    var index = value?.Any() ?? false
+                        ? value.Last()
+                        : -1;
                     UpdateToSelectedRadio(index);
                     break;
                 case SelectionMode.Multi:
-                    UpdateToSelectedMulti(index);
+                    SetSelectedIndexesMulti(value);
                     break;
             }
         }
+    }
 
-        public void SelectItem(T item)
-            => SelectIndex(Collection.IndexOf(item));
+    public List<T> SelectedItems
+    {
+        get
+        {
+            var result = new List<T>();
+            for (var i = 0; i < Collection.Count; i++)
+            {
+                if (_selectedIndexes.Contains(i))
+                    result.Add(Collection[i]);
+            }
+            return result;
+        }
+        set
+        {
+            switch (SelectionMode)
+            {
+                case SelectionMode.Radio:
+                    var index = -1;
+                    if (Collection is not null && value is not null && value.Count != 0)
+                        index = Collection.IndexOf(value.First());
+                    UpdateToSelectedRadio(index);
+                    break;
+                case SelectionMode.Multi:
+                    SetSelectedItemsMulti(value);
+                    break;
+            }
+        }
+    }
+
+    private WeakReference<IList<T>> _weakCollectionRef;
+    public IList<T> Collection
+    {
+        get
+        {
+            if (_weakCollectionRef != null && _weakCollectionRef.TryGetTarget(out var target))
+                return target;
+            target = new List<T>();
+            _weakCollectionRef = new WeakReference<IList<T>>(target);
+            return target;
+        }
+        set
+        {
+            var selections = SelectedItems.ToList();
+            SelectedIndexes.Clear();
+            value ??= new List<T>();
+            _weakCollectionRef = new WeakReference<IList<T>>(value);
+            foreach (var selection in selections)
+            {
+                if (Collection.IndexOf(selection) is int index and > -1)
+                    SelectedIndexes.Add(index);
+            }
+        }
+    } 
+
+    public bool AllowUnselectAll = false;
+
+    #endregion
+
+
+    #region Events
+    public event EventHandler<CollectionSelectionTrackerSelectionChangedArguments<T>> SelectionChanged;
+    public event NotifyCollectionChangedEventHandler CollectionChanged;
+    #endregion
+
+
+    #region Constructor
+    public CollectionSelectionTracker(IList<T> collection = null)
+    {
+        if (collection != null)
+            Collection = collection;
+    }
+    #endregion
+
+
+    #region Methods
+    public void SelectIndex(int index)
+    {
+        switch (SelectionMode)
+        {
+            case SelectionMode.None:
+                UpdateToSelectNone();
+                break;
+            case SelectionMode.Radio:
+                UpdateToSelectedRadio(index);
+                break;
+            case SelectionMode.Multi:
+                UpdateToSelectedMulti(index);
+                break;
+        }
+    }
+
+    public void SelectItem(T item)
+        => SelectIndex(Collection.IndexOf(item));
         
 
-        public void SelectIndexes(IEnumerable<int> indexes)
-        {
-            foreach (var index in indexes)
-                SelectIndex(index);
-        }
+    public void SelectIndexes(IEnumerable<int> indexes)
+    {
+        foreach (var index in indexes)
+            SelectIndex(index);
+    }
         
 
-        public void SelectItems(IEnumerable<T> items)
+    public void SelectItems(IEnumerable<T> items)
+    {
+        foreach (var item in items)
+            SelectIndex(Collection.IndexOf(item));
+    }
+
+    public void UnselectIndex(int index)
+    {
+        if (index < 0 || index >= (Collection?.Count ?? 0))
+            return;
+
+        if (AllowUnselectAll || (_selectedIndexes?.Count ?? 0) > 1)
         {
-            foreach (var item in items)
-                SelectIndex(Collection.IndexOf(item));
+            if (_selectedIndexes.Contains(index))
+            {
+                var oldSelectedIndex = SelectedIndex;
+                var oldSelectedItem = SelectedItem;
+                var i = _selectedIndexes.IndexOf(index);
+                _selectedIndexes.Remove(index);
+
+                if (oldSelectedIndex != SelectedIndex)
+                    SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, new List<int>(index), i));
+            }
         }
+    }
 
-        public void UnselectIndex(int index)
+    public void UnselectItem(T item)
+        => UnselectIndex(Collection.IndexOf(item));
+
+    public void UnselectIndexes(IEnumerable<int> indexes)
+    {
+        var groups = new Dictionary<int, List<int>>();
+        var oldSelectedIndex = SelectedIndex;
+        var oldSelectedItem = SelectedItem;
+
+
+        for (var i = 0; i < _selectedIndexes.Count; i++)
         {
-            if (index < 0 || index >= (Collection?.Count ?? 0))
-                return;
-
             if (AllowUnselectAll || (_selectedIndexes?.Count ?? 0) > 1)
             {
-                if (_selectedIndexes.Contains(index))
+                if (indexes.Contains(_selectedIndexes[i]))
                 {
-                    var oldSelectedIndex = SelectedIndex;
-                    var oldSelectedItem = SelectedItem;
-                    var i = _selectedIndexes.IndexOf(index);
-                    _selectedIndexes.Remove(index);
-
-                    if (oldSelectedIndex != SelectedIndex)
-                        SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, new List<int>(index), i));
+                    if (!groups.Any() || groups.Last().Key + groups.Last().Value.Count < i)
+                        groups.Add(i, []);
+                    groups.Last().Value.Add(_selectedIndexes[i]);
+                    _selectedIndexes.Remove(_selectedIndexes[i]);
                 }
             }
         }
 
-        public void UnselectItem(T item)
-            => UnselectIndex(Collection.IndexOf(item));
+        if (oldSelectedIndex != SelectedIndex)
+            SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
 
-        public void UnselectIndexes(IEnumerable<int> indexes)
+        foreach (var kvp in groups)
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, kvp.Value, kvp.Key));
+
+    }
+
+    public void UnselectItems(IEnumerable<T> items)
+    {
+        var indexes = new List<int>();
+        foreach (var item in items)
+            indexes.Add(Collection.IndexOf(item));
+        UnselectIndexes(indexes);
+    }
+
+    public void Clear()
+    {
+        var oldSelectedIndex = SelectedIndex;
+        var oldSelectedItem = SelectedItem;
+        var oldSelectedIndexes = _selectedIndexes.ToArray().ToList();
+
+        _selectedIndexes.Clear();
+        if (SelectedIndex != -1)
+            SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
+        if (oldSelectedIndexes.Any())
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, oldSelectedIndex, 0));
+    }
+    #endregion
+
+
+    #region Support Methods
+
+    private void SetSelectedItemsMulti(IList<T> newSelectedItems)
+    {
+        if (Collection is { } collection)
         {
-            var groups = new Dictionary<int, List<int>>();
+            var newSelectedIndexes = new List<int>();
+            if (newSelectedItems?.Any() ?? false)
+            {
+                for (var i = newSelectedItems.Count - 1; i >= 0; i--)
+                {
+                    if (collection.IndexOf(newSelectedItems[i]) is int index && index > -1)
+                        newSelectedIndexes.Add(index);
+                }
+            }
+
+            SetSelectedIndexesMulti(newSelectedIndexes);
+        }
+    }
+
+    private void SetSelectedIndexesMulti(IList<int> newSelectedIndexes)
+    {
+        if (Collection is { } collection)
+        {
+            var newSelectedIndex = -1;
+            var newSelectedIndexSet = false;
+            if (newSelectedIndexes?.Any() ?? false)
+            {
+                for (var i = newSelectedIndexes.Count-1; i >= 0; i--)
+                {
+                    if (newSelectedIndexes[i] >= collection.Count)
+                    {
+                        newSelectedIndexes.Remove(newSelectedIndexes[i]);
+                    }
+                    else if (!newSelectedIndexSet)
+                    {
+                        newSelectedIndex = newSelectedIndexes[i];
+                        newSelectedIndexSet = true;
+                    }
+                }
+            }
+
+            if (newSelectedIndex >= collection.Count)
+                return;
+
+            if (newSelectedIndex < 0)
+            {
+                Clear();
+                return;
+            }
+
             var oldSelectedIndex = SelectedIndex;
             var oldSelectedItem = SelectedItem;
 
-
-            for (int i = 0; i < _selectedIndexes.Count; i++)
+            var changed = _selectedIndexes.Count != newSelectedIndexes.Count;
+            if (!changed)
             {
-                if (AllowUnselectAll || (_selectedIndexes?.Count ?? 0) > 1)
+                for (var i = 0; i < _selectedIndexes.Count; i++)
                 {
-                    if (indexes.Contains(_selectedIndexes[i]))
+                    if (_selectedIndexes[i] != newSelectedIndexes[i])
                     {
-                        if (!groups.Any() || groups.Last().Key + groups.Last().Value.Count < i)
-                            groups.Add(i, new List<int>());
-                        groups.Last().Value.Add(_selectedIndexes[i]);
-                        _selectedIndexes.Remove(_selectedIndexes[i]);
+                        changed = true;
+                        break;
                     }
                 }
             }
 
-            if (oldSelectedIndex != SelectedIndex)
-                SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
-
-            foreach (var kvp in groups)
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, kvp.Value, kvp.Key));
-
-        }
-
-        public void UnselectItems(IEnumerable<T> items)
-        {
-            var indexes = new List<int>();
-            foreach (var item in items)
-                indexes.Add(Collection.IndexOf(item));
-            UnselectIndexes(indexes);
-        }
-
-        public void Clear()
-        {
-            var oldSelectedIndex = SelectedIndex;
-            var oldSelectedItem = SelectedItem;
-            var oldSelectedIndexes = _selectedIndexes.ToArray().ToList();
-
-            _selectedIndexes.Clear();
-            if (SelectedIndex != -1)
-                SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
-            if (oldSelectedIndexes.Any())
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, oldSelectedIndex, 0));
-        }
-        #endregion
-
-
-        #region Support Methods
-        void SetSelectedItemsMulti(IList<T> newSelectedItems)
-        {
-            if (Collection is IList<T> collection)
+            if (changed)
             {
-                var newSelectedIndexes = new List<int>();
-                if (newSelectedItems?.Any() ?? false)
-                {
-                    for (int i = newSelectedItems.Count - 1; i >= 0; i--)
-                    {
-                        if (collection.IndexOf(newSelectedItems[i]) is int index && index > -1)
-                            newSelectedIndexes.Add(index);
-                    }
-                }
-
-                SetSelectedIndexesMulti(newSelectedIndexes);
-            }
-        }
-
-        void SetSelectedIndexesMulti(IList<int> newSelectedIndexes)
-        {
-            if (Collection is IList<T> collection)
-            {
-                var newSelectedIndex = -1;
-                var newSelectedIndexSet = false;
-                if (newSelectedIndexes?.Any() ?? false)
-                {
-                    for (int i = newSelectedIndexes.Count-1; i >= 0; i--)
-                    {
-                        if (newSelectedIndexes[i] >= collection.Count)
-                        {
-                            newSelectedIndexes.Remove(newSelectedIndexes[i]);
-                        }
-                        else if (!newSelectedIndexSet)
-                        {
-                            newSelectedIndex = newSelectedIndexes[i];
-                            newSelectedIndexSet = true;
-                        }
-                    }
-                }
-
-                if (newSelectedIndex >= collection.Count)
-                    return;
-
-                if (newSelectedIndex < 0)
-                {
-                    Clear();
-                    return;
-                }
-
-                var oldSelectedIndex = SelectedIndex;
-                var oldSelectedItem = SelectedItem;
-
-                var changed = _selectedIndexes.Count != newSelectedIndexes.Count;
-                if (!changed)
-                {
-                    for (int i = 0; i < _selectedIndexes.Count; i++)
-                    {
-                        if (_selectedIndexes[i] != newSelectedIndexes[i])
-                        {
-                            changed = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (changed)
-                {
-                    _selectedIndexes.Clear();
-                    _selectedIndexes.AddRange(newSelectedIndexes);
-                    if (SelectedIndex != oldSelectedIndex)
-                        SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newSelectedIndexes, 0));
-                }
-            }
-        }
-
-        void UpdateToSelectedMulti(int newSelectedIndex)
-        {
-            if (Collection is IList<T> collection)
-            {
-                if (newSelectedIndex >= collection.Count)
-                    return;
-
-                if (newSelectedIndex == SelectedIndex || newSelectedIndex >= (Collection?.Count ?? 0))
-                    return;
-
-                if (newSelectedIndex < 0)
-                {
-                    Clear();
-                    return;
-                }
-
-                var oldSelectedIndex = SelectedIndex;
-                var oldSelectedItem = SelectedItem;
-
-                var movedFrom = -1;
-                if (_selectedIndexes.Contains(newSelectedIndex))
-                {
-                    var i = _selectedIndexes.IndexOf(newSelectedIndex);
-                    movedFrom = i;
-                    _selectedIndexes.Remove(newSelectedIndex);
-                }
-                _selectedIndexes.Add(newSelectedIndex);
-
+                _selectedIndexes.Clear();
+                _selectedIndexes.AddRange(newSelectedIndexes);
                 if (SelectedIndex != oldSelectedIndex)
                     SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
-                if (movedFrom != -1)
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, SelectedIndex, collection.Count - 1, movedFrom));
-                else
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, SelectedIndex, collection.Count - 1));
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newSelectedIndexes, 0));
             }
         }
+    }
 
-        void UpdateToSelectedRadio(int newSelectedIndex)
+    private void UpdateToSelectedMulti(int newSelectedIndex)
+    {
+        if (Collection is { } collection)
         {
-            if (Collection is IList<T> collection)
-            {
-                if (newSelectedIndex >= collection.Count)
-                    return;
-            }
+            if (newSelectedIndex >= collection.Count)
+                return;
 
             if (newSelectedIndex == SelectedIndex || newSelectedIndex >= (Collection?.Count ?? 0))
                 return;
@@ -391,69 +354,106 @@ namespace P42.Uno.Controls
             var oldSelectedIndex = SelectedIndex;
             var oldSelectedItem = SelectedItem;
 
-            var removedBefore = new List<int>();
-            var removedAfter = new List<int>();
-            var removedBeforeIndex = -1;
-            var removedAfterIndex = -1;
-
-            foreach (var index in _selectedIndexes.ToArray())
+            var movedFrom = -1;
+            if (_selectedIndexes.Contains(newSelectedIndex))
             {
-                if (index != newSelectedIndex)
-                {
-                    if (index < newSelectedIndex)
-                    {
-                        removedBefore.Add(index);
-                        if (removedBeforeIndex == -1)
-                            removedBeforeIndex = index;
-                    }
-                    else
-                    {
-                        removedAfter.Add(index);
-                        if (removedAfterIndex == -1)
-                            removedAfterIndex = index;
-                    }
-                    _selectedIndexes.Remove(index);
-                }
+                var i = _selectedIndexes.IndexOf(newSelectedIndex);
+                movedFrom = i;
+                _selectedIndexes.Remove(newSelectedIndex);
             }
-
-            var added = new List<int>();
-            added.Add(newSelectedIndex);
             _selectedIndexes.Add(newSelectedIndex);
 
             if (SelectedIndex != oldSelectedIndex)
                 SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
-            if (removedAfter.Any())
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedAfter, removedAfterIndex));
-            if (removedBefore.Any())
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedBefore, removedBeforeIndex));
-            if (added.Any())
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added));
-
+            if (movedFrom != -1)
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, SelectedIndex, collection.Count - 1, movedFrom));
+            else
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, SelectedIndex, collection.Count - 1));
         }
-
-        void UpdateToSelectNone()
-            => Clear();
-
-        #endregion
     }
 
-
-    public class CollectionSelectionTrackerSelectionChangedArguments<T> : EventArgs
+    private void UpdateToSelectedRadio(int newSelectedIndex)
     {
-        public int OldIndex { get; private set; }
-
-        public T OldItem { get; private set; }
-
-        public int NewIndex { get; private set; }
-
-        public T NewItem { get; private set; }
-
-        public CollectionSelectionTrackerSelectionChangedArguments(T oldItem, int oldIndex, T newItem, int newIndex)
+        if (Collection is { } collection)
         {
-            OldItem = oldItem;
-            OldIndex = oldIndex;
-            NewItem = newItem;
-            NewIndex = newIndex;
+            if (newSelectedIndex >= collection.Count)
+                return;
         }
+
+        if (newSelectedIndex == SelectedIndex || newSelectedIndex >= (Collection?.Count ?? 0))
+            return;
+
+        if (newSelectedIndex < 0)
+        {
+            Clear();
+            return;
+        }
+
+        var oldSelectedIndex = SelectedIndex;
+        var oldSelectedItem = SelectedItem;
+
+        var removedBefore = new List<int>();
+        var removedAfter = new List<int>();
+        var removedBeforeIndex = -1;
+        var removedAfterIndex = -1;
+
+        foreach (var index in _selectedIndexes.ToArray())
+        {
+            if (index != newSelectedIndex)
+            {
+                if (index < newSelectedIndex)
+                {
+                    removedBefore.Add(index);
+                    if (removedBeforeIndex == -1)
+                        removedBeforeIndex = index;
+                }
+                else
+                {
+                    removedAfter.Add(index);
+                    if (removedAfterIndex == -1)
+                        removedAfterIndex = index;
+                }
+                _selectedIndexes.Remove(index);
+            }
+        }
+
+        var added = new List<int>();
+        added.Add(newSelectedIndex);
+        _selectedIndexes.Add(newSelectedIndex);
+
+        if (SelectedIndex != oldSelectedIndex)
+            SelectionChanged?.Invoke(this, new CollectionSelectionTrackerSelectionChangedArguments<T>(oldSelectedItem, oldSelectedIndex, SelectedItem, SelectedIndex));
+        if (removedAfter.Any())
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedAfter, removedAfterIndex));
+        if (removedBefore.Any())
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedBefore, removedBeforeIndex));
+        if (added.Any())
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added));
+
+    }
+
+    private void UpdateToSelectNone()
+        => Clear();
+
+    #endregion
+}
+
+
+public class CollectionSelectionTrackerSelectionChangedArguments<T> : EventArgs
+{
+    public int OldIndex { get; private set; }
+
+    public T OldItem { get; private set; }
+
+    public int NewIndex { get; private set; }
+
+    public T NewItem { get; private set; }
+
+    public CollectionSelectionTrackerSelectionChangedArguments(T oldItem, int oldIndex, T newItem, int newIndex)
+    {
+        OldItem = oldItem;
+        OldIndex = oldIndex;
+        NewItem = newItem;
+        NewIndex = newIndex;
     }
 }

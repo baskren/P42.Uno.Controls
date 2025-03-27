@@ -24,7 +24,7 @@ public partial class TargetedPopup : ITargetedPopup
     #region Override Properties
 
     #region Opacity Property
-    public static readonly new DependencyProperty OpacityProperty = DependencyProperty.Register(
+    public new static readonly DependencyProperty OpacityProperty = DependencyProperty.Register(
         nameof(Opacity),
         typeof(double),
         typeof(TargetedPopup),
@@ -38,7 +38,7 @@ public partial class TargetedPopup : ITargetedPopup
     #endregion Opacity Property
 
     #region Margin Property
-    public static readonly new DependencyProperty MarginProperty = DependencyProperty.Register(
+    public new static readonly DependencyProperty MarginProperty = DependencyProperty.Register(
         nameof(Margin),
         typeof(Thickness),
         typeof(TargetedPopup),
@@ -52,7 +52,7 @@ public partial class TargetedPopup : ITargetedPopup
     #endregion Margin Property
 
     #region HorizontalAlignment Property
-    public static readonly new DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
+    public new static readonly DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register(
         nameof(HorizontalAlignment),
         typeof(HorizontalAlignment),
         typeof(TargetedPopup),
@@ -66,7 +66,7 @@ public partial class TargetedPopup : ITargetedPopup
     #endregion HorizontalAlignment Property
 
     #region VerticalAlignment Property
-    public static readonly new DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register(
+    public new static readonly DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register(
         nameof(VerticalAlignment),
         typeof(VerticalAlignment),
         typeof(TargetedPopup),
@@ -83,7 +83,7 @@ public partial class TargetedPopup : ITargetedPopup
 
     #region Background Property
     [Obsolete("Use BackgroundColor, instead")]
-    public static readonly new DependencyProperty BackgroundProperty = DependencyProperty.Register(
+    public new static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register(
         nameof(Background),
         typeof(Brush),
         typeof(TargetedPopup),
@@ -123,7 +123,7 @@ public partial class TargetedPopup : ITargetedPopup
 
     #region BorderBrush Property
     [Obsolete("Use BorderColor, instead")]
-    public static readonly new DependencyProperty BorderBrushProperty = DependencyProperty.Register(
+    public new static readonly DependencyProperty BorderBrushProperty = DependencyProperty.Register(
         nameof(BorderBrush),
         typeof(Brush),
         typeof(TargetedPopup),
@@ -159,7 +159,7 @@ public partial class TargetedPopup : ITargetedPopup
 
     #region BorderThickness Property
     [Obsolete("Use BorderWidth instead")]
-    public static readonly new DependencyProperty BorderThicknessProperty = DependencyProperty.Register(
+    public new static readonly DependencyProperty BorderThicknessProperty = DependencyProperty.Register(
         nameof(BorderThickness),
         typeof(Thickness),
         typeof(TargetedPopup),
@@ -168,7 +168,7 @@ public partial class TargetedPopup : ITargetedPopup
     [Obsolete("Use BorderWidth instead")]
     public new Thickness BorderThickness
     {
-        get => new Thickness(BorderWidth);
+        get => new(BorderWidth);
         set
         {
             if (value is Thickness thickness)
@@ -192,7 +192,7 @@ public partial class TargetedPopup : ITargetedPopup
     #endregion BorderWidth Property
 
     #region CornerRadius Property
-    public static readonly new DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
+    public new static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
         nameof(CornerRadius),
         typeof(double),
         typeof(TargetedPopup),
@@ -419,12 +419,12 @@ public partial class TargetedPopup : ITargetedPopup
         nameof(PageOverlayBrush),
         typeof(Brush),
         typeof(TargetedPopup),
-        new PropertyMetadata(new SolidColorBrush(Microsoft.UI.Colors.Gray.WithAlpha(0.4)), (d,e)=>((TargetedPopup)d).UpdatePageOverlayVisibility())
+        new PropertyMetadata(new SolidColorBrush(Colors.Gray.WithAlpha(0.4)), (d,e)=>((TargetedPopup)d).UpdatePageOverlayVisibility())
     );
     public Brush PageOverlayBrush
     {
         get => (Brush)GetValue(PageOverlayBrushProperty);
-        set => SetValue(PageOverlayBrushProperty, value ?? new SolidColorBrush(Microsoft.UI.Colors.Gray.WithAlpha(0.4)));
+        set => SetValue(PageOverlayBrushProperty, value ?? new SolidColorBrush(Colors.Gray.WithAlpha(0.4)));
     }
     #endregion PageOverlayBrush Property
 
@@ -443,13 +443,15 @@ public partial class TargetedPopup : ITargetedPopup
     #endregion IsPageOverlayHitTestVisible Property
 
     #region PageOverlayVisible Property
-    static readonly DependencyProperty PageOverlayVisibleProperty = DependencyProperty.Register(
+
+    private static readonly DependencyProperty PageOverlayVisibleProperty = DependencyProperty.Register(
         nameof(PageOverlayVisible),
         typeof(bool),
         typeof(TargetedPopup),
         new PropertyMetadata(true)
     );
-    bool PageOverlayVisible
+
+    private bool PageOverlayVisible
     {
         get => (bool)GetValue(PageOverlayVisibleProperty);
         set => SetValue(PageOverlayVisibleProperty, value);
@@ -475,13 +477,15 @@ public partial class TargetedPopup : ITargetedPopup
     #endregion HasShadow Property
 
     #region ShadowVisible Property
-    static readonly DependencyProperty ShadowVisibleProperty = DependencyProperty.Register(
+
+    private static readonly DependencyProperty ShadowVisibleProperty = DependencyProperty.Register(
         nameof(ShadowVisible),
         typeof(bool),
         typeof(TargetedPopup),
         new PropertyMetadata(true)
     );
-    bool ShadowVisible
+
+    private bool ShadowVisible
     {
         get => (bool)GetValue(ShadowVisibleProperty);
         set => SetValue(ShadowVisibleProperty, value);
@@ -748,7 +752,8 @@ public partial class TargetedPopup : ITargetedPopup
 
 
     #region Private Properties
-    bool HasBorder
+
+    private bool HasBorder
     {
         get
         {
@@ -761,7 +766,7 @@ public partial class TargetedPopup : ITargetedPopup
         }
     }
 
-    Size AvailableWindowSpace
+    private Size AvailableWindowSpace
     {
         get
         {
@@ -826,7 +831,7 @@ public partial class TargetedPopup : ITargetedPopup
     public TargetedPopup()
     {
         Build();
-        RegisterPropertyChangedCallback(ContentControl.VisibilityProperty, OnVisibilityChanged);
+        RegisterPropertyChangedCallback(VisibilityProperty, OnVisibilityChanged);
         RegisterPropertyChangedCallback(ContentControl.CornerRadiusProperty, OnBaseCornerRadiusChanged);
     }
     public TargetedPopup(UIElement target) : this()
@@ -843,10 +848,10 @@ public partial class TargetedPopup : ITargetedPopup
         UpdateShadowVisibility();
     }
 
-    void UpdatePageOverlayVisibility()
+    private void UpdatePageOverlayVisibility()
         => PageOverlayVisible = Visibility.Equals(Visibility.Visible) && (bool)BooleanConverter.Instance.Convert(PageOverlayBrush);
 
-    void UpdateShadowVisibility()
+    private void UpdateShadowVisibility()
         => ShadowVisible = Visibility.Equals(Visibility.Visible) && HasShadow;
 
     protected override void OnContentChanged(object oldContent, object newContent)
@@ -860,18 +865,18 @@ public partial class TargetedPopup : ITargetedPopup
 
     #region Pointer Move Event Handlers
 
-    Point _enteredPoint = new(-1,-1);
+    private Point _enteredPoint = new(-1,-1);
     private void OnPointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
     {
-        _enteredPoint = e.GetCurrentPoint(P42.Utils.Uno.Platform.Window.Content).Position;
+        _enteredPoint = e.GetCurrentPoint(P42.Utils.Uno.Platform.MainWindow.Content).Position;
         //System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPointerEntered e: [" + _enteredPoint.X + ", " + _enteredPoint.Y + "]");
     }
 
-    async void OnPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    private async void OnPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
     {
         if (PopOnPointerMove)
         {
-            var position = e.GetCurrentPoint(P42.Utils.Uno.Platform.Window.Content).Position;
+            var position = e.GetCurrentPoint(P42.Utils.Uno.Platform.MainWindow.Content).Position;
             //System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPointerMoved e: [" + position.X + ", " + position.Y + "]");
 
             if (Target != null)
@@ -882,7 +887,7 @@ public partial class TargetedPopup : ITargetedPopup
                 var targetBounds = Target.GetBounds();
                 var borderBounds = ContentBorder.GetBounds();
 
-                if (Microsoft.UI.Xaml.RectHelper.Intersect(targetBounds, zone) is Rect intersect0
+                if (RectHelper.Intersect(targetBounds, zone) is Rect intersect0
                     && intersect0.Width > 0
                     && intersect0.Height > 0)
                 {
@@ -890,7 +895,8 @@ public partial class TargetedPopup : ITargetedPopup
                     //System.Diagnostics.Debug.WriteLine("\t\t in Target ["+ targetBounds + "]");
                     return;
                 }
-                else if (Microsoft.UI.Xaml.RectHelper.Intersect(borderBounds, zone) is Rect intersect1
+
+                if (RectHelper.Intersect(borderBounds, zone) is Rect intersect1
                     && intersect1.Width > 0
                     && intersect1.Height > 0)
                 {
@@ -898,7 +904,7 @@ public partial class TargetedPopup : ITargetedPopup
                     //System.Diagnostics.Debug.WriteLine("\t\t in Border");
                     return;
                 }
-                else if (Microsoft.UI.Xaml.RectHelper.Intersect(borderBounds, targetBounds) is Rect intersect2
+                if (RectHelper.Intersect(borderBounds, targetBounds) is Rect intersect2
                     && intersect2.Width <= 0
                     && intersect2.Height <= 0)
                 {
@@ -942,7 +948,7 @@ public partial class TargetedPopup : ITargetedPopup
                     bridge.Width += 10;
                     bridge.Height += 10;
 
-                    if (Microsoft.UI.Xaml.RectHelper.Intersect(bridge, zone) is Rect intersect3
+                    if (RectHelper.Intersect(bridge, zone) is Rect intersect3
                         && intersect3.Width > 0
                         && intersect3.Height > 0)
                     {
@@ -951,6 +957,7 @@ public partial class TargetedPopup : ITargetedPopup
                     }
                     
                 }
+
                 //System.Diagnostics.Debug.WriteLine("\t\t Popping");
                 await PopAsync(PopupPoppedCause.PointerMoved);
 
@@ -958,7 +965,7 @@ public partial class TargetedPopup : ITargetedPopup
             else
             {
                 if (_enteredPoint.X == -1 && _enteredPoint.Y == -1)
-                    _enteredPoint = e.GetCurrentPoint(P42.Utils.Uno.Platform.Window.Content).Position;
+                    _enteredPoint = e.GetCurrentPoint(P42.Utils.Uno.Platform.MainWindow.Content).Position;
 
                 var dx = position.X - _enteredPoint.X;
                 var dy = position.Y - _enteredPoint.Y;
@@ -989,7 +996,7 @@ public partial class TargetedPopup : ITargetedPopup
         await InnerPushAsync(animated);
     }
 
-    async Task InnerPushAsync(bool animated)
+    private async Task InnerPushAsync(bool animated)
     { 
         PushPopState = PushPopState.Pushing;
         await OnPushBeginAsync();
@@ -1016,14 +1023,14 @@ public partial class TargetedPopup : ITargetedPopup
             if (animated)
             {
                 void action(double percent) => UpdateOpacity(Opacity * percent);
-                var animator = new P42.Utils.Uno.ActionAnimator(0.11, 0.95, TimeSpan.FromMilliseconds(300), action);
+                var animator = new ActionAnimator(0.11, 0.95, TimeSpan.FromMilliseconds(300), action);
                 await animator.RunAsync();
             }
             UpdateOpacity(Opacity);
 
             if (PopAfter > default(TimeSpan))
             {
-                P42.Utils.Timer.StartTimer(PopAfter, async () =>
+                Utils.Timer.StartTimer(PopAfter, async () =>
                 {
                     await PopAsync(PopupPoppedCause.Timeout, animated, "Timeout");
                     return false;
@@ -1064,7 +1071,7 @@ public partial class TargetedPopup : ITargetedPopup
         await InnerPop(cause, animated, trigger);
     }
 
-    async Task InnerPop(PopupPoppedCause cause, bool animated = false, [CallerMemberName] object trigger = null)
+    private async Task InnerPop(PopupPoppedCause cause, bool animated = false, [CallerMemberName] object trigger = null)
     {
         _pushCompletionSource?.TrySetResult(false);
         _pushCompletionSource = null;
@@ -1079,7 +1086,7 @@ public partial class TargetedPopup : ITargetedPopup
         if (animated)
         {
             void action(double percent) => UpdateOpacity(Opacity * percent);
-            var animator = new P42.Utils.Uno.ActionAnimator(0.95, 0.11, TimeSpan.FromMilliseconds(300), action);
+            var animator = new ActionAnimator(0.95, 0.11, TimeSpan.FromMilliseconds(300), action);
             await animator.RunAsync();
         }
 
@@ -1088,7 +1095,7 @@ public partial class TargetedPopup : ITargetedPopup
         await OnPopEndAsync();
     }
 
-    void CompletePop(PopupPoppedCause poppedCause, object poppedTrigger)
+    private void CompletePop(PopupPoppedCause poppedCause, object poppedTrigger)
     {
         UpdateOpacity(0.001);
         Popups.Remove(this);
@@ -1103,7 +1110,7 @@ public partial class TargetedPopup : ITargetedPopup
         _popCompletionSource?.TrySetResult(result);
     }
 
-    TaskCompletionSource<PopupPoppedEventArgs> _popCompletionSource;
+    private TaskCompletionSource<PopupPoppedEventArgs> _popCompletionSource;
     /// <summary>
     /// Wait for popup to be popped
     /// </summary>
@@ -1114,12 +1121,12 @@ public partial class TargetedPopup : ITargetedPopup
         return await _popCompletionSource.Task;
     }
 
-    TaskCompletionSource<bool> _pushCompletionSource;
+    private TaskCompletionSource<bool> _pushCompletionSource;
     /// <summary>
     /// Wait for popup to be pushed
     /// </summary>
     /// <returns></returns>
-    async Task WaitForPushAsync()
+    private async Task WaitForPushAsync()
     {
         _pushCompletionSource ??= new TaskCompletionSource<bool>();
         await _pushCompletionSource.Task;
@@ -1167,7 +1174,8 @@ public partial class TargetedPopup : ITargetedPopup
 
 
     #region Layout
-    void UpdateOpacity(double value = -1)
+
+    private void UpdateOpacity(double value = -1)
     {
         if (ContentBorder is null ||
             ShadowBorder is null ||
@@ -1206,7 +1214,7 @@ public partial class TargetedPopup : ITargetedPopup
         }
     }
 
-    void SetAlignmentMarginsAndPointer(AlignmentMarginsAndPointer value, Size bubbleSize = default)
+    private void SetAlignmentMarginsAndPointer(AlignmentMarginsAndPointer value, Size bubbleSize = default)
     {
         ContentBorder.HorizontalAlignment = ShadowBorder.HorizontalAlignment = value.HorizontalAlignment;
         ContentBorder.VerticalAlignment = ShadowBorder.VerticalAlignment = value.VerticalAlignment;
@@ -1341,7 +1349,7 @@ public partial class TargetedPopup : ITargetedPopup
             }
             else if (stats.PointerDirection == PointerDirection.Right)
             {
-                margin.Right = (windowSize.Width - targetBounds.Left) + PointerMargin;
+                margin.Right = windowSize.Width - targetBounds.Left + PointerMargin;
                 if (HorizontalAlignment != HorizontalAlignment.Stretch)
                     hzAlign = HorizontalAlignment.Right;
             }
@@ -1383,7 +1391,7 @@ public partial class TargetedPopup : ITargetedPopup
             }
             else if (stats.PointerDirection == PointerDirection.Down)
             {
-                margin.Bottom = (windowSize.Height - targetBounds.Top) + PointerMargin;
+                margin.Bottom = windowSize.Height - targetBounds.Top + PointerMargin;
                 if (VerticalAlignment != VerticalAlignment.Stretch)
                     vtAlign = VerticalAlignment.Bottom;
             }
@@ -1438,7 +1446,7 @@ public partial class TargetedPopup : ITargetedPopup
     }
 
 
-    DirectionStats CreateDirectionStats(Size size, PointerDirection pointerDirection = PointerDirection.None)
+    private DirectionStats CreateDirectionStats(Size size, PointerDirection pointerDirection = PointerDirection.None)
     {
         var windowSpace = AvailableWindowSpace;
 
@@ -1455,7 +1463,7 @@ public partial class TargetedPopup : ITargetedPopup
         return cleanStat;
     }
 
-    DirectionStats BestFit(Thickness availableSpaceSpaceAroundTarget, Size modalSize, Thickness safeMargin)
+    private DirectionStats BestFit(Thickness availableSpaceSpaceAroundTarget, Size modalSize, Thickness safeMargin)
     {
 
         //System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit(available:[{availableSpaceAroundTarget}], clean:[{modalSize}], safe:[{safeMargin}]) ");
@@ -1467,14 +1475,14 @@ public partial class TargetedPopup : ITargetedPopup
 
         // Check if clean border fits in preferred pointer quadrants
         var cleanStats = GetCleanStatsForDirection(PreferredPointerDirection | FallbackPointerDirection, cleanStat, availableSpaceSpaceAroundTarget);
-        if (GetBestDirectionStat(cleanStats, PreferredPointerDirection) is DirectionStats stats1)
+        if (GetBestDirectionStat(cleanStats, PreferredPointerDirection) is { } stats1)
         {
             //System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit : stats1=[{stats1}]");
             return stats1;
         }
 
         // Check if clean border fits in unchecked fallback pointer quadrants
-        if (GetBestDirectionStat(cleanStats, FallbackPointerDirection) is DirectionStats stats2)
+        if (GetBestDirectionStat(cleanStats, FallbackPointerDirection) is { } stats2)
         {
             //System.Diagnostics.Debug.WriteLine($"TargetedPopup.BestFit : stats2=[{stats2}]");
             return stats2;
@@ -1544,14 +1552,14 @@ public partial class TargetedPopup : ITargetedPopup
         return cleanStat;
     }
 
-    static DirectionStats? GetBestDirectionStat(List<DirectionStats> stats, PointerDirection pointerDirections)
+    private static DirectionStats? GetBestDirectionStat(List<DirectionStats> stats, PointerDirection pointerDirections)
     {
-        if (stats.Where(s=> (s.PointerDirection & pointerDirections) > 0).ToList() is List<DirectionStats> acceptable && acceptable.Any())
+        if (stats.Where(s=> (s.PointerDirection & pointerDirections) > 0).ToList() is { } acceptable && acceptable.Any())
             return GetBestDirectionStat(acceptable);
         return null;
     }
 
-    static DirectionStats? GetBestDirectionStat(List<DirectionStats> stats)
+    private static DirectionStats? GetBestDirectionStat(List<DirectionStats> stats)
     {
         if (stats.Count == 1)
             return stats[0];
@@ -1570,22 +1578,22 @@ public partial class TargetedPopup : ITargetedPopup
         return null;
     }
 
-    Rect TargetBounds()
+    private Rect TargetBounds()
     {
         var targetBounds = Target is null ? Rect.Empty : Target.GetBounds();
 
-        double targetLeft = (Target is null ? TargetRect.Left : targetBounds.Left);
-        double targetRight = (Target is null ? TargetRect.Right : targetBounds.Right);
-        double targetTop = (Target is null ? TargetRect.Top : targetBounds.Top);
-        double targetBottom = (Target is null ? TargetRect.Bottom: targetBounds.Bottom);
+        var targetLeft = Target is null ? TargetRect.Left : targetBounds.Left;
+        var targetRight = Target is null ? TargetRect.Right : targetBounds.Right;
+        var targetTop = Target is null ? TargetRect.Top : targetBounds.Top;
+        var targetBottom = Target is null ? TargetRect.Bottom: targetBounds.Bottom;
 
         return new Rect(targetLeft, targetTop, targetRight - targetLeft, targetBottom - targetTop);
     }
 
-    Thickness AvailableSpaceAroundTarget(Rect target, Thickness safeMargin)
+    private Thickness AvailableSpaceAroundTarget(Rect target, Thickness safeMargin)
     {
         var windowBounds = AppWindow.Size(this);
-        if (Target != null || (TargetRect.Width > 0 || TargetRect.Height > 0))
+        if (Target != null || TargetRect.Width > 0 || TargetRect.Height > 0)
         {
             if (target.Right > 0 && target.Left < windowBounds.Width && target.Bottom > 0 && target.Top < windowBounds.Height)
             {
@@ -1603,7 +1611,7 @@ public partial class TargetedPopup : ITargetedPopup
         return new Thickness(-1, -1, -1, -1);
     }
 
-    List<DirectionStats> GetCleanStatsForDirection(PointerDirection pointerDirection, DirectionStats cleanStat, Thickness availableSpace)
+    private List<DirectionStats> GetCleanStatsForDirection(PointerDirection pointerDirection, DirectionStats cleanStat, Thickness availableSpace)
     {
         //System.Diagnostics.Debug.WriteLine(GetType() + ".GetCleanStatsForDirection cleanStat:["+cleanStat+"]");
         var stats = new List<DirectionStats>();
@@ -1612,7 +1620,7 @@ public partial class TargetedPopup : ITargetedPopup
         if (IsTooSmall(cleanStat.BorderSize))
             return stats;
 
-        if (pointerDirection.LeftAllowed() && (availableSpace.Right - cleanStat.BorderSize.Width) >= PointerLength && availableWindowSpace.Height >= cleanStat.BorderSize.Height)
+        if (pointerDirection.LeftAllowed() && availableSpace.Right - cleanStat.BorderSize.Width >= PointerLength && availableWindowSpace.Height >= cleanStat.BorderSize.Height)
         {
             var stat = cleanStat;
             stat.PointerDirection = PointerDirection.Left;
@@ -1625,7 +1633,7 @@ public partial class TargetedPopup : ITargetedPopup
             }
         }
 
-        if (pointerDirection.RightAllowed() && (availableSpace.Left - cleanStat.BorderSize.Width) >= PointerLength && availableWindowSpace.Height >= cleanStat.BorderSize.Height)
+        if (pointerDirection.RightAllowed() && availableSpace.Left - cleanStat.BorderSize.Width >= PointerLength && availableWindowSpace.Height >= cleanStat.BorderSize.Height)
         {
             var stat = cleanStat;
             stat.PointerDirection = PointerDirection.Right;
@@ -1638,7 +1646,7 @@ public partial class TargetedPopup : ITargetedPopup
             }
         }
 
-        if (pointerDirection.UpAllowed() && (availableSpace.Bottom - cleanStat.BorderSize.Height) >= PointerLength && availableWindowSpace.Width >= cleanStat.BorderSize.Width)
+        if (pointerDirection.UpAllowed() && availableSpace.Bottom - cleanStat.BorderSize.Height >= PointerLength && availableWindowSpace.Width >= cleanStat.BorderSize.Width)
         {
             var stat = cleanStat;
             stat.PointerDirection = PointerDirection.Up;
@@ -1652,7 +1660,7 @@ public partial class TargetedPopup : ITargetedPopup
         }
 
 
-        if (pointerDirection.DownAllowed() && (availableSpace.Top - cleanStat.BorderSize.Height) >= PointerLength && availableWindowSpace.Width >= cleanStat.BorderSize.Width)
+        if (pointerDirection.DownAllowed() && availableSpace.Top - cleanStat.BorderSize.Height >= PointerLength && availableWindowSpace.Width >= cleanStat.BorderSize.Width)
         {
             var stat = cleanStat;
             stat.PointerDirection = PointerDirection.Down;
@@ -1668,7 +1676,7 @@ public partial class TargetedPopup : ITargetedPopup
         return stats;
     }
 
-    List<DirectionStats> GetMeasuredStatsForDirection(PointerDirection pointerDirection, DirectionStats cleanStat, Thickness availableSpace, Size availableWindowSpace)
+    private List<DirectionStats> GetMeasuredStatsForDirection(PointerDirection pointerDirection, DirectionStats cleanStat, Thickness availableSpace, Size availableWindowSpace)
     {
         var stats = new List<DirectionStats>();
         if (pointerDirection.LeftAllowed())
@@ -1746,7 +1754,7 @@ public partial class TargetedPopup : ITargetedPopup
         return stats;
     }
 
-    bool IsWidthTooSmall(double measuredWidth)
+    private bool IsWidthTooSmall(double measuredWidth)
     {
         if (!double.IsNaN(MinWidth) && MinWidth > 0)
         {
@@ -1757,7 +1765,7 @@ public partial class TargetedPopup : ITargetedPopup
         return false;
     }
 
-    bool IsHeightTooSmall(double measuredHeight)
+    private bool IsHeightTooSmall(double measuredHeight)
     {
         if (!double.IsNaN(MinHeight) && MinHeight > 0)
         {
@@ -1768,7 +1776,7 @@ public partial class TargetedPopup : ITargetedPopup
         return false;
     }
 
-    bool IsTooSmall(double measuredWidth, double measuredHeight)
+    private bool IsTooSmall(double measuredWidth, double measuredHeight)
     {
         if (!double.IsNaN(MinWidth) && MinWidth > 0)
         {
@@ -1785,10 +1793,10 @@ public partial class TargetedPopup : ITargetedPopup
         return false;
     }
 
-    bool IsTooSmall(Size measuredSize)
+    private bool IsTooSmall(Size measuredSize)
         => IsTooSmall(measuredSize.Width, measuredSize.Height);
 
-    Size MeasureCleanBorder(Size available, Size failSize = default, UIElement content = null)
+    private Size MeasureCleanBorder(Size available, Size failSize = default, UIElement content = null)
     {
         //System.Diagnostics.Debug.WriteLine("\n");
         //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder({available})");

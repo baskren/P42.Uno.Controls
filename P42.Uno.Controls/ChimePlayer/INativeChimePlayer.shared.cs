@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace P42.Uno.Controls
+namespace P42.Uno.Controls;
+
+internal interface INativeChimePlayer
 {
-    interface INativeChimePlayer
-    {
-        Task PlayAsync(Effect chime, EffectMode mode);
-    }
+    Task PlayAsync(Effect chime, EffectMode mode);
 }
