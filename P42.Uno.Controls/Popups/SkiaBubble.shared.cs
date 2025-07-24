@@ -46,11 +46,8 @@ namespace P42.Uno.Controls
             Redraw(nameof(BackgroundColor));
         }
 
-#if __IOS__
-        public new Color BackgroundColor
-#else
+
         public Color BackgroundColor
-#endif
         {
             get => (Color)GetValue(BackgroundColorProperty);
             set => SetValue(BackgroundColorProperty, value);
@@ -210,7 +207,7 @@ namespace P42.Uno.Controls
         #endregion
 
 
-#endregion
+        #endregion
 
 
         #region Fields
@@ -223,9 +220,9 @@ namespace P42.Uno.Controls
         public SkiaBubble()
         {
             _instance = _instances++;
-#if __IOS__
-            ((UIKit.UIView)this).BackgroundColor = UIKit.UIColor.Clear;
-#endif
+//#if __IOS__
+//            ((UIKit.UIView)this).BackgroundColor = UIKit.UIColor.Clear;
+//#endif
 
             //RegisterPropertyChangedCallback(MarginProperty, OnMarginChanged);
         }

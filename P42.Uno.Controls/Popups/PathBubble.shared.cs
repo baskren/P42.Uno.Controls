@@ -1,4 +1,4 @@
-﻿using Windows.Foundation;
+using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using P42.Uno.Markup;
@@ -209,6 +209,7 @@ namespace P42.Uno.Controls
                 (float)PointerCornerRadius);
             var data = path.ToSvgPathData();
 
+            /*
 #if __WASM__
             //System.Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
             //var x = this.GetFirstHtmlDescendent();
@@ -216,8 +217,9 @@ namespace P42.Uno.Controls
                 x.SetHtmlContent($"<path fill-rule=\"even-odd\" d=\"{data}\"></path>");
 #else
             //System.Console.WriteLine($"BubbleBorder.RegeneratePath [{data}]");
+            */
             Data = P42.Utils.Uno.StringToPathGeometryConverter.Current.Convert(data);
-#endif
+//#endif
 
             if (_pendingUpdatePath)
                 UpdatePath($"pending({_pendingPathSize})", true);

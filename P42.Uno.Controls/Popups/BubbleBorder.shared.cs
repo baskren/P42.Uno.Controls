@@ -34,16 +34,12 @@ namespace P42.Uno.Controls
             System.Diagnostics.Debug.WriteLine($"BubbleBorder.OnBackgroundColorChanged : [{e.NewValue}] ");
             
         }
-#if __IOS__ || __MACCATALYST__
-        public new Color BackgroundColor
-#else
         public Color BackgroundColor
-#endif
         {
             get => (Color)GetValue(BackgroundColorProperty);
             set => SetValue(BackgroundColorProperty, value);
         }
-#endregion BackgroundColor Property
+        #endregion BackgroundColor Property
 
         #region BorderColor Property
         public static readonly DependencyProperty BorderColorProperty = DependencyProperty.Register(
@@ -78,7 +74,7 @@ namespace P42.Uno.Controls
         }
         #endregion BorderWidth Property
 
-#endregion
+        #endregion
 
         #region ContentPresenter Properties
 
@@ -331,11 +327,8 @@ namespace P42.Uno.Controls
             typeof(BubbleBorder),
             new PropertyMetadata(P42.Uno.Markup.SystemTextBoxBrushes.Foreground)
         );
-#if __ANDROID__
-        public new Brush Foreground
-#else
+
         public Brush Foreground
-#endif
         {
             get => (Brush)GetValue(ForegroundProperty);
             set => SetValue(ForegroundProperty, value);
@@ -600,7 +593,7 @@ namespace P42.Uno.Controls
 
         #endregion
 
-#endregion
+        #endregion
 
 
         #region Private Properties

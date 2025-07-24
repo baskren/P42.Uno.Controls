@@ -1,21 +1,20 @@
-<Project Sdk="Uno.Sdk">
+﻿<Project Sdk="Uno.Sdk">
 
 
   <PropertyGroup>
      <TargetFrameworks>
-      net8.0-ios;
-      net8.0-maccatalyst;
-      net8.0-android
-    </TargetFrameworks>
+       net9.0;
+       net9.0-ios;
+       net9.0-android
+     </TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) or '$(EnableWindowsTargeting)' == 'true'">
       $(TargetFrameworks);
-      net8.0-windows10.0.19041
+      net9.0-windows10.0.26100
     </TargetFrameworks>
     <TargetFrameworks>
       $(TargetFrameworks);
-      net8.0-browserwasm;
-      net8.0-desktop;
-      net8.0
+      net9.0-browserwasm;
+      net9.0-desktop;
     </TargetFrameworks>
     <UnoSingleProject>true</UnoSingleProject>
     <OutputType>Library</OutputType>
@@ -28,19 +27,16 @@
       UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
       https://aka.platform.uno/singleproject-features
     -->
-    <SkiaSharpVersion>3.0.0-preview.5.4</SkiaSharpVersion>
-
+    
     <UnoFeatures>
       Lottie;
       Skia;
+      SkiaRenderer
     </UnoFeatures>
     
 
     <BuildInParallel>true</BuildInParallel>
-    <WindowsSdkPackageVersion>10.0.19041.38</WindowsSdkPackageVersion>
-    <WinAppSdkBuildToolsVersion>10.0.22621.756</WinAppSdkBuildToolsVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Platforms>AnyCPU;ARM64;X86;X64</Platforms>
 
 
   </PropertyGroup>
@@ -67,9 +63,9 @@
 
 
   <ItemGroup>
-    <Compile Include="Extensions\AlignedPlacementPanelExtensions.cs" />
-    <Compile Include="GlobalUsings.cs" />
+    <None Include="HapticPlayer\NativeHapticPlayer.wasm.x.cs" />
   </ItemGroup>
+
 
   
 </Project>

@@ -220,7 +220,7 @@ namespace P42.Uno.Controls
                 if (baseItem.Text is string text)
                     Children.Add(new TextBlock { Text = text }.Margin(5, 0).Column(1).CenterVertical());
                 if (args.NewValue is P42.Uno.Controls.MenuGroup subItem)
-                    Children.Add(new TextBlock { Text = "\uE76C", FontFamily = new FontFamily("Segoe MDL2 Assets") }.Margin(5, 0).Column(3).CenterVertical().Right());
+                    Children.Add(new TextBlock { Text = "\uE76C", FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe MDL2 Assets") }.Margin(5, 0).Column(3).CenterVertical().Right());
             }
         }
 

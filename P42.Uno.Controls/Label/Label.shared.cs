@@ -187,11 +187,7 @@ namespace P42.Uno.Controls
         protected virtual void OnTextAlignmentChanged(DependencyPropertyChangedEventArgs e)
 			=>_textBlock.TextAlignment = TextAlignment;
 
-#if __ANDROID__
-		public new TextAlignment TextAlignment
-#else
 		public TextAlignment TextAlignment
-#endif
 		{
 			get => (TextAlignment)GetValue(TextAlignmentProperty);
             set => SetValue(TextAlignmentProperty, value);

@@ -38,27 +38,28 @@ namespace P42.Uno.Controls
                     Delete.PlaySystemSound();
                     break;
                 case Effect.Info:
-                    InfoPlayer ??= new AVFoundation.AVAudioPlayer(NSUrl.FromFilename(await ChimePlayer.GetPathAsync(Effect.Info)), "mp3", out NSError nSError0);
+                    //InfoPlayer ??= new AVFoundation.AVAudioPlayer(NSUrl.FromFilename(await ChimePlayer.GetPathAsync(Effect.Info)), "mp3", out NSError nSError0);
+                    InfoPlayer ??= AVFoundation.AVAudioPlayer.FromUrl(NSUrl.FromFilename(await ChimePlayer.GetPathAsync(Effect.Info)), (NSString)"mp3", out NSError nSError0);
                     InfoPlayer.Play();
                     break;
                 case Effect.Warning:
-                    WarningPlayer ??= new AVFoundation.AVAudioPlayer(NSUrl.FromFilename(await ChimePlayer.GetPathAsync(Effect.Warning)), "mp3", out NSError nSError1);
+                    WarningPlayer ??= AVFoundation.AVAudioPlayer.FromUrl(NSUrl.FromFilename(await ChimePlayer.GetPathAsync(Effect.Warning)), (NSString)"mp3", out NSError nSError1);
                     WarningPlayer.Play();
                     break;
                 case Effect.Error:
-                    ErrorPlayer ??= new AVFoundation.AVAudioPlayer(NSUrl.FromFilename(await ChimePlayer.GetPathAsync(Effect.Error)), "mp3", out NSError nSError2);
+                    ErrorPlayer ??= AVFoundation.AVAudioPlayer.FromUrl(NSUrl.FromFilename(await ChimePlayer.GetPathAsync(Effect.Error)), (NSString)"mp3", out NSError nSError2);
                     ErrorPlayer.Play();
                     break;
                 case Effect.Alarm:
-                    AlarmPlayer ??= new AVFoundation.AVAudioPlayer(NSUrl.FromFilename(await ChimePlayer.GetPathAsync(Effect.Alarm)), "mp3", out NSError nSError3);
+                    AlarmPlayer ??= AVFoundation.AVAudioPlayer.FromUrl(NSUrl.FromFilename(await ChimePlayer.GetPathAsync(Effect.Alarm)), (NSString)"mp3", out NSError nSError3);
                     AlarmPlayer.Play();
                     break;
                 case Effect.Inquiry:
-                    InquiryPlayer ??= new AVFoundation.AVAudioPlayer(NSUrl.FromFilename(await ChimePlayer.GetPathAsync(Effect.Inquiry)), "mp3", out NSError nSError4);
+                    InquiryPlayer ??= AVFoundation.AVAudioPlayer.FromUrl(NSUrl.FromFilename(await ChimePlayer.GetPathAsync(Effect.Inquiry)), (NSString)"mp3", out NSError nSError4);
                     InquiryPlayer.Play();
                     break;
                 case Effect.Progress:
-                    ProgressPlayer ??= new AVFoundation.AVAudioPlayer(NSUrl.FromFilename(await ChimePlayer.GetPathAsync(Effect.Progress)), "mp3", out NSError nSError5);
+                    ProgressPlayer ??= AVFoundation.AVAudioPlayer.FromUrl(NSUrl.FromFilename(await ChimePlayer.GetPathAsync(Effect.Progress)), (NSString)"mp3", out NSError nSError5);
                     ProgressPlayer.Play();
                     break;
             }

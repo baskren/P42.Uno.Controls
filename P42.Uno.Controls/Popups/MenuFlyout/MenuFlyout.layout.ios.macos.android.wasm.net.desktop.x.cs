@@ -165,6 +165,7 @@ namespace P42.Uno.Controls
         */
 
 
+#pragma warning disable CS0618 // Type or member is obsolete
         static void OnItemClick(object sender, RoutedEventArgs e)
         {
             if (sender is Microsoft.UI.Xaml.Controls.MenuFlyoutItem winItem && winItem.Tag is MenuItemBase item)
@@ -213,12 +214,14 @@ namespace P42.Uno.Controls
                 //var collectionChangedHandler = new ItemsCollectionChangeHandler(group.ObsvItems, winGroupItem.Items);
                 //winGroupItem.Tag = collectionChangedHandler;
                 //group.ObsvItems.CollectionChanged += collectionChangedHandler.OnItemsCollectionChanged;
-
+                /*
                 foreach (var i in group.Items)
                     winGroupItem.Items.Add(i.AsMenuFlyoutItem());
 
                 return winGroupItem;
+                */
             }
+#pragma warning restore CS0618 // Type or member is obsolete
             return null;
         }
     }

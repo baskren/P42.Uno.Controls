@@ -10,6 +10,9 @@ using Microsoft.UI.Xaml.Media;
 using SkiaSharp.Views.Windows;
 using P42.Uno.Markup;
 using Svg;
+using System.Net.Http;
+using System.Threading.Tasks;
+using P42.Utils;
 
 namespace P42.Uno.Controls;
 
@@ -44,6 +47,8 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
     private double _canvasAspect = 1.0;
     private float _canvasWidth = 0;
     private float _canvasHeight = 0;
+
+    private HttpClient _httpClient = new();
     #endregion
 
 
@@ -54,9 +59,9 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
         PaintSurface += OnPaintSurface;
         //MinHeight = 20;
         //MinWidth = 20;
-#if __IOS__
-        Opaque = false;
-#endif
+//#if __IOS__
+//        Opaque = false;
+//#endif
 
     }
 
@@ -104,14 +109,33 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
 
     public void SetSource(Uri uri)
     {
+        /*
         if (uri.IsFile)
         {
             SetSourceFromPath(uri.LocalPath);
             return;
         }
+
         var aRequest = (HttpWebRequest)WebRequest.Create(uri);
         using var aResponse = (HttpWebResponse)aRequest.GetResponse();
         using var stream = aResponse.GetResponseStream();
+        SetSource(stream);
+        */
+
+        SetSourceAsync(uri).Forget();
+    }
+
+    public async Task SetSourceAsync(Uri uri)
+    {
+        if (uri.IsFile)
+        {
+            SetSourceFromPath(uri.LocalPath);
+            return;
+        }
+
+        using var request = new HttpRequestMessage(HttpMethod.Get, uri);
+        using var response = await _httpClient.SendAsync(request);
+        using var stream = await response.Content.ReadAsStreamAsync();
         SetSource(stream);
     }
 

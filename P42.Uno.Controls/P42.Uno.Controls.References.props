@@ -19,6 +19,10 @@
     <!--
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
     -->
+
+    <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
+    <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Utils.Uno" Version="$(UnoVersion)" />
+
   </ItemGroup>
 
   <!-- PLATFORM SPECIFIC ITEMS -->

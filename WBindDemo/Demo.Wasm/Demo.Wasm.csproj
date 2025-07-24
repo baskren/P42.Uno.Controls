@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <NoWarn>$(NoWarn);NU1504;NU1505;NU1701</NoWarn>
     <!-- Disabled due to issue with Central Package Management with implicit using -->
     <ImplicitUsings>disable</ImplicitUsings>
@@ -62,6 +62,6 @@
   <Target Name="ValidateOverrides" BeforeTargets="Restore;_CheckForUnsupportedTargetFramework" Condition="'$(OverrideTargetFramework)' != ''">
     <Error
         Text="OverrideTargetFramework set to '$(OverrideTargetFramework)' is invalid. Set OverrideTargetFramework to $([MSBuild]::Escape('$'))(DotNetVersion) or skip building this project (eg unload the project in Visual Studio)"
-        Condition="'$(OverrideTargetFramework)'!='net8.0'" />
+        Condition="'$(OverrideTargetFramework)'!='net9.0'" />
   </Target>
 </Project>

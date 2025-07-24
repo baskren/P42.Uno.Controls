@@ -36,18 +36,14 @@ namespace P42.Uno.Controls.AnimateBar
             }
         }
 
-#if ANDROID
-        public new Brush Foreground
-#else
         public Brush Foreground
-#endif
         {
             get => (Brush)GetValue(ForegroundProperty);
             set => SetValue(ForegroundProperty, value);
         }
-#endregion Brush Property
+        #endregion Brush Property
 
-#endregion
+        #endregion
 
 
         #region Fields
@@ -82,15 +78,6 @@ namespace P42.Uno.Controls.AnimateBar
         }
 
 
-#if ANDROID
-        protected override void Dispose(bool disposing)
-        {
-            _disposed |= disposing;
-            base.Dispose(disposing);
-        }
-
-
-#elif WINDOWS
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
@@ -103,16 +90,24 @@ namespace P42.Uno.Controls.AnimateBar
             }
         }
 
+#if WINDOWS
         public virtual void Dispose()
+#else
+        public new virtual void Dispose()
+#endif
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
+
+#if !WINDOWS
+            base.Dispose();
+#endif
+
             System.GC.SuppressFinalize(this);
         }
 
-#endif
 
-        #endregion
+#endregion
 
 
         #region vitual methods

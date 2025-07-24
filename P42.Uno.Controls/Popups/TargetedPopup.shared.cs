@@ -109,11 +109,8 @@ public partial class TargetedPopup : ITargetedPopup
         typeof(TargetedPopup),
         new PropertyMetadata(SkiaBubble.DefaultFillColor)
     );
-#if __IOS__
-    public new Color BackgroundColor
-#else
     public Color BackgroundColor
-#endif
+
     {
         get => (Color)GetValue(BackgroundColorProperty);
         set => SetValue(BackgroundColorProperty, value);
@@ -1047,7 +1044,7 @@ public partial class TargetedPopup : ITargetedPopup
             Pushed?.Invoke(this, EventArgs.Empty);
             _pushCompletionSource?.TrySetResult(true);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             await InnerPop(PopupPoppedCause.Exception, animated);
         }
