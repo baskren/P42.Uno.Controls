@@ -31,7 +31,7 @@ namespace P42.Uno.Controls
 
         private void OnBackgroundColorChanged(DependencyPropertyChangedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine($"BubbleBorder.OnBackgroundColorChanged : [{e.NewValue}] ");
+            //System.Diagnostics.Debug.WriteLine($"BubbleBorder.OnBackgroundColorChanged : [{e.NewValue}] ");
             
         }
         public Color BackgroundColor
