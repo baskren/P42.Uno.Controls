@@ -42,7 +42,6 @@
       ThemeService;
       Skia;
       Svg;
-      SkiaRenderer
     </UnoFeatures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

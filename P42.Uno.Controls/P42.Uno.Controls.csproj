@@ -31,7 +31,6 @@
     <UnoFeatures>
       Lottie;
       Skia;
-      SkiaRenderer
     </UnoFeatures>
     
 
