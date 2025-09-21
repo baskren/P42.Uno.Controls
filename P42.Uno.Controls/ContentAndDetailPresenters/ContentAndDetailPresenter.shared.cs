@@ -585,7 +585,14 @@ namespace P42.Uno.Controls
 
             var size = new Size(ActualWidth, ActualHeight);
             var drawerMode = LocalUpdateIsInDrawerMode(size);
-            LayoutDetailAndOverlay(size, 0.11, drawerMode);
+            try
+            { LayoutDetailAndOverlay(size, 0.11, drawerMode);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+
             animation?.Invoke(0.11);
             if (drawerMode)
             {

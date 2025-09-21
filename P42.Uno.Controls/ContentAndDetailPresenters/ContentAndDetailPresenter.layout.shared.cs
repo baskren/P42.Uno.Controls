@@ -22,6 +22,7 @@ namespace P42.Uno.Controls
             // r1,c0 : Footer
             this.Rows("*", _drawerRowDefinition);
             this.Columns("*", _drawerColumnDefinition);
+            
             _overlay = new Rectangle()
                 .Row(0)
                 .RowSpan(2)
