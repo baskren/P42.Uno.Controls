@@ -1225,7 +1225,7 @@ public partial class TargetedPopup : ITargetedPopup
         ContentBorder.InvalidateMeasure();
 #endif
 
-#if __ANDROID__
+#if __ANDROID__ && !HAS_UNO_SKIA
         // As god as my witness, I curse the former CEO of Android with the passion of a thousand suns.
         if (bubbleSize != default && (bubbleSize.Width < value.Size.Width || bubbleSize.Height < value.Size.Height))
         {
@@ -1285,7 +1285,8 @@ public partial class TargetedPopup : ITargetedPopup
             return new AlignmentMarginsAndPointer(cleanSize, HorizontalAlignment, VerticalAlignment, Margin.Add(safeMargin), PointerDirection.None);
 
         var targetBounds = TargetBounds();
-#if __ANDROID__
+        
+#if __ANDROID__ && !HAS_UNO_SKIA
         if (Target != null)
         {
             var shift = AppWindow.StatusBarHeight();
