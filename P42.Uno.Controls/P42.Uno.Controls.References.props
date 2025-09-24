@@ -2,9 +2,9 @@
 
 
   <PropertyGroup>
-    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally> 
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
   </PropertyGroup>
-  
+
 
   <!-- SHARED ITEMS -->
   <ItemGroup>
@@ -14,14 +14,14 @@
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
     -->
 
-    <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
-    <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Uno.Markup" Version="$(UnoVersion)" />
+    <ProjectReference Condition=" '$(Configuration)' != 'Release' OR $(TargetFramework.Contains('android')) " Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
+    <PackageReference Condition=" '$(Configuration)' == 'Release' AND !$(TargetFramework.Contains('android')) " Include="P42.Uno.Markup" Version="$(UnoVersion)" />
     <!--
     <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
     -->
 
-    <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
-    <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Utils.Uno" Version="$(UnoVersion)" />
+    <ProjectReference Condition=" '$(Configuration)' != 'Release' OR $(TargetFramework.Contains('android')) " Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
+    <PackageReference Condition=" '$(Configuration)' == 'Release' AND !$(TargetFramework.Contains('android')) " Include="P42.Utils.Uno" Version="$(UnoVersion)" />
 
   </ItemGroup>
 
