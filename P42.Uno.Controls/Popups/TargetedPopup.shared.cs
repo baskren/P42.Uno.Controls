@@ -1044,8 +1044,9 @@ public partial class TargetedPopup : ITargetedPopup
             Pushed?.Invoke(this, EventArgs.Empty);
             _pushCompletionSource?.TrySetResult(true);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            
             await InnerPop(PopupPoppedCause.Exception, animated);
         }
     }
