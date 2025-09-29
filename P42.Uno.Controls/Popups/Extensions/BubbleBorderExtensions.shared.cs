@@ -16,7 +16,7 @@ public static class BubbleBorderExtensions
     #region Binding
     public static TElement BindNullCollapse<TElement>(this TElement element) where TElement : ElementType
     {
-        return element.Bind(UIElement.VisibilityProperty, element, nameof(Content),
+        return element.BindX(UIElement.VisibilityProperty, element, nameof(Content),
             convert: (object content) => content != null? Visibility.Visible : Visibility.Collapsed);
     }
 

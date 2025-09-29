@@ -3,8 +3,6 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
     <RootNamespace>Demo.Windows</RootNamespace>
-    <Platforms>x86;x64;arm64</Platforms>
-
 
     <!-- Bundles the WinAppSDK binaries -->
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
