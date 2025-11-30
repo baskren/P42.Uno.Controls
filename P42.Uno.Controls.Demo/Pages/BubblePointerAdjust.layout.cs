@@ -7,7 +7,7 @@ namespace P42.Uno.Controls.Demo;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 public sealed partial class BubblePointerAdjustPage : Page
 {
     private readonly BubbleBorder _bubble = new();
@@ -22,8 +22,8 @@ public sealed partial class BubblePointerAdjustPage : Page
             (
                 _bubble
                     .Stretch()
-                    .Background(Microsoft.UI.Colors.Blue)
-                    .BorderBrush(Microsoft.UI.Colors.Green)
+                    .Background(Colors.Blue)
+                    .BorderBrush(Colors.Green)
                     .BorderThickness(5)
                     .CornerRadius(5)
                     .PointerDown()

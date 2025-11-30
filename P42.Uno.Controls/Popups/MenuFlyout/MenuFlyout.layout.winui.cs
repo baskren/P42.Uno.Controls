@@ -1,22 +1,10 @@
 #if !HAS_UNO
-using P42.Uno.Markup;
-using P42.Utils.Uno;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using Windows.UI;
-using Windows.UI.Text;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
+using System.ComponentModel;
 using Microsoft.UI.Xaml.Markup;
-using Microsoft.UI.Xaml.Media;
 
 namespace P42.Uno.Controls
 {
-    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
+    [System.ComponentModel.Bindable(BindableSupport.Yes)]
     [ContentProperty(Name = "Items")]
     public partial class MenuFlyout : IDisposable
     {
@@ -47,8 +35,8 @@ namespace P42.Uno.Controls
         #region Fields
         internal TargetedPopup _popup;
         private ListView _listView;
-        private MenuFlyout _parentMenu = null;
-        private MenuFlyout _childMenu = null;
+        private MenuFlyout _parentMenu;
+        private MenuFlyout _childMenu;
         #endregion
 
 
@@ -88,11 +76,11 @@ namespace P42.Uno.Controls
         public void Dispose()
         {
             Dispose(disposing: true);
-            System.GC.SuppressFinalize(this);
+            GC.SuppressFinalize(this);
         }
         #endregion
 
-        private async void OnListView_SelectionChanged(object sender, Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)
+        private async void OnListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _childMenu = _childMenu ?? new MenuFlyout();
             _childMenu._parentMenu = this;
@@ -212,14 +200,14 @@ namespace P42.Uno.Controls
         private void CellTemplate_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
             Children.Clear();
-            if (args.NewValue is P42.Uno.Controls.MenuItemBase baseItem)
+            if (args.NewValue is MenuItemBase baseItem)
             {
                 baseItem.MenuFlyoutCellWeakRef = new WeakReference<MenuFlyoutCell>(this);
                 if (baseItem.IconSource is IconSource iconSource && iconSource.AsIconElement() is IconElement iconElement)
                     Children.Add(iconElement.Center().Margin(5, 0));
                 if (baseItem.Text is string text)
                     Children.Add(new TextBlock { Text = text }.Margin(5, 0).Column(1).CenterVertical());
-                if (args.NewValue is P42.Uno.Controls.MenuGroup subItem)
+                if (args.NewValue is MenuGroup subItem)
                     Children.Add(new TextBlock { Text = "\uE76C", FontFamily = new FontFamily("Segoe MDL2 Assets") }.Margin(5, 0).Column(3).CenterVertical().Right());
             }
         }

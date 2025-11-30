@@ -1,21 +1,11 @@
-using P42.Uno.Markup;
-using P42.Utils.Uno;
-using P42.Utils;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
 using Windows.Foundation;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Shapes;
 
 namespace P42.Uno.Controls;
 
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class SegmentedControl : UserControl
+[Bindable]
+public class SegmentedControl : UserControl
 {
     #region Properties
 
@@ -282,7 +272,7 @@ public partial class SegmentedControl : UserControl
         _selectionTracker.SelectionChanged += OnSelectionTracker_SelectionChanged;
 
 #if !HAS_UNO
-            RegisterPropertyChangedCallback(UserControl.BorderThicknessProperty, OnBorderThicknessChanged);
+            RegisterPropertyChangedCallback(BorderThicknessProperty, OnBorderThicknessChanged);
 #endif
         RegisterPropertyChangedCallback(IsEnabledProperty, OnIsEnabledChanged);
         RegisterPropertyChangedCallback(VisibilityProperty, OnSegmentControlVisibilityChanged);
@@ -567,7 +557,7 @@ public partial class SegmentedControl : UserControl
         UpdateChildren();
     }
 
-    private Size _lastSize = default;
+    private Size _lastSize;
     private void SegmentedControl_SizeChanged(object sender, SizeChangedEventArgs args)
     {
         if (_lastSize == args.NewSize)

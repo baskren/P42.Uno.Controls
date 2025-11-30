@@ -2,14 +2,15 @@
 
 public partial class Up : Down
 {
+    // ReSharper disable once MemberCanBeProtected.Global
     public Up()
     {
         Width = 30;
-        Margin = new Microsoft.UI.Xaml.Thickness(5, 0, 5, 0);
-        VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Bottom;
+        Margin = new Thickness(5, 0, 5, 0);
+        VerticalAlignment = VerticalAlignment.Bottom;
 
-        dir = -1;
+        Dir = -1;
         //StaticRect.VerticalAlignment = 
-        DynamicRect.VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Bottom;
+        DynamicRect.VerticalAlignment = VerticalAlignment.Bottom;
     }
 }

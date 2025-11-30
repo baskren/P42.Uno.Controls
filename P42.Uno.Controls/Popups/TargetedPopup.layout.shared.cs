@@ -1,12 +1,6 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Shapes;
-using P42.Uno.Markup;
-using System;
-
 namespace P42.Uno.Controls;
 
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 public partial class TargetedPopup : ContentControl
 {
     #region Defaults
@@ -105,7 +99,7 @@ public partial class TargetedPopup : ContentControl
         }
     }
 
-    private async void OnPageOverlayTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+    private async void OnPageOverlayTapped(object sender, TappedRoutedEventArgs e)
     {
         if (PopOnPageOverlayTouch)
         {

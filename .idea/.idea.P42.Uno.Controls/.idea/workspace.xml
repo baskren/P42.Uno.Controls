@@ -8,6 +8,9 @@
     <projectFile kind="XamarinIOS">P42.Uno.Controls/P42.Uno.Controls.csproj</projectFile>
     <projectFile kind="XamarinAndroid">P42.Uno.Markup/P42.Uno.Markup/P42.Uno.Markup.csproj</projectFile>
     <projectFile kind="XamarinIOS">P42.Uno.Markup/P42.Uno.Markup/P42.Uno.Markup.csproj</projectFile>
+    <projectFile kind="XamarinAndroid">P42.Uno.Markup/P42.Uno.WinUI.Markup/P42.Uno.WinUI.Markup.csproj</projectFile>
+    <projectFile kind="XamarinIOS">P42.Uno.Markup/P42.Uno.WinUI.Markup/P42.Uno.WinUI.Markup.csproj</projectFile>
+    <projectFile profileName="P42.Uno.WinUI.Markup">P42.Uno.Markup/P42.Uno.WinUI.Markup/P42.Uno.WinUI.Markup.csproj</projectFile>
     <projectFile kind="XamarinAndroid">P42.Utils/P42.Utils.Uno/P42.Utils.Uno.csproj</projectFile>
     <projectFile kind="XamarinIOS">P42.Utils/P42.Utils.Uno/P42.Utils.Uno.csproj</projectFile>
     <projectFile profileName="P42.Utils.NetStandard">P42.Utils/P42.Utils/P42.Utils.csproj</projectFile>
@@ -115,16 +118,19 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/P42.Uno.Controls.Demo/Pages/BubblePointerAdjust.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.android.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.desktop.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.wasm.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/P42.Uno.Controls/Popups/MenuFlyout/MenuFlyout.layout.winui.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d1ae447567d8428db6b067f6c9a6acbf721d00/03/99e83083/NavigationView.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d1ae447567d8428db6b067f6c9a6acbf721d00/77/d52bacdf/Slider.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/afa924a13dca4893e2356f86136dd91393eb78c/Microsoft.UI.Xaml.Controls.Slider.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/de446d4ac7f84c0097b2aae81158d5c33a000/56/1f3cfdbb/PanelExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ab9734dd3c4a38b584c6d76c565dd8c9b4ecd57fb36446610c7e49bc1ae98ce/SafeFireAndForgetExtensions.shared.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
       <facet id="P42.Uno.Controls.Demo/invalid/Android Facet - P42.Uno.Controls.Demo" />
       <facet id="P42.Uno.Controls/invalid/Android Facet - P42.Uno.Controls" />
       <facet id="P42.Uno.Markup/invalid/Android Facet - P42.Uno.Markup" />
+      <facet id="P42.Uno.WinUI.Markup/invalid/Android Facet - P42.Uno.WinUI.Markup" />
       <facet id="P42.Utils.Uno/invalid/Android Facet - P42.Utils.Uno" />
     </ignored-facets>
   </component>
@@ -140,46 +146,57 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Device#class com.jetbrains.rider.run.multiPlatform.ios.devices.IOSSimulatorKind#com.jetbrains.rider.run.multiPlatform.ios.devices.IOSDevicesProvider#iOS: P42.Uno.Controls.Demo": "iPhone 15 Pro Max",
-    "DeviceKind#com.jetbrains.rider.run.multiPlatform.ios.devices.IOSDevicesProvider": "Simulator",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Uno.Sdk",
-    "iOS.P42.Uno.Controls.Demo.executor": "Debug",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.stylelint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.stylelint": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "settings.editor.splitter.proportion": "0.2590507",
-    "vue.rearranger.settings.migration": "true"
-  },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "/Users/ben/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache",
-      "/Users/ben/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache",
-      "/Users/ben/Library/Application Support/Symbols/src"
-    ]
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Device#class com.jetbrains.rider.run.multiPlatform.ios.devices.IOSSimulatorKind#com.jetbrains.rider.run.multiPlatform.ios.devices.IOSDevicesProvider#iOS: P42.Uno.Controls.Demo&quot;: &quot;iPhone 15 Pro Max&quot;,
+    &quot;DeviceKind#com.jetbrains.rider.run.multiPlatform.ios.devices.IOSDevicesProvider&quot;: &quot;Simulator&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;net9&quot;,
+    &quot;iOS.P42.Uno.Controls.Demo.executor&quot;: &quot;Debug&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;settings.editor.splitter.proportion&quot;: &quot;0.2590507&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="iOS.P42.Uno.Controls.Demo">
-    <configuration name="P42.Utils: P42.Utils.NetStandard" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
-      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/P42.Utils/P42.Utils/P42.Utils.csproj" />
-      <option name="LAUNCH_PROFILE_TFM" value="net7.0" />
-      <option name="LAUNCH_PROFILE_NAME" value="P42.Utils.NetStandard" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+    <configuration name="P42.Uno.WinUI.Markup" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/P42.Uno.WinUI.Markup.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value="net10.0" />
+      <option name="LAUNCH_PROFILE_NAME" value="P42.Uno.WinUI.Markup" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
       <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
       <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
       <option name="SEND_DEBUG_REQUEST" value="1" />
       <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+    <configuration name="P42.Utils: P42.Utils.NetStandard" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/P42.Utils/P42.Utils/P42.Utils.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value="net7.0" />
+      <option name="LAUNCH_PROFILE_NAME" value="P42.Utils.NetStandard" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <method v="2">
         <option name="Build" />
       </method>
@@ -187,7 +204,7 @@
     <configuration name="P42.Uno.Controls" type="XamarinAndroidProject" factoryName="Xamarin.Android">
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/P42.Uno.Controls/P42.Uno.Controls.csproj" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
       <option name="DEPLOY_BEHAVIOUR_NAME" value="Default" />
       <method v="2">
         <option name="Build" />
@@ -196,7 +213,7 @@
     <configuration name="P42.Uno.Controls.Demo" type="XamarinAndroidProject" factoryName="Xamarin.Android">
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/P42.Uno.Controls.Demo/P42.Uno.Controls.Demo.csproj" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
       <option name="DEPLOY_BEHAVIOUR_NAME" value="Default" />
       <method v="2">
         <option name="Build" />
@@ -205,16 +222,23 @@
     <configuration name="P42.Uno.Markup" type="XamarinAndroidProject" factoryName="Xamarin.Android">
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.Markup/P42.Uno.Markup.csproj" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
       <option name="DEPLOY_BEHAVIOUR_NAME" value="Default" />
       <method v="2">
         <option name="Build" />
       </method>
     </configuration>
+    <configuration name="P42.Uno.WinUI.Markup" type="XamarinAndroidProject" factoryName="Xamarin.Android">
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/P42.Uno.WinUI.Markup.csproj" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="DEPLOY_BEHAVIOUR_NAME" value="Default" />
+      <method v="2" />
+    </configuration>
     <configuration name="P42.Utils.Uno" type="XamarinAndroidProject" factoryName="Xamarin.Android">
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/P42.Utils/P42.Utils.Uno/P42.Utils.Uno.csproj" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
       <option name="DEPLOY_BEHAVIOUR_NAME" value="Default" />
       <method v="2">
         <option name="Build" />
@@ -225,6 +249,7 @@
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="IS_PASS_PARENT_ENVS" value="false" />
       <option name="EXTRA_MLAUNCH_PARAMETERS" value="" />
+      <option name="PLATFORM_TYPE" value="IOS" />
       <method v="2" />
     </configuration>
     <configuration name="P42.Uno.Controls.Demo" type="XamarinIOSProject" factoryName="Xamarin.iOS">
@@ -232,6 +257,7 @@
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="IS_PASS_PARENT_ENVS" value="false" />
       <option name="EXTRA_MLAUNCH_PARAMETERS" value="" />
+      <option name="PLATFORM_TYPE" value="IOS" />
       <method v="2" />
     </configuration>
     <configuration name="P42.Uno.Markup" type="XamarinIOSProject" factoryName="Xamarin.iOS">
@@ -239,6 +265,15 @@
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="IS_PASS_PARENT_ENVS" value="false" />
       <option name="EXTRA_MLAUNCH_PARAMETERS" value="" />
+      <option name="PLATFORM_TYPE" value="IOS" />
+      <method v="2" />
+    </configuration>
+    <configuration name="P42.Uno.WinUI.Markup" type="XamarinIOSProject" factoryName="Xamarin.iOS">
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/P42.Uno.WinUI.Markup.csproj" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="IS_PASS_PARENT_ENVS" value="false" />
+      <option name="EXTRA_MLAUNCH_PARAMETERS" value="" />
+      <option name="PLATFORM_TYPE" value="IOS" />
       <method v="2" />
     </configuration>
     <configuration name="P42.Utils.Uno" type="XamarinIOSProject" factoryName="Xamarin.iOS">
@@ -246,6 +281,7 @@
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="IS_PASS_PARENT_ENVS" value="false" />
       <option name="EXTRA_MLAUNCH_PARAMETERS" value="" />
+      <option name="PLATFORM_TYPE" value="IOS" />
       <method v="2" />
     </configuration>
     <configuration name="P42.Uno.Controls.Demo" type="XamarinMacProject" factoryName="Xamarin.Mac">
@@ -269,6 +305,9 @@
       <workItem from="1722714460080" duration="9560000" />
       <workItem from="1722787897245" duration="6301000" />
       <workItem from="1722866819289" duration="823000" />
+      <workItem from="1764516487459" duration="1455000" />
+      <workItem from="1764518512231" duration="2748000" />
+      <workItem from="1764521436702" duration="4490000" />
     </task>
     <servers />
   </component>
@@ -278,6 +317,24 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="3" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

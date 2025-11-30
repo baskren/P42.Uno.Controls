@@ -1,16 +1,9 @@
-using System;
-using System.Threading.Tasks;
-using P42.Uno.Markup;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-
 namespace P42.Uno.Controls;
 
 /// <summary>
 /// BusyPopup: popup with spinner, title and messageContent
 /// </summary>
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
 public partial class BusyPopup : Toast
 {
@@ -21,7 +14,7 @@ public partial class BusyPopup : Toast
         nameof(SpinnerBrush),
         typeof(Brush),
         typeof(BusyPopup),
-        new PropertyMetadata(new SolidColorBrush(SystemColors.Accent), new PropertyChangedCallback(OnSpinnerBrushChanged))
+        new PropertyMetadata(new SolidColorBrush(SystemColors.Accent), OnSpinnerBrushChanged)
     );
     private static void OnSpinnerBrushChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {

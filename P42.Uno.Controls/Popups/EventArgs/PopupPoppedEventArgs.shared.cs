@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace P42.Uno.Controls;
+﻿namespace P42.Uno.Controls;
 
 /// <summary>
 /// Event arguments passed by Popped event and WaitUntilPoppedAsyc() method in P42.Uno.Controls popups.

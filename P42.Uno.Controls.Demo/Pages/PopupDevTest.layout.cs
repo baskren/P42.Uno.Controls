@@ -8,7 +8,7 @@ namespace P42.Uno.Controls.Demo;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 public partial class PopupDevTest : Page
 {
     private readonly Grid _grid = new();
@@ -42,43 +42,43 @@ public partial class PopupDevTest : Page
         Content = _grid
             .Margin(0)
             .Padding(0)
-            .Background(Microsoft.UI.Colors.Yellow)
+            .Background(Colors.Yellow)
             .Rows(150, 50, 50, "*", 50, 50)
             .Children
             (
                 _bubbleTestRectangle
                     .Row(0)
                     .Stretch()
-                    .Fill(Microsoft.UI.Colors.Beige),
+                    .Fill(Colors.Beige),
                 new StackPanel()
                     .Row(1)
                     .Horizontal()
                     .Children
                     (
-                        new TextBlock().Text("Margin:").Foreground(Microsoft.UI.Colors.Black),
-                        _marginTextBox.Text("0").Foreground(Microsoft.UI.Colors.Black),
-                        new TextBlock().Text("Padding:").Foreground(Microsoft.UI.Colors.Black),
-                        _paddingTextBox.Text("0").Foreground(Microsoft.UI.Colors.Black),
-                        new TextBlock().Text("Pointer:").Foreground(Microsoft.UI.Colors.Black),
+                        new TextBlock().Text("Margin:").Foreground(Colors.Black),
+                        _marginTextBox.Text("0").Foreground(Colors.Black),
+                        new TextBlock().Text("Padding:").Foreground(Colors.Black),
+                        _paddingTextBox.Text("0").Foreground(Colors.Black),
+                        new TextBlock().Text("Pointer:").Foreground(Colors.Black),
                         _pointerDirectionCombo
                             .Text("PointerDir")
-                            .Foreground(Microsoft.UI.Colors.Black)
+                            .Foreground(Colors.Black)
                             .ItemTemplate(typeof(EnumItemTemplate))
                             .ItemsSource(Enum.GetValues(typeof(PointerDirection)))
                             .SelectedIndex(0)
                             .AddSelectionChangedHandler(OnPointerDirChanged),
-                        new TextBlock().Text("HzAlign:").Foreground(Microsoft.UI.Colors.Black),
+                        new TextBlock().Text("HzAlign:").Foreground(Colors.Black),
                         _hzAlignCombo
                             .Text("HzAlign")
-                            .Foreground(Microsoft.UI.Colors.Black)
+                            .Foreground(Colors.Black)
                             .ItemTemplate(typeof(EnumItemTemplate))
                             .ItemsSource(Enum.GetValues(typeof(HorizontalAlignment)))
                             .SelectedIndex(0)
                             .AddSelectionChangedHandler(OnHzAlignChanged),
-                        new TextBlock().Text("VtAlign:").Foreground(Microsoft.UI.Colors.Black),
+                        new TextBlock().Text("VtAlign:").Foreground(Colors.Black),
                         _vtAlignCombo
                             .Text("VtAlign")
-                            .Foreground(Microsoft.UI.Colors.Black)
+                            .Foreground(Colors.Black)
                             .ItemTemplate(typeof(EnumItemTemplate))
                             .ItemsSource(Enum.GetValues(typeof(VerticalAlignment)))
                             .SelectedIndex(0)
@@ -86,20 +86,20 @@ public partial class PopupDevTest : Page
                         _button
                             .Content("Show Popup")
                             .AddTapHandler(OnButton_Click)
-                            .Foreground(Microsoft.UI.Colors.Black)
+                            .Foreground(Colors.Black)
                     ),
                 new StackPanel()
                     .Row(2)
                     .Horizontal()
                     .Children(
-                        new TextBlock().Text("Shadow:").Foreground(Microsoft.UI.Colors.Black),
+                        new TextBlock().Text("Shadow:").Foreground(Colors.Black),
                         _shadowToggleSwitch.On().AddToggledHandler(OnShadowToggleButtonChanged),
-                        new TextBlock().Text("Overlay:").Foreground(Microsoft.UI.Colors.Black),
+                        new TextBlock().Text("Overlay:").Foreground(Colors.Black),
                         _overlayToggleSwitch.On().AddToggledHandler(OnPageOverlayToggleSwitchChanged),
-                        new TextBlock().Text("Hitable:").Foreground(Microsoft.UI.Colors.Black),
+                        new TextBlock().Text("Hitable:").Foreground(Colors.Black),
                         _hitTransparentOverlayToggleSwitch.On().AddToggledHandler(OnHitTransparentToggleButtonChanged),
-                        new TextBlock().Text("Border:").Foreground(Microsoft.UI.Colors.Black),
-                        _borderTextBox.Text("1").Foreground(Microsoft.UI.Colors.Black).AddTextChangedHandler(_borderTextBox_TextChanged)
+                        new TextBlock().Text("Border:").Foreground(Colors.Black),
+                        _borderTextBox.Text("1").Foreground(Colors.Black).AddTextChangedHandler(_borderTextBox_TextChanged)
 
                     ),
                 _listView
@@ -115,7 +115,7 @@ public partial class PopupDevTest : Page
                     .Size(50, 50)
                     .CenterHorizontal()
                     .Child(new TextBlock { Text = "TARGET", VerticalAlignment = VerticalAlignment.Center })
-                    .Background(Microsoft.UI.Colors.Pink)
+                    .Background(Colors.Pink)
                     .AddTapHandler(OnElementTapped)
                     /*,
                 new BubbleBorder()
@@ -155,7 +155,7 @@ public partial class PopupDevTest : Page
     private void OnPageOverlayToggleSwitchChanged(object sender, RoutedEventArgs e)
     {
         TargetedPopup.PageOverlayBrush = _overlayToggleSwitch.IsOn
-            ? new SolidColorBrush(Microsoft.UI.Colors.Black.WithAlpha(0.25))
+            ? new SolidColorBrush(Colors.Black.WithAlpha(0.25))
             : null;
     }
 
@@ -192,16 +192,16 @@ public partial class PopupDevTest : Page
     }
 }
 
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class MainPageButtonRowTemplate : Button
+[Bindable]
+public class MainPageButtonRowTemplate : Button
 {
     public MainPageButtonRowTemplate()
     {
         this.Padding(20, 2)
             .StretchHorizontal()
             .HorizontalContentAlignment(HorizontalAlignment.Right)
-            .Background(Microsoft.UI.Colors.Beige)
-            .BorderBrush(Microsoft.UI.Colors.Green)
+            .Background(Colors.Beige)
+            .BorderBrush(Colors.Green)
             .BorderThickness(1)
             .CornerRadius(5)
             .AddTapHandler(BorderTapped)
@@ -213,7 +213,7 @@ public partial class MainPageButtonRowTemplate : Button
     private void BorderTapped(object sender, TappedRoutedEventArgs e)
     {
         var page = this.FindAncestor<PopupDevTest>();
-        System.Diagnostics.Debug.WriteLine($"page=[{page}]");
+        Debug.WriteLine($"page=[{page}]");
     }
 
     private void CellTemplate_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
@@ -222,8 +222,8 @@ public partial class MainPageButtonRowTemplate : Button
     }
 }
 
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class EnumItemTemplate : Grid
+[Bindable]
+public class EnumItemTemplate : Grid
 {
     private readonly TextBlock _textBlock = new();
 

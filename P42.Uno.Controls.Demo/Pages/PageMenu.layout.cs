@@ -4,7 +4,7 @@ using P42.Utils.Uno;
 
 namespace P42.Uno.Controls.Demo;
 
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 public partial class PageMenu : Page
 {
     
@@ -34,8 +34,8 @@ public partial class PageMenu : Page
 
 }
 
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class PageMenuCellTemplate : UserControl
+[Bindable]
+public class PageMenuCellTemplate : UserControl
 {
     private readonly TextBlock _textBlock = new();
 

@@ -1,20 +1,15 @@
-using System;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
+using System.Diagnostics;
 using Windows.UI;
-using P42.Uno.Markup;
-using P42.Utils.Uno;
-using Microsoft.UI.Xaml.Media.Animation;
 using Windows.UI.Text;
+using Microsoft.UI.Xaml.Media.Animation;
 
 namespace P42.Uno.Controls;
 
 /// <summary>
 /// Border used by Popups
 /// </summary>
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class BubbleBorder : Grid
+[Bindable]
+public class BubbleBorder : Grid
 // An important note.  It appears that ContentControl does not resize itself smaller if its content gets smaller. Also, it does not resize itself when going from Stretch Alignment to something else
 {
     #region Properties
@@ -31,7 +26,7 @@ public partial class BubbleBorder : Grid
 
     private void OnBackgroundColorChanged(DependencyPropertyChangedEventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine($"BubbleBorder.OnBackgroundColorChanged : [{e.NewValue}] ");
+        Debug.WriteLine($"BubbleBorder.OnBackgroundColorChanged : [{e.NewValue}] ");
             
     }
 #if __IOS__ || __MACCATALYST__
@@ -257,13 +252,13 @@ public partial class BubbleBorder : Grid
     #region FontFamily Property
     public static readonly DependencyProperty FontFamilyProperty = DependencyProperty.Register(
         nameof(FontFamily),
-        typeof(Microsoft.UI.Xaml.Media.FontFamily),
+        typeof(FontFamily),
         typeof(BubbleBorder),
-        new PropertyMetadata(default(Microsoft.UI.Xaml.Media.FontFamily))
+        new PropertyMetadata(default(FontFamily))
     );
-    public Microsoft.UI.Xaml.Media.FontFamily FontFamily
+    public FontFamily FontFamily
     {
-        get => (Microsoft.UI.Xaml.Media.FontFamily)GetValue(FontFamilyProperty);
+        get => (FontFamily)GetValue(FontFamilyProperty);
         set => SetValue(FontFamilyProperty, value);
     }
     #endregion FontFamily Property

@@ -1,21 +1,15 @@
-using SkiaSharp;
-using System;
-using System.IO;
+using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using Windows.Foundation;
-using Microsoft.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
+using SkiaSharp;
 using SkiaSharp.Views.Windows;
-using P42.Uno.Markup;
-using Svg;
 
 namespace P42.Uno.Controls;
 
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
-public partial class EmbeddedSvgImage : SKXamlCanvas
+public class EmbeddedSvgImage : SKXamlCanvas
 {
     #region Properties
 
@@ -42,8 +36,8 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
     private Svg.Skia.SKSvg _skSvg;
     //private SkiaSharp.Extended.Svg.SKSvg _skSvg;
     private double _canvasAspect = 1.0;
-    private float _canvasWidth = 0;
-    private float _canvasHeight = 0;
+    private float _canvasWidth;
+    private float _canvasHeight;
     #endregion
 
 
@@ -76,7 +70,7 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
             return;
 
         if (!resourceId.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
-            throw new ArgumentException($"Resource ID must end with '.svg'.");
+            throw new ArgumentException("Resource ID must end with '.svg'.");
 
         if (resourceId.StartsWith("http://") || resourceId.StartsWith("https://") || resourceId.StartsWith("file://") || resourceId.StartsWith("ms-appx://"))
         {
@@ -94,7 +88,7 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
         {
             var resources = assembly.GetManifestResourceNames();
             Console.WriteLine($"ERROR: Cannot find embedded resource [{resourceId}] in assembly [{assembly}].");
-            Console.WriteLine($"       Resources found:");
+            Console.WriteLine("       Resources found:");
             foreach (var resource in resources)
                 Console.WriteLine($"       [{resource}]");
         }
@@ -176,7 +170,7 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
         workingCanvas.Save();
 
         var fillRect = e.Info.Rect;
-        var fillRectAspect = (float)fillRect.Width / (float)fillRect.Height;
+        var fillRectAspect = fillRect.Width / (float)fillRect.Height;
         
         // System.Diagnostics.Debug.WriteLine($"{nameof(EmbeddedSvgImage)}.OnPaintSurface");
         // System.Diagnostics.Debug.WriteLine($"\t fillRect:[{fillRect.Width}x{fillRect.Height}] aspect: {fillRectAspect}  Stretch:[{Stretch}]");
@@ -193,7 +187,7 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
                 // : fillRect.Width / _skSvg.CanvasSize.Width;
                 ? fillRect.Height / _canvasHeight
                 : fillRect.Width / _canvasWidth;
-            System.Diagnostics.Debug.WriteLine($"\t scale:[{scale}]");
+            Debug.WriteLine($"\t scale:[{scale}]");
             workingCanvas.Scale(scale, scale);
         }
         else if (Stretch == Stretch.Uniform)
@@ -203,7 +197,7 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
                 // : fillRect.Height / _skSvg.CanvasSize.Height;
                 ? fillRect.Width / _canvasWidth
                 : fillRect.Height / _canvasHeight;
-            System.Diagnostics.Debug.WriteLine($"\t scale:[{scale}]");
+            Debug.WriteLine($"\t scale:[{scale}]");
             workingCanvas.Scale(scale, scale);
         }
         else if (Stretch == Stretch.Fill)

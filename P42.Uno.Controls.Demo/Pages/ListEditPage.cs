@@ -1,6 +1,8 @@
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
+using System.Collections.ObjectModel;
+
 namespace P42.Uno.Controls.Demo;
 
 /// <summary>
@@ -10,7 +12,7 @@ public partial class ListEditPage
 {
     public static ListEditPage? Current { get; private set; }
 
-    readonly System.Collections.ObjectModel.ObservableCollection<string> _items =
+    readonly ObservableCollection<string> _items =
     [
             "1 one", "2 two", "3 three", "4 four", "5 five", "6 six", "7 seven", "8 eight", "9 nine", "10 ten", "11 eleven", "12 twelve", "13 thirteen", "14 fourteen", "15 fifteen", "16 sixteen", "17 seventeen", "18 eighteen", "19 nineteen", "20 twenty", "21 twenty one", "22 twenty two", "23 twenty three", "24 twenty four", "25 twenty five", "26 twenty six",
             "Item A", "Item B", "Item C", "Item D", "Item E", "Item F", "Item G", "Item H", "Item I", "Item J", "Item K", "Item L", "Item M", "Item N", "Item O", "Item P", "Item Q", "Item R", "Item S", "Item T", "Item U", "Item V", "Item W", "Item X", "Item Y", "Item Z",
@@ -32,7 +34,7 @@ public partial class ListEditPage
     //async void OnItemClicked(object sender, ItemClickEventArgs args)
     public async Task OnCellClicked(TextBlock textBlock)
     {
-        System.Diagnostics.Debug.WriteLine("ListEditPage.CLICK!!!");
+        Debug.WriteLine("ListEditPage.CLICK!!!");
         //QuickMeasureList.Stopwatch.Restart();
 
         var items = new List<string> 
@@ -147,7 +149,7 @@ public partial class ListEditPage
             var popup = new TargetedPopup
                 {
                     Content = _grid,
-                    BackgroundColor = Microsoft.UI.Colors.Pink,
+                    BackgroundColor = Colors.Pink,
                     Target = textBlock
                 }
                 .Padding(4)

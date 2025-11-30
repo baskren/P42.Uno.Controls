@@ -45,19 +45,19 @@ public partial class StringButtonUserControl
     private void OnDataContextChanged(DependencyObject sender, DependencyProperty dp)
     {
         // works in Uno but not UWP?!?!
-        System.Diagnostics.Debug.WriteLine(GetType() + ".OnDataContextChanged sender:" + sender + " dp:" + dp);
+        Debug.WriteLine(GetType() + ".OnDataContextChanged sender:" + sender + " dp:" + dp);
     }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-    private async void BorderTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+    private async void BorderTapped(object sender, TappedRoutedEventArgs e)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
-        System.Diagnostics.Debug.WriteLine(GetType() + ".BorderTapped: sender:" + sender + " e.PointerDeviceType:" + e.PointerDeviceType);
+        Debug.WriteLine(GetType() + ".BorderTapped: sender:" + sender + " e.PointerDeviceType:" + e.PointerDeviceType);
     }
 
 
     public void OnCellTapped()
     {
-        System.Diagnostics.Debug.WriteLine("StringButtonUserControl.");
+        Debug.WriteLine("StringButtonUserControl.");
     }
 }

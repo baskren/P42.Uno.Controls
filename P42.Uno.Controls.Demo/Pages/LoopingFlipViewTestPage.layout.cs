@@ -7,7 +7,7 @@ namespace P42.Uno.Controls.Demo;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 public sealed partial class LoopingFlipViewTestPage : Page
 {
     private readonly Grid 
@@ -81,7 +81,7 @@ public sealed partial class LoopingFlipViewTestPage : Page
         if (_clicking)
             return;
         _clicking = true;
-        System.Diagnostics.Debug.WriteLine($"CLICKS: {++_clicks}");
+        Debug.WriteLine($"CLICKS: {++_clicks}");
 
         var popup = await TargetedPopup.CreateAsync(_button, _contentPresenter);
         await popup.WaitForPoppedAsync();

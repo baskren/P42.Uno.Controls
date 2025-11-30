@@ -33,7 +33,7 @@ public partial class PopupDevTest
                     (
                         new Grid()
                             .Background(SystemColors.AltHigh)
-                            .BorderBrush(Microsoft.UI.Colors.Gray)
+                            .BorderBrush(Colors.Gray)
                             .Padding(10)
                             .Children
                             (
@@ -46,8 +46,8 @@ public partial class PopupDevTest
                             .Margin(10)
                             .Bind(TextBlock.TextProperty, _textBox, nameof(TextBox.Text)),
                         new Grid()
-                            .Background(Microsoft.UI.Colors.Pink)
-                            .BorderBrush(Microsoft.UI.Colors.Gray)
+                            .Background(Colors.Pink)
+                            .BorderBrush(Colors.Gray)
                             .Padding(10).Children
                             (
                                 new Button()

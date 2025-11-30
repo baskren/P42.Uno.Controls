@@ -1,18 +1,15 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using Windows.Media.Core;
-using Windows.Storage;
+using Windows.Media.Playback;
 
 namespace P42.Uno.Controls 
 {
     class NativeChimePlayer : INativeChimePlayer 
     {
-        static Windows.Media.Playback.MediaPlayer MediaPlayer;
+        static MediaPlayer MediaPlayer;
 
         static NativeChimePlayer() 
         { 
-            MediaPlayer = new Windows.Media.Playback.MediaPlayer();
+            MediaPlayer = new MediaPlayer();
         }
 
 

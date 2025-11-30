@@ -1,12 +1,9 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using P42.Uno.Markup;
+using P42.Uno.Controls.AnimateBar;
 
 namespace P42.Uno.Controls;
 
-[Microsoft.UI.Xaml.Data.Bindable]
-internal partial class LoopingFlipViewItem : Grid, IEventSubscriber
+[Bindable]
+internal class LoopingFlipViewItem : Grid, IEventSubscriber
 {
     #region Foreground Property
     public static readonly DependencyProperty ForegroundProperty = DependencyProperty.Register(
@@ -30,15 +27,15 @@ internal partial class LoopingFlipViewItem : Grid, IEventSubscriber
 
     internal UIElement Child;
 
-    private AnimateBar.Left LeftBar = new();
+    private Left LeftBar = new();
 
 
-    private AnimateBar.Right RightBar = new();
+    private Right RightBar = new();
 
     public LoopingFlipViewItem(UIElement child)
     {
-        RightBar.WBind(AnimateBar.Base.ForegroundProperty, this, ForegroundProperty);
-        LeftBar.WBind(AnimateBar.Base.ForegroundProperty, this, ForegroundProperty);
+        RightBar.WBind(Base.ForegroundProperty, this, ForegroundProperty);
+        LeftBar.WBind(Base.ForegroundProperty, this, ForegroundProperty);
 
         Child = child;
         Children.Add(child);
@@ -51,11 +48,11 @@ internal partial class LoopingFlipViewItem : Grid, IEventSubscriber
 
 
 
-    private void OnBarTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+    private void OnBarTapped(object sender, TappedRoutedEventArgs e)
     {
         if (Parent is Grid _grid && _grid.Parent is LoopingFlipView flipView)
         {
-            if (sender is AnimateBar.Base bar)
+            if (sender is Base bar)
             {
                 if (bar == LeftBar)
                     flipView.SelectedIndex--;

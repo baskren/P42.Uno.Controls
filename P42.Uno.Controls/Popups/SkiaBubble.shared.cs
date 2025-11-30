@@ -1,20 +1,18 @@
-using System;
-using Windows.Foundation;
-using Microsoft.UI.Xaml;
-using SkiaSharp;
-using Windows.UI;
-using P42.Uno.Markup;
-using SkiaSharp.Views.Windows;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Windows.Foundation;
+using Windows.UI;
+using SkiaSharp;
+using SkiaSharp.Views.Windows;
 
 namespace P42.Uno.Controls;
 
 /// <summary>
 /// Border used by Popups
 /// </summary>
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
-public partial class SkiaBubble : SKXamlCanvas
+public class SkiaBubble : SKXamlCanvas
 {
 
     internal static readonly Color DefaultBorderColor = SystemColors.BaseMedium;
@@ -226,7 +224,7 @@ public partial class SkiaBubble : SKXamlCanvas
     {
         _instance = _instances++;
 #if __IOS__
-            ((UIKit.UIView)this).BackgroundColor = UIKit.UIColor.Clear;
+            ((UIView)this).BackgroundColor = UIColor.Clear;
 #endif
 
         //RegisterPropertyChangedCallback(MarginProperty, OnMarginChanged);
@@ -236,7 +234,7 @@ public partial class SkiaBubble : SKXamlCanvas
     {
         Invalidate();
 
-        System.Diagnostics.Debug.WriteLine($"SkiaBubble.OnMarginChanged: {Margin}");
+        Debug.WriteLine($"SkiaBubble.OnMarginChanged: {Margin}");
     }
 
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)

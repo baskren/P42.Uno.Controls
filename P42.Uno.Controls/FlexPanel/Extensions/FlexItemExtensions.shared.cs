@@ -11,9 +11,8 @@
 //  - Stephane Delcroix (.NET port)
 //  - Ben Askren (UWP/Uno port)
 //
-using System;
+
 using Windows.Foundation;
-using Microsoft.UI.Xaml;
 using static P42.Uno.Controls.FlexPanel;
 
 namespace P42.Uno.Controls.InternalFlexPanelExtensions;
@@ -65,12 +64,12 @@ internal static class FlexItemExtensions
 
             if (widthConstraint < 0 && !double.IsNaN(parent.Width))
             {
-                widthConstraint = (double)parent.Width;
+                widthConstraint = parent.Width;
             }
 
             if (heightConstraint < 0 && !double.IsNaN(parent.Height))
             {
-                heightConstraint = (double)parent.Height;
+                heightConstraint = parent.Height;
             }
 
             parent = parent.Parent;
@@ -81,9 +80,9 @@ internal static class FlexItemExtensions
 
     public static void SetPadding(this FlexItem item, Thickness padding)
     {
-        item.PaddingLeft = (double)padding.Left;
-        item.PaddingTop = (double)padding.Top;
-        item.PaddingRight = (double)padding.Right;
-        item.PaddingBottom = (double)padding.Bottom;
+        item.PaddingLeft = padding.Left;
+        item.PaddingTop = padding.Top;
+        item.PaddingRight = padding.Right;
+        item.PaddingBottom = padding.Bottom;
     }
 }

@@ -1,18 +1,7 @@
-using P42.Uno.Markup;
-using P42.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Shapes;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI;
-
 namespace P42.Uno.Controls;
 
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class SimpleStringGrid : UserControl
+[Bindable]
+public class SimpleStringGrid : UserControl
 {
     #region Properties
 
@@ -220,10 +209,6 @@ public partial class SimpleStringGrid : UserControl
     #endregion
 
 
-    #region Event Handlers
-    #endregion
-
-
     #region Helper Methods
 
     private void ResetColumns()
@@ -399,7 +384,7 @@ public partial class SimpleStringGrid : UserControl
             return tb;
         }
 
-        return new TextBlock()
+        return new TextBlock
         {
             HorizontalAlignment= HorizontalAlignment.Left,
             VerticalAlignment= VerticalAlignment.Center,

@@ -1,4 +1,3 @@
-using Uno.Resizetizer;
 using Uno.UI.Adapter.Microsoft.Extensions.Logging;
 
 namespace P42.Uno.Controls.Demo;
@@ -82,9 +81,9 @@ public partial class App : Application
         var factory = LoggerFactory.Create(builder =>
         {
 #if __WASM__
-            builder.AddProvider(new global::Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
+            builder.AddProvider(new WebAssemblyConsoleLoggerProvider());
 #elif __IOS__ || __MACCATALYST__
-            builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
+            builder.AddProvider(new OSLogLoggerProvider());
 #else
             builder.AddConsole();
 #endif

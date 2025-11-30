@@ -1,6 +1,11 @@
+using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.Media;
 using Android.OS;
+using Android.Provider;
+using Android.Views;
+using Application = Android.App.Application;
 
 #pragma warning disable CA1422 // Validate platform compatibility
 namespace P42.Uno.Controls;
@@ -8,7 +13,7 @@ namespace P42.Uno.Controls;
 internal class NativeHapticPlayer : INativeHapticPlayer
 {
     private static Vibrator _vibrator;
-    private static Vibrator Vibrator => _vibrator ??= (Vibrator)Android.App.Application.Context.GetSystemService(Context.VibratorService);
+    private static Vibrator Vibrator => _vibrator ??= (Vibrator)Application.Context.GetSystemService(Context.VibratorService);
 
     private static bool _appEnabledTested;
     private static bool _appEnabled;
@@ -19,7 +24,7 @@ internal class NativeHapticPlayer : INativeHapticPlayer
         {
             if (!_appEnabledTested)
             {
-                _appEnabled = Android.App.Application.Context.CheckCallingOrSelfPermission("android.permission.VIBRATE") == Android.Content.PM.Permission.Granted;
+                _appEnabled = Application.Context.CheckCallingOrSelfPermission("android.permission.VIBRATE") == Permission.Granted;
                 _appEnabledTested = true;
             }
             return _appEnabled;
@@ -52,14 +57,14 @@ internal class NativeHapticPlayer : INativeHapticPlayer
 
         if (mode == EffectMode.Default)
         {
-            var enabled = Android.Provider.Settings.System.GetInt(Android.App.Application.Context.ContentResolver, Android.Provider.Settings.System.HapticFeedbackEnabled, 1) != 0;
+            var enabled = Settings.System.GetInt(Application.Context.ContentResolver, Settings.System.HapticFeedbackEnabled, 1) != 0;
             if (!enabled)
                 return;
         }
 
-        var currentActivity = global::Uno.UI.ContextHelper.Current as Android.App.Activity;
+        var currentActivity = ContextHelper.Current as Activity;
         if (effect == Effect.Select)
-            currentActivity.Window.DecorView.PerformHapticFeedback(Android.Views.FeedbackConstants.KeyboardTap);
+            currentActivity.Window.DecorView.PerformHapticFeedback(FeedbackConstants.KeyboardTap);
         else if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
             VibrationEffect droidEffect = null;

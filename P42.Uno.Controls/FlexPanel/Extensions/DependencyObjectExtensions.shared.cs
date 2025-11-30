@@ -8,8 +8,6 @@
 //  - Ben Askren (UWP/Uno port)
 //
 
-using Microsoft.UI.Xaml;
-
 namespace P42.Uno.Controls.InternalFlexPanelExtensions;
 
 internal static class DependencyObjectExtensions

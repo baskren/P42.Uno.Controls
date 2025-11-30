@@ -1,7 +1,7 @@
 namespace App1;
 
-    [Microsoft.UI.Xaml.Data.Bindable]
-    public partial class SimplePage : Page
+    [Bindable]
+    public class SimplePage : Page
     {
         public SimplePage()
         {
@@ -14,7 +14,7 @@ namespace App1;
                         HorizontalAlignment = HorizontalAlignment.Center,
                         VerticalAlignment = VerticalAlignment.Center,
                         Text = "SIMPLE PAGE",
-                        Foreground = new SolidColorBrush(Microsoft.UI.Colors.Red)
+                        Foreground = new SolidColorBrush(Colors.Red)
                     }
                 }
             };

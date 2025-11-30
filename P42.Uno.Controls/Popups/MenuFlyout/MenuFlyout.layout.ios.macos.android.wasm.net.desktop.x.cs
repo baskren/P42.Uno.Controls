@@ -1,11 +1,4 @@
 #if HAS_UNO
-using P42.Utils.Uno;
-using System;
-using System.Collections.Generic;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using P42.Utils;
-
 namespace P42.Uno.Controls;
 
 public partial class MenuFlyout : IDisposable
@@ -62,7 +55,7 @@ public partial class MenuFlyout : IDisposable
     public void Dispose()
     {
         Dispose(disposing: true);
-        System.GC.SuppressFinalize(this);
+        GC.SuppressFinalize(this);
     }
 }
 

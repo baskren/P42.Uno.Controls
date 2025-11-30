@@ -16,16 +16,16 @@ public sealed partial class AlignedPlacementPanelTestPage : Page
             .Row(1)
             .Stretch()
             .Visible()
-            .Foreground(Microsoft.UI.Colors.Pink).Background(Microsoft.UI.Colors.Blue)
+            .Foreground(Colors.Pink).Background(Colors.Blue)
             .SelectionMode(SelectionMode.Radio)
-            .Labels(["LEFT", "CENTER", "RIGHT"])
+            .Labels("LEFT", "CENTER", "RIGHT")
         );
 
         Grid.Children.Add(new Button()
             .Row(2)
             .Margin(20, 0)
-            .Foreground(Microsoft.UI.Colors.Pink)
-            .Background(Microsoft.UI.Colors.Blue)
+            .Foreground(Colors.Pink)
+            .Background(Colors.Blue)
             .Content("ADD ITEM")
         );
     }

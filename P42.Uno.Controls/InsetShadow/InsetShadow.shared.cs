@@ -1,13 +1,9 @@
-using P42.Uno.Markup;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Shapes;
-using Microsoft.UI.Xaml.Media;
+using Windows.Foundation;
 
 namespace P42.Uno.Controls;
 
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class InsetShadow : Grid
+[Bindable]
+public class InsetShadow : Grid
 {
     #region Properties
 
@@ -39,8 +35,8 @@ public partial class InsetShadow : Grid
                 .WBind<Rectangle, Orientation, Visibility>(VisibilityProperty, this, OrientationProperty, convert:VerticalVisible) 
                 .Fill(new LinearGradientBrush
                 {
-                    StartPoint = new Windows.Foundation.Point(0.5, 0),
-                    EndPoint = new Windows.Foundation.Point(0.5, 1),
+                    StartPoint = new Point(0.5, 0),
+                    EndPoint = new Point(0.5, 1),
                     GradientStops =
                     {
                         new GradientStop{ Offset=0.0, Color=ColorExtensions.ColorFromHex("#8222")},
@@ -53,8 +49,8 @@ public partial class InsetShadow : Grid
                 .WBind<Rectangle, Orientation, Visibility>(VisibilityProperty, this, OrientationProperty, convert: VerticalVisible)
                 .Fill(new LinearGradientBrush
                 {
-                    StartPoint = new Windows.Foundation.Point(0.5, 0),
-                    EndPoint = new Windows.Foundation.Point(0.5, 1),
+                    StartPoint = new Point(0.5, 0),
+                    EndPoint = new Point(0.5, 1),
                     GradientStops =
                     {
                         new GradientStop{ Offset=0.0, Color=ColorExtensions.ColorFromHex("#0222")},
@@ -68,8 +64,8 @@ public partial class InsetShadow : Grid
                 .WBind<Rectangle, Orientation, Visibility>(VisibilityProperty, this, OrientationProperty, convert: HorizontalVisible)
                 .Fill(new LinearGradientBrush
                 {
-                    StartPoint = new Windows.Foundation.Point(0, 0.5),
-                    EndPoint = new Windows.Foundation.Point(1, 0.5),
+                    StartPoint = new Point(0, 0.5),
+                    EndPoint = new Point(1, 0.5),
                     GradientStops =
                     {
                         new GradientStop{ Offset=0.0, Color=ColorExtensions.ColorFromHex("#8222")},
@@ -83,8 +79,8 @@ public partial class InsetShadow : Grid
                 .WBind<Rectangle, Orientation, Visibility>(VisibilityProperty, this, OrientationProperty, convert: HorizontalVisible)                    
                 .Fill(new LinearGradientBrush
                 {
-                    StartPoint = new Windows.Foundation.Point(0, 0.5),
-                    EndPoint = new Windows.Foundation.Point(1, 0.5),
+                    StartPoint = new Point(0, 0.5),
+                    EndPoint = new Point(1, 0.5),
                     GradientStops =
                     {
                         new GradientStop{ Offset=0.0, Color=ColorExtensions.ColorFromHex("#0222")},

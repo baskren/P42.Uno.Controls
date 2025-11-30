@@ -1,13 +1,8 @@
 using Windows.UI;
 using Windows.UI.Text;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Text;
+using Microsoft.UI.Xaml.Media.Animation;
 using ElementType = P42.Uno.Controls.BubbleBorder;
-using P42.Uno.Markup;
 
 namespace P42.Uno.Controls;
 
@@ -265,7 +260,7 @@ public static class BubbleBorderExtensions
     { element.Foreground = new SolidColorBrush(color); return element; }
 
     public static TElement Foreground<TElement>(this TElement element, string color) where TElement : ElementType
-    { element.Foreground = new SolidColorBrush(ColorExtensions.ColorFromString(color)); return element; }
+    { element.Foreground = new SolidColorBrush(color.ColorFromString()); return element; }
 
     public static TElement Foreground<TElement>(this TElement element, uint hex) where TElement : ElementType
     { element.Foreground = new SolidColorBrush(ColorExtensions.ColorFromUint(hex)); return element; }
@@ -367,7 +362,7 @@ public static class BubbleBorderExtensions
 
 
     #region FontFamily
-    public static TElement FontFamily<TElement>(this TElement element, Microsoft.UI.Xaml.Media.FontFamily family) where TElement : ElementType
+    public static TElement FontFamily<TElement>(this TElement element, FontFamily family) where TElement : ElementType
     { element.FontFamily = family; return element; }
 
     public static TElement FontFamily<TElement>(this TElement element, string family) where TElement : ElementType
@@ -501,7 +496,7 @@ public static class BubbleBorderExtensions
     { element.BorderColor = value; return element; }
 
     public static TElement BorderBrush<TElement>(this TElement element, string color) where TElement : ElementType
-    { element.BorderColor = ColorExtensions.ColorFromString(color); return element; }
+    { element.BorderColor = color.ColorFromString(); return element; }
 
     public static TElement BorderBrush<TElement>(this TElement element, uint hex) where TElement : ElementType
     { element.BorderColor = ColorExtensions.ColorFromUint(hex); return element; }
@@ -541,7 +536,7 @@ public static class BubbleBorderExtensions
     { element.BackgroundColor = color; return element; }
 
     public static TElement BackgroundColor<TElement>(this TElement element, string color) where TElement : ElementType
-    { element.BackgroundColor = ColorExtensions.ColorFromString(color); return element; }
+    { element.BackgroundColor = color.ColorFromString(); return element; }
 
     public static TElement BackgroundColor<TElement>(this TElement element, uint hex) where TElement : ElementType
     { element.BackgroundColor = ColorExtensions.ColorFromUint(hex); return element; }

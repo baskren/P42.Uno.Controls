@@ -1,8 +1,5 @@
-using Microsoft.UI.Xaml.Controls;
-using P42.Uno.Markup;
 #if __IOS__
 using ObjCRuntime;
-using UIKit;
 #endif
 
 namespace P42.Uno.Controls;

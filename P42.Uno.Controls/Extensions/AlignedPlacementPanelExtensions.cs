@@ -1,4 +1,3 @@
-using Microsoft.UI.Xaml;
 using ElementType = P42.Uno.Controls.AlignedPlacementPanel;
 
 namespace P42.Uno.Controls;

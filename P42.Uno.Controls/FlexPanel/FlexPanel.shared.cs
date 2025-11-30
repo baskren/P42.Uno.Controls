@@ -11,13 +11,10 @@
 //  - Stephane Delcroix (.NET port)
 //  - Ben Askren (UWP/Uno port)
 //
-using System;
-using System.Collections.Generic;
+
+using Windows.Foundation;
 using Microsoft.Toolkit.Diagnostics;
 using P42.Uno.Controls.InternalFlexPanelExtensions;
-using Windows.Foundation;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace P42.Uno.Controls;
 
@@ -29,9 +26,9 @@ namespace P42.Uno.Controls;
 /// if there are too many to fit in a single row or column, and also has many options for orientation, alignment,
 /// and adapting to various screen sizes.
 /// </summary>
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
-public partial class FlexPanel : Panel
+public class FlexPanel : Panel
 {
     /// <summary>
     /// Dependency Property for the FlexPanel.AlignContent property
@@ -40,7 +37,7 @@ public partial class FlexPanel : Panel
         nameof(AlignContent),
         typeof(FlexAlignContent),
         typeof(FlexPanel),
-        new PropertyMetadata(FlexItem.AlignContentDefault, new PropertyChangedCallback(OnAlignContentChanged)));
+        new PropertyMetadata(FlexItem.AlignContentDefault, OnAlignContentChanged));
 
     private static void OnAlignContentChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
     {
@@ -70,7 +67,7 @@ public partial class FlexPanel : Panel
         nameof(AlignItems),
         typeof(FlexAlignItems),
         typeof(FlexPanel),
-        new PropertyMetadata(FlexItem.AlignItemsDefault, new PropertyChangedCallback(OnAlignItemsChanged)));
+        new PropertyMetadata(FlexItem.AlignItemsDefault, OnAlignItemsChanged));
 
     private static void OnAlignItemsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
     {
@@ -99,7 +96,7 @@ public partial class FlexPanel : Panel
         nameof(Direction),
         typeof(FlexDirection),
         typeof(FlexPanel),
-        new PropertyMetadata(FlexItem.DirectionDefault, new PropertyChangedCallback(OnDirectionChanged)));
+        new PropertyMetadata(FlexItem.DirectionDefault, OnDirectionChanged));
 
     private static void OnDirectionChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
     {
@@ -129,7 +126,7 @@ public partial class FlexPanel : Panel
         nameof(JustifyContent),
         typeof(FlexJustify),
         typeof(FlexPanel),
-        new PropertyMetadata(FlexItem.JustifyContentDefault, new PropertyChangedCallback(OnJustifyContentChanged)));
+        new PropertyMetadata(FlexItem.JustifyContentDefault, OnJustifyContentChanged));
 
     private static void OnJustifyContentChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
     {
@@ -158,7 +155,7 @@ public partial class FlexPanel : Panel
         nameof(Wrap),
         typeof(FlexWrap),
         typeof(FlexPanel),
-        new PropertyMetadata(FlexItem.WrapDefault, new PropertyChangedCallback(OnWrapChanged)));
+        new PropertyMetadata(FlexItem.WrapDefault, OnWrapChanged));
 
     private static void OnWrapChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
     {
@@ -480,10 +477,10 @@ public partial class FlexPanel : Panel
 
         if (view is FrameworkElement element)
         {
-            item.MarginLeft = (double)element.Margin.Left;
-            item.MarginTop = (double)element.Margin.Top;
-            item.MarginRight = (double)element.Margin.Right;
-            item.MarginBottom = (double)element.Margin.Bottom;
+            item.MarginLeft = element.Margin.Left;
+            item.MarginTop = element.Margin.Top;
+            item.MarginRight = element.Margin.Right;
+            item.MarginBottom = element.Margin.Bottom;
         }
 
         if (view is Control control)
@@ -519,7 +516,7 @@ public partial class FlexPanel : Panel
         if (!(view is FlexPanel))
         {
             // inner layouts don't get measured
-            item.SelfSizing = (FlexItem it, ref double w, ref double h) =>
+            item.SelfSizing = (it, ref w, ref h) =>
             {
                 UpdateItemProperties(view, item);
 
@@ -531,15 +528,15 @@ public partial class FlexPanel : Panel
                 {
                     if (view.DesiredSize.Width > 0 && view.DesiredSize.Height > 0)
                     {
-                        w = (double)view.DesiredSize.Width;
-                        h = (double)view.DesiredSize.Height;
+                        w = view.DesiredSize.Width;
+                        h = view.DesiredSize.Height;
                         return;
                     }
                 }
 
                 view.Measure(sizeConstraints);
-                w = (double)view.DesiredSize.Width;
-                h = (double)view.DesiredSize.Height;
+                w = view.DesiredSize.Width;
+                h = view.DesiredSize.Height;
             };
         }
 
@@ -558,16 +555,16 @@ public partial class FlexPanel : Panel
         item.AlignSelf = GetAlignSelf(view);
 
         var margin = (Thickness)view.GetValue(MarginProperty);
-        item.MarginLeft = (double)margin.Left;
-        item.MarginTop = (double)margin.Top;
-        item.MarginRight = (double)margin.Right;
-        item.MarginBottom = (double)margin.Bottom;
+        item.MarginLeft = margin.Left;
+        item.MarginTop = margin.Top;
+        item.MarginRight = margin.Right;
+        item.MarginBottom = margin.Bottom;
 
         var width = view.Width;
-        item.Width = width <= 0 ? double.NaN : (double)width;
+        item.Width = width <= 0 ? double.NaN : width;
 
         var height = view.Height;
-        item.Height = height <= 0 ? double.NaN : (double)height;
+        item.Height = height <= 0 ? double.NaN : height;
 
         item.IsVisible = (Visibility)view.GetValue(VisibilityProperty) == Visibility.Visible;
     }
@@ -698,8 +695,8 @@ public partial class FlexPanel : Panel
             return;
         }
 
-        root.Width = !double.IsPositiveInfinity(width) ? (double)width : 0;
-        root.Height = !double.IsPositiveInfinity(height) ? (double)height : 0;
+        root.Width = !double.IsPositiveInfinity(width) ? width : 0;
+        root.Height = !double.IsPositiveInfinity(height) ? height : 0;
         root.Layout();
     }
 
@@ -792,22 +789,22 @@ public partial class FlexPanel : Panel
         /// <summary>Gets or sets  the margin space required on the bottom edge of the item.</summary>
         /// <value>The top edge margin space (negative values are allowed).</value>
         /// <remarks>The default value for this property is 0.</remarks>
-        public double MarginBottom { get; set; } = 0f;
+        public double MarginBottom { get; set; }
 
         /// <summary>Gets or sets  the margin space required on the left edge of the item.</summary>
         /// <value>The top edge margin space (negative values are allowed).</value>
         /// <remarks>The default value for this property is 0.</remarks>
-        public double MarginLeft { get; set; } = 0f;
+        public double MarginLeft { get; set; }
 
         /// <summary>Gets or sets  the margin space required on the right edge of the item.</summary>
         /// <value>The top edge margin space (negative values are allowed).</value>
         /// <remarks>The default value for this property is 0.</remarks>
-        public double MarginRight { get; set; } = 0f;
+        public double MarginRight { get; set; }
 
         /// <summary>Gets or sets  the margin space required on the top edge of the item.</summary>
         /// <value>The top edge margin space (negative values are allowed).</value>
         /// <remarks>The default value for this property is 0.</remarks>
-        public double MarginTop { get; set; } = 0f;
+        public double MarginTop { get; set; }
 
         private int order = OrderDefault;
 

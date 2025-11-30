@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.UI.Xaml;
 using Element = P42.Uno.Controls.SegmentedControl;
 
 namespace P42.Uno.Controls;

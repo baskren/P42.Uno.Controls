@@ -7,7 +7,7 @@ namespace P42.Uno.Controls.Demo;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 public sealed partial class SummaryDetailPage : Page
 {
     private readonly ContentAndDetailPresenter _contentAndDetailPresenter = new();
@@ -30,16 +30,16 @@ public sealed partial class SummaryDetailPage : Page
 
 }
 
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class SummaryDetailPageCellTemplate : Button
+[Bindable]
+public class SummaryDetailPageCellTemplate : Button
 {
     public SummaryDetailPageCellTemplate()
     {
         this.Padding(20, 2)
             .StretchHorizontal()
             .ContentRight()
-            .Background(Microsoft.UI.Colors.Beige)
-            .BorderBrush(Microsoft.UI.Colors.Green)
+            .Background(Colors.Beige)
+            .BorderBrush(Colors.Green)
             .BorderThickness(1)
             //.AddTapHandler(BorderTapped)
             .CornerRadius(5);

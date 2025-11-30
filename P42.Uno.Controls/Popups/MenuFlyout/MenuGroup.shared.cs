@@ -1,14 +1,12 @@
-using System.Collections.Generic;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Markup;
 using System.Collections.ObjectModel;
+using Microsoft.UI.Xaml.Markup;
 
 namespace P42.Uno.Controls;
 
-[Microsoft.UI.Xaml.Data.Bindable]
-[System.Obsolete("Use Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem")]
+[Bindable]
+[Obsolete("Use Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem")]
 [ContentProperty(Name = "Items")]
-public partial class MenuGroup : MenuItemBase
+public class MenuGroup : MenuItemBase
 {
     #region Items Property
     public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register(

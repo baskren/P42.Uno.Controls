@@ -2,6 +2,9 @@
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
+using System.Collections.ObjectModel;
+using Windows.UI;
+
 namespace P42.Uno.Controls.Demo;
 
 /// <summary>
@@ -9,7 +12,7 @@ namespace P42.Uno.Controls.Demo;
 /// </summary>
 public partial class LoopingFlipViewTestPage 
 {
-    private readonly System.Collections.ObjectModel.ObservableCollection<UIElement> _elements = new();
+    private readonly ObservableCollection<UIElement> _elements = new();
 
     public LoopingFlipViewTestPage()
     {
@@ -87,7 +90,7 @@ public partial class LoopingFlipViewTestPage
         _innerGrid.Children.Add(flipView);
     }
 
-    public partial class Item : Grid
+    public class Item : Grid
     {
         #region Text Property
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
@@ -113,9 +116,9 @@ public partial class LoopingFlipViewTestPage
                 FontSize = 50,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = new SolidColorBrush(Microsoft.UI.Colors.Red)
+                Foreground = new SolidColorBrush(Colors.Red)
             });
-            Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, (byte)Rand.Next(255), (byte)Rand.Next(255), (byte)Rand.Next(255)));
+            Background = new SolidColorBrush(Color.FromArgb(255, (byte)Rand.Next(255), (byte)Rand.Next(255), (byte)Rand.Next(255)));
         }
     }
 }

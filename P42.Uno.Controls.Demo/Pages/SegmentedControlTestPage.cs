@@ -2,13 +2,15 @@
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
+using System.Collections.ObjectModel;
+
 namespace P42.Uno.Controls.Demo;
 
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class SegmentedControlTestPage : Page
+[Bindable]
+public class SegmentedControlTestPage : Page
 {
     #region Fields
-    private readonly System.Collections.ObjectModel.ObservableCollection<string> _labels = [];
+    private readonly ObservableCollection<string> _labels = [];
     private readonly List<string> _numbers =
     [
         "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "twenty one", "twenty two", "twenty three", "twenty four", "twenty five", "twenty six", "twenty seven", "twenty eight", "twenty nine", "thirty"
@@ -27,7 +29,7 @@ public partial class SegmentedControlTestPage : Page
 
     private void Build()
     {
-        this.Background(Microsoft.UI.Colors.LightBlue);
+        this.Background(Colors.LightBlue);
 
         Content = new Grid()
             .Rows(40, 40, 'a', '*')
@@ -66,7 +68,7 @@ public partial class SegmentedControlTestPage : Page
 
     private void _segmentedControl_SelectionChanged(object? sender, (int SelectedIndex, string SelectedItem) e)
     {
-        System.Diagnostics.Debug.WriteLine($"New Selection: [{e.SelectedItem}]");
+        Debug.WriteLine($"New Selection: [{e.SelectedItem}]");
     }
 
     private void _slider_ValueChanged(object? sender, RangeBaseValueChangedEventArgs? e)

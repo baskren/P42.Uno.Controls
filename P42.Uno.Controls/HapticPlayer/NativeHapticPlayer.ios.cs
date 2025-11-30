@@ -1,10 +1,11 @@
+using AudioToolbox;
 using UIKit;
 
 namespace P42.Uno.Controls;
 
 internal class NativeHapticPlayer : INativeHapticPlayer
 {
-    private static readonly AudioToolbox.SystemSound vibrate = new(4095);
+    private static readonly SystemSound vibrate = new(4095);
 
     public void Play(Effect effect, EffectMode mode)
     {

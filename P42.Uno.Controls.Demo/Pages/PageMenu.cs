@@ -2,6 +2,8 @@
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
+using System.Reflection;
+
 namespace P42.Uno.Controls.Demo;
 
 public partial class PageMenu
@@ -42,7 +44,7 @@ public partial class PageMenu
         }
     }
 
-    private Type[] GetTypesInNamespace(System.Reflection.Assembly assembly, string nameSpace)
+    private Type[] GetTypesInNamespace(Assembly assembly, string nameSpace)
     {
         return
           assembly.GetTypes()

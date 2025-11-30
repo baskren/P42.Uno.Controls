@@ -6,9 +6,11 @@
     See https://aka.platform.uno/using-uno-sdk#implicit-packages for more information regarding the Implicit Packages.
   -->
   <ItemGroup>
-    <PackageVersion Include="AvantiPoint.CodeGenHelpers" Version="2.0.30-pre" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis" Version="4.4.0" />
-    <PackageVersion Include="System.Collections.Immutable" Version="6.0.0" />
+    	<PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+
+    <PackageVersion Include="P42.Utils" Version="$(P42UtilsVersion)" />
+    <PackageVersion Include="P42.Utils.Uno" Version="$(P42UtilsUnoVersion)" />
+    <PackageVersion Include="P42.Uno.WinUI.Markup" Version="$(UnoVersion)" />
+    
   </ItemGroup>
 </Project>

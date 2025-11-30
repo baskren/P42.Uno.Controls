@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
+﻿using Windows.Foundation;
 
 namespace P42.Uno.Controls;
 

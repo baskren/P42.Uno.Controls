@@ -1,6 +1,3 @@
-using Microsoft.UI.Xaml.Controls;
-using P42.Uno.Markup;
-
 namespace P42.Uno.Controls;
 
 public partial class PermissionPopup : Alert

@@ -1,18 +1,12 @@
-using P42.Utils.Uno;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Windows.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using P42.Uno.Markup;
 
 namespace P42.Uno.Controls;
 
 /// <summary>
 /// Permission Popup
 /// </summary>
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
 public partial class PermissionPopup : Alert
 {
@@ -153,7 +147,7 @@ public partial class PermissionPopup : Alert
     /// <returns></returns>
     public static async Task<PermissionPopup> CreateAsync(string titleText, string messageText, string okButtonText = null, string cancelButtonText = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default, Effect effect = Effect.Inquiry, EffectMode effectMode = EffectMode.Default)
     {
-        var popup = new PermissionPopup() 
+        var popup = new PermissionPopup
         { 
             Target = null, 
             TitleContent = titleText, 
@@ -192,7 +186,7 @@ public partial class PermissionPopup : Alert
     /// <param name="cancelTextColor">Cancel text color.</param>
     public static async Task<PermissionPopup> CreateAsync(UIElement target, object titleContent, object messageContent, object okButtonContent = null, object cancelButtonContent = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default, Effect effect = Effect.Inquiry, EffectMode effectMode = EffectMode.Default)
     {
-        var popup = new PermissionPopup() 
+        var popup = new PermissionPopup
         { 
             Target = target, 
             TitleContent = titleContent, 

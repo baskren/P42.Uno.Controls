@@ -7,7 +7,7 @@ namespace P42.Uno.Controls.Demo;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 public partial class ListEditPage : Page
 {
     private readonly Grid _grid = new()
@@ -50,14 +50,14 @@ public partial class ListEditPage : Page
         var button1 = new Button
         {
             Content = "TOP",
-            Background = new SolidColorBrush(Microsoft.UI.Colors.White),
+            Background = new SolidColorBrush(Colors.White),
             Tag = ScrollToPosition.Start //P42.Uno.Controls.ScrollIntoViewAlignment.Leading
         };
         button1.Click += OnButtonClick;
         var button2 = new Button
         {
             Content = "CENTER",
-            Background = new SolidColorBrush(Microsoft.UI.Colors.White),
+            Background = new SolidColorBrush(Colors.White),
             Tag = ScrollToPosition.Center //P42.Uno.Controls.ScrollIntoViewAlignment.Center
         };
         button2.Click += OnButtonClick;
@@ -65,7 +65,7 @@ public partial class ListEditPage : Page
         var button3 = new Button
         {
             Content = "BOTTOM",
-            Background = new SolidColorBrush(Microsoft.UI.Colors.White),
+            Background = new SolidColorBrush(Colors.White),
             Tag = ScrollToPosition.End //P42.Uno.Controls.ScrollIntoViewAlignment.Trailing
         };
         button3.Click += OnButtonClick;

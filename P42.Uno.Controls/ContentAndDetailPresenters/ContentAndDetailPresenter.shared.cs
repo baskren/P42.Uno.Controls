@@ -1,20 +1,10 @@
-using P42.Uno.Markup;
-using P42.Utils.Uno;
-using System;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
-using Microsoft.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Input;
-using P42.Utils;
 
 namespace P42.Uno.Controls;
 
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
 [ContentProperty(Name = "Content")]
 public partial class ContentAndDetailPresenter : Grid
@@ -27,7 +17,7 @@ public partial class ContentAndDetailPresenter : Grid
         nameof(Content),
         typeof(FrameworkElement),
         typeof(ContentAndDetailPresenter),
-        new PropertyMetadata(null, new PropertyChangedCallback(OnContentChanged))
+        new PropertyMetadata(null, OnContentChanged)
     );
     private static void OnContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -51,7 +41,7 @@ public partial class ContentAndDetailPresenter : Grid
         nameof(Footer),
         typeof(FrameworkElement),
         typeof(ContentAndDetailPresenter),
-        new PropertyMetadata(null, new PropertyChangedCallback(OnFooterChanged))
+        new PropertyMetadata(null, OnFooterChanged)
     );
     private static void OnFooterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -154,7 +144,7 @@ public partial class ContentAndDetailPresenter : Grid
         nameof(DrawerAspectRatio),
         typeof(double),
         typeof(ContentAndDetailPresenter),
-        new PropertyMetadata(1.0, new PropertyChangedCallback((d, e) => ((ContentAndDetailPresenter)d).OnDetailAspectRatioChanged(e)))
+        new PropertyMetadata(1.0, (d, e) => ((ContentAndDetailPresenter)d).OnDetailAspectRatioChanged(e))
     );
     protected virtual void OnDetailAspectRatioChanged(DependencyPropertyChangedEventArgs e)
     {

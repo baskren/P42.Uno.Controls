@@ -1,6 +1,4 @@
 using Windows.UI;
-using P42.Uno.Markup;
-using Microsoft.UI;
 using ElementType = P42.Uno.Controls.SkiaBubble;
 
 namespace P42.Uno.Controls;
@@ -13,7 +11,7 @@ public static class SkiaBubbleExtensions
     { element.BackgroundColor = color; return element; }
 
     public static TElement BackgroundColor<TElement>(this TElement element, string color) where TElement : ElementType
-    { element.BackgroundColor = ColorExtensions.ColorFromString(color); return element; }
+    { element.BackgroundColor = color.ColorFromString(); return element; }
 
     public static TElement BackgroundColor<TElement>(this TElement element, uint hex) where TElement : ElementType
     { element.BackgroundColor = ColorExtensions.ColorFromUint(hex); return element; }
@@ -24,7 +22,7 @@ public static class SkiaBubbleExtensions
     { element.BorderColor = color; return element; }
 
     public static TElement BorderColor<TElement>(this TElement element, string color) where TElement : ElementType
-    { element.BorderColor = ColorExtensions.ColorFromString(color); return element; }
+    { element.BorderColor = color.ColorFromString(); return element; }
 
     public static TElement BorderColor<TElement>(this TElement element, uint hex) where TElement : ElementType
     { element.BorderColor = ColorExtensions.ColorFromUint(hex); return element; }

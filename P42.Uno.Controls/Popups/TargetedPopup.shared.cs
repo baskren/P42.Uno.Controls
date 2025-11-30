@@ -1,16 +1,6 @@
-using P42.Uno.Markup;
-using P42.Utils.Uno;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI;
 
 namespace P42.Uno.Controls;
 
@@ -271,7 +261,7 @@ public partial class TargetedPopup : ITargetedPopup
         nameof(PointerBias),
         typeof(double),
         typeof(TargetedPopup),
-        new PropertyMetadata(0.5, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
+        new PropertyMetadata(0.5, (d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment())
     );
     /// <summary>
     /// Gets or sets the bias (0.0 is start; 0.5 is center;  1.0 is end; greater than 1.0 is pixels from start; less than 0.0 is pixels from end)of the pointer relative to the chosen face on the target.
@@ -314,7 +304,7 @@ public partial class TargetedPopup : ITargetedPopup
         nameof(PreferredPointerDirection),
         typeof(PointerDirection),
         typeof(TargetedPopup),
-        new PropertyMetadata(PointerDirection.Any, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
+        new PropertyMetadata(PointerDirection.Any, (d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment())
     );
     public PointerDirection PreferredPointerDirection
     {
@@ -328,7 +318,7 @@ public partial class TargetedPopup : ITargetedPopup
         nameof(FallbackPointerDirection),
         typeof(PointerDirection),
         typeof(TargetedPopup),
-        new PropertyMetadata(default(PointerDirection), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
+        new PropertyMetadata(default(PointerDirection), (d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment())
     );
     public PointerDirection FallbackPointerDirection
     {
@@ -344,7 +334,7 @@ public partial class TargetedPopup : ITargetedPopup
         nameof(PointerLength),
         typeof(double),
         typeof(TargetedPopup),
-        new PropertyMetadata(10.0, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
+        new PropertyMetadata(10.0, (d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment())
     );
     /// <summary>
     /// Gets or sets the length of the bubble layout's pointer.
@@ -380,7 +370,7 @@ public partial class TargetedPopup : ITargetedPopup
         nameof(PointToOffScreenElements),
         typeof(bool),
         typeof(TargetedPopup),
-        new PropertyMetadata(default(bool), new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
+        new PropertyMetadata(default(bool), (d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment())
     );
     /// <summary>
     /// If Target is off screen (but known), should the popup still point at it?
@@ -397,7 +387,7 @@ public partial class TargetedPopup : ITargetedPopup
         nameof(PointerMargin),
         typeof(double),
         typeof(TargetedPopup),
-        new PropertyMetadata(3.0, new PropertyChangedCallback((d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment()))
+        new PropertyMetadata(3.0, (d, e) => ((TargetedPopup)d).UpdateMarginAndAlignment())
     );
 
     /// <summary>
@@ -641,7 +631,7 @@ public partial class TargetedPopup : ITargetedPopup
         nameof(PushPopState),
         typeof(PushPopState),
         typeof(TargetedPopup),
-        new PropertyMetadata(default(PushPopState), new PropertyChangedCallback((d,e)=>((TargetedPopup)d).OnPushPopStateChanged(e)))
+        new PropertyMetadata(default(PushPopState), (d,e)=>((TargetedPopup)d).OnPushPopStateChanged(e))
     );
 
     protected virtual void OnPushPopStateChanged(DependencyPropertyChangedEventArgs e)
@@ -866,17 +856,17 @@ public partial class TargetedPopup : ITargetedPopup
     #region Pointer Move Event Handlers
 
     private Point _enteredPoint = new(-1,-1);
-    private void OnPointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    private void OnPointerEntered(object sender, PointerRoutedEventArgs e)
     {
-        _enteredPoint = e.GetCurrentPoint(P42.Utils.Uno.Platform.MainWindow.Content).Position;
+        _enteredPoint = e.GetCurrentPoint(Utils.Uno.Platform.MainWindow.Content).Position;
         //System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPointerEntered e: [" + _enteredPoint.X + ", " + _enteredPoint.Y + "]");
     }
 
-    private async void OnPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    private async void OnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
         if (PopOnPointerMove)
         {
-            var position = e.GetCurrentPoint(P42.Utils.Uno.Platform.MainWindow.Content).Position;
+            var position = e.GetCurrentPoint(Utils.Uno.Platform.MainWindow.Content).Position;
             //System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPointerMoved e: [" + position.X + ", " + position.Y + "]");
 
             if (Target != null)
@@ -965,7 +955,7 @@ public partial class TargetedPopup : ITargetedPopup
             else
             {
                 if (_enteredPoint.X == -1 && _enteredPoint.Y == -1)
-                    _enteredPoint = e.GetCurrentPoint(P42.Utils.Uno.Platform.MainWindow.Content).Position;
+                    _enteredPoint = e.GetCurrentPoint(Utils.Uno.Platform.MainWindow.Content).Position;
 
                 var dx = position.X - _enteredPoint.X;
                 var dy = position.Y - _enteredPoint.Y;

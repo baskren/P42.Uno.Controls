@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/P42.Uno.Markup" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/P42.Utils" vcs="Git" />
   </component>
 </project>

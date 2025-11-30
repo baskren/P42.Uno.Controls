@@ -1,3 +1,5 @@
+using Uno.Foundation;
+
 namespace P42.Uno.Controls;
 
 internal class NativeHapticPlayer : INativeHapticPlayer
@@ -48,6 +50,6 @@ navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mo
 if (navigator.vibrate) {{
 	{command}
 }}";
-        global::Uno.Foundation.WebAssemblyRuntime.InvokeJS(javascript);
+        WebAssemblyRuntime.InvokeJS(javascript);
     }
 }

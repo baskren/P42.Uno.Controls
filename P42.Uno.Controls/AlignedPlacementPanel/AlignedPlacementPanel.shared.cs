@@ -1,17 +1,11 @@
-﻿using P42.Uno.Markup;
-using P42.Utils.Uno;
-using System;
-using System.Collections.Generic;
-using Windows.Foundation;
-using Microsoft.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
+﻿using Windows.Foundation;
+using P42.Serilog.QuickLog;
 
 namespace P42.Uno.Controls;
 
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
+// ReSharper disable once PartialTypeWithSinglePart
 public partial class AlignedPlacementPanel : Panel
 {
     #region Spacing Property
@@ -19,7 +13,7 @@ public partial class AlignedPlacementPanel : Panel
         nameof(Spacing),
         typeof(double),
         typeof(AlignedPlacementPanel),
-        new PropertyMetadata(default(double))
+        new PropertyMetadata(0.0)
     );
     public double Spacing
     {
@@ -42,16 +36,16 @@ public partial class AlignedPlacementPanel : Panel
     }
     #endregion Padding Property
 
-    private Button _moreButton = new()
+    private readonly Button _moreButton = new()
     {
         Content = "...",
         Background = Colors.Transparent.ToBrush(),
         Margin = new Thickness(0)
     };
 
-    private List<UIElement> ExtraChildren = [];
+    private readonly List<UIElement> _extraChildren = [];
 
-    private TargetedPopup _popup;
+    private TargetedPopup? _popup;
 
     public AlignedPlacementPanel()
     {
@@ -63,42 +57,58 @@ public partial class AlignedPlacementPanel : Panel
 
     private async void OnMoreButtonClicked(object sender, RoutedEventArgs e)
     {
-        var stack = new StackPanel();
-        var w = stack.Margin.Horizontal() + stack.Padding.Horizontal();
-        var h = stack.Margin.Vertical() + stack.Padding.Vertical();
-        foreach (var child in ExtraChildren)
+        try
         {
-            w = Math.Max(w, child.DesiredSize.Width);
-            h += child.DesiredSize.Height + 3;
-            Children.Remove(child);
-            if (child is Button b)
-                b.Click += OnMoreButtonChildClicked;
+            var stack = new StackPanel();
+            //var w = stack.Margin.Horizontal() + stack.Padding.Horizontal();
+            //var h = stack.Margin.Vertical() + stack.Padding.Vertical();
+            foreach (var child in _extraChildren)
+            {
+                //w = Math.Max(w, child.DesiredSize.Width);
+                //h += child.DesiredSize.Height + 3;
+                Children.Remove(child);
+                if (child is Button b)
+                    b.Click += OnMoreButtonChildClicked;
+            }
+
+            stack.Spacing(3)
+                //.Margin(0)
+                //.Padding(0)
+                .Children(
+                    _extraChildren
+                );
+            //stack.Width = w;
+            //stack.Height = h;
+            _popup = await TargetedPopup.CreateAsync(_moreButton, stack);
+            _popup.Padding(2);
+            await _popup.WaitForPoppedAsync();
+            foreach (var child in _extraChildren)
+            {
+                if (child is Button b)
+                    b.Click -= OnMoreButtonChildClicked;
+                stack.Children.Remove(child);
+                Children.Add(child);
+            }
+
+            _popup = null;
         }
-        stack.Spacing(3)
-            //.Margin(0)
-            //.Padding(0)
-            .Children(
-                ExtraChildren
-            );
-        //stack.Width = w;
-        //stack.Height = h;
-        _popup = await TargetedPopup.CreateAsync(_moreButton, stack);
-        _popup.Padding(2);
-        await _popup.WaitForPoppedAsync();
-        foreach (var child in ExtraChildren)
+        catch (Exception ex)
         {
-            if (child is Button b)
-                b.Click -= OnMoreButtonChildClicked;
-            stack.Children.Remove(child);
-            Children.Add(child);
+            QLog.Error(ex);
         }
-        _popup = null;
     }
 
     private async void OnMoreButtonChildClicked(object sender, RoutedEventArgs e)
     {
-        if (_popup is { } p)
-            await p.PopAsync();
+        try
+        {
+            if (_popup is { } p)
+                await p.PopAsync();
+        }    
+        catch (Exception ex)
+        {
+            QLog.Error(ex); 
+        }
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -147,12 +157,19 @@ public partial class AlignedPlacementPanel : Panel
 
             if (child is FrameworkElement element)
             {
-                if (element.HorizontalAlignment == HorizontalAlignment.Left)
-                    leftChildren.Add(element);
-                else if (element.HorizontalAlignment == HorizontalAlignment.Right)
-                    rightChildren.Add(element);
-                else
-                    centerChildren.Add(element);
+                switch (element.HorizontalAlignment)
+                {
+                    case HorizontalAlignment.Left:
+                        leftChildren.Add(element);
+                        break;
+                    case HorizontalAlignment.Right:
+                        rightChildren.Add(element);
+                        break;
+                    default:
+                        centerChildren.Add(element);
+                        break;
+                }
+
                 width += element.DesiredSize.Width;
                 //if (element is Button button)
                 //    System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.ArrangeOverride: element: " + button.Content);
@@ -172,7 +189,7 @@ public partial class AlignedPlacementPanel : Panel
             //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange : width > finalSize.Width  : centerChildrenCount=["+centerChildren.Count+"]");
         }
         var maxSectionCount = Math.Max(leftChildren.Count, Math.Max(rightChildren.Count, centerChildren.Count));
-        //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrage maxSectionCount["+maxSectionCount+"]");
+        //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange maxSectionCount["+maxSectionCount+"]");
         bool leftDone = false, rightDone = false, centerDone = false;
         for (var i=0;i< maxSectionCount;i++)
         {
@@ -183,8 +200,8 @@ public partial class AlignedPlacementPanel : Panel
                 //System.Diagnostics.Debug.WriteLine($"AlignedPlacementPanel left: left[{leftWidth}] center[{centerWidth}] right[{rightWidth}]");
                 if (!leftDone && leftWidth + centerWidth + rightWidth + element.DesiredSize.Width < finalSize.Width)
                 {
-                    if (ExtraChildren.Contains(element))
-                        ExtraChildren.Remove(element);
+                    if (_extraChildren.Contains(element))
+                        _extraChildren.Remove(element);
                     //System.Diagnostics.Debug.Write("AlignedPlacementPanel.Arrange left["+i+"] ...");
                     element.Arrange(new Rect(new Point(leftWidth, (finalSize.Height - element.DesiredSize.Height)/2.0), element.DesiredSize));
                     //System.Diagnostics.Debug.WriteLine(" ! ");
@@ -199,8 +216,8 @@ public partial class AlignedPlacementPanel : Panel
                     {
                         element = leftChildren[i];
                         leftChildren.Remove(element);
-                        if (!ExtraChildren.Contains(element))
-                            ExtraChildren.Add(element);
+                        if (!_extraChildren.Contains(element))
+                            _extraChildren.Add(element);
                     }
                 }
                 //System.Diagnostics.Debug.WriteLine($"AlignedPlacementPanel left: left[{leftWidth}] center[{centerWidth}] right[{rightWidth}]");
@@ -212,8 +229,8 @@ public partial class AlignedPlacementPanel : Panel
                 //System.Diagnostics.Debug.WriteLine($"AlignedPlacementPanel right: left[{leftWidth}] center[{centerWidth}] right[{rightWidth}]");
                 if (!rightDone && leftWidth + centerWidth + rightWidth +  element.DesiredSize.Width < finalSize.Width)
                 {
-                    if (ExtraChildren.Contains(element))
-                        ExtraChildren.Remove(element);
+                    if (_extraChildren.Contains(element))
+                        _extraChildren.Remove(element);
 
                     if (i > 0) // only add spacing to right if there is another right element
                         rightWidth += Spacing;
@@ -231,8 +248,8 @@ public partial class AlignedPlacementPanel : Panel
                     {
                         element = rightChildren[i];
                         rightChildren.Remove(element);
-                        if (!ExtraChildren.Contains(element))
-                            ExtraChildren.Add(element);
+                        if (!_extraChildren.Contains(element))
+                            _extraChildren.Add(element);
                     }
                 }
                 //System.Diagnostics.Debug.WriteLine($"AlignedPlacementPanel right: left[{leftWidth}] center[{centerWidth}] right[{rightWidth}]");
@@ -246,8 +263,8 @@ public partial class AlignedPlacementPanel : Panel
                 //System.Diagnostics.Debug.WriteLine($"AlignedPlacementPanel center: left[{leftWidth}] center[{centerWidth}] right[{rightWidth}]");
                 if (!centerDone && leftWidth + centerWidth + rightWidth + element.DesiredSize.Width < finalSize.Width)
                 {
-                    if (ExtraChildren.Contains(element))
-                        ExtraChildren.Remove(element);
+                    if (_extraChildren.Contains(element))
+                        _extraChildren.Remove(element);
                     //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange KEEP");
                     centerWidth += element.DesiredSize.Width;
                     centerWidth += Spacing; // like LEFT, always add spacing to CENTER
@@ -260,8 +277,8 @@ public partial class AlignedPlacementPanel : Panel
                         element = centerChildren[i];
                         //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.Arrange REMOVE ["+element+"]");
                         centerChildren.Remove(element);
-                        if (!ExtraChildren.Contains(element))
-                            ExtraChildren.Add(element);
+                        if (!_extraChildren.Contains(element))
+                            _extraChildren.Add(element);
                     }
                 }
                 //System.Diagnostics.Debug.WriteLine($"AlignedPlacementPanel center: left[{leftWidth}] center[{centerWidth}] right[{rightWidth}]");
@@ -284,7 +301,7 @@ public partial class AlignedPlacementPanel : Panel
         //System.Diagnostics.Debug.WriteLine("AlignedPlacementPanel.ArrangeOverride: centerX: " + centerX);
 
 
-        foreach (var child in ExtraChildren)
+        foreach (var child in _extraChildren)
         {
             child.Arrange(new Rect(new Point(finalSize.Width, 0), child.DesiredSize));
             //if (Children.Contains(child))

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.UI.Xaml.Media.Animation;
+﻿using Microsoft.UI.Xaml.Media.Animation;
 
 namespace P42.Uno.Controls;
 

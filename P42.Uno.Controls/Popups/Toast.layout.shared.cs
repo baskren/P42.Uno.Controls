@@ -1,7 +1,3 @@
-using P42.Uno.Markup;
-using System;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Text;
 
 namespace P42.Uno.Controls;

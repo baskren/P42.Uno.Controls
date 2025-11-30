@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-
 namespace P42.Uno.Controls;
 
 internal class NativeChimePlayer : INativeChimePlayer
@@ -15,7 +12,7 @@ internal class NativeChimePlayer : INativeChimePlayer
 
         if (string.IsNullOrWhiteSpace(SoundAssetsPath))
         {
-            Console.WriteLine($"NativeAudioPlayer.Initialize: === ENTER ====");
+            Console.WriteLine("NativeAudioPlayer.Initialize: === ENTER ====");
             if (await ChimePlayer.GetPathAsync(Effect.Alarm) is { } path)
             {
                 Console.WriteLine($"NativeAudioPlayer.Initialize : path=[{path}]");
@@ -23,12 +20,12 @@ internal class NativeChimePlayer : INativeChimePlayer
                 SoundAssetsPath = path.Replace(ac, ".").Replace($"{Effect.Alarm}.mp3", "");
                 Console.WriteLine($"NativeAudioPlayer.Initialize : path=[{SoundAssetsPath}]");
             }
-            Console.WriteLine($"NativeAudioPlayer.Initialize: === EXIT ====");
+            Console.WriteLine("NativeAudioPlayer.Initialize: === EXIT ====");
         }
 
         if (string.IsNullOrWhiteSpace(SoundAssetsPath))
         {
-            Console.WriteLine($"NativeChimePlayer.Could not find P42.Uno.Controls sound assets");
+            Console.WriteLine("NativeChimePlayer.Could not find P42.Uno.Controls sound assets");
             return;
         }
 

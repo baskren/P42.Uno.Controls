@@ -1,20 +1,14 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml;
-using System;
-using Microsoft.UI.Xaml.Markup;
-using Windows.UI.Text;
 using Windows.Foundation;
-using P42.Uno.Markup;
-using Microsoft.UI.Xaml.Controls;
+using Windows.UI.Text;
+using Microsoft.UI.Xaml.Markup;
 
 namespace P42.Uno.Controls;
 
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 [ContentProperty(Name = "Text")]
-public partial class Label : UserControl
+public class Label : UserControl
 {
 
     #region Properties
@@ -126,7 +120,7 @@ public partial class Label : UserControl
             if (_textBlock.TextTrimming != TextTrimming.Clip && label.TextTrimming == TextTrimming.None)
             {
                 _textBlock.TextTrimming = TextTrimming.Clip;
-                await System.Threading.Tasks.Task.Delay(10);
+                await Task.Delay(10);
             }
             _textBlock.TextTrimming = label.TextTrimming;
         }

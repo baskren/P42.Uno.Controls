@@ -1,18 +1,12 @@
-using P42.Utils.Uno;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Windows.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using P42.Uno.Markup;
 
 namespace P42.Uno.Controls;
 
 /// <summary>
 /// Alert popup: A Toast with an "OK" button
 /// </summary>
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
 public partial class Alert : Toast
 {
@@ -132,7 +126,7 @@ public partial class Alert : Toast
     /// <returns></returns>
     public static async Task<Alert> CreateAsync(string titleText, string messageText, string okButtonText = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
     {
-        var popup = new Alert() 
+        var popup = new Alert
         { 
             Target = null, 
             TitleContent = titleText, 

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.UI.Xaml;
-
-namespace P42.Uno.Controls;
+﻿namespace P42.Uno.Controls;
 
 /// <summary>
 /// Pointer direction extensions.
@@ -91,7 +87,7 @@ public static class PointerDirectionExtensions
         if (thickness.Bottom >=0)
             fits.Add(new BestFitPlace { Space = thickness.Bottom, Direction = PointerDirection.Up });
 
-        fits = fits.OrderByDescending((place) => place.Space).ToList();
+        fits = fits.OrderByDescending(place => place.Space).ToList();
         var result = fits.Select(place => place.Direction);
         return result;
     }

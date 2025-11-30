@@ -1,8 +1,3 @@
-using System;
-using System.Windows.Input;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-
 namespace P42.Uno.Controls;
 // TODO: Obsolete P42.Uno.Control.MenuFlyout after 2025.01.01
 
@@ -10,8 +5,8 @@ namespace P42.Uno.Controls;
 /// Item for Popup Menu
 /// </summary>
 [Obsolete("Use Microsoft.UI.Xaml.Controls.MenuFlyoutItem")]
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class MenuItemBase : DependencyObject 
+[Bindable]
+public class MenuItemBase : DependencyObject 
 {
     #region Properties 
 
@@ -134,10 +129,6 @@ public partial class MenuItemBase : DependencyObject
         //internal WeakReference<MenuFlyout> MenuFlyoutWeakRef;
         internal WeakReference<MenuFlyoutCell> MenuFlyoutCellWeakRef;
 #endif
-
-    public MenuItemBase() 
-    {
-    }
 
     public void OnItemClicked()
     {

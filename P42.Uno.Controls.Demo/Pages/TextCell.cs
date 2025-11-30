@@ -1,7 +1,7 @@
 namespace P42.Uno.Controls.Demo;
 
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class TextCell : Grid
+[Bindable]
+public class TextCell : Grid
 {
     readonly TextBlock _valueLabel = new();
     readonly TextBlock _titleLabel = new();
@@ -20,7 +20,7 @@ public partial class TextCell : Grid
         Tapped += TextCell_Tapped;
     }
 
-    async void TextCell_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+    async void TextCell_Tapped(object sender, TappedRoutedEventArgs e)
     {
         await (ListEditPage.Current?.OnCellClicked(_valueLabel) ?? Task.CompletedTask);
     }
@@ -31,7 +31,7 @@ public partial class TextCell : Grid
     private void TextCell_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
 #endif
     {
-        System.Diagnostics.Debug.WriteLine("TextCell.DataContextChanged!!!");
+        Debug.WriteLine("TextCell.DataContextChanged!!!");
         switch (DataContext)
         {
             case null:

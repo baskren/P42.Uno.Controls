@@ -1,6 +1,3 @@
-using P42.Uno.Markup;
-using Microsoft.UI.Xaml;
-using System.Threading.Tasks;
 using Windows.UI;
 
 namespace P42.Uno.Controls;
@@ -8,7 +5,7 @@ namespace P42.Uno.Controls;
 /// <summary>
 /// Alert with "Do not notify me again" check box
 /// </summary>
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 public partial class CheckedToast : Alert
 {
     #region Properties
@@ -56,7 +53,7 @@ public partial class CheckedToast : Alert
     /// <returns></returns>
     public new static async Task<CheckedToast> CreateAsync(string titleText, string messageText, string okButtonText = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
     {
-        var popup = new CheckedToast() 
+        var popup = new CheckedToast
         { 
             TitleContent = titleText, 
             Message = messageText, 

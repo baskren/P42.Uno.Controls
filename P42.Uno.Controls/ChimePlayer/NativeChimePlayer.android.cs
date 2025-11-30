@@ -1,10 +1,12 @@
-using System.Threading.Tasks;
 using Android.Content;
 using Android.Media;
+using Android.Provider;
+using Application = Android.App.Application;
+using Object = Java.Lang.Object;
 
 namespace P42.Uno.Controls;
 
-internal class NativeChimePlayer : Java.Lang.Object, INativeChimePlayer, MediaPlayer.IOnPreparedListener
+internal class NativeChimePlayer : Object, INativeChimePlayer, MediaPlayer.IOnPreparedListener
 {
     private static AudioManager _audio;
     //static SoundPool _soundPool;
@@ -41,14 +43,14 @@ internal class NativeChimePlayer : Java.Lang.Object, INativeChimePlayer, MediaPl
 
         if (mode == EffectMode.Default)
         {
-            var enabled = Android.Provider.Settings.System.GetInt(Android.App.Application.Context.ContentResolver, Android.Provider.Settings.System.SoundEffectsEnabled) != 0;
+            var enabled = Settings.System.GetInt(Application.Context.ContentResolver, Settings.System.SoundEffectsEnabled) != 0;
             if (!enabled)
                 return;
         }
 
         if (_audio is null)
         {
-            _audio = (AudioManager)Android.App.Application.Context.GetSystemService(Context.AudioService);
+            _audio = (AudioManager)Application.Context.GetSystemService(Context.AudioService);
 
             var audioAttributes = new AudioAttributes.Builder()
                 .SetUsage(AudioUsageKind.NotificationEvent)

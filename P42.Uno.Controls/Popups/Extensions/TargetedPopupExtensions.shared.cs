@@ -1,10 +1,6 @@
-using System;
 using Windows.Foundation;
 using Windows.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
 using ElementType = P42.Uno.Controls.TargetedPopup;
-using P42.Uno.Markup;
 
 namespace P42.Uno.Controls;
 
@@ -185,7 +181,7 @@ public static class TargetedPopupExtensions
     { element.PageOverlayBrush = new SolidColorBrush(color); return element; }
 
     public static TElement PageOverlay<TElement>(this TElement element, string color) where TElement : ElementType
-    { element.PageOverlayBrush = new SolidColorBrush(ColorExtensions.ColorFromString(color)); return element; }
+    { element.PageOverlayBrush = new SolidColorBrush(color.ColorFromString()); return element; }
 
     public static TElement PageOverlay<TElement>(this TElement element, uint hex) where TElement : ElementType
     { element.PageOverlayBrush = new SolidColorBrush(ColorExtensions.ColorFromUint(hex)); return element; }

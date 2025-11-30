@@ -5,11 +5,11 @@
 
 namespace P42.Uno.Controls.Demo;
 
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 public partial class StringButtonUserControl : UserControl
 {
     private readonly Grid _grid = new();
-    private readonly Microsoft.UI.Xaml.Shapes.Rectangle _rectangle = new();
+    private readonly Rectangle _rectangle = new();
     private readonly Button _button = new();
 
     private void Build()
@@ -20,14 +20,14 @@ public partial class StringButtonUserControl : UserControl
                     (
                         _rectangle
                             .Stretch()
-                            .Fill(Microsoft.UI.Colors.Gray),
+                            .Fill(Colors.Gray),
                         _button
                             .Padding(20,2)
                             .StretchHorizontal()
                             .CenterVertical()
                             .ContentCenter()
-                            .Background(Microsoft.UI.Colors.Beige)
-                            .BorderBrush(Microsoft.UI.Colors.Green)
+                            .Background(Colors.Beige)
+                            .BorderBrush(Colors.Green)
                             .BorderThickness(1)
                             .CornerRadius(5)
                             .Opacity(0)

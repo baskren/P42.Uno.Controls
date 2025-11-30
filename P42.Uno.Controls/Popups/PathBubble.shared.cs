@@ -1,17 +1,14 @@
-﻿using Windows.Foundation;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
-using P42.Uno.Markup;
-using System.Runtime.CompilerServices;
-using System.Collections;
+﻿using System.Runtime.CompilerServices;
+using Windows.Foundation;
+using Path = Microsoft.UI.Xaml.Shapes.Path;
 
 namespace P42.Uno.Controls;
 
 /// <summary>
 /// Border used by Popups
 /// </summary>
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class PathBubble : Microsoft.UI.Xaml.Shapes.Path
+[Bindable]
+public class PathBubble : Path
 {
 
     #region Properties
@@ -217,7 +214,7 @@ public partial class PathBubble : Microsoft.UI.Xaml.Shapes.Path
                 x.SetHtmlContent($"<path fill-rule=\"even-odd\" d=\"{data}\"></path>");
 #else
         //System.Console.WriteLine($"BubbleBorder.RegeneratePath [{data}]");
-        Data = Utils.Uno.StringToPathGeometryConverter.Current.Convert(data);
+        Data = StringToPathGeometryConverter.Current.Convert(data);
 #endif
 
         if (_pendingUpdatePath)

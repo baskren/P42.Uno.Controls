@@ -2,23 +2,24 @@
 
 
   <PropertyGroup>
-    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally> 
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
   </PropertyGroup>
-  
+
 
   <!-- SHARED ITEMS -->
   <ItemGroup>
-    <PackageReference Include="Svg.Skia" Version="2.0.0.1" />
     <!--
+    <PackageReference Include="Svg.Skia" Version="2.0.0.1" />
     <PackageReference Include="Svg.Skia" Version="1.0.0.18" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
     -->
 
-    <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
-    <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Uno.Markup" Version="$(UnoVersion)" />
-    <!--
-    <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
-    -->
+    <PackageReference Include="P42.Uno.WinUI.Markup" />
+    <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\P42.Utils\P42.Utils\P42.Utils.csproj" />
+    <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Utils"  />
+    <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
+    <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Utils.Uno"  />
+
   </ItemGroup>
 
   <!-- PLATFORM SPECIFIC ITEMS -->

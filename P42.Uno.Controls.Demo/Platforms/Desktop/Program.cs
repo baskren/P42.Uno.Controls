@@ -1,5 +1,3 @@
-using Uno.UI.Runtime.Skia;
-
 namespace P42.Uno.Controls.Demo;
 
 public class Program

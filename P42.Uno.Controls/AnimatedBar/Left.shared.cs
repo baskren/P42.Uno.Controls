@@ -1,13 +1,10 @@
-using P42.Utils.Uno;
-using System;
-using System.Threading.Tasks;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
+using System.Diagnostics;
 
 namespace P42.Uno.Controls.AnimateBar;
 
 public partial class Left : Base
 {
+    // ReSharper disable once MemberCanBeProtected.Global
     public Left()
     {
         //Height = 30;
@@ -16,7 +13,7 @@ public partial class Left : Base
         HorizontalAlignment = HorizontalAlignment.Left;
 
         Width = 11;
-        dir = 1;
+        Dir = 1;
         //StaticRect.Width =
         DynamicRect.Width = 1;
         //StaticRect.VerticalAlignment = 
@@ -33,21 +30,21 @@ public partial class Left : Base
             {
                 try
                 {
-                    if (_failed || _disposed || !DynamicRect.IsLoaded) return;
+                    if (Failed || Disposed || !DynamicRect.IsLoaded) return;
 
                     DynamicRect.Opacity = 1 - x;
                     DynamicRect.RenderTransform = new TranslateTransform { X = dir * (ActualWidth - 1) * x };
                 }
                 catch (Exception ex)
                 {
-                    _failed = true;
-                    System.Diagnostics.Debug.WriteLine(ex.ToString());
+                    Failed = true;
+                    Debug.WriteLine(ex.ToString());
                 }
 
             }); //, new Microsoft.UI.Xaml.Media.Animation.ExponentialEase());
             await animator.RunAsync();
             await Task.Delay(LullTime);
-        } while (!_disposed);
+        } while (!Disposed);
     }
 
 }

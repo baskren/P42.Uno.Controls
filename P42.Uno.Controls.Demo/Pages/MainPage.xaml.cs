@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace P42.Uno.Controls.Demo;
 
 public sealed partial class MainPage : Page
@@ -61,7 +63,7 @@ public sealed partial class MainPage : Page
     }
     */
 
-    private static Type[] GetTypesInNamespace(System.Reflection.Assembly assembly, string nameSpace)
+    private static Type[] GetTypesInNamespace(Assembly assembly, string nameSpace)
     {
         return
           assembly.GetTypes()
@@ -71,8 +73,8 @@ public sealed partial class MainPage : Page
 
 }
 
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class NavItemTemplate : Grid
+[Bindable]
+public class NavItemTemplate : Grid
 {
     private readonly TextBlock _textBlock = new();
     public NavItemTemplate()

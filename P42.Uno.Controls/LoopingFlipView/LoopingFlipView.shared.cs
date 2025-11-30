@@ -1,23 +1,13 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using Windows.Foundation;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using P42.Utils.Uno;
-using System.Threading;
-using Microsoft.UI.Input;
-using P42.Uno.Markup;
 using Windows.UI;
+using Microsoft.UI.Input;
 
 namespace P42.Uno.Controls;
 
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class LoopingFlipView : UserControl
+[Bindable]
+public class LoopingFlipView : UserControl
 {
 
     #region Properties
@@ -154,7 +144,7 @@ public partial class LoopingFlipView : UserControl
            )
         {
             _cancellationTokenSource = new CancellationTokenSource();
-            var animator = new ActionAnimator(_dx, Math.Sign(_dx) *ActualWidth, TimeSpan.FromSeconds(0.5), (x) =>
+            var animator = new ActionAnimator(_dx, Math.Sign(_dx) *ActualWidth, TimeSpan.FromSeconds(0.5), x =>
             {
                 _dx = x;
                 LayoutChildren();
@@ -173,7 +163,7 @@ public partial class LoopingFlipView : UserControl
         else if (_dx != 0)
         {
             _cancellationTokenSource = new CancellationTokenSource();
-            var animator = new ActionAnimator(_dx, 0, TimeSpan.FromSeconds(0.5), (x) =>
+            var animator = new ActionAnimator(_dx, 0, TimeSpan.FromSeconds(0.5), x =>
             {
                 _dx = x;
                 LayoutChildren();
@@ -321,7 +311,7 @@ public partial class LoopingFlipView : UserControl
 
             _cancellationTokenSource = new CancellationTokenSource();
 
-            var animator = new ActionAnimator(0, -t.X, TimeSpan.FromSeconds(0.4), (dx) =>
+            var animator = new ActionAnimator(0, -t.X, TimeSpan.FromSeconds(0.4), dx =>
             {
                 foreach (var child in ContentGrid.Children)
                 {

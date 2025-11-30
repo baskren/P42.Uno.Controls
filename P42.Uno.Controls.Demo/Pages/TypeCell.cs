@@ -1,13 +1,13 @@
 
 namespace P42.Uno.Controls.Demo;
 
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class TypeCell : Grid
+[Bindable]
+public class TypeCell : Grid
 {
     private readonly TextBlock _textBlock = new TextBlock
     {
         HorizontalAlignment = HorizontalAlignment.Stretch,
-        HorizontalTextAlignment = Microsoft.UI.Xaml.TextAlignment.Left,
+        HorizontalTextAlignment = TextAlignment.Left,
         VerticalAlignment = VerticalAlignment.Stretch
     };
 

@@ -2,7 +2,7 @@ using P42.Utils.Uno;
 
 namespace P42.Uno.Controls.Demo;
 
-[Microsoft.UI.Xaml.Data.Bindable]
+[Bindable]
 public sealed partial class LabelTestPage : Page
 {
     private static readonly string Text1 = "Żyłę;^`g <b><em>Lorem</em></b> ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Odio ut enim blandit volutpat maecenas. Diam volutpat commodo sed egestas egestas fringilla phasellus. Odio eu feugiat pretium nibh ipsum consequat. Urna condimentum mattis pellentesque id nibh tortor. Ut lectus arcu bibendum at varius vel pharetra. Dui nunc mattis enim ut tellus. Nullam vehicula ipsum a arcu cursus vitae congue mauris. Libero nunc consequat interdum varius sit amet mattis vulputate. Pharetra pharetra massa massa ultricies. Lorem sed risus ultricies tristique nulla aliquet enim tortor at. Aliquam sem et tortor consequat id porta. Ultrices in iaculis nunc sed augue. Tincidunt vitae semper quis lectus nulla at volutpat diam. Vitae elementum curabitur vitae nunc sed velit.";
@@ -49,7 +49,7 @@ public sealed partial class LabelTestPage : Page
 
     private void Build()
     {
-        this.Background(Microsoft.UI.Colors.LightGray);
+        this.Background(Colors.LightGray);
 
         Content = _scrollViewer
             .Padding(0)
@@ -76,14 +76,14 @@ public sealed partial class LabelTestPage : Page
                         _borderForUnoLabel
                             .Height(100)
                             .Padding(0)
-                            .BorderBrush(Microsoft.UI.Colors.DarkGray)
+                            .BorderBrush(Colors.DarkGray)
                             .BorderThickness(1)
                             .CornerRadius(2)
-                            .Background(Microsoft.UI.Colors.Black)
+                            .Background(Colors.Black)
                             .Child
                             (
                                 _unoLabel
-                                    .Foreground(Microsoft.UI.Colors.White)
+                                    .Foreground(Colors.White)
                                     .FontSize(15)
                                     .Text(Text1)
                                     .WrapWords()
@@ -93,12 +93,12 @@ public sealed partial class LabelTestPage : Page
                         _label
                             .Height(100)
                             .Padding(0)
-                            .BorderBrush(Microsoft.UI.Colors.DarkGray)
+                            .BorderBrush(Colors.DarkGray)
                             .BorderThickness(1)
                             .CornerRadius(2)
-                            .Foreground(Microsoft.UI.Colors.White)
+                            .Foreground(Colors.White)
                             .FontSize(15)
-                            .Background(Microsoft.UI.Colors.Black),
+                            .Background(Colors.Black),
                         _labelSizeLabel
                             .Text("label.Size: "),
                         new StackPanel()

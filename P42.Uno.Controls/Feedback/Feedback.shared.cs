@@ -1,6 +1,4 @@
 
-using System.Threading.Tasks;
-
 namespace P42.Uno.Controls;
 
 public static class Feedback

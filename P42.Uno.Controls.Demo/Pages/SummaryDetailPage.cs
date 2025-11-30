@@ -32,7 +32,7 @@ public sealed partial class SummaryDetailPage
             return;
 
         //var grid = (Grid)templateRoot.FindName("_grid");
-        var rect = (Microsoft.UI.Xaml.Shapes.Rectangle)templateRoot.FindName("_rectangle");
+        var rect = (Rectangle)templateRoot.FindName("_rectangle");
         var button = (Button)templateRoot.FindName("_button");
 
         button.Opacity = 1;
@@ -61,12 +61,12 @@ public sealed partial class SummaryDetailPage
         //throw new NotImplementedException();
         var itemContainer = args.ItemContainer;
         var index = args.ItemIndex;
-        System.Diagnostics.Debug.WriteLine("SummaryDetailPage._listView_ChoosingItemContainer itemContainer:" + itemContainer + " index:" + index);
+        Debug.WriteLine("SummaryDetailPage._listView_ChoosingItemContainer itemContainer:" + itemContainer + " index:" + index);
     }
 
     private async void OnItemClick(object sender, ItemClickEventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine(GetType() + ".OnItemClick: sender:" + sender + "  e.ClickedItem:" + e.ClickedItem + " e.OriginalSource:" + e.OriginalSource);
+        Debug.WriteLine(GetType() + ".OnItemClick: sender:" + sender + "  e.ClickedItem:" + e.ClickedItem + " e.OriginalSource:" + e.OriginalSource);
 
         var ring = await BusyPopup.CreateAsync(null, "I'm very busy", TimeSpan.FromSeconds(2));
         await ring.WaitForPoppedAsync();

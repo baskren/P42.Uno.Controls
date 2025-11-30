@@ -1,8 +1,3 @@
-using P42.Uno.Markup;
-using Microsoft.UI;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Shapes;
-
 namespace P42.Uno.Controls;
 
 public partial class ContentAndDetailPresenter : Grid

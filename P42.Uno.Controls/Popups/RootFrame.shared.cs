@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
-using P42.Utils.Uno;
 
 namespace P42.Uno.Controls;
 
-[Microsoft.UI.Xaml.Data.Bindable]
-public partial class RootFrame : Frame
+[Bindable]
+public class RootFrame : Frame
 {
     #region Frame Properties
 
@@ -224,7 +219,7 @@ public partial class RootFrame : Frame
 
     private static RootFrame Inject()
     {
-        var targetFrame = P42.Utils.Uno.Platform.MainWindow.Content as Frame;
+        var targetFrame = Utils.Uno.Platform.MainWindow.Content as Frame;
 
         while (targetFrame is not null)
         {
@@ -237,8 +232,8 @@ public partial class RootFrame : Frame
         }
 
         var rootFrame = new RootFrame();
-        P42.Utils.Uno.Platform.MainWindow.Content = null;
-        P42.Utils.Uno.Platform.MainWindow.Content = rootFrame;
+        Utils.Uno.Platform.MainWindow.Content = null;
+        Utils.Uno.Platform.MainWindow.Content = rootFrame;
         rootFrame.InnerFrame = targetFrame;
 
         return rootFrame;

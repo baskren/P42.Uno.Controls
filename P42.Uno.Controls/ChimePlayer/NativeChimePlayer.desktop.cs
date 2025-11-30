@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-
 namespace P42.Uno.Controls;
 
 internal class NativeChimePlayer : INativeChimePlayer
