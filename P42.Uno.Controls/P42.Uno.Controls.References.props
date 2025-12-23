@@ -16,10 +16,6 @@
 
     <ProjectReference Condition=" '$(Configuration)' != 'Release' OR $(TargetFramework.Contains('android')) " Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
     <PackageReference Condition=" '$(Configuration)' == 'Release' AND !$(TargetFramework.Contains('android')) " Include="P42.Uno.Markup" Version="$(UnoVersion)" />
-    <!--
-    <ProjectReference Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
-    -->
-
     <ProjectReference Condition=" '$(Configuration)' != 'Release' OR $(TargetFramework.Contains('android')) " Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
     <PackageReference Condition=" '$(Configuration)' == 'Release' AND !$(TargetFramework.Contains('android')) " Include="P42.Utils.Uno" Version="$(UnoVersion)" />
 
