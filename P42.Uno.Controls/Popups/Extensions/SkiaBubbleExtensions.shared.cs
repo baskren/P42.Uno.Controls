@@ -7,44 +7,16 @@ public static class SkiaBubbleExtensions
 {
 
     #region Background Color
-    public static TElement BackgroundColor<TElement>(this TElement element, Color color) where TElement : ElementType
-    { element.BackgroundColor = color; return element; }
-
-    public static TElement BackgroundColor<TElement>(this TElement element, string color) where TElement : ElementType
-    { element.BackgroundColor = color.ColorFromString(); return element; }
-
+    
     public static TElement BackgroundColor<TElement>(this TElement element, uint hex) where TElement : ElementType
     { element.BackgroundColor = ColorExtensions.ColorFromUint(hex); return element; }
     #endregion
 
     #region BorderColor Color
-    public static TElement BorderColor<TElement>(this TElement element, Color color) where TElement : ElementType
-    { element.BorderColor = color; return element; }
-
-    public static TElement BorderColor<TElement>(this TElement element, string color) where TElement : ElementType
-    { element.BorderColor = color.ColorFromString(); return element; }
 
     public static TElement BorderColor<TElement>(this TElement element, uint hex) where TElement : ElementType
     { element.BorderColor = ColorExtensions.ColorFromUint(hex); return element; }
     #endregion
-
-    public static TElement BorderWidth<TElement>(this TElement element, double value) where TElement : ElementType
-    { element.BorderWidth = value; return element; }
-
-    public static TElement CornerRadius<TElement>(this TElement element, double value) where TElement : ElementType
-    { element.CornerRadius = value; return element; }
-
-    public static TElement PointerLength<TElement>(this TElement element, double value) where TElement : ElementType
-    { element.PointerLength = value; return element; }
-
-    public static TElement PointerTipRadius<TElement>(this TElement element, double value) where TElement : ElementType
-    { element.PointerTipRadius = value; return element; }
-
-    public static TElement PointerAxialPosition<TElement>(this TElement element, double value) where TElement : ElementType
-    { element.PointerAxialPosition = value; return element; }
-
-    public static TElement PointerDirection<TElement>(this TElement element, PointerDirection value) where TElement : ElementType
-    { element.PointerDirection = value; return element; }
 
     #region Pointer Direction
     public static TElement PointerDown<TElement>(this TElement element) where TElement : ElementType
@@ -69,14 +41,11 @@ public static class SkiaBubbleExtensions
     { element.PointerDirection = Controls.PointerDirection.Any; return element; }
     #endregion
 
-    public static TElement PointerCornerRadius<TElement>(this TElement element, double value) where TElement : ElementType
-    { element.PointerCornerRadius = value; return element; }
-
     internal static TElement IsShadow<TElement>(this TElement element) where TElement : ElementType
     {
         element
             .BackgroundColor(Colors.Black.WithAlpha(0.5))
-            .HitTestVisible(false)
+            .IsHitTestVisible(false)
             .Translate(element.BlurSigma, element.BlurSigma)
             .BorderWidth(0);
         element.ApplyBlur = true;
@@ -105,3 +74,5 @@ public static class SkiaBubbleExtensions
     */
 
 }
+
+

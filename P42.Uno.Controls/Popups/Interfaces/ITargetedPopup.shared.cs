@@ -1,6 +1,8 @@
-﻿using Windows.Foundation;
+using Windows.Foundation;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace P42.Uno.Controls;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 internal interface ITargetedPopup
 {
@@ -9,10 +11,10 @@ internal interface ITargetedPopup
 
     Thickness Padding { get; set; }
 
-    object Content { get; set; }
+    object? Content { get; set; }
 
     #region Pointer Properties
-    UIElement Target { get; set; }
+    UIElement? Target { get; set; }
 
     Rect TargetRect { get; set; }
 
@@ -36,7 +38,7 @@ internal interface ITargetedPopup
 
     #endregion
 
-    Brush PageOverlayBrush { get; set; }
+    Brush? PageOverlayBrush { get; set; }
 
     #region Push / Pop Properties
     TimeSpan PopAfter { get; set; }
@@ -53,7 +55,7 @@ internal interface ITargetedPopup
         
     PopupPoppedCause PoppedCause { get; }
 
-    object PoppedTrigger { get; }
+    object? PoppedTrigger { get; }
 
     PushPopState PushPopState { get; }
 
@@ -69,5 +71,5 @@ internal interface ITargetedPopup
 
     Task PushAsync(bool animated = true);
 
-    Task PopAsync(PopupPoppedCause cause, bool animated = true, object trigger = null);
+    Task PopAsync(PopupPoppedCause cause, bool animated = true, object? trigger = null);
 }

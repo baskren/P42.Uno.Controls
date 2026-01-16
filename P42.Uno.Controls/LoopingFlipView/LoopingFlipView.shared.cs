@@ -3,11 +3,12 @@ using System.Collections.Specialized;
 using Windows.Foundation;
 using Windows.UI;
 using Microsoft.UI.Input;
+using AsyncAwaitBestPractices;
 
 namespace P42.Uno.Controls;
 
 [Bindable]
-public class LoopingFlipView : UserControl
+public partial class LoopingFlipView : UserControl
 {
 
     #region Properties
@@ -85,22 +86,35 @@ public class LoopingFlipView : UserControl
 
 
     #region Events
-    public event EventHandler<int> SelectedIndexChanged;
-    public event EventHandler<UIElement> SelectedItemChanged;
+    private readonly WeakEventManager<int> _selectedIndexChangedEventManager = new();
+    public event EventHandler<int> SelectedIndexChanged
+    {
+        add => _selectedIndexChangedEventManager.AddEventHandler(value);
+        remove => _selectedIndexChangedEventManager.RemoveEventHandler(value);
+    }
+
+    private readonly WeakEventManager<UIElement?> _selectedItemChangedEventManager = new();
+    public event EventHandler<UIElement?> SelectedItemChanged
+    {
+        add => _selectedItemChangedEventManager.AddEventHandler(value);
+        remove => _selectedItemChangedEventManager.RemoveEventHandler(value);
+    }
     #endregion
 
 
     #region Fields
 
-    private Grid ContentGrid = new();
-    private Grid OverlayGrid = new();
+#pragma warning disable IDE0028 // Simplify collection initialization
+    private readonly Grid ContentGrid = new();
+    private readonly Grid OverlayGrid = new();
+#pragma warning restore IDE0028 // Simplify collection initialization
     private double _dx;
     private bool _isDown;
     private double _downX;
-    private PointerPoint _lastPoint;
+    private PointerPoint? _lastPoint;
     private double _lastVelocity;
-    private CancellationTokenSource _cancellationTokenSource;
-    private InsetShadow InsetShadow = new() { Orientation = Orientation.Horizontal };
+    private CancellationTokenSource? _cancellationTokenSource;
+    private readonly InsetShadow InsetShadow = new() { Orientation = Orientation.Horizontal };
     #endregion
 
 
@@ -134,14 +148,13 @@ public class LoopingFlipView : UserControl
     {
         if (!_isDown)
             return;
+
         _isDown = false;
 
         if (_cancellationTokenSource != null)
             return;
 
-        if (Math.Abs(_dx) > 2 * ActualWidth / 3 ||
-            (Math.Abs(_dx) > ActualWidth /2 && _lastVelocity > 0.0001)
-           )
+        if (Math.Abs(_dx) > 2 * ActualWidth / 3 || (Math.Abs(_dx) > ActualWidth /2 && _lastVelocity > 0.0001))
         {
             _cancellationTokenSource = new CancellationTokenSource();
             var animator = new ActionAnimator(_dx, Math.Sign(_dx) *ActualWidth, TimeSpan.FromSeconds(0.5), x =>
@@ -182,35 +195,35 @@ public class LoopingFlipView : UserControl
 
     private void PointerMove(object sender, PointerRoutedEventArgs e)
     {
-        if (_isDown)
-        {
-            var point = e.GetCurrentPoint(null);
-            _lastVelocity = Math.Abs(point.Position.X - _lastPoint.Position.X) / (point.Timestamp - _lastPoint.Timestamp);
+        if (!_isDown)
+            return;
 
-            _lastPoint = point; 
-            _dx = _lastPoint.Position.X - _downX;
-            LayoutChildren();
-        }
+        var point = e.GetCurrentPoint(null);
+        _lastPoint ??= point;
+        _lastVelocity = Math.Abs(point.Position.X - _lastPoint.Position.X) / (point.Timestamp - _lastPoint.Timestamp);
+        _lastPoint = point; 
+        _dx = _lastPoint.Position.X - _downX;
+        LayoutChildren();
     }
 
     private void PointerStart(object sender, PointerRoutedEventArgs e)
     {
-        if (!_isDown)
-        {
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource?.Dispose();  // is this going to cause problems?
-            _cancellationTokenSource = null;
-            _lastPoint = e.GetCurrentPoint(null);
-            _downX = _lastPoint.Position.X;
-            _isDown = true;
-        }
+        if (_isDown)
+            return;
+
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource?.Dispose();  // is this going to cause problems?
+        _cancellationTokenSource = null;
+        _lastPoint = e.GetCurrentPoint(null);
+        _downX = _lastPoint.Position.X;
+        _isDown = true;
     }
     #endregion
 
 
     #region Layout
 
-    private void LayoutChildren(bool ignoreIndex = false)
+    private void LayoutChildren()
     {
         if (double.IsNaN(ActualWidth) || double.IsNaN(ActualHeight) || ActualWidth < 1 || ActualHeight < 1)
             return;
@@ -292,9 +305,9 @@ public class LoopingFlipView : UserControl
             return;
         }
 
-        var itemsSource = ItemsSource as IList<UIElement> ?? new List<UIElement>(ItemsSource);
+        var itemsSource = ItemsSource as IList<UIElement> ?? [.. ItemsSource];
         SelectedIndex = itemsSource.IndexOf(SelectedItem);
-        SelectedItemChanged?.Invoke(this, e.NewValue as UIElement);
+        _selectedItemChangedEventManager.RaiseEvent(this, e.NewValue as UIElement, nameof(SelectedItemChanged));
     }
 
     private async void OnSelectedIndexChanged(DependencyPropertyChangedEventArgs e)
@@ -334,7 +347,7 @@ public class LoopingFlipView : UserControl
         }
 
         LayoutChildren();
-        SelectedIndexChanged?.Invoke(this, (int)e.NewValue);
+        _selectedIndexChangedEventManager.RaiseEvent(this, (int)e.NewValue, nameof(SelectedIndexChanged));
     }
        
     private void OnItemsSourceChanged(DependencyPropertyChangedEventArgs e)
@@ -362,7 +375,7 @@ public class LoopingFlipView : UserControl
         LayoutChildren();
     }
 
-    private void OnItemsSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void OnItemsSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
         {
@@ -370,15 +383,14 @@ public class LoopingFlipView : UserControl
                 InsertNewItems(e.NewStartingIndex, e.NewItems);
                 break;
             case NotifyCollectionChangedAction.Remove:
-                RemoveItemsAt(e.OldStartingIndex, e.OldItems.Count);
+                if (e.OldItems is not null)
+                    RemoveItemsAt(e.OldStartingIndex, e.OldItems.Count);
                 break;
             case NotifyCollectionChangedAction.Replace:
-                RemoveItemsAt(e.OldStartingIndex, e.OldItems.Count);
-                InsertNewItems(e.NewStartingIndex, e.NewItems);
-                break;
             case NotifyCollectionChangedAction.Move:
-                RemoveItemsAt(e.OldStartingIndex, e.OldItems.Count);
-                InsertNewItems(e.NewStartingIndex, e.OldItems);
+                if (e.OldItems is not null)
+                    RemoveItemsAt(e.OldStartingIndex, e.OldItems.Count);
+                InsertNewItems(e.NewStartingIndex, e.NewItems);
                 break;
             case NotifyCollectionChangedAction.Reset:
                 foreach (var child in ContentGrid.Children)
@@ -392,6 +404,8 @@ public class LoopingFlipView : UserControl
 
     private void RemoveItemsAt(int index, int count)
     {
+        if (index >= ContentGrid.Children.Count)
+            return;
         for (var i = 0; i < count; i++)
         {
             if (ContentGrid.Children[index] is IEventSubscriber eventSubscriber)
@@ -400,15 +414,19 @@ public class LoopingFlipView : UserControl
         }
     }
 
-    private void InsertNewItems(int index, IList items)
+    private void InsertNewItems(int index, IList? items)
     {
+        if (items is null)
+            return;
         var newItems = items.Cast<UIElement>().ToList();
         for (var i = newItems.Count - 1; i >= 0; i--)
             InsertItem(index, newItems[i]);
     }
 
-    private void InsertItem(int index, UIElement item)
+    private void InsertItem(int index, UIElement? item)
     {
+        if (item is null)
+            return;
         var xitem = new LoopingFlipViewItem(item);
         ContentGrid.Children.Insert(index, xitem);
         if (xitem is IEventSubscriber eventSubscriber)

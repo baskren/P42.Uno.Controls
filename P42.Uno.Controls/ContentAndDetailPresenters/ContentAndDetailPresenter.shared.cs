@@ -1,6 +1,7 @@
 using Windows.Foundation;
 using Windows.UI;
 using Microsoft.UI.Xaml.Markup;
+using AsyncAwaitBestPractices;
 
 namespace P42.Uno.Controls;
 
@@ -29,9 +30,9 @@ public partial class ContentAndDetailPresenter : Grid
                 view.Children.Insert(0,newElement);
         }
     }
-    public FrameworkElement Content
+    public FrameworkElement? Content
     {
-        get => (FrameworkElement)GetValue(ContentProperty);
+        get => (FrameworkElement?)GetValue(ContentProperty);
         set => SetValue(ContentProperty, value);
     }
     #endregion Content Property
@@ -56,9 +57,9 @@ public partial class ContentAndDetailPresenter : Grid
             }
         }
     }
-    public FrameworkElement Footer
+    public FrameworkElement? Footer
     {
-        get => (FrameworkElement)GetValue(FooterProperty);
+        get => (FrameworkElement?)GetValue(FooterProperty);
         set => SetValue(FooterProperty, value);
     }
     #endregion Footer Property
@@ -72,9 +73,9 @@ public partial class ContentAndDetailPresenter : Grid
         typeof(ContentAndDetailPresenter),
         new PropertyMetadata(null)
     );
-    public FrameworkElement Detail
+    public FrameworkElement? Detail
     {
-        get => (FrameworkElement)GetValue(DetailProperty);
+        get => (FrameworkElement?)GetValue(DetailProperty);
         set => SetValue(DetailProperty, value);
     }
     #endregion Detail Property
@@ -166,7 +167,7 @@ public partial class ContentAndDetailPresenter : Grid
     /// <summary>
     /// The UIElement the popup will point at (no pointer if Target is null or not found)
     /// </summary>
-    public UIElement Target
+    public UIElement? Target
     {
         get
         {
@@ -174,7 +175,7 @@ public partial class ContentAndDetailPresenter : Grid
                 return target;
             return null;
         }
-        set => WeakTarget = new WeakReference<UIElement>(value);
+        set => WeakTarget = value != null ? new WeakReference<UIElement>(value) : null;
     }
     #endregion Target Property
 
@@ -185,7 +186,7 @@ public partial class ContentAndDetailPresenter : Grid
         typeof(ContentAndDetailPresenter),
         new PropertyMetadata(default(WeakReference<UIElement>))
     );
-    public WeakReference<UIElement> WeakTarget
+    public WeakReference<UIElement>? WeakTarget
     {
         get => (WeakReference<UIElement>)GetValue(WeakTargetProperty);
         set => SetValue(WeakTargetProperty, value);
@@ -291,7 +292,7 @@ public partial class ContentAndDetailPresenter : Grid
             if (width <= 0)
             {
                 if (windowSize == Size.Empty)
-                    windowSize = AppWindow.Size(this);
+                    windowSize = AppWindow.Size();
                 width = windowSize.Width;
             }
             var height = ActualHeight;
@@ -300,7 +301,7 @@ public partial class ContentAndDetailPresenter : Grid
             if (height <= 0)
             {
                 if (windowSize == Size.Empty)
-                    windowSize = AppWindow.Size(this);
+                    windowSize = AppWindow.Size();
                 height = windowSize.Height;
             }
             return new Size(width, height);
@@ -362,7 +363,12 @@ public partial class ContentAndDetailPresenter : Grid
 
 
     #region Events
-    public event EventHandler<DismissPointerPressedEventArgs> DismissPointerPressed;
+    private WeakEventManager<DismissPointerPressedEventArgs> _dismissPointerPressedEventManager = new();
+    public event EventHandler<DismissPointerPressedEventArgs> DismissPointerPressed
+    {
+        add => _dismissPointerPressedEventManager.AddEventHandler(value);
+        remove => _dismissPointerPressedEventManager.RemoveEventHandler(value);
+    }
     #endregion
 
 
@@ -427,7 +433,7 @@ public partial class ContentAndDetailPresenter : Grid
         {
             //System.Diagnostics.Debug.WriteLine($"ContentAndDetailPresenter.LayoutDetailAndOverlay : DRAWER");
             if (percentOpen > 0 && _targetedPopup.PushPopState == PushPopState.Pushed)
-                _targetedPopup.PopAsync(trigger: popupToDrawerResizeTrigger).Forget();
+                _targetedPopup.PopAsync(trigger: popupToDrawerResizeTrigger).SafeFireAndForget();
             _targetedPopup.Content = null;
             _detailDrawer.Child = Detail;
             _detailDrawer.Opacity = percentOpen;
@@ -443,9 +449,9 @@ public partial class ContentAndDetailPresenter : Grid
             _targetedPopup.Content = Detail;
 
             if (percentOpen > 0 && _targetedPopup.PushPopState == PushPopState.Popped)
-                _targetedPopup.PushAsync().Forget();
+                _targetedPopup.PushAsync().SafeFireAndForget();
             else if (percentOpen <=0 && _targetedPopup.PushPopState == PushPopState.Pushed)
-                _targetedPopup.PopAsync().Forget();
+                _targetedPopup.PopAsync().SafeFireAndForget();
                 
                 
             //while (RowDefinitions.Count > 2)
@@ -558,7 +564,7 @@ public partial class ContentAndDetailPresenter : Grid
 
 
     #region Push / Pop
-    public async Task PushDetailAsync(bool animated = false, Action<double> animation = null)
+    public async Task PushDetailAsync(bool animated = false, Action<double>? animation = null)
     {
         if (DetailPushPopState == PushPopState.Pushing || DetailPushPopState == PushPopState.Pushed)
             return;
@@ -655,7 +661,7 @@ public partial class ContentAndDetailPresenter : Grid
                 e.Cause == PopupPoppedCause.Timeout)
             {
                 var dismissEventArgs = new DismissPointerPressedEventArgs();
-                DismissPointerPressed?.Invoke(this, dismissEventArgs);
+                _dismissPointerPressedEventManager.RaiseEvent(this, dismissEventArgs, nameof(DismissPointerPressed));
                 if (!dismissEventArgs.CancelDismiss)
                     await PopDetailAsync();
             }
@@ -670,7 +676,7 @@ public partial class ContentAndDetailPresenter : Grid
     private void OnTargetedPopupDismissPointerPressed(object sender, DismissPointerPressedEventArgs e)
     {
         if (PopOnPageOverlayTouch)
-            DismissPointerPressed?.Invoke(this, e);
+            _dismissPointerPressedEventManager.RaiseEvent(this, e, nameof(DismissPointerPressed));
         else
             e.CancelDismiss = true;
     }
@@ -680,13 +686,13 @@ public partial class ContentAndDetailPresenter : Grid
         if (PopOnPageOverlayTouch)
         {
             var dismissEventArgs = new DismissPointerPressedEventArgs();
-            DismissPointerPressed?.Invoke(this, dismissEventArgs);
+            _dismissPointerPressedEventManager.RaiseEvent(this, dismissEventArgs, nameof(DismissPointerPressed));
             if (!dismissEventArgs.CancelDismiss)
                 await PopDetailAsync();
         }
     }
 
-    private TaskCompletionSource<bool> _popCompletionSource;
+    private TaskCompletionSource<bool>? _popCompletionSource;
     public async Task<bool> WaitForPop()
     {
         _popCompletionSource ??= new TaskCompletionSource<bool>();
@@ -694,7 +700,7 @@ public partial class ContentAndDetailPresenter : Grid
     }
 
 
-    private TaskCompletionSource<bool> _pushCompletionSource;
+    private TaskCompletionSource<bool>? _pushCompletionSource;
 
     private async Task<bool> WaitForPush()
     {

@@ -9,11 +9,12 @@ internal class NativeChimePlayer : INativeChimePlayer
         if (mode == EffectMode.Off)
             return;
 
+        //TODO:  THIS IS NOT RIGHT!!! NEED TO FIGURE OUT HOW TO GET ASSET PATHS IN WASM
 
         if (string.IsNullOrWhiteSpace(SoundAssetsPath))
         {
             Console.WriteLine("NativeAudioPlayer.Initialize: === ENTER ====");
-            if (await ChimePlayer.GetPathAsync(Effect.Alarm) is { } path)
+            if (Effect.Alarm.ChimeAssetRelativePath is { } path)
             {
                 Console.WriteLine($"NativeAudioPlayer.Initialize : path=[{path}]");
                 var ac = "/local/.assetsCache";

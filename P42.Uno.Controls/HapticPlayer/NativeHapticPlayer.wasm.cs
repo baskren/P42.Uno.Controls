@@ -16,7 +16,7 @@ internal class NativeHapticPlayer : INativeHapticPlayer
     private const string Inquiry = "navigator.vibrate([200, 100, 200]);";
 
 
-    public void Play(Effect effect, EffectMode mode)
+    public async Task PlayAsync(Effect effect, EffectMode mode)
     {
         if (mode == EffectMode.Off)
             return;
@@ -50,6 +50,6 @@ navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mo
 if (navigator.vibrate) {{
 	{command}
 }}";
-        WebAssemblyRuntime.InvokeJS(javascript);
+        await Task.Run(() => WebAssemblyRuntime.InvokeJS(javascript));
     }
 }

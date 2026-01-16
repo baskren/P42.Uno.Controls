@@ -14,7 +14,6 @@
 
 using System.ComponentModel;
 using System.Globalization;
-using Microsoft.Toolkit.Diagnostics;
 
 namespace P42.Uno.Controls;
 
@@ -23,32 +22,21 @@ namespace P42.Uno.Controls;
 /// </summary>
 internal class FlexWrapTypeConverter : TypeConverter
 {
-    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-    {
-        if (sourceType == typeof(string))
-        {
-            return true;
-        }
+    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
+        => sourceType == typeof(string) ? true : base.CanConvertFrom(context, sourceType);
 
-        return base.CanConvertFrom(context, sourceType);
-    }
-
-    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+    public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
         if (value is string stringValue)
         {
             if (Enum.TryParse(stringValue, true, out FlexWrap wrap))
-            {
                 return wrap;
-            }
 
             if (stringValue.Equals("wrap-reverse", StringComparison.OrdinalIgnoreCase))
-            {
                 return FlexWrap.Reverse;
-            }
+
         }
 
-        ThrowHelper.ThrowInvalidOperationException(string.Format("Cannot convert \"{0}\" into {1}", value, typeof(FlexWrap)));
-        return null;
+        throw new InvalidOperationException(string.Format("Cannot convert \"{0}\" into {1}", value, typeof(FlexWrap)));
     }
 }

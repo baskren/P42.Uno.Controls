@@ -35,10 +35,10 @@ public static class SegmentedControlExtensions
     { element.AllowUnselectAll = allow; return element; }
 
     public static Element SelectedIndexes(this Element element, params int[] indexes)
-    { element.SelectedIndexes = indexes.ToList(); return element; }
+    { element.SelectedIndexes = [.. indexes]; return element; }
 
     public static Element SelectedItems(this Element element, params string[] items)
-    { element.SelectedLabels = items.ToList(); return element; }
+    { element.SelectedLabels = [.. items]; return element; }
 
     public static Element SelectionMode(this Element element, SelectionMode mode)
     { element.SelectionMode = mode; return element; }

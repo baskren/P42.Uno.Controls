@@ -26,18 +26,18 @@ public partial class Alert : Toast
         {
             var t = tb.Text;
             if (string.IsNullOrWhiteSpace(t))
-                t = tb.GetHtml();
+                t = tb.Html;
             _okButton.Collapsed(string.IsNullOrWhiteSpace(t));
             _okButton.Content = tb;
         }
         else if (args.NewValue is string text)
         {
             _okButton.Collapsed(string.IsNullOrWhiteSpace(text));
-            if (_okButton.IsVisible())
+            if (_okButton.IsVisible)
             {
                 _okButton.Content = new TextBlock()
-                    .WBindFont(_okButton)
-                    .WrapWords()
+                    .BindFont(_okButton)
+                    .WrapWholeWords()
                     .SetHtml(text);
             }
             else
@@ -124,7 +124,7 @@ public partial class Alert : Toast
     /// <param name="okButtonColor"></param>
     /// <param name="okTextColor"></param>
     /// <returns></returns>
-    public static async Task<Alert> CreateAsync(string titleText, string messageText, string okButtonText = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
+    public static async Task<Alert> CreateAsync(string titleText, string messageText, string okButtonText = "", Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
     {
         var popup = new Alert
         { 
@@ -153,7 +153,7 @@ public partial class Alert : Toast
     /// <param name="okButtonColor"></param>
     /// <param name="okTextColor"></param>
     /// <returns></returns>
-    public static async Task<Alert> CreateAsync(UIElement target, object titleContent, object messageContent, object okButtonContent = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
+    public static async Task<Alert> CreateAsync(UIElement target, object titleContent, object messageContent, object? okButtonContent = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
     {
         var popup = new Alert(target) 
         {
@@ -176,7 +176,7 @@ public partial class Alert : Toast
     /// </summary>
     public Alert() : this(null) {}
         
-    public Alert(UIElement target) : base(target)
+    public Alert(UIElement? target) : base(target)
     {
         Build();
     }

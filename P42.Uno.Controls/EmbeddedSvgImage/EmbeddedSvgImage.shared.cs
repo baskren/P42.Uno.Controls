@@ -4,6 +4,8 @@ using System.Reflection;
 using Windows.Foundation;
 using SkiaSharp;
 using SkiaSharp.Views.Windows;
+using P42.Serilog.QuickLog;
+using AsyncAwaitBestPractices;
 
 namespace P42.Uno.Controls;
 
@@ -27,13 +29,14 @@ public class EmbeddedSvgImage : SKXamlCanvas
     }
     #endregion Stretch Property
 
+    private HttpClient HttpClient => field ??= new HttpClient();
 
     #endregion
 
 
     #region Fields
 
-    private Svg.Skia.SKSvg _skSvg;
+    private Svg.Skia.SKSvg? _skSvg;
     //private SkiaSharp.Extended.Svg.SKSvg _skSvg;
     private double _canvasAspect = 1.0;
     private float _canvasWidth;
@@ -48,21 +51,18 @@ public class EmbeddedSvgImage : SKXamlCanvas
         PaintSurface += OnPaintSurface;
         //MinHeight = 20;
         //MinWidth = 20;
-#if __IOS__
-        Opaque = false;
-#endif
 
     }
 
-    public EmbeddedSvgImage(string resourceId, Assembly assembly = null) : this()
+    public EmbeddedSvgImage(string resourceId, Assembly? assembly = null) : this()
     {
-        SetSource(resourceId, assembly);
+        SetSourceAsync(resourceId, assembly).SafeFireAndForget();
     }
     #endregion
 
 
     #region SetSource
-    public void SetSource(string resourceId, Assembly assembly = null)
+    public async Task SetSourceAsync(string resourceId, Assembly? assembly = null)
     {
         _skSvg = null;
 
@@ -75,37 +75,35 @@ public class EmbeddedSvgImage : SKXamlCanvas
         if (resourceId.StartsWith("http://") || resourceId.StartsWith("https://") || resourceId.StartsWith("file://") || resourceId.StartsWith("ms-appx://"))
         {
             var uri = new Uri(resourceId);
-            SetSource(uri);
+            await SetSourceAsync(uri);
             return;
         }
             
-        assembly ??= Utils.Uno.EmbeddedResourceExtensions.FindAssemblyForResourceId(resourceId);
-        if (assembly == null)
-            return;
-
-        using var stream = Utils.Uno.EmbeddedResourceExtensions.FindStreamForResourceId(resourceId, assembly);
-        if (stream is null)
+        if (EmbeddedResourceExtensions.FindAssemblyResourceIdAndStream(resourceId, assembly) is not { } result || result.DisposableStream is null)
         {
+            var sb = new System.Text.StringBuilder();
+            assembly ??= Utils.AssemblyExtensions.GetApplicationAssembly();
             var resources = assembly.GetManifestResourceNames();
-            Console.WriteLine($"ERROR: Cannot find embedded resource [{resourceId}] in assembly [{assembly}].");
-            Console.WriteLine("       Resources found:");
+            sb.AppendLine($"ERROR: Cannot find embedded resource [{resourceId}] in assembly [{assembly}].");
+            sb.AppendLine("       Resources found:");
             foreach (var resource in resources)
-                Console.WriteLine($"       [{resource}]");
+                sb.AppendLine($"       [{resource}]");
+            QLog.Error(sb.ToString());
+            return;
         }
-        else
-            SetSource(stream);
+
+        SetSource(result.DisposableStream);
     }
 
-    public void SetSource(Uri uri)
+    public async Task SetSourceAsync(Uri uri)
     {
         if (uri.IsFile)
         {
             SetSourceFromPath(uri.LocalPath);
             return;
         }
-        var aRequest = (HttpWebRequest)WebRequest.Create(uri);
-        using var aResponse = (HttpWebResponse)aRequest.GetResponse();
-        using var stream = aResponse.GetResponseStream();
+        using var request = await HttpClient.GetAsync(uri);
+        using var stream = await request.Content.ReadAsStreamAsync();
         SetSource(stream);
     }
 
@@ -122,30 +120,7 @@ public class EmbeddedSvgImage : SKXamlCanvas
 
         
         _skSvg = new Svg.Skia.SKSvg();
-        //_skSvg = new SkiaSharp.Extended.Svg.SKSvg();
         _skSvg.Load(stream);
-        /*
-        _imageAspect = _skSvg.CanvasSize.Width < 1 || _skSvg.CanvasSize.Height < 1 
-            ? 1 
-            : _skSvg.CanvasSize.Width / _skSvg.CanvasSize.Height;
-        */
-        /*
-        System.Diagnostics.Debug.WriteLine($"SKSvg loaded:");
-        System.Diagnostics.Debug.WriteLine($"\t Bounds: {_skSvg.Drawable.Bounds.Width}x{_skSvg.Drawable.Bounds.Height}");
-        System.Diagnostics.Debug.WriteLine($"\t Model.CullRect: {_skSvg.Model?.CullRect}");
-        System.Diagnostics.Debug.WriteLine($"\t Picture.CullRect: {_skSvg.Picture?.CullRect}");
-
-        var p = _skSvg.Parameters?.Entities;
-        if (p is not null)
-        {
-            foreach (var kvp in p)
-            {
-                System.Diagnostics.Debug.WriteLine($"{kvp.Key}: {kvp.Value}");
-            }
-        }
-
-        System.Diagnostics.Debug.WriteLine($"\t {_skSvg.Drawable.Bounds.Width}x{_skSvg.Drawable.Bounds.Height}");
-        */
         
         _canvasWidth = _skSvg.Picture?.CullRect.Width ?? _skSvg.Model?.CullRect.Width ?? 10;
         _canvasHeight =_skSvg.Picture?.CullRect.Height ??  _skSvg.Model?.CullRect.Height ?? 10;
@@ -153,20 +128,23 @@ public class EmbeddedSvgImage : SKXamlCanvas
             ? 1
             : _canvasWidth / _canvasHeight;
         
-        //Invalidate();
         InvalidateMeasure();
     }
     #endregion
     
     
-    private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
+    private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
     {
         if (e?.Surface?.Canvas is not { } workingCanvas)
+            return;
+
+        if (_skSvg?.Drawable is not { } drawable)
             return;
 
         workingCanvas.Clear();
         if (_skSvg?.Picture is not { } picture)
             return;
+
         workingCanvas.Save();
 
         var fillRect = e.Info.Rect;
@@ -176,7 +154,7 @@ public class EmbeddedSvgImage : SKXamlCanvas
         // System.Diagnostics.Debug.WriteLine($"\t fillRect:[{fillRect.Width}x{fillRect.Height}] aspect: {fillRectAspect}  Stretch:[{Stretch}]");
 
         //if (_skSvg.CanvasSize.Width <= 0 || _skSvg.CanvasSize.Height <= 0)
-        if (_skSvg.Drawable.Bounds.Width <= 0 || _skSvg.Drawable.Bounds.Height <= 0)
+        if (drawable.Bounds.Width <= 0 || drawable.Bounds.Height <= 0)
         {
             Console.WriteLine("Cannot tile, scale or justify an SVG image with zero or negative Width or Height. Verify, in the SVG source, that the x, y, width, height, and viewBox attributes of the <SVG> tag are present and set correctly.");
         }

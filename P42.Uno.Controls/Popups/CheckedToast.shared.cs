@@ -51,7 +51,7 @@ public partial class CheckedToast : Alert
     /// <param name="okButtonColor"></param>
     /// <param name="okTextColor"></param>
     /// <returns></returns>
-    public new static async Task<CheckedToast> CreateAsync(string titleText, string messageText, string okButtonText = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
+    public new static async Task<CheckedToast> CreateAsync(string titleText, string messageText, string okButtonText = "", Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
     {
         var popup = new CheckedToast
         { 
@@ -79,7 +79,7 @@ public partial class CheckedToast : Alert
     /// <param name="okButtonColor"></param>
     /// <param name="okTextColor"></param>
     /// <returns></returns>
-    public new static async Task<CheckedToast> CreateAsync(UIElement target, object titleContent, object messageContent, object okButtonContent = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
+    public new static async Task<CheckedToast> CreateAsync(UIElement target, object titleContent, object messageContent, object? okButtonContent = null, Color okButtonColor = default, Color okTextColor = default, Effect effect = Effect.Alarm, EffectMode effectMode = EffectMode.Default)
     {
         var popup = new CheckedToast(target) 
         { 

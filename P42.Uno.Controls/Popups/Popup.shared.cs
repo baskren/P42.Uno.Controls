@@ -1,10 +1,17 @@
+using AsyncAwaitBestPractices;
+
 namespace P42.Uno.Controls;
 
 public static class Popups
 {
     private static List<TargetedPopup> Stack = [];
 
-    internal static event SizeChangedEventHandler FrameSizeChanged;
+    private static WeakEventManager _frameSizeChangedManager = new();
+    internal static event SizeChangedEventHandler FrameSizeChanged
+    {
+        add => _frameSizeChangedManager.AddEventHandler(value);
+        remove => _frameSizeChangedManager.RemoveEventHandler(value);
+    }
 
     private static Visibility _visibility = Visibility.Visible;
     public static Visibility Visibility
@@ -35,53 +42,57 @@ public static class Popups
         Visibility = Visibility.Collapsed;
     }
 
-    internal static void Add(TargetedPopup popup)
+    internal static async Task AddAsync(TargetedPopup popup)
     {
         if (!RootFrame.Initiated)
             throw new Exception("P42.Uno.Controls popups require using P42.Uno.Controls.RootFrame as the application's window's Content");
 
-        if (RootFrame.Current?.IsLoaded ?? false    )
+        if (await RootFrame.GetCurrentAsync() is RootFrame rootFrame && rootFrame.IsLoaded)
         {
-            InnerAdd(popup);
+            await InnerAddAsync(popup);
             Stack.Add(popup);
         }
     }
 
-    private static void InnerAdd(TargetedPopup popup)
+    private static async Task InnerAddAsync(TargetedPopup popup)
     {
+        if (await RootFrame.GetPopupGridAsync() is not Grid grid)
+            throw new Exception("P42.Uno.Controls popups require using P42.Uno.Controls.RootFrame as the application's window's Content");
         popup.Visibility = Visibility;
-        if (!RootFrame.PopupGrid.Children.Contains(popup.PageOverlay))
-            RootFrame.PopupGrid.Children.Add(popup.PageOverlay);
-        if (!RootFrame.PopupGrid.Children.Contains(popup.ShadowBorder))
-            RootFrame.PopupGrid.Children.Add(popup.ShadowBorder);
-        if (!RootFrame.PopupGrid.Children.Contains(popup.ContentBorder))
-            RootFrame.PopupGrid.Children.Add(popup.ContentBorder);
+        if (!grid.Children.Contains(popup.PageOverlay))
+            grid.Children.Add(popup.PageOverlay);
+        if (!grid.Children.Contains(popup.ShadowBorder))
+            grid.Children.Add(popup.ShadowBorder);
+        if (!grid.Children.Contains(popup.ContentBorder))
+            grid.Children.Add(popup.ContentBorder);
     }
 
-    internal static void Remove(TargetedPopup popup)
+    internal static async Task RemoveAsync(TargetedPopup popup)
     {
         if (!RootFrame.Initiated)
             throw new Exception("P42.Uno.Controls popups require using P42.Uno.Controls.RootFrame as the application's window's Content");
 
-        if (RootFrame.Current?.IsLoaded ?? false)
+        if (await RootFrame.GetCurrentAsync() is RootFrame rootFrame && rootFrame.IsLoaded)
         {
-            InnerRemove(popup);
+            await InnerRemoveAsync(popup);
             Stack.Remove(popup);
         }
     }
 
-    private static void InnerRemove(TargetedPopup popup)
+    private static async Task InnerRemoveAsync(TargetedPopup popup)
     {
-        if (RootFrame.PopupGrid.Children.Contains(popup.PageOverlay))
-            RootFrame.PopupGrid.Children.Remove(popup.PageOverlay);
-        if (RootFrame.PopupGrid.Children.Contains(popup.ShadowBorder))
-            RootFrame.PopupGrid.Children.Remove(popup.ShadowBorder);
-        if (RootFrame.PopupGrid.Children.Contains(popup.ContentBorder))
-            RootFrame.PopupGrid.Children.Remove(popup.ContentBorder);
+        if (await RootFrame.GetPopupGridAsync() is not Grid grid)
+            throw new Exception("P42.Uno.Controls popups require using P42.Uno.Controls.RootFrame as the application's window's Content");
+        if (grid.Children.Contains(popup.PageOverlay))
+            grid.Children.Remove(popup.PageOverlay);
+        if (grid.Children.Contains(popup.ShadowBorder))
+            grid.Children.Remove(popup.ShadowBorder);
+        if (grid.Children.Contains(popup.ContentBorder))
+            grid.Children.Remove(popup.ContentBorder);
     }
 
     internal static void OnRootFrameSizeChanged(object sender, SizeChangedEventArgs args)
-        => FrameSizeChanged?.Invoke(sender, args);
+        => _frameSizeChangedManager.RaiseEvent(sender, args, nameof(FrameSizeChanged)); //FrameSizeChanged?.Invoke(sender, args);
 
     public static async Task<bool> TryPopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled)
     {

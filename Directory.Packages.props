@@ -11,6 +11,10 @@
     <PackageVersion Include="P42.Utils" Version="$(P42UtilsVersion)" />
     <PackageVersion Include="P42.Utils.Uno" Version="$(P42UtilsUnoVersion)" />
     <PackageVersion Include="P42.Uno.WinUI.Markup" Version="$(UnoVersion)" />
+    <PackageVersion Include="P42.Utils.Uno.HtmlTextBlock" Version="$(UnoVersion)" />
+
+    <PackageVersion Include="Svg.Skia" Version="3.4.0" />
+    <PackageVersion Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
     
   </ItemGroup>
 </Project>

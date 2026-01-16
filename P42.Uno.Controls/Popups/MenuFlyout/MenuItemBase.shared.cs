@@ -6,7 +6,7 @@ namespace P42.Uno.Controls;
 /// </summary>
 [Obsolete("Use Microsoft.UI.Xaml.Controls.MenuFlyoutItem")]
 [Bindable]
-public class MenuItemBase : DependencyObject 
+public partial class MenuItemBase : DependencyObject 
 {
     #region Properties 
 

@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml.Markup;
+using P42.Utils.Uno;
 
 namespace P42.Uno.Controls;
 
@@ -10,6 +11,8 @@ namespace P42.Uno.Controls;
 [ContentProperty(Name = "Message")]
 public partial class Toast : TargetedPopup
 {
+    #region Properties
+
     #region Padding Property
     public new static readonly DependencyProperty PaddingProperty = DependencyProperty.Register(
         nameof(Padding),
@@ -23,8 +26,6 @@ public partial class Toast : TargetedPopup
         set => SetValue(PaddingProperty, value);
     }
     #endregion Padding Property
-
-
 
     #region Title Property
     public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -49,18 +50,18 @@ public partial class Toast : TargetedPopup
         {
             var t = tb.Text;
             if (string.IsNullOrWhiteSpace(t))
-                t = tb.GetHtml();
+                t = tb.Html;
             _titleBlock.Collapsed(string.IsNullOrWhiteSpace(t));
             _titleBlock.Content = tb;
         }
         else if (args.NewValue is string text)
         {
             _titleBlock.Collapsed(string.IsNullOrWhiteSpace(text));
-            if (_titleBlock.IsVisible())
+            if (_titleBlock.IsVisible)
             {
                 _titleBlock.Content = new TextBlock()
-                    .WBindFont(_titleBlock)
-                    .WrapWords()
+                    .BindFont(_titleBlock)
+                    .WrapWholeWords()
                     .SetHtml(text);
             }
             else
@@ -101,7 +102,6 @@ public partial class Toast : TargetedPopup
     }
     #endregion TitleBackground Property
 
-
     #region Message Property
     public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
         nameof(Message),
@@ -125,18 +125,18 @@ public partial class Toast : TargetedPopup
         {
             var t = tb.Text;
             if (string.IsNullOrWhiteSpace(t))
-                t = tb.GetHtml();
+                t = tb.Html;
             _messageBlock.Collapsed(string.IsNullOrWhiteSpace(t));
             _messageBlock.Content = tb;
         }
         else if (args.NewValue is string text)
         {
             _messageBlock.Collapsed(string.IsNullOrWhiteSpace(text));
-            if (_messageBlock.IsVisible())
+            if (_messageBlock.IsVisible)
             {
                 _messageBlock.Content = new TextBlock()
-                    .WBindFont(_messageBlock)
-                    .WrapWords()
+                    .BindFont(_messageBlock)
+                    .WrapWholeWords()
                     .SetHtml(text);
             }
             else
@@ -155,7 +155,6 @@ public partial class Toast : TargetedPopup
         set => SetValue(MessageProperty, value);
     }
     #endregion Message Property
-
 
     #region IconElement Property
     public static readonly DependencyProperty IconElementProperty = DependencyProperty.Register(
@@ -179,7 +178,6 @@ public partial class Toast : TargetedPopup
         set => SetValue(IconElementProperty, value);
     }
     #endregion IconElement Property
-
 
     #region IsMessageScrollable Property
     public static readonly DependencyProperty IsMessageScrollableProperty = DependencyProperty.Register(
@@ -219,6 +217,8 @@ public partial class Toast : TargetedPopup
         set => SetValue(IsMessageScrollableProperty, value);
     }
     #endregion IsMessageScrollable Property
+
+    #endregion Properties
 
 
     #region Factory
@@ -293,7 +293,7 @@ public partial class Toast : TargetedPopup
          
     public Toast() : this(null) {}
 
-    public Toast(UIElement target) : base(target) 
+    public Toast(UIElement? target) : base(target) 
     {
         Build();
         Loaded += OnLoaded;

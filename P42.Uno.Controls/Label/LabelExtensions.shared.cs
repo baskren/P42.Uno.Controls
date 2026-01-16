@@ -36,46 +36,50 @@ public static class LabelExtensions
         return sb.ToString();
     }
 
-    internal static double HeightForLinesAtFontSize(this TextBlock textBlock, int lines, double fontSize)
+    extension(TextBlock textBlock)
     {
-        lock (SizingTextBlock)
+        internal double HeightForLinesAtFontSize(int lines, double fontSize)
         {
-            SizingTextBlock.SizePropertiesFrom(textBlock);
-            SizingTextBlock.Text = LinesOfText(lines);
-            SizingTextBlock.Measure(Infinite);
-            return SizingTextBlock.DesiredSize.Height;
+            lock (SizingTextBlock)
+            {
+                SizingTextBlock.SizePropertiesFrom(textBlock);
+                SizingTextBlock.Text = LinesOfText(lines);
+                SizingTextBlock.FontSize = fontSize;
+                SizingTextBlock.Measure(Infinite);
+                return SizingTextBlock.DesiredSize.Height;
+            }
         }
-    }
 
-    internal static double FontSizeFromLinesInHeight(this TextBlock textBlock, int lines, double targetHeight)
-    {
-        var currentHeight = 0.0;
-        var currentFontSize = textBlock.FontSize;
-        lock (SizingTextBlock)
+        internal double FontSizeFromLinesInHeight(int lines, double targetHeight)
         {
-            SizingTextBlock.SizePropertiesFrom(textBlock);
-            SizingTextBlock.Text = LinesOfText(lines);
-            SizingTextBlock.Measure(Infinite);
-            currentHeight = SizingTextBlock.DesiredSize.Height;
+            var currentHeight = 0.0;
+            var currentFontSize = textBlock.FontSize;
+            lock (SizingTextBlock)
+            {
+                SizingTextBlock.SizePropertiesFrom(textBlock);
+                SizingTextBlock.Text = LinesOfText(lines);
+                SizingTextBlock.Measure(Infinite);
+                currentHeight = SizingTextBlock.DesiredSize.Height;
+            }
+            var fontSize = currentFontSize * targetHeight / currentHeight;
+            return fontSize;
         }
-        var fontSize = currentFontSize * targetHeight / currentHeight;
-        return fontSize;
-    }
 
-    internal static void SizePropertiesFrom(this TextBlock textBlock, TextBlock source)
-    {
-        textBlock.CharacterSpacing = source.CharacterSpacing;
-        textBlock.FontFamily = source.FontFamily;
-        textBlock.FontSize = source.FontSize;
-        textBlock.FontStretch = source.FontStretch;
-        textBlock.FontStyle = source.FontStyle;
-        textBlock.FontWeight = source.FontWeight;
-        textBlock.LineHeight = source.LineHeight;
-        textBlock.LineStackingStrategy = source.LineStackingStrategy;
-        textBlock.MaxLines = source.MaxLines;
-        textBlock.OpticalMarginAlignment = source.OpticalMarginAlignment;
-        textBlock.Padding = source.Padding;
-        textBlock.TextTrimming = source.TextTrimming;  //None, CharacterEllipsis, WordEllipsis, Clip
-        textBlock.TextWrapping = source.TextWrapping;  //None, Wrap, WrapWholeWords
+        internal void SizePropertiesFrom(TextBlock source)
+        {
+            textBlock.CharacterSpacing = source.CharacterSpacing;
+            textBlock.FontFamily = source.FontFamily;
+            textBlock.FontSize = source.FontSize;
+            textBlock.FontStretch = source.FontStretch;
+            textBlock.FontStyle = source.FontStyle;
+            textBlock.FontWeight = source.FontWeight;
+            textBlock.LineHeight = source.LineHeight;
+            textBlock.LineStackingStrategy = source.LineStackingStrategy;
+            textBlock.MaxLines = source.MaxLines;
+            textBlock.OpticalMarginAlignment = source.OpticalMarginAlignment;
+            textBlock.Padding = source.Padding;
+            textBlock.TextTrimming = source.TextTrimming;  //None, CharacterEllipsis, WordEllipsis, Clip
+            textBlock.TextWrapping = source.TextWrapping;  //None, Wrap, WrapWholeWords
+        }
     }
 }

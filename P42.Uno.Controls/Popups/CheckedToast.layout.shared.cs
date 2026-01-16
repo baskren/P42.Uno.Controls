@@ -13,8 +13,8 @@ public partial class CheckedToast : Alert
             .Row(2).Column(1).Margin(0)
             .StretchHorizontal()
             .HorizontalContentAlignment(HorizontalAlignment.Left)
-            .WBind(ToggleButton.IsCheckedProperty, this, IsCheckedProperty, BindingMode.TwoWay)
-            .WBind(ContentProperty, this, CheckContentProperty);
+            .AltBind(ToggleButton.IsCheckedProperty, this, IsCheckedProperty, BindingMode.TwoWay)
+            .AltBind(ContentProperty, this, CheckContentProperty);
 
         _bubbleContentGrid.Children.Add(_checkBox);
 

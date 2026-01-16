@@ -123,12 +123,12 @@ public partial class BusyPopup : Toast
 
     protected virtual void UpdateProgressRingLocation()
     {
-        if (_titleBlock.IsVisible())
+        if (_titleBlock.IsVisible)
         {
             ProgressRing.RowCol(0, 0);
-            ProgressRing.RowSpan(_messageBlock.IsVisible() ? 2 : 1);
+            ProgressRing.RowSpan(_messageBlock.IsVisible ? 2 : 1);
         }
-        else if (_messageBlock.IsVisible())
+        else if (_messageBlock.IsVisible)
         {
             ProgressRing.RowCol(1, 0);
             ProgressRing.RowSpan(1);

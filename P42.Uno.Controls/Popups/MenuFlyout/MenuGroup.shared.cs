@@ -6,7 +6,7 @@ namespace P42.Uno.Controls;
 [Bindable]
 [Obsolete("Use Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem")]
 [ContentProperty(Name = "Items")]
-public class MenuGroup : MenuItemBase
+public partial class MenuGroup : MenuItemBase
 {
     #region Items Property
     public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register(

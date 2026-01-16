@@ -1,13 +1,14 @@
+using Windows.Devices.Haptics;
+
 namespace P42.Uno.Controls;
 
 public static class HapticPlayer 
 {
-    private static INativeHapticPlayer nativeHapticPlayer;
-    private static INativeHapticPlayer NativeHapticPlayer => nativeHapticPlayer ??= new NativeHapticPlayer();
+    private static INativeHapticPlayer NativeHapticPlayer => field ??= new NativeHapticPlayer();
 
     public static EffectMode DefaultEffectMode { get; set; }
 
-    public static void Play(Effect effect, EffectMode mode = default)
+    public static async Task PlayAsync(Effect effect, EffectMode mode = default)
     {
         if (mode == EffectMode.Default)
             mode = DefaultEffectMode;
@@ -15,6 +16,8 @@ public static class HapticPlayer
         if (mode == EffectMode.Off)
             return;
 
-        NativeHapticPlayer.Play(effect, mode);
+        await NativeHapticPlayer.PlayAsync(effect, mode);
+
     }
+
 }

@@ -5,13 +5,13 @@ namespace P42.Uno.Controls;
 
 public static class ContentAndDetailPresenterMarkupExtensions
 {
-    public static TElement Content<TElement>(this TElement presenter, FrameworkElement element = null) where TElement : ElementType
+    public static TElement Content<TElement>(this TElement presenter, FrameworkElement? element = null) where TElement : ElementType
     { presenter.Content = element; return presenter; }
 
-    public static TElement Footer<TElement>(this TElement presenter, FrameworkElement element = null) where TElement : ElementType
+    public static TElement Footer<TElement>(this TElement presenter, FrameworkElement? element = null) where TElement : ElementType
     { presenter.Footer = element; return presenter; }
 
-    public static TElement Detail<TElement>(this TElement presenter, FrameworkElement element = null) where TElement : ElementType
+    public static TElement Detail<TElement>(this TElement presenter, FrameworkElement? element = null) where TElement : ElementType
     { presenter.Detail = element; return presenter; }
 
     public static TElement DetailBackgroundColor<TElement>(this TElement presenter, Color color) where TElement : ElementType

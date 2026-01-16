@@ -12,6 +12,8 @@
 //  - Ben Askren (UWP/Uno port)
 //
 
+using CommunityToolkit.Diagnostics;
+
 namespace P42.Uno.Controls;
 
 /// <summary>
@@ -32,12 +34,11 @@ public readonly struct FlexBasis
     {
         value = value.Trim().ToLower();
         if (value.Contains("auto"))
-        {
             return Auto;
-        }
+
 
         var isPercent = false;
-        if (value.EndsWith("%"))
+        if (value.EndsWith('%'))
         {
             value = value[..^1];
             isPercent = true;
@@ -46,14 +47,11 @@ public readonly struct FlexBasis
         if (double.TryParse(value.Split(',')[0], out var length))
         {
             if (length < 0)
-            {
                 return Auto;
-            }
-
+        
             if (isPercent)
-            {
                 return new FlexBasis(length / 100, true);
-            }
+
             return new FlexBasis(length, value.Contains("relative"));
         }
 
@@ -61,7 +59,6 @@ public readonly struct FlexBasis
     }
 
     private readonly bool isLength;
-    private readonly bool isRelative;
 
     /// <summary>
     /// Main-axis length of element is calculated by FlexPanel
@@ -76,12 +73,12 @@ public readonly struct FlexBasis
     /// <summary>
     /// Gets a value indicating whether the basis is auto.
     /// </summary>
-    internal bool IsAuto => !isLength && !isRelative;
+    internal bool IsAuto => !isLength && !IsRelative;
 
     /// <summary>
     /// Gets a value indicating whether the basis length is relative to parent's size.
     /// </summary>
-    internal bool IsRelative => isRelative;
+    internal bool IsRelative { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FlexBasis"/> struct.
@@ -90,15 +87,13 @@ public readonly struct FlexBasis
     /// <param name="isRelative">If set to <c>true</c> is relative.</param>
     public FlexBasis(double length, bool isRelative = false)
     {
-        //Guard.IsGreaterThanOrEqualTo(length, 0, nameof(length));
+        Guard.IsGreaterThanOrEqualTo(length, 0, nameof(length));
 
         if (isRelative)
-        {
-            //Guard.IsLessThanOrEqualTo(length, 1, nameof(length));
-        }
+            Guard.IsLessThanOrEqualTo(length, 1, nameof(length));
 
         isLength = !isRelative;
-        this.isRelative = isRelative;
+        IsRelative = isRelative;
         Length = length;
     }
 
@@ -123,14 +118,10 @@ public readonly struct FlexBasis
     public override string ToString()
     {
         if (IsAuto)
-        {
             return "auto";
-        }
 
         if (IsRelative)
-        {
             return $"{Length},relative";
-        }
 
         return Length.ToString();
     }

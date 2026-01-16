@@ -1,11 +1,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.2.32210.308
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15
 MinimumVisualStudioVersion = 15.0.26124.0
-
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P42.Uno.Controls.Demo", "P42.Uno.Controls.Demo\P42.Uno.Controls.Demo.csproj", "{F6E301A8-C993-49CB-B6D6-6F0851FF3772}"
 EndProject
-
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BADA71DC-7FFD-4EDC-9F28-FB74AEADC713}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -24,6 +22,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P42.Uno.Controls", "P42.Uno.Controls\P42.Uno.Controls.csproj", "{46153E29-55B1-49C1-90F5-6C9558877349}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P42.Uno.WinUI.Markup", "P42.Uno.Markup\P42.Uno.WinUI.Markup\P42.Uno.WinUI.Markup.csproj", "{72FFEE2B-F7F3-4FCD-B9E5-2873B6230F02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P42.Uno.Controls.Native.Test", "P42.Uno.Controls.Native.Test\P42.Uno.Controls.Native.Test.csproj", "{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P42.Utils.Uno.HtmlTextBlock", "P42.Utils\P42.Utils.Uno.HtmlTextBlock\P42.Utils.Uno.HtmlTextBlock.csproj", "{9A45B51B-8849-251D-DA5E-857E624947D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -197,11 +199,65 @@ Global
 		{72FFEE2B-F7F3-4FCD-B9E5-2873B6230F02}.Release|x64.Build.0 = Release|Any CPU
 		{72FFEE2B-F7F3-4FCD-B9E5-2873B6230F02}.Release|x86.ActiveCfg = Release|Any CPU
 		{72FFEE2B-F7F3-4FCD-B9E5-2873B6230F02}.Release|x86.Build.0 = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|ARM.Build.0 = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|x64.Build.0 = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Debug|x86.Build.0 = Debug|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|ARM.ActiveCfg = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|ARM.Build.0 = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|ARM64.Build.0 = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|iPhone.Build.0 = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|x64.ActiveCfg = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|x64.Build.0 = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|x86.ActiveCfg = Release|Any CPU
+		{FBDCB597-B5B4-43CB-8ABC-E5A6F2D558FD}.Release|x86.Build.0 = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|ARM.Build.0 = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|x64.Build.0 = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Debug|x86.Build.0 = Debug|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|ARM.ActiveCfg = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|ARM.Build.0 = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|ARM64.Build.0 = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|iPhone.Build.0 = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|x64.ActiveCfg = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|x64.Build.0 = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|x86.ActiveCfg = Release|Any CPU
+		{9A45B51B-8849-251D-DA5E-857E624947D2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {307D88C5-736A-48EA-A6EF-0BB107930231}

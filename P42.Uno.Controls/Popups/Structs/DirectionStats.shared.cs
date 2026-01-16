@@ -1,4 +1,4 @@
-﻿using Windows.Foundation;
+using Windows.Foundation;
 
 namespace P42.Uno.Controls;
 
@@ -14,8 +14,5 @@ internal struct DirectionStats
     public PointerDirection PointerDirection;
     public Size BorderSize;
 
-    public override string ToString()
-    {
-        return $"{{PointerDirection={PointerDirection}, BorderSize={BorderSize}, FreeSpace={FreeSpace}}}";
-    }
+    public override readonly string ToString() => $"{{PointerDirection={PointerDirection}, BorderSize={BorderSize}, FreeSpace={FreeSpace}}}";
 }

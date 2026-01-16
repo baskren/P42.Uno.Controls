@@ -3,8 +3,10 @@ using P42.Uno.Controls.AnimateBar;
 namespace P42.Uno.Controls;
 
 [Bindable]
-internal class LoopingFlipViewItem : Grid, IEventSubscriber
+internal partial class LoopingFlipViewItem : Grid, IEventSubscriber
 {
+    #region Properties
+
     #region Foreground Property
     public static readonly DependencyProperty ForegroundProperty = DependencyProperty.Register(
         nameof(Foreground),
@@ -12,30 +14,31 @@ internal class LoopingFlipViewItem : Grid, IEventSubscriber
         typeof(LoopingFlipViewItem),
         new PropertyMetadata(SystemColors.BaseHigh.ToBrush())
     );
-#if ANDROID
-        public new Brush Foreground 
-#else
     public Brush Foreground
-#endif
     {
         get => (Brush)GetValue(ForegroundProperty);
         set => SetValue(ForegroundProperty, value);
     }
     #endregion Foreground Property
 
+    public bool AreEventsEnabled 
+        => Child is IEventSubscriber subscriber ? subscriber.AreEventsEnabled : false;
+
+    #endregion Properties
 
 
+    #region Fields
     internal UIElement Child;
+    private readonly Left LeftBar = new();
+    private readonly Right RightBar = new();
+    #endregion Fields
 
-    private Left LeftBar = new();
 
-
-    private Right RightBar = new();
-
+    #region Constructors
     public LoopingFlipViewItem(UIElement child)
     {
-        RightBar.WBind(Base.ForegroundProperty, this, ForegroundProperty);
-        LeftBar.WBind(Base.ForegroundProperty, this, ForegroundProperty);
+        RightBar.AltBind(Base.ForegroundProperty, this, ForegroundProperty);
+        LeftBar.AltBind(Base.ForegroundProperty, this, ForegroundProperty);
 
         Child = child;
         Children.Add(child);
@@ -45,21 +48,23 @@ internal class LoopingFlipViewItem : Grid, IEventSubscriber
         RightBar.Tapped += OnBarTapped;
         LeftBar.Tapped += OnBarTapped;
     }
+    #endregion Constructors
 
 
-
+    #region Methods
     private void OnBarTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (Parent is Grid _grid && _grid.Parent is LoopingFlipView flipView)
-        {
-            if (sender is Base bar)
-            {
-                if (bar == LeftBar)
-                    flipView.SelectedIndex--;
-                else if (bar == RightBar)
-                    flipView.SelectedIndex++;
-            }
-        }
+        if (sender is not Base bar)
+            return;
+
+        if (Parent is not Grid _grid || _grid.Parent is not LoopingFlipView flipView)
+            return;
+
+        if (bar == LeftBar)
+            flipView.SelectedIndex--;
+        else if (bar == RightBar)
+            flipView.SelectedIndex++;
+
     }
 
     public void EnableEvents()
@@ -73,14 +78,6 @@ internal class LoopingFlipViewItem : Grid, IEventSubscriber
         if (Child is IEventSubscriber eventSubscriber)
             eventSubscriber.DisableEvents();
     }
+    #endregion Methods
 
-    public bool AreEventsEnabled
-    {
-        get
-        {
-            if (Child is IEventSubscriber subscriber)
-                return subscriber.AreEventsEnabled;
-            return false;
-        }
-    }
 }

@@ -1,7 +1,7 @@
 namespace P42.Uno.Controls;
 
 [Bindable]
-public class SimpleStringGrid : UserControl
+public partial class SimpleStringGrid : UserControl
 {
     #region Properties
 
@@ -174,26 +174,26 @@ public class SimpleStringGrid : UserControl
 
     #region Fields
 
-    private Grid _grid = new()
+    private readonly Grid _grid = new()
     {
         HorizontalAlignment = HorizontalAlignment.Stretch,
         VerticalAlignment = VerticalAlignment.Stretch,
     };
 
-    private ScrollViewer _scrollViewer = new()
+    private readonly ScrollViewer _scrollViewer = new()
     {
         HorizontalAlignment = HorizontalAlignment.Stretch,
         VerticalAlignment = VerticalAlignment.Stretch,
     };
 
-    private List<TextBlock> textBlocksStore = [];
-    private List<Rectangle> rectanglesStore = [];
+    private readonly List<TextBlock> textBlocksStore = [];
+    private readonly List<Rectangle> rectanglesStore = [];
     private int columnsCount;
-    private List<TextBlock> textBlocksBuffer = [];
-    private List<Rectangle> backgroundRectanglesBuffer = [];
-    private List<Rectangle> hzGridlinesRectanglesBuffer = [];
-    private List<Rectangle> vtGridlinesRectanglesBuffer = [];
-    private List<double> MaxColumnWidths = [];
+    private readonly List<TextBlock> textBlocksBuffer = [];
+    private readonly List<Rectangle> backgroundRectanglesBuffer = [];
+    private readonly List<Rectangle> hzGridlinesRectanglesBuffer = [];
+    private readonly List<Rectangle> vtGridlinesRectanglesBuffer = [];
+    private readonly List<double> MaxColumnWidths = [];
     #endregion
 
 
@@ -203,7 +203,6 @@ public class SimpleStringGrid : UserControl
         HorizontalAlignment = HorizontalAlignment.Stretch;
         VerticalAlignment = VerticalAlignment.Stretch;
         Content = _scrollViewer.Content(_grid);
-
     }
 
     #endregion
@@ -269,8 +268,6 @@ public class SimpleStringGrid : UserControl
 
         _grid.Children.AddRange(textBlocksBuffer);
         textBlocksBuffer.Clear();
-
-
     }
 
     private void RecordColumnWidths()

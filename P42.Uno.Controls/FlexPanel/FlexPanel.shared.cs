@@ -13,8 +13,8 @@
 //
 
 using Windows.Foundation;
-using Microsoft.Toolkit.Diagnostics;
 using P42.Uno.Controls.InternalFlexPanelExtensions;
+using CommunityToolkit.Diagnostics;
 
 namespace P42.Uno.Controls;
 
@@ -57,7 +57,7 @@ public class FlexPanel : Panel
     public FlexAlignContent AlignContent
     {
         get => (FlexAlignContent)GetValue(AlignContentProperty);
-        set => this?.SetNewValue(AlignContentProperty, value);
+        set => this?.SetValue(AlignContentProperty, value);
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public class FlexPanel : Panel
     public FlexAlignItems AlignItems
     {
         get => (FlexAlignItems)GetValue(AlignItemsProperty);
-        set => this?.SetNewValue(AlignItemsProperty, value);
+        set => this?.SetValue(AlignItemsProperty, value);
     }
 
     /// <summary>
@@ -116,7 +116,7 @@ public class FlexPanel : Panel
     public FlexDirection Direction
     {
         get => (FlexDirection)GetValue(DirectionProperty);
-        set => this?.SetNewValue(DirectionProperty, value);
+        set => this?.SetValue(DirectionProperty, value);
     }
 
     /// <summary>
@@ -145,7 +145,7 @@ public class FlexPanel : Panel
     public FlexJustify JustifyContent
     {
         get => (FlexJustify)GetValue(JustifyContentProperty);
-        set => this?.SetNewValue(JustifyContentProperty, value);
+        set => this?.SetValue(JustifyContentProperty, value);
     }
 
     /// <summary>
@@ -176,7 +176,7 @@ public class FlexPanel : Panel
     public FlexWrap Wrap
     {
         get => (FlexWrap)GetValue(WrapProperty);
-        set => this?.SetNewValue(WrapProperty, value);
+        set => this?.SetValue(WrapProperty, value);
     }
 
     /// <summary>
@@ -206,7 +206,7 @@ public class FlexPanel : Panel
     /// <remarks>The default value for this property is 0.</remarks>
     /// <returns>Element's FlexPanel order value</returns>
     public static int GetOrder(UIElement element)
-        => (int)element?.GetValue(OrderProperty);
+        => (int)(element?.GetValue(OrderProperty) ?? -1);
 
     /// <summary>
     /// This attached property specifies whether this UIElement should be laid out before or after other items
@@ -216,7 +216,7 @@ public class FlexPanel : Panel
     /// <value>The item order (can be a negative, 0, or positive value).</value>
     /// <remarks>The default value for this property is 0.</remarks>
     public static void SetOrder(UIElement element, int value)
-        => element?.SetNewValue(OrderProperty, value);
+        => element?.SetValue(OrderProperty, value);
 
     /// <summary>
     /// The Attached Dependency Property for the FlexLayout.Grow attached property
@@ -244,7 +244,7 @@ public class FlexPanel : Panel
     /// <remarks>The default value for this property is 0 (does not take any available space).</remarks>
     /// <returns>Element's FlexPanel Grow value</returns>
     public static double GetGrow(UIElement element)
-        => (double)element?.GetValue(GrowProperty);
+        => (double)(element?.GetValue(GrowProperty) ?? 0);
 
     /// <summary>
     /// This attached property defines the grow factor of the UIElement; the amount of available space it
@@ -253,7 +253,7 @@ public class FlexPanel : Panel
     /// <value>The item grow factor.</value>
     /// <remarks>The default value for this property is 0 (does not take any available space).</remarks>
     public static void SetGrow(UIElement element, double value)
-        => element?.SetNewValue(GrowProperty, value);
+        => element?.SetValue(GrowProperty, value);
 
     /// <summary>
     /// The Attached Dependency Property for the FlexLayout.Shrink attached property;
@@ -283,7 +283,7 @@ public class FlexPanel : Panel
     /// <remarks>The default value for this property is 1 (all items will shrink equally).</remarks>
     /// <returns>Element's FlexPanel shrink value</returns>
     public static double GetShrink(UIElement element)
-        => (double)element?.GetValue(ShrinkProperty);
+        => (double)(element?.GetValue(ShrinkProperty) ?? 0);
 
     /// <summary>
     /// This attached property defines the shrink factor of the UIElement.  In case the child items overflow
@@ -294,7 +294,7 @@ public class FlexPanel : Panel
     /// <value>The item shrink factor.</value>
     /// <remarks>The default value for this property is 1 (all items will shrink equally).</remarks>
     public static void SetShrink(UIElement element, double value)
-        => element?.SetNewValue(ShrinkProperty, value);
+        => element?.SetValue(ShrinkProperty, value);
 
     /// <summary>
     /// The Attached Dependency Property for the FlexPanel.AlignSelf attached property
@@ -323,7 +323,7 @@ public class FlexPanel : Panel
     /// <remarks>The default value for this property FlexAlignSelf.Auto.</remarks>
     /// <returns>Element's Self Alignment</returns>
     public static FlexAlignSelf GetAlignSelf(UIElement element)
-        => (FlexAlignSelf)element?.GetValue(AlignSelfProperty);
+        => (FlexAlignSelf)(element?.GetValue(AlignSelfProperty) ?? FlexAlignSelf.Unknown);
 
     /// <summary>
     /// This attached property defines how the FlexPanel will distribute space between and around child
@@ -333,7 +333,7 @@ public class FlexPanel : Panel
     /// </summary>
     /// <remarks>The default value for this property FlexAlignSelf.Auto.</remarks>
     public static void SetAlignSelf(UIElement element, FlexAlignSelf value)
-        => element?.SetNewValue(AlignSelfProperty, value);
+        => element?.SetValue(AlignSelfProperty, value);
 
     /// <summary>
     /// The Attached Dependency Property for the FlexLayout.Basis attached property
@@ -370,14 +370,7 @@ public class FlexPanel : Panel
     /// <remarks>The default value for this property is Auto.</remarks>
     /// <returns>string representation of the element's basis</returns>
     public static string GetBasis(UIElement element)
-    {
-        if (element?.GetValue(BasisProperty) is string value)
-        {
-            return value;
-        }
-
-        return "auto";
-    }
+        => element?.GetValue(BasisProperty) is string value ? value : "auto";
 
     /// <summary>
     /// Gets or sets the initial main-axis dimension of the UIElement in the FlexLayout or if that value
@@ -387,7 +380,7 @@ public class FlexPanel : Panel
     /// </summary>
     /// <remarks>The default value for this property is Auto.</remarks>
     public static void SetBasis(UIElement element, string value)
-        => element?.SetNewValue(BasisProperty, value);
+        => element?.SetValue(BasisProperty, value);
 
     /// <summary>
     /// Gets or sets the initial main-axis dimension of the UIElement in the FlexLayout or if that value
@@ -408,34 +401,24 @@ public class FlexPanel : Panel
     /// <remarks>The default value for this property is Auto.</remarks>
     /// <returns>FlexBasis</returns>
     public static FlexBasis GetFlexBasis(UIElement element)
-    {
-        if (GetBasis(element) is { } basisString)
-        {
-            return FlexBasis.Parse(basisString);
-        }
+        => GetBasis(element) is { } basisString ? FlexBasis.Parse(basisString) : FlexBasis.Auto;
+    
 
-        return FlexBasis.Auto;
-    }
-
-    private static readonly DependencyProperty FlexItemProperty = DependencyProperty.RegisterAttached(
+    public static readonly DependencyProperty FlexItemProperty = DependencyProperty.RegisterAttached(
         "FlexItem",
         typeof(object),
         typeof(FlexPanel),
         new PropertyMetadata(null));
 
-    private static FlexItem GetFlexItem(UIElement element)
+    private static FlexItem? GetFlexItem(UIElement element)
     {
         if (element is null)
-        {
             return null;
-        }
 
         if (element is FlexPanel flexPanel)
-        {
             return flexPanel.root;
-        }
 
-        FlexItem item = null;
+        FlexItem? item = null;
         try
         {
             item = (FlexItem)element.GetValue(FlexItemProperty);
@@ -455,20 +438,16 @@ public class FlexPanel : Panel
 
     private static void SetFlexItem(UIElement element, FlexItem value)
     {
-        element?.SetValue(FlexItemProperty, value);
+        element.SetValue(FlexItemProperty, value);
         UpdateItemProperties(element, value);
     }
 
     private static void InternalInvalidateArrange(UIElement element)
     {
         if (element is FlexPanel)
-        {
             element.InvalidateArrange();
-        }
         else if (element is FrameworkElement frameworkElement && frameworkElement.Parent is FlexPanel flexPanel)
-        {
             flexPanel.InvalidateArrange();
-        }
     }
 
     private static void UpdateItemProperties(UIElement view, FlexItem item)
@@ -484,36 +463,24 @@ public class FlexPanel : Panel
         }
 
         if (view is Control control)
-        {
             item.SetPadding(control.Padding);
-        }
         else if (view is Border border)
-        {
             item.SetPadding(border.Padding);
-        }
         else if (view is TextBlock textBlock)
-        {
             item.SetPadding(textBlock.Padding);
-        }
         else if (view is RichTextBlock richTextBlock)
-        {
             item.SetPadding(richTextBlock.Padding);
-        }
+
     }
 
     private readonly FlexItem root = new();
 
     private FlexItem AddChild(FrameworkElement view)
     {
-        if (root == null)
-        {
-            return null;
-        }
-
         view.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
         var item = (view as FlexPanel)?.root ?? new FlexItem();
         InitItemProperties(view, item);
-        if (!(view is FlexPanel))
+        if (view is not FlexPanel)
         {
             // inner layouts don't get measured
             item.SelfSizing = (it, ref w, ref h) =>
@@ -546,7 +513,7 @@ public class FlexPanel : Panel
         return item;
     }
 
-    private void InitItemProperties(FrameworkElement view, FlexItem item)
+    private static void InitItemProperties(FrameworkElement view, FlexItem item)
     {
         item.Order = GetOrder(view);
         item.Grow = GetGrow(view);
@@ -591,7 +558,7 @@ public class FlexPanel : Panel
                     || double.IsNaN(frame.Width)
                     || double.IsNaN(frame.Height))
                 {
-                    ThrowHelper.ThrowInvalidDataException("child frame contains invalid value");
+                    throw new InvalidDataException("child frame contains invalid value");
                 }
 
                 child.Arrange(frame);
@@ -613,11 +580,6 @@ public class FlexPanel : Panel
         var widthConstraint = availableSize.Width;
         var heightConstraint = availableSize.Height;
 
-        if (root == null)
-        {
-            return new Size(widthConstraint, heightConstraint);
-        }
-
         measuring = true;
 
         // 1. Keep track of missing layout items
@@ -628,17 +590,11 @@ public class FlexPanel : Panel
         foreach (var child in Children)
         {
             if (GetFlexItem(child) is { } item && item.Parent != null)
-            {
                 deleteCandidates.Remove(item);
-            }
             else if (child is FrameworkElement frameworkElement)
-            {
                 item = AddChild(frameworkElement);
-            }
             else
-            {
                 continue;
-            }
 
             item.Shrink = 0;
             item.AlignSelf = FlexAlignSelf.Start;
@@ -646,9 +602,7 @@ public class FlexPanel : Panel
 
         // 3. Remove missing layout items
         foreach (var item in deleteCandidates)
-        {
             root.Remove(item);
-        }
 
         Layout(widthConstraint, heightConstraint);
 
@@ -657,18 +611,14 @@ public class FlexPanel : Panel
         {
             widthConstraint = 0;
             foreach (var item in root)
-            {
                 widthConstraint = Math.Max(widthConstraint, item.Frame[0] + item.Frame[2] + item.MarginRight);
-            }
         }
 
         if (double.IsPositiveInfinity(heightConstraint))
         {
             heightConstraint = 0;
             foreach (var item in root)
-            {
                 heightConstraint = Math.Max(heightConstraint, item.Frame[1] + item.Frame[3] + item.MarginBottom);
-            }
         }
 
         // 5. reset Shrink, algin-self, and image.aspect
@@ -691,9 +641,7 @@ public class FlexPanel : Panel
     {
         // Layout is only computed at root level
         if (root.Parent != null)
-        {
             return;
-        }
 
         root.Width = !double.IsPositiveInfinity(width) ? width : 0;
         root.Height = !double.IsPositiveInfinity(height) ? height : 0;
@@ -703,7 +651,7 @@ public class FlexPanel : Panel
     /// <summary>
     /// An item with flexbox properties. Items can also contain other items and be enumerated.
     /// </summary>
-    internal class FlexItem
+    public class FlexItem
     {
         internal const FlexAlignContent AlignContentDefault = FlexAlignContent.Stretch;
         internal const FlexAlignItems AlignItemsDefault = FlexAlignItems.Stretch;
@@ -727,9 +675,9 @@ public class FlexPanel : Panel
 
         /// <summary>Gets the parent item.</summary>
         /// <value>The parent item, or null if the item is a root item.</value>
-        public FlexItem Parent { get; private set; }
+        public FlexItem? Parent { get; private set; }
 
-        private List<FlexItem> children;
+        private List<FlexItem> Children => field ??= [];
 
         private bool ShouldOrderChildren { get; set; }
 
@@ -806,22 +754,18 @@ public class FlexPanel : Panel
         /// <remarks>The default value for this property is 0.</remarks>
         public double MarginTop { get; set; }
 
-        private int order = OrderDefault;
-
         /// <summary>Gets or sets whether this item should be laid out before or after other items in the container.Items are laid out based on the ascending value of this property.Items that have the same value for this property will be laid out in the order they were inserted.</summary>
         /// <value>The item order (can be a negative, 0, or positive value).</value>
         /// <remarks>The default value for this property is 0.</remarks>
         public int Order
         {
-            get => order;
+            get => field;
             set
             {
-                if ((order = value) != 0 && Parent != null)
-                {
+                if ((field = value) != 0 && Parent != null)
                     Parent.ShouldOrderChildren = true;
-                }
             }
-        }
+        } = OrderDefault;
 
         /// <summary>Gets or sets the height of the item's bottom edge padding space that should be used when laying out child items.</summary>
         /// <value>The bottom edge padding space.Negative values are not allowed.</value>
@@ -889,35 +833,38 @@ public class FlexPanel : Panel
 
         public void Add(FlexItem child)
         {
-            //Guard.IsNotNull(child, nameof(child));
-            //Guard.IsNull(child.Parent, "child.Parent");
-            (children ??= []).Add(child);
+            Guard.IsNotNull(child, nameof(child));
+            Guard.IsNull(child.Parent, "child.Parent");
+            Children.Add(child);
             child.Parent = this;
             ShouldOrderChildren |= child.Order != 0;
         }
 
         public void InsertAt(int index, FlexItem child)
         {
-            //Guard.IsNotNull(child, nameof(child));
-            //Guard.IsNull(child.Parent, "child.Parent");
-            (children ??= []).Insert(index, child);
+            Guard.IsNotNull(child, nameof(child));
+            Guard.IsNull(child.Parent, "child.Parent");
+            Children.Insert(index, child);
             child.Parent = this;
             ShouldOrderChildren |= child.Order != 0;
         }
 
-        public FlexItem RemoveAt(uint index)
+        public FlexItem? RemoveAt(uint index)
         {
-            var child = children[(int)index];
+            if (Children.IsEmpty)
+                return null;
+
+            var child = Children[(int)index];
             child.Parent = null;
-            children.RemoveAt((int)index);
+            Children.RemoveAt((int)index);
             return child;
         }
 
-        public int Count =>
-            children?.Count ?? 0;
+        public int Count 
+            => Children.Count;
 
-        public FlexItem ItemAt(int index) =>
-            children?[index];
+        public FlexItem ItemAt(int index) 
+            => Children[index];
 
         public FlexItem this[int index]
             => ItemAt(index);
@@ -938,27 +885,23 @@ public class FlexPanel : Panel
 
         public void Layout()
         {
-            //Guard.IsNull(Parent, nameof(Parent));
-            //Guard.IsNull(SelfSizing, nameof(SelfSizing));
+            Guard.IsNull(Parent, nameof(Parent));
+            Guard.IsNull(SelfSizing, nameof(SelfSizing));
 
             if (double.IsNaN(Width) || double.IsNaN(Height))
-            {
-                ThrowHelper.ThrowInvalidOperationException("Layout() must be called on an item that has proper values for the Width and Height properties");
-            }
+                throw new InvalidOperationException("Layout() must be called on an item that has proper values for the Width and Height properties");
 
             LayoutItem(this, Width, Height);
         }
 
         public delegate void SelfSizingDelegate(FlexItem item, ref double width, ref double height);
 
-        public SelfSizingDelegate SelfSizing { get; set; }
+        public SelfSizingDelegate? SelfSizing { get; set; }
 
         private static void LayoutItem(FlexItem item, double width, double height)
         {
-            if (item.children == null || item.children.Count == 0)
-            {
+            if (item.Children.Count == 0)
                 return;
-            }
 
             var layout = default(FlexLayout);
             layout.Init(item, width, height);
@@ -971,9 +914,7 @@ public class FlexPanel : Panel
             {
                 var child = layout.ChildAt(item, i);
                 if (!child.IsVisible)
-                {
                     continue;
-                }
 
                 // Items with an absolute position have their frames determined
                 // directly and are skipped during layout.
@@ -997,22 +938,16 @@ public class FlexPanel : Panel
 
                 // Main axis size defaults to 0.
                 if (double.IsNaN(child.Frame[layout.MainAxisSize]))
-                {
                     child.Frame[layout.MainAxisSize] = 0;
-                }
 
                 // Cross axis size defaults to the parent's size (or line size in wrap
                 // mode, which is calculated later on).
                 if (double.IsNaN(child.Frame[layout.CrossAxisSize]))
                 {
                     if (layout.Wrap)
-                    {
                         layout.NeedLines = true;
-                    }
                     else
-                    {
                         child.Frame[layout.CrossAxisSize] = (layout.Vertical ? width : height) - child.MarginThickness(!layout.Vertical);
-                    }
                 }
 
                 // Call the SelfSizing callback if provided. Only non-NAN values
@@ -1026,32 +961,27 @@ public class FlexPanel : Panel
                     {
                         var sizeOff = j + 2;
                         if (sizeOff == layout.CrossAxisSize && ChildAlign(child, item) == FlexAlignItems.Stretch)
-                        {
                             continue;
-                        }
 
                         var val = size[j];
                         if (!double.IsNaN(val))
-                        {
                             child.Frame[sizeOff] = val;
-                        }
+
                     }
                 }
 
                 // Honor the `basis' property which overrides the main-axis size.
                 if (!child.Basis.IsAuto)
                 {
-                    //Guard.IsGreaterThanOrEqualTo(child.Basis.Length, 0, nameof(child.Basis.Length));
+                    Guard.IsGreaterThanOrEqualTo(child.Basis.Length, 0, nameof(child.Basis.Length));
                     if (child.Basis.IsRelative)
                     {
-                        //Guard.IsLessThanOrEqualTo(child.Basis.Length, 1, nameof(child.Basis.Length));
+                        Guard.IsLessThanOrEqualTo(child.Basis.Length, 1, nameof(child.Basis.Length));
                     }
 
                     var basis = child.Basis.Length;
                     if (child.Basis.IsRelative)
-                    {
                         basis *= layout.Vertical ? height : width;
-                    }
 
                     child.Frame[layout.MainAxisSize] = basis - child.MarginThickness(layout.Vertical);
                 }
@@ -1072,13 +1002,12 @@ public class FlexPanel : Panel
 
                     var crossAxisChildSize = child.Frame[layout.CrossAxisSize];
                     if (!double.IsNaN(crossAxisChildSize) && crossAxisChildSize + child.MarginThickness(!layout.Vertical) > layout.LineCrossAxisSize)
-                    {
                         layout.LineCrossAxisSize = crossAxisChildSize + child.MarginThickness(!layout.Vertical);
-                    }
+
                 }
 
-                //Guard.IsGreaterThanOrEqualTo(child.Grow, 0, nameof(child.Grow));
-                //Guard.IsGreaterThanOrEqualTo(child.Shrink, 0, nameof(child.Shrink));
+                Guard.IsGreaterThanOrEqualTo(child.Grow, 0, nameof(child.Grow));
+                Guard.IsGreaterThanOrEqualTo(child.Shrink, 0, nameof(child.Shrink));
 
                 layout.LineFlexGrows += child.Grow;
                 layout.LineFlexShrinks += child.Shrink;
@@ -1088,9 +1017,8 @@ public class FlexPanel : Panel
                 relativeChildrenCount++;
 
                 if (mainAxisChildSize > 0 && child.Grow > 0)
-                {
                     layout.LineExtraFlexDim += mainAxisChildSize;
-                }
+
             }
 
             // Layout remaining items in wrap mode, or everything otherwise.
@@ -1106,9 +1034,7 @@ public class FlexPanel : Panel
                 var flexDim = layout.CrossAxisParentSize - layout.LinesSizes;
 
                 if (flexDim > 0)
-                {
                     LayoutAlign(item.AlignContent, flexDim, (uint)(layout.Lines?.Length ?? 0), ref pos, ref spacing);
-                }
 
                 double oldPos = 0;
                 if (layout.IsCrossAxisReversed)
@@ -1119,7 +1045,7 @@ public class FlexPanel : Panel
 
                 for (uint i = 0; i < (layout.Lines?.Length ?? 0); i++)
                 {
-                    var line = layout.Lines[i];
+                    var line = layout.Lines![i];
 
                     if (layout.IsCrossAxisReversed)
                     {
@@ -1134,19 +1060,15 @@ public class FlexPanel : Panel
                     {
                         var child = layout.ChildAt(item, j);
                         if (child.Position == FlexPosition.Absolute)
-                        {
                             // Should not be re-positioned.
                             continue;
-                        }
 
                         if (double.IsNaN(child.Frame[layout.CrossAxisSize]))
-                        {
                             // If the child's cross axis size hasn't been set it, it
                             // defaults to the line size.
                             child.Frame[layout.CrossAxisSize] = line.Size
                                                                 + (item.AlignContent == FlexAlignContent.Stretch
                                                                     ? spacing : 0);
-                        }
 
                         child.Frame[layout.CrossAxisPosition] = pos + (child.Frame[layout.CrossAxisPosition] - oldPos);
                     }
@@ -1165,7 +1087,7 @@ public class FlexPanel : Panel
 
         private static void LayoutAlign1(FlexJustify align, double flexDim, int childrenCount, ref double posP, ref double spacingP)
         {
-            //Guard.IsGreaterThanOrEqualTo(flexDim, 0, nameof(flexDim));
+            Guard.IsGreaterThanOrEqualTo(flexDim, 0, nameof(flexDim));
 
             posP = 0;
             spacingP = 0;
@@ -1182,10 +1104,7 @@ public class FlexPanel : Panel
                     return;
                 case FlexJustify.SpaceBetween:
                     if (childrenCount > 0)
-                    {
                         spacingP = flexDim / (childrenCount - 1);
-                    }
-
                     return;
                 case FlexJustify.SpaceAround:
                     if (childrenCount > 0)
@@ -1208,7 +1127,7 @@ public class FlexPanel : Panel
 
         private static void LayoutAlign(FlexAlignContent align, double flexDim, uint childrenCount, ref double posP, ref double spacingP)
         {
-            //Guard.IsGreaterThanOrEqualTo(flexDim, 0, nameof(flexDim));
+            Guard.IsGreaterThanOrEqualTo(flexDim, 0, nameof(flexDim));
 
             posP = 0;
             spacingP = 0;
@@ -1225,10 +1144,7 @@ public class FlexPanel : Panel
                     return;
                 case FlexAlignContent.SpaceBetween:
                     if (childrenCount > 0)
-                    {
                         spacingP = flexDim / (childrenCount - 1);
-                    }
-
                     return;
                 case FlexAlignContent.SpaceAround:
                     if (childrenCount > 0)
@@ -1236,7 +1152,6 @@ public class FlexPanel : Panel
                         spacingP = flexDim / childrenCount;
                         posP = spacingP / 2;
                     }
-
                     return;
                 case FlexAlignContent.SpaceEvenly:
                     if (childrenCount > 0)
@@ -1244,7 +1159,6 @@ public class FlexPanel : Panel
                         spacingP = flexDim / (childrenCount + 1);
                         posP = spacingP;
                     }
-
                     return;
                 case FlexAlignContent.Stretch:
                     spacingP = flexDim / childrenCount;
@@ -1254,56 +1168,40 @@ public class FlexPanel : Panel
 
         private static void LayoutItems(FlexItem item, int childBegin, int childEnd, int childrenCount, ref FlexLayout layout)
         {
-            //Guard.IsGreaterThan(childrenCount, 0, nameof(childrenCount));
-            //Guard.IsLessThanOrEqualTo(childrenCount, childEnd - childBegin, nameof(childrenCount));
+            Guard.IsGreaterThan(childrenCount, 0, nameof(childrenCount));
+            Guard.IsLessThanOrEqualTo(childrenCount, childEnd - childBegin, nameof(childrenCount));
 
             if (layout.LineFlexibleMainAxisSize > 0 && layout.LineExtraFlexDim > 0)
-            {
                 // If the container has a positive flexible space, let's add to it
                 // the sizes of all flexible children.
                 layout.LineFlexibleMainAxisSize += layout.LineExtraFlexDim;
-            }
 
             // Determine the main axis initial position and optional spacing.
             double pos = 0;
             double spacing = 0;
             if (layout.LineFlexGrows == 0 && layout.LineFlexibleMainAxisSize > 0)
-            {
                 LayoutAlign1(item.JustifyContent, layout.LineFlexibleMainAxisSize, childrenCount, ref pos, ref spacing);
-            }
 
             if (layout.IsMainAxisReversed)
-            {
                 pos = layout.MainAxisParentSize - pos;
-            }
 
             if (layout.IsMainAxisReversed)
-            {
                 pos -= layout.Vertical ? item.PaddingBottom : item.PaddingRight;
-            }
             else
-            {
                 pos += layout.Vertical ? item.PaddingTop : item.PaddingLeft;
-            }
 
             if (layout.Wrap && layout.IsCrossAxisReversed)
-            {
                 layout.LineCrossAxisPosition -= layout.LineCrossAxisSize;
-            }
 
             for (var i = childBegin; i < childEnd; i++)
             {
                 var child = layout.ChildAt(item, i);
                 if (!child.IsVisible)
-                {
                     continue;
-                }
 
                 if (child.Position == FlexPosition.Absolute)
-                {
                     // Already positioned.
                     continue;
-                }
 
                 // Grow or shrink the main axis item size if needed.
                 double flexSize = 0;
@@ -1381,9 +1279,7 @@ public class FlexPanel : Panel
             }
 
             if (layout.Wrap && !layout.IsCrossAxisReversed)
-            {
                 layout.LineCrossAxisPosition += layout.LineCrossAxisSize;
-            }
 
             if (layout.NeedLines)
             {
@@ -1399,14 +1295,14 @@ public class FlexPanel : Panel
             }
         }
 
-        private static double AbsoluteSize(double val, double pos1, double pos2, double dim) =>
-            !double.IsNaN(val) ? val : !double.IsNaN(pos1) && !double.IsNaN(pos2) ? dim - pos2 - pos1 : 0;
+        private static double AbsoluteSize(double val, double pos1, double pos2, double dim) 
+            => !double.IsNaN(val) ? val : !double.IsNaN(pos1) && !double.IsNaN(pos2) ? dim - pos2 - pos1 : 0;
 
-        private static double AbsolutePosition(double pos1, double pos2, double size, double dim) =>
-            !double.IsNaN(pos1) ? pos1 : !double.IsNaN(pos2) ? dim - size - pos2 : 0;
+        private static double AbsolutePosition(double pos1, double pos2, double size, double dim) 
+            => !double.IsNaN(pos1) ? pos1 : !double.IsNaN(pos2) ? dim - size - pos2 : 0;
 
-        private static FlexAlignItems ChildAlign(FlexItem child, FlexItem parent) =>
-            child.AlignSelf == FlexAlignSelf.Auto ? parent.AlignItems : (FlexAlignItems)child.AlignSelf;
+        private static FlexAlignItems ChildAlign(FlexItem child, FlexItem parent) 
+            => child.AlignSelf == FlexAlignSelf.Auto ? parent.AlignItems : (FlexAlignItems)child.AlignSelf;
 
         private struct FlexLayout
         {
@@ -1421,7 +1317,7 @@ public class FlexPanel : Panel
             public uint CrossAxisPosition;
             public uint MainAxisSize;
             public uint CrossAxisSize;
-            private int[] orderedIndices;
+            private int[]? orderedIndices;
 
             // Set for each line layout.
             public double LineCrossAxisSize;              // the cross axis size
@@ -1443,7 +1339,7 @@ public class FlexPanel : Panel
                 public double Size;
             }
 
-            public FlexLayoutLine[] Lines;
+            public FlexLayoutLine[]? Lines;
             public double LinesSizes;
 
             public void Reset()
@@ -1457,10 +1353,10 @@ public class FlexPanel : Panel
 
             public void Init(FlexItem item, double width, double height)
             {
-                //Guard.IsGreaterThanOrEqualTo(item.PaddingLeft, 0, nameof(item.PaddingLeft));
-                //Guard.IsGreaterThanOrEqualTo(item.PaddingRight, 0, nameof(item.PaddingRight));
-                //Guard.IsGreaterThanOrEqualTo(item.PaddingTop, 0, nameof(item.PaddingTop));
-                //Guard.IsGreaterThanOrEqualTo(item.PaddingBottom, 0, nameof(item.PaddingBottom));
+                Guard.IsGreaterThanOrEqualTo(item.PaddingLeft, 0, nameof(item.PaddingLeft));
+                Guard.IsGreaterThanOrEqualTo(item.PaddingRight, 0, nameof(item.PaddingRight));
+                Guard.IsGreaterThanOrEqualTo(item.PaddingTop, 0, nameof(item.PaddingTop));
+                Guard.IsGreaterThanOrEqualTo(item.PaddingBottom, 0, nameof(item.PaddingBottom));
 
                 width = Math.Max(0, width - item.PaddingLeft + item.PaddingRight);
                 height = Math.Max(0, height - item.PaddingTop + item.PaddingBottom);
@@ -1507,10 +1403,8 @@ public class FlexPanel : Panel
                         {
                             var prev = indices[j - 1];
                             var curr = indices[j];
-                            if (item.children[prev].Order <= item.children[curr].Order)
-                            {
+                            if (item.Children[prev].Order <= item.Children[curr].Order)
                                 break;
-                            }
 
                             indices[j - 1] = curr;
                             indices[j] = prev;
@@ -1545,7 +1439,7 @@ public class FlexPanel : Panel
             }
 
             public FlexItem ChildAt(FlexItem item, int i) =>
-                item.children[orderedIndices?[i] ?? i];
+                item.Children[orderedIndices?[i] ?? i];
 
             public void Cleanup()
             {
@@ -1554,16 +1448,13 @@ public class FlexPanel : Panel
             }
         }
 
-        private static readonly List<FlexItem> Empty = [];
+        public List<FlexItem>.Enumerator GetEnumerator() 
+            => Children.GetEnumerator();
 
-        public List<FlexItem>.Enumerator GetEnumerator() =>
-            (children ?? Empty).GetEnumerator();
+        public List<FlexItem> CopyChildrenAsList() 
+            => [..Children];
 
-        public List<FlexItem> CopyChildrenAsList() => children is null
-            ? []
-            : [..children];
-
-        private double MarginThickness(bool vertical) =>
-            vertical ? MarginTop + MarginBottom : MarginLeft + MarginRight;
+        private double MarginThickness(bool vertical) 
+            => vertical ? MarginTop + MarginBottom : MarginLeft + MarginRight;
     }
 }

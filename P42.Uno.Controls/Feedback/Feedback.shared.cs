@@ -5,7 +5,10 @@ public static class Feedback
 {
     public static async Task PlayAsync(Effect effect, EffectMode mode = default) 
     {
-        HapticPlayer.Play(effect, mode);
-        await ChimePlayer.PlayAsync(effect, mode);
+        await Task.WhenAll
+        (
+            HapticPlayer.PlayAsync(effect, mode),
+            ChimePlayer.PlayAsync(effect, mode)
+        );
     }
 }

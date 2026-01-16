@@ -32,7 +32,7 @@ public class InsetShadow : Grid
             new Rectangle()  // header shadow
                 .Height(5)
                 .Stretch().Top()
-                .WBind<Rectangle, Orientation, Visibility>(VisibilityProperty, this, OrientationProperty, convert:VerticalVisible) 
+                .AltBind<Rectangle, Orientation, Visibility>(VisibilityProperty, this, OrientationProperty, convert:VerticalVisible) 
                 .Fill(new LinearGradientBrush
                 {
                     StartPoint = new Point(0.5, 0),
@@ -46,7 +46,7 @@ public class InsetShadow : Grid
             new Rectangle()  // footer shadow
                 .Height(5)
                 .Stretch().Bottom()
-                .WBind<Rectangle, Orientation, Visibility>(VisibilityProperty, this, OrientationProperty, convert: VerticalVisible)
+                .AltBind<Rectangle, Orientation, Visibility>(VisibilityProperty, this, OrientationProperty, convert: VerticalVisible)
                 .Fill(new LinearGradientBrush
                 {
                     StartPoint = new Point(0.5, 0),
@@ -61,7 +61,7 @@ public class InsetShadow : Grid
             new Rectangle()  // left shadow
                 .Width(5)
                 .Stretch().Left()
-                .WBind<Rectangle, Orientation, Visibility>(VisibilityProperty, this, OrientationProperty, convert: HorizontalVisible)
+                .AltBind<Rectangle, Orientation, Visibility>(VisibilityProperty, this, OrientationProperty, convert: HorizontalVisible)
                 .Fill(new LinearGradientBrush
                 {
                     StartPoint = new Point(0, 0.5),
@@ -76,7 +76,7 @@ public class InsetShadow : Grid
             new Rectangle()  // right shadow
                 .Width(5)
                 .Stretch().Right()
-                .WBind<Rectangle, Orientation, Visibility>(VisibilityProperty, this, OrientationProperty, convert: HorizontalVisible)                    
+                .AltBind<Rectangle, Orientation, Visibility>(VisibilityProperty, this, OrientationProperty, convert: HorizontalVisible)                    
                 .Fill(new LinearGradientBrush
                 {
                     StartPoint = new Point(0, 0.5),

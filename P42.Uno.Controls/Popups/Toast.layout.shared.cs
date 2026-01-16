@@ -24,19 +24,19 @@ public partial class Toast : TargetedPopup
                     .RowSpan(2)
                     .Margin(3)
                     .Center()
-                    .WBind(ContentPresenter.ContentProperty, this, IconElementProperty)
-                    .WBindNullCollapse(),
+                    .AltBind(ContentPresenter.ContentProperty, this, IconElementProperty)
+                    .BindEmptyCollapse(),
 
                 _titleBlock
                     .RowCol(0,1)
                     .CenterVertical()
                     .VerticalContentAlignment(VerticalAlignment.Center)
                     .TextWrapping(TextWrapping.WrapWholeWords)
-                    .WBindFont(this, except: nameof(FontWeight))
+                    .BindFont(this, except: nameof(FontWeight))
                     .FontWeight(FontWeights.Bold)
-                    .WBindNullCollapse()
-                    .WBind(ContentPresenter.BackgroundProperty, this, TitleBackgroundProperty)
-                    .WBind(ContentPresenter.PaddingProperty, this, PaddingProperty)
+                    .BindEmptyCollapse()
+                    .AltBind(ContentPresenter.BackgroundProperty, this, TitleBackgroundProperty)
+                    .AltBind(ContentPresenter.PaddingProperty, this, PaddingProperty)
                 ,
 
                 scrollViewer
@@ -48,9 +48,9 @@ public partial class Toast : TargetedPopup
                             .CenterVertical()
                             .VerticalContentAlignment(VerticalAlignment.Center)
                             .TextWrapping(TextWrapping.WrapWholeWords)
-                            .WBindFont(this)
-                            .WBindNullCollapse()
-                            .WBind(ContentPresenter.PaddingProperty, this, PaddingProperty)
+                            .BindFont(this)
+                            .BindEmptyCollapse()
+                            .AltBind(ContentPresenter.PaddingProperty, this, PaddingProperty)
                     )
 
                 //.Bind(ScrollViewer.MaxHeightProperty, _contentRowDefinition, nameof(ActualHeight))

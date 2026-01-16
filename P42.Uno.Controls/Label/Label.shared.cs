@@ -3,19 +3,20 @@ using System.Collections.Specialized;
 using Windows.Foundation;
 using Windows.UI.Text;
 using Microsoft.UI.Xaml.Markup;
+using AsyncAwaitBestPractices;
 
 namespace P42.Uno.Controls;
 
 [Bindable]
 [ContentProperty(Name = "Text")]
-public class Label : UserControl
+public partial class Label : UserControl
 {
 
     #region Properties
 
     #region Inlines
 
-    private ObservableCollection<Inline> _inlines;
+    private ObservableCollection<Inline>? _inlines;
 
     /// <summary>
     /// Gets an InlineCollection containing the top-level Inline elements that comprise the contents of the TextBlock.
@@ -38,7 +39,6 @@ public class Label : UserControl
     }
 
     #endregion
-
 
     #region TextWrapping Dependency Property
     public static DependencyProperty TextWrappingProperty =
@@ -113,7 +113,7 @@ public class Label : UserControl
             new PropertyMetadata(TextTrimming.None, OnTextTrimmingChanged)
         );
 
-    private static async void OnTextTrimmingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static async void OnTextTrimmingChanged(DependencyObject d, DependencyPropertyChangedEventArgs? e)
     {
         if (d is Label label && label._textBlock is { } _textBlock)
         {
@@ -172,7 +172,7 @@ public class Label : UserControl
     }
     #endregion
 
-    #region TextAlignment Property
+    #region TextAlignment Dependency Property
     public static readonly DependencyProperty TextAlignmentProperty =
         DependencyProperty.Register(
             nameof(TextAlignment),
@@ -182,18 +182,14 @@ public class Label : UserControl
     protected virtual void OnTextAlignmentChanged(DependencyPropertyChangedEventArgs e)
         =>_textBlock.TextAlignment = TextAlignment;
 
-#if __ANDROID__
-		public new TextAlignment TextAlignment
-#else
     public TextAlignment TextAlignment
-#endif
     {
         get => (TextAlignment)GetValue(TextAlignmentProperty);
         set => SetValue(TextAlignmentProperty, value);
     }
     #endregion TextAlignment Property
 
-    #region TextDecorations
+    #region TextDecorations Dependency Property
     public static DependencyProperty TextDecorationsProperty =
         DependencyProperty.Register(
             "TextDecorations",
@@ -209,8 +205,7 @@ public class Label : UserControl
     }
     #endregion
 
-
-    #region Lines property
+    #region Lines Dependency Property
     /// <summary>
     /// The backing store for the lines property.
     /// </summary>
@@ -232,7 +227,7 @@ public class Label : UserControl
     }
     #endregion
 
-    #region LabelAutoFit Property
+    #region LabelAutoFit Dependency Property
     public static DependencyProperty LabelAutoFitProperty =
         DependencyProperty.Register(
             nameof(LabelAutoFit),
@@ -248,7 +243,7 @@ public class Label : UserControl
     }
     #endregion
 
-    #region MinFontSize Property
+    #region MinFontSize Dependency Property
     public static DependencyProperty MinFontSizeProperty =
         DependencyProperty.Register(
             nameof(MinFontSize),
@@ -275,8 +270,8 @@ public class Label : UserControl
         set => SetValue(MinFontSizeProperty, value);
     }
     #endregion
-		
-    #region VerticalTextAlignment Property
+
+    #region VerticalTextAlignment Dependency Property
     public static DependencyProperty VerticalTextAlignmentProperty =
         DependencyProperty.Register(
             nameof(VerticalTextAlignment),
@@ -295,14 +290,16 @@ public class Label : UserControl
     }
     #endregion
 
-    #region FittedFontSize
+    #region FittedFontSize Dependency Property
     public static DependencyProperty FittedFontSizeProperty =
         DependencyProperty.Register(
             nameof(FittedFontSize),
             typeof(double),
             typeof(Label),
-            new PropertyMetadata(-1.0, (s,e) => ((Label)s).OnFontSizeChanged(s,FittedFontSizeProperty))
+            new PropertyMetadata(-1.0, OnFittedFontSizeChanged)
         );
+    private static void OnFittedFontSizeChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        => ((Label)s).OnFontSizeChanged(s, FittedFontSizeProperty);
     public double FittedFontSize
     {
         get => (double)GetValue(FittedFontSizeProperty);
@@ -310,16 +307,16 @@ public class Label : UserControl
     }
     #endregion
 
-    #region SynchronizedFontSize
+    #region SynchronizedFontSize Dependency Property
     public static DependencyProperty SynchronizedFontSizeProperty =
         DependencyProperty.Register(
             nameof(SynchronizedFontSize),
             typeof(double),
             typeof(Label),
-            new PropertyMetadata(double.NaN, (s,e) => ((Label)s).OnFontSizeChanged(s, SynchronizedFontSizeProperty))
+            new PropertyMetadata(double.NaN, OnSynchronizedFontSizeChanged)
         );
-    private void OnSynchronizedFontSizeChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
-        =>_textBlock.FontSize = SynchronizedFontSize;
+    private static void OnSynchronizedFontSizeChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        => ((Label)s).OnFontSizeChanged(s, SynchronizedFontSizeProperty);
     public double SynchronizedFontSize
     {
         get => (double)GetValue(SynchronizedFontSizeProperty);
@@ -333,18 +330,22 @@ public class Label : UserControl
     #region Fields
 
     private const double Precision = 0.05f;
-    private TextBlock _textBlock = new();
-    private TextBlock _testTextBlock = new();
-    private Grid _grid = new();
+    private readonly TextBlock _textBlock = new();
+    private readonly Grid _grid = new();
     private bool _loading;
 
-    private Dictionary<DependencyProperty, long> PropertyChangedCallbackTokens = new();
+    private readonly Dictionary<DependencyProperty, long> PropertyChangedCallbackTokens = new();
 
     #endregion
 
 
     #region Events
-    public event EventHandler<double> FittedFontSizeChanged;
+    public WeakEventManager<double> FittedFontSizeChangedManager = new();
+    public event EventHandler<double> FittedFontSizeChanged
+    {
+        add => FittedFontSizeChangedManager.AddEventHandler(value);
+        remove => FittedFontSizeChangedManager.RemoveEventHandler(value);
+    }
     #endregion
 
     #region Construction / Destruction
@@ -391,7 +392,7 @@ public class Label : UserControl
         // FontStretch : Not implemented in Uno
         Register(FontStyleProperty, OnFontStyleChanged);
         Register(FontWeightProperty, OnFontWeightChanged);
-        _textBlock.WBind(TextBlock.ForegroundProperty, this, ForegroundProperty);
+        _textBlock.AltBind(TextBlock.ForegroundProperty, this, ForegroundProperty);
         // HorizontalTextAlignment : Not implemented because redundant with TextAlignment
         // InLines : local
         // IsColorFontEnabled : Not implemented in Uno
@@ -419,12 +420,12 @@ public class Label : UserControl
 
 
         // Control Property Implementations
-        _grid.WBind(BackgroundProperty, this, BackgroundProperty);
-        _grid.WBind(Grid.BackgroundSizingProperty, this, BackgroundSizingProperty);
-        _grid.WBind(Grid.BorderBrushProperty, this, BorderBrushProperty);
-        _grid.WBind(Grid.BorderThicknessProperty, this, BorderThicknessProperty);
+        _grid.AltBind(BackgroundProperty, this, BackgroundProperty);
+        _grid.AltBind(Grid.BackgroundSizingProperty, this, BackgroundSizingProperty);
+        _grid.AltBind(Grid.BorderBrushProperty, this, BorderBrushProperty);
+        _grid.AltBind(Grid.BorderThicknessProperty, this, BorderThicknessProperty);
         // CharacterSpacing : above
-        _grid.WBind(Grid.CornerRadiusProperty, this, CornerRadiusProperty);
+        _grid.AltBind(Grid.CornerRadiusProperty, this, CornerRadiusProperty);
         // DefaultKeyStyle : not implemented
         // DefaultStyleResourceUri : not implemented
         // ElementSoundMode : not implemented
@@ -454,7 +455,7 @@ public class Label : UserControl
         // XYFocusUp : not implemented
 
         // FrameworkElement
-        _textBlock.WBind(DataContextProperty, this, DataContextProperty);
+        _textBlock.AltBind(DataContextProperty, this, DataContextProperty);
 
         OnTextWrappingChanged();
         OnTextChanged();
@@ -531,7 +532,7 @@ public class Label : UserControl
         }
 
         if (dp == FittedFontSizeProperty)
-            FittedFontSizeChanged?.Invoke(this, FittedFontSize);
+            FittedFontSizeChangedManager.RaiseEvent(this, FittedFontSize, nameof(FittedFontSizeChanged));
     }
 
     private void OnFontStyleChanged(DependencyObject sender, DependencyProperty dp)
@@ -554,29 +555,24 @@ public class Label : UserControl
     private void OnVerticalContentAlignmentChanged(DependencyObject sender, DependencyProperty dp)
         => VerticalContentAlignment = VerticalAlignment.Stretch;
 
-    private void OnInlinesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void OnInlinesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Add:
-                for (var i = e.NewItems.Count - 1; i >= 0; i--)
-                    _textBlock.Inlines.Insert(e.NewStartingIndex, e.NewItems[i] as Inline);
+                for (var i = e.NewItems?.Count - 1 ?? -1; i >= 0; i--)
+                    _textBlock.Inlines.Insert(e.NewStartingIndex, e.NewItems![i] as Inline);
                 break;
             case NotifyCollectionChangedAction.Remove:
-                for (var i = 0; i < e.OldItems.Count; i++)
+                for (var i = 0; i < (e.OldItems?.Count ?? -1); i++)
                     _textBlock.Inlines.RemoveAt(e.OldStartingIndex);
                 break;
             case NotifyCollectionChangedAction.Replace:
-                for (var i = 0; i < e.OldItems.Count; i++)
-                    _textBlock.Inlines.RemoveAt(e.OldStartingIndex);
-                for (var i = e.NewItems.Count - 1; i >= 0; i--)
-                    _textBlock.Inlines.Insert(e.NewStartingIndex, e.NewItems[i] as Inline);
-                break;
             case NotifyCollectionChangedAction.Move:
-                for (var i = 0; i < e.OldItems.Count; i++)
+                for (var i = 0; i < (e.OldItems?.Count ?? -1); i++)
                     _textBlock.Inlines.RemoveAt(e.OldStartingIndex);
-                for (var i = e.NewItems.Count - 1; i >= 0; i--)
-                    _textBlock.Inlines.Insert(e.NewStartingIndex, e.NewItems[i] as Inline);
+                for (var i = e.NewItems?.Count - 1 ?? -1; i >= 0; i--)
+                    _textBlock.Inlines.Insert(e.NewStartingIndex, e.NewItems![i] as Inline);
                 break;
             case NotifyCollectionChangedAction.Reset:
                 _textBlock.Inlines.Clear();

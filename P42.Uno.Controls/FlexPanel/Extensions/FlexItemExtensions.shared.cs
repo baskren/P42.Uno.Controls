@@ -21,14 +21,12 @@ internal static class FlexItemExtensions
 {
     public static int IndexOf(this FlexItem parent, FlexItem child)
     {
-        var index = -1;
+        var index = 0;
         foreach (var it in parent)
         {
-            index++;
             if (it == child)
-            {
                 return index;
-            }
+            index++;
         }
 
         return -1;
@@ -38,17 +36,14 @@ internal static class FlexItemExtensions
     {
         var index = parent.IndexOf(child);
         if (index < 0)
-        {
             return;
-        }
 
         parent.RemoveAt((uint)index);
     }
 
     public static Rect GetFrame(this FlexItem item)
-    {
-        return new Rect(item.Frame[0], item.Frame[1], Math.Max(item.Frame[2], 0), Math.Max(item.Frame[3], 0));
-    }
+        => new(item.Frame[0], item.Frame[1], Math.Max(item.Frame[2], 0), Math.Max(item.Frame[3], 0));
+    
 
     public static Size GetConstraints(this FlexItem item)
     {
@@ -58,19 +53,13 @@ internal static class FlexItemExtensions
         do
         {
             if (parent == null)
-            {
                 break;
-            }
 
             if (widthConstraint < 0 && !double.IsNaN(parent.Width))
-            {
                 widthConstraint = parent.Width;
-            }
 
             if (heightConstraint < 0 && !double.IsNaN(parent.Height))
-            {
                 heightConstraint = parent.Height;
-            }
 
             parent = parent.Parent;
         }
@@ -79,10 +68,6 @@ internal static class FlexItemExtensions
     }
 
     public static void SetPadding(this FlexItem item, Thickness padding)
-    {
-        item.PaddingLeft = padding.Left;
-        item.PaddingTop = padding.Top;
-        item.PaddingRight = padding.Right;
-        item.PaddingBottom = padding.Bottom;
-    }
+        => (item.PaddingBottom, item.PaddingLeft, item.PaddingRight, item.PaddingTop) = (padding.Bottom, padding.Left, padding.Right, padding.Top);
+    
 }

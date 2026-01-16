@@ -7,63 +7,86 @@ internal class NativeHapticPlayer : INativeHapticPlayer
 {
     private static readonly SystemSound vibrate = new(4095);
 
-    public void Play(Effect effect, EffectMode mode)
+    internal static UIWindow? IOSWindow
+    {
+        get
+        {
+            if (field is null)
+            {
+                var window = UIApplication.SharedApplication.Delegate.Window;
+                field = window;
+            }
+            return field;
+        }
+    }
+
+    public async Task PlayAsync(Effect effect, EffectMode mode)
     {
         if (mode == EffectMode.Off || !UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
             return;
 
-        switch (effect)
+        await Task.Run(() =>
         {
-            case Effect.Select:
-            {
-                using var selection = new UISelectionFeedbackGenerator();
-                selection.Prepare();
-                selection.SelectionChanged();
-            }
-                break;
-            case Effect.Delete:
-            {
-                using var impact = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Medium);
-                impact.Prepare();
-                impact.ImpactOccurred();
-            }
-                break;
-            case Effect.Info:
-            {
-                using var impact = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Heavy);
-                impact.Prepare();
-                impact.ImpactOccurred();
-            }
-                break;
-            case Effect.Error:
-            {
-                // Initialize feedback
-                using var notification = new UINotificationFeedbackGenerator();
-                notification.Prepare();
-                notification.NotificationOccurred(UINotificationFeedbackType.Error);
-            }
-                break;
-            case Effect.Warning:
-            {
-                // Initialize feedback
-                using var notification = new UINotificationFeedbackGenerator();
-                notification.Prepare();
-                notification.NotificationOccurred(UINotificationFeedbackType.Warning);
-            }
-                break;
-            case Effect.Alarm:
-                vibrate.PlaySystemSound();
-                break;
-            case Effect.Inquiry:
-            {
-                // Initialize feedback
-                using var notification = new UINotificationFeedbackGenerator();
-                notification.Prepare();
-                notification.NotificationOccurred(UINotificationFeedbackType.Success);
-            }
-                break;
+            UIImpactFeedbackGenerator? generator;
 
-        }
+            UIImpactFeedbackStyle? style = effect switch
+            {
+                Effect.Press => UIImpactFeedbackStyle.Light,
+                Effect.Select => UIImpactFeedbackStyle.Medium,
+                Effect.Delete => UIImpactFeedbackStyle.Medium,
+                Effect.Info => UIImpactFeedbackStyle.Heavy,
+                _ => null,
+            };
+
+            if (style is not null)
+            {
+                if (UIDevice.CurrentDevice.CheckSystemVersion(17, 5) && IOSWindow is not null)
+                {
+                    generator = UIImpactFeedbackGenerator.GetFeedbackGenerator(style.Value, IOSWindow);
+                }
+                else
+                {
+#pragma warning disable CA1422 // Validate platform compatibility
+                    generator = new UIImpactFeedbackGenerator(style.Value);
+#pragma warning restore CA1422 // Validate platform compatibility
+                }
+                generator.Prepare();
+                generator.ImpactOccurred();
+                generator.Dispose();
+                return;
+            }
+
+            UINotificationFeedbackType? notification = effect switch
+            {
+                Effect.Error => UINotificationFeedbackType.Error,
+                Effect.Warning => UINotificationFeedbackType.Warning,
+                Effect.Inquiry => UINotificationFeedbackType.Success,
+                _ => null,
+            };
+
+            if (notification is not null)
+            {
+                UINotificationFeedbackGenerator? notifGenerator;
+                if (UIDevice.CurrentDevice.CheckSystemVersion(17, 5) && IOSWindow is not null)
+                {
+                    notifGenerator = UINotificationFeedbackGenerator.GetFeedbackGenerator(IOSWindow);
+                }
+                else
+                {
+                    notifGenerator = new UINotificationFeedbackGenerator();
+                }
+                notifGenerator.Prepare();
+                notifGenerator.NotificationOccurred(notification.Value);
+                notifGenerator.Dispose();
+                return;
+            }
+
+            if (effect == Effect.Alarm)
+            {
+                vibrate.PlaySystemSound();
+                return;
+            }
+        });
 
     }
 

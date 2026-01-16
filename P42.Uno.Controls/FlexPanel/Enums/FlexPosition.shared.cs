@@ -18,7 +18,7 @@ namespace P42.Uno.Controls;
 /// Not implemented at this time
 /// Values for <see cref="P:P42.Uno.Controls.FlexItem.Position" />.
 /// </summary>
-internal enum FlexPosition
+public enum FlexPosition
 {
     /// <summary>
     /// Whether the elements's frame will be determined by the flex rules of the layout system.

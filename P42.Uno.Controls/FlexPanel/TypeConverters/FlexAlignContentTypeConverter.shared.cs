@@ -14,7 +14,6 @@
 
 using System.ComponentModel;
 using System.Globalization;
-using Microsoft.Toolkit.Diagnostics;
 
 namespace P42.Uno.Controls;
 
@@ -23,47 +22,30 @@ namespace P42.Uno.Controls;
 /// </summary>
 internal class FlexAlignContentTypeConverter : TypeConverter
 {
-    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-    {
-        if (sourceType == typeof(string))
-        {
-            return true;
-        }
+    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
+        => sourceType == typeof(string) ? true : base.CanConvertFrom(context, sourceType);
+    
 
-        return base.CanConvertFrom(context, sourceType);
-    }
-
-    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+    public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
         if (value is string stringValue)
         {
             if (Enum.TryParse(stringValue, true, out FlexAlignContent aligncontent))
-            {
                 return aligncontent;
-            }
 
             if (stringValue.Equals("flex-start", StringComparison.OrdinalIgnoreCase))
-            {
                 return FlexAlignContent.Start;
-            }
 
             if (stringValue.Equals("flex-end", StringComparison.OrdinalIgnoreCase))
-            {
                 return FlexAlignContent.End;
-            }
 
             if (stringValue.Equals("space-between", StringComparison.OrdinalIgnoreCase))
-            {
                 return FlexAlignContent.SpaceBetween;
-            }
 
             if (stringValue.Equals("space-around", StringComparison.OrdinalIgnoreCase))
-            {
                 return FlexAlignContent.SpaceAround;
-            }
         }
 
-        ThrowHelper.ThrowInvalidOperationException(string.Format("Cannot convert \"{0}\" into {1}", value, typeof(FlexAlignContent)));
-        return null;
+        throw new InvalidOperationException(string.Format("Cannot convert \"{0}\" into {1}", value, typeof(FlexAlignContent)));
     }
 }

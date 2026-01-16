@@ -1,7 +1,9 @@
+using Microsoft.UI.Text;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Media.Animation;
+using P42.Utils.Uno;
 using Windows.UI;
 using Windows.UI.Text;
-using Microsoft.UI.Text;
-using Microsoft.UI.Xaml.Media.Animation;
 using ElementType = P42.Uno.Controls.BubbleBorder;
 
 namespace P42.Uno.Controls;
@@ -9,241 +11,277 @@ namespace P42.Uno.Controls;
 public static class BubbleBorderExtensions
 {
     #region Binding
-    public static TElement BindNullCollapse<TElement>(this TElement element) where TElement : ElementType
+
+    /*
+    public static TElement BindEmptyCollapse<TElement>(this TElement element) where TElement : ElementType
     {
-        return element.BindX(UIElement.VisibilityProperty, element, nameof(Content),
+        return element.AltBind(UIElement.VisibilityProperty, element, BubbleBorder.ContentProperty,
             convert: (object content) => content != null? Visibility.Visible : Visibility.Collapsed);
     }
-
-    public static TElement BindFont<TElement>(this TElement target, Control source, BindingMode bindingMode = BindingMode.OneWay, object except = null) where TElement : ElementType
+    */
+    #region Other -> BubbleBorder Font Bindings
+    public static TElement BindFont<TElement>(this TElement target, Control source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
     {   
-        var excepts = InternalHelpers.GetExcepts(except);
-        if (excepts is null || !excepts.Contains(nameof(Control.CharacterSpacing)))
-            target.Bind(ElementType.CharacterSpacingProperty, source, nameof(Control.CharacterSpacing), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(Control.FontFamily)))
-            target.Bind(ElementType.FontFamilyProperty, source, nameof(Control.FontFamily), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(Control.FontSize)))
-            target.Bind(ElementType.FontSizeProperty, source, nameof(Control.FontSize), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(Control.FontStretch)))
-            target.Bind(ElementType.FontStretchProperty, source, nameof(Control.FontStretch), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(Control.FontStyle)))
-            target.Bind(ElementType.FontStyleProperty, source, nameof(Control.FontStyle), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(Control.FontWeight)))
-            target.Bind(ElementType.FontWeightProperty, source, nameof(Control.FontWeight), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(Control.Foreground)))
-            target.Bind(ElementType.ForegroundProperty, source, nameof(Control.Foreground), bindingMode);
+        var excepts = AltBindingExtensions.GetExcepts(except);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.CharacterSpacing)))
+            target.AltBind(ElementType.CharacterSpacingProperty, source, Control.CharacterSpacingProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontFamily)))
+            target.AltBind(ElementType.FontFamilyProperty, source, Control.FontFamilyProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontSize)))
+            target.AltBind(ElementType.FontSizeProperty, source, Control.FontSizeProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStretch)))
+            target.AltBind(ElementType.FontStretchProperty, source, Control.FontStretchProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStyle)))
+            target.AltBind(ElementType.FontStyleProperty, source, Control.FontStyleProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontWeight)))
+            target.AltBind(ElementType.FontWeightProperty, source, Control.FontWeightProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.Foreground)))
+            target.AltBind(ElementType.ForegroundProperty, source, Control.ForegroundProperty, bindingMode);
         return target;
     }
 
-    public static TElement BindTextProperties<TElement>(this TElement target, Control source, BindingMode bindingMode = BindingMode.OneWay, object except = null) where TElement : ElementType
+    public static TElement BindFont<TElement>(this TElement target, ContentPresenter source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
     {
-        var excepts = InternalHelpers.GetExcepts(except);
-        target.BindFont(source, bindingMode, excepts);
-        if (excepts is null || !excepts.Contains(nameof(Control.IsTextScaleFactorEnabledProperty)))
-            target.Bind(ElementType.IsTextScaleFactorEnabledProperty, source, nameof(Control.IsTextScaleFactorEnabled), bindingMode);
-
+        var excepts = AltBindingExtensions.GetExcepts(except);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.CharacterSpacing)))
+            target.AltBind(ElementType.CharacterSpacingProperty, source, ContentPresenter.CharacterSpacingProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontFamily)))
+            target.AltBind(ElementType.FontFamilyProperty, source, ContentPresenter.FontFamilyProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontSize)))
+            target.AltBind(ElementType.FontSizeProperty, source, Control.FontSizeProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStretch)))
+            target.AltBind(ElementType.FontStretchProperty, source, ContentPresenter.FontStretchProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStyle)))
+            target.AltBind(ElementType.FontStyleProperty, source, ContentPresenter.FontStyleProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontWeight)))
+            target.AltBind(ElementType.FontWeightProperty, source, ContentPresenter.FontWeightProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.Foreground)))
+            target.AltBind(ElementType.ForegroundProperty, source, ContentPresenter.ForegroundProperty, bindingMode);
         return target;
     }
 
-
-    public static TElement BindFont<TElement>(this TElement target, TextBlock source, BindingMode bindingMode = BindingMode.OneWay, object except = null) where TElement : ElementType
+    public static TElement BindFont<TElement>(this TElement target, TextBlock source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
     {
-        var excepts = InternalHelpers.GetExcepts(except);
+        var excepts = AltBindingExtensions.GetExcepts(except);
         if (excepts is null || !excepts.Contains(nameof(TextBlock.FontFamily)))
-            target.Bind(ElementType.FontFamilyProperty, source, nameof(TextBlock.FontFamily), bindingMode);
+            target.AltBind(ElementType.FontFamilyProperty, source, TextBlock.FontFamilyProperty, bindingMode);
         if (excepts is null || !excepts.Contains(nameof(TextBlock.FontSize)))
-            target.Bind(ElementType.FontSizeProperty, source, nameof(TextBlock.FontSize), bindingMode);
+            target.AltBind(ElementType.FontSizeProperty, source, TextBlock.FontSizeProperty, bindingMode);
         if (excepts is null || !excepts.Contains(nameof(TextBlock.FontStretch)))
-            target.Bind(ElementType.FontStretchProperty, source, nameof(TextBlock.FontStretch), bindingMode);
+            target.AltBind(ElementType.FontStretchProperty, source, TextBlock.FontStretchProperty, bindingMode);
         if (excepts is null || !excepts.Contains(nameof(TextBlock.FontStyle)))
-            target.Bind(ElementType.FontStyleProperty, source, nameof(TextBlock.FontStyle), bindingMode);
+            target.AltBind(ElementType.FontStyleProperty, source, TextBlock.FontStyleProperty, bindingMode);
         if (excepts is null || !excepts.Contains(nameof(TextBlock.FontWeight)))
-            target.Bind(ElementType.FontWeightProperty, source, nameof(TextBlock.FontWeight), bindingMode);
+            target.AltBind(ElementType.FontWeightProperty, source, TextBlock.FontWeightProperty, bindingMode);
         if (excepts is null || !excepts.Contains(nameof(TextBlock.Foreground)))
-            target.Bind(ElementType.ForegroundProperty, source, nameof(TextBlock.Foreground), bindingMode);
+            target.AltBind(ElementType.ForegroundProperty, source, TextBlock.ForegroundProperty, bindingMode);
         return target;
     }
 
-    public static TElement BindTextProperties<TElement>(this TElement target, TextBlock source, BindingMode bindingMode = BindingMode.OneWay, object except = null) where TElement : ElementType
+    public static TElement BindFont<TElement>(this TElement target, TextBox source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
     {
-        var excepts = InternalHelpers.GetExcepts(except);
-        target.BindFont(source, bindingMode, excepts);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.IsTextScaleFactorEnabledProperty)))
-            target.Bind(ElementType.IsTextScaleFactorEnabledProperty, source, nameof(TextBlock.IsTextScaleFactorEnabled), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.LineHeightProperty)))
-            target.Bind(ElementType.LineHeightProperty, source, nameof(TextBlock.LineHeight), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.LineStackingStrategyProperty)))
-            target.Bind(ElementType.LineStackingStrategyProperty, source, nameof(TextBlock.LineStackingStrategy), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.MaxLinesProperty)))
-            target.Bind(ElementType.MaxLinesProperty, source, nameof(TextBlock.MaxLines), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.TextLineBoundsProperty)))
-            target.Bind(ElementType.TextLineBoundsProperty, source, nameof(TextBlock.TextLineBounds), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.TextWrappingProperty)))
-            target.Bind(ElementType.TextWrappingProperty, source, nameof(TextBlock.TextWrapping), bindingMode);
-
+        var excepts = AltBindingExtensions.GetExcepts(except);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontFamily)))
+            target.AltBind(ElementType.FontFamilyProperty, source, TextBox.FontFamilyProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontSize)))
+            target.AltBind(ElementType.FontSizeProperty, source, TextBox.FontSizeProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStretch)))
+            target.AltBind(ElementType.FontStretchProperty, source, TextBox.FontStretchProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStyle)))
+            target.AltBind(ElementType.FontStyleProperty, source, TextBox.FontStyleProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontWeight)))
+            target.AltBind(ElementType.FontWeightProperty, source, TextBox.FontWeightProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.Foreground)))
+            target.AltBind(ElementType.ForegroundProperty, source, TextBox.ForegroundProperty, bindingMode);
         return target;
     }
 
-
-
-    public static TElement BindFont<TElement>(this TElement target, ContentPresenter source, BindingMode bindingMode = BindingMode.OneWay, object except = null) where TElement : ElementType
+    public static TElement BindFont<TElement>(this TElement target, RichTextBlock source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
     {
-        var excepts = InternalHelpers.GetExcepts(except);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.FontFamily)))
-            target.Bind(ElementType.FontFamilyProperty, source, nameof(ContentPresenter.FontFamily), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.FontSize)))
-            target.Bind(ElementType.FontSizeProperty, source, nameof(ContentPresenter.FontSize), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.FontStretch)))
-            target.Bind(ElementType.FontStretchProperty, source, nameof(ContentPresenter.FontStretch), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.FontStyle)))
-            target.Bind(ElementType.FontStyleProperty, source, nameof(ContentPresenter.FontStyle), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.FontWeight)))
-            target.Bind(ElementType.FontWeightProperty, source, nameof(ContentPresenter.FontWeight), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.Foreground)))
-            target.Bind(ElementType.ForegroundProperty, source, nameof(ContentPresenter.Foreground), bindingMode);
-
+        var excepts = AltBindingExtensions.GetExcepts(except);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontFamily)))
+            target.AltBind(ElementType.FontFamilyProperty, source, RichTextBlock.FontFamilyProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontSize)))
+            target.AltBind(ElementType.FontSizeProperty, source, RichTextBlock.FontSizeProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStretch)))
+            target.AltBind(ElementType.FontStretchProperty, source, RichTextBlock.FontStretchProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStyle)))
+            target.AltBind(ElementType.FontStyleProperty, source, RichTextBlock.FontStyleProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontWeight)))
+            target.AltBind(ElementType.FontWeightProperty, source, RichTextBlock.FontWeightProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.Foreground)))
+            target.AltBind(ElementType.ForegroundProperty, source, RichTextBlock.ForegroundProperty, bindingMode);
         return target;
     }
 
-    public static TElement BindTextProperties<TElement>(this TElement target, ContentPresenter source, BindingMode bindingMode = BindingMode.OneWay, object except = null) where TElement : ElementType
+    public static TElement BindFont<TElement>(this TElement target, RichEditBox source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
     {
-        var excepts = InternalHelpers.GetExcepts(except);
-        target.BindFont(source, bindingMode, excepts);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.IsTextScaleFactorEnabled)))
-            target.Bind(ElementType.IsTextScaleFactorEnabledProperty, source, nameof(ContentPresenter.IsTextScaleFactorEnabled), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.LineHeightProperty)))
-            target.Bind(ElementType.LineHeightProperty, source, nameof(ContentPresenter.LineHeight), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.LineStackingStrategyProperty)))
-            target.Bind(ElementType.LineStackingStrategyProperty, source, nameof(ContentPresenter.LineStackingStrategy), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.MaxLinesProperty)))
-            target.Bind(ElementType.MaxLinesProperty, source, nameof(ContentPresenter.MaxLines), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.TextLineBoundsProperty)))
-            target.Bind(ElementType.TextLineBoundsProperty, source, nameof(ContentPresenter.TextLineBounds), bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.TextWrappingProperty)))
-            target.Bind(ElementType.TextWrappingProperty, source, nameof(ContentPresenter.TextWrapping), bindingMode);
+        var excepts = AltBindingExtensions.GetExcepts(except);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontFamily)))
+            target.AltBind(ElementType.FontFamilyProperty, source, RichEditBox.FontFamilyProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontSize)))
+            target.AltBind(ElementType.FontSizeProperty, source, RichEditBox.FontSizeProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStretch)))
+            target.AltBind(ElementType.FontStretchProperty, source, RichEditBox.FontStretchProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStyle)))
+            target.AltBind(ElementType.FontStyleProperty, source, RichEditBox.FontStyleProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontWeight)))
+            target.AltBind(ElementType.FontWeightProperty, source, RichEditBox.FontWeightProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.Foreground)))
+            target.AltBind(ElementType.ForegroundProperty, source, RichEditBox.ForegroundProperty, bindingMode);
+        return target;
+    }
 
+    public static TElement BindFont<TElement>(this TElement target, BubbleBorder source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
+    {
+        var excepts = AltBindingExtensions.GetExcepts(except);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontFamily)))
+            target.AltBind(ElementType.FontFamilyProperty, source, BubbleBorder.FontFamilyProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontSize)))
+            target.AltBind(ElementType.FontSizeProperty, source, BubbleBorder.FontSizeProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStretch)))
+            target.AltBind(ElementType.FontStretchProperty, source, BubbleBorder.FontStretchProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStyle)))
+            target.AltBind(ElementType.FontStyleProperty, source, BubbleBorder.FontStyleProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontWeight)))
+            target.AltBind(ElementType.FontWeightProperty, source, BubbleBorder.FontWeightProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.Foreground)))
+            target.AltBind(ElementType.ForegroundProperty, source, BubbleBorder.ForegroundProperty, bindingMode);
+        return target;
+    }
+
+    public static TElement BindFont<TElement>(this TElement target, FontIcon source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
+    {
+        var excepts = AltBindingExtensions.GetExcepts(except);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontFamily)))
+            target.AltBind(ElementType.FontFamilyProperty, source, FontIcon.FontFamilyProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontSize)))
+            target.AltBind(ElementType.FontSizeProperty, source, FontIcon.FontSizeProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStyle)))
+            target.AltBind(ElementType.FontStyleProperty, source, FontIcon.FontStyleProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontWeight)))
+            target.AltBind(ElementType.FontWeightProperty, source, FontIcon.FontWeightProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.Foreground)))
+            target.AltBind(ElementType.ForegroundProperty, source, FontIcon.ForegroundProperty, bindingMode);
+        return target;
+    }
+
+    public static TElement BindFont<TElement>(this TElement target, FontIconSource source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
+    {
+        var excepts = AltBindingExtensions.GetExcepts(except);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontFamily)))
+            target.AltBind(ElementType.FontFamilyProperty, source, FontIconSource.FontFamilyProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontSize)))
+            target.AltBind(ElementType.FontSizeProperty, source, FontIconSource.FontSizeProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontStyle)))
+            target.AltBind(ElementType.FontStyleProperty, source, FontIconSource.FontStyleProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.FontWeight)))
+            target.AltBind(ElementType.FontWeightProperty, source, FontIconSource.FontWeightProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(BubbleBorder.Foreground)))
+            target.AltBind(ElementType.ForegroundProperty, source, FontIconSource.ForegroundProperty, bindingMode);
         return target;
     }
 
     #endregion
 
 
-    #region Workaround Binding
-    public static TElement WBindNullCollapse<TElement>(this TElement element) where TElement : ElementType
+    #region BindTextProperties
+    public static TElement BindTextProperties<TElement>(this TElement target, Control source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
     {
-        return element.WBind(UIElement.VisibilityProperty, element, ContentPresenter.ContentProperty,
-            convert: (object content) => content != null ? Visibility.Visible : Visibility.Collapsed);
-    }
-
-    public static TElement WBindFont<TElement>(this TElement target, Control source, BindingMode bindingMode = BindingMode.OneWay, object except = null) where TElement : ElementType
-    {
-        var excepts = InternalHelpers.GetExcepts(except);
-        if (excepts is null || !excepts.Contains(nameof(Control.CharacterSpacing)))
-            target.WBind(ElementType.CharacterSpacingProperty, source, Control.CharacterSpacingProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(Control.FontFamily)))
-            target.WBind(ElementType.FontFamilyProperty, source, Control.FontFamilyProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(Control.FontSize)))
-            target.WBind(ElementType.FontSizeProperty, source, Control.FontSizeProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(Control.FontStretch)))
-            target.WBind(ElementType.FontStretchProperty, source, Control.FontStretchProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(Control.FontStyle)))
-            target.WBind(ElementType.FontStyleProperty, source, Control.FontStyleProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(Control.FontWeight)))
-            target.WBind(ElementType.FontWeightProperty, source, Control.FontWeightProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(Control.Foreground)))
-            target.WBind(ElementType.ForegroundProperty, source, Control.ForegroundProperty, bindingMode);
-        return target;
-    }
-
-    public static TElement WBindTextProperties<TElement>(this TElement target, Control source, BindingMode bindingMode = BindingMode.OneWay, object except = null) where TElement : ElementType
-    {
-        var excepts = InternalHelpers.GetExcepts(except);
-        target.WBindFont(source, bindingMode, excepts);
+        var excepts = AltBindingExtensions.GetExcepts(except);
+        target.BindFont(source, bindingMode, excepts);
         if (excepts is null || !excepts.Contains(nameof(Control.IsTextScaleFactorEnabledProperty)))
-            target.WBind(ElementType.IsTextScaleFactorEnabledProperty, source, Control.IsTextScaleFactorEnabledProperty, bindingMode);
+            target.AltBind(ElementType.IsTextScaleFactorEnabledProperty, source, Control.IsTextScaleFactorEnabledProperty, bindingMode);
+
 
         return target;
     }
 
-
-    public static TElement WBindFont<TElement>(this TElement target, TextBlock source, BindingMode bindingMode = BindingMode.OneWay, object except = null) where TElement : ElementType
+    public static TElement BindTextProperties<TElement>(this TElement target, ContentPresenter source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
     {
-        var excepts = InternalHelpers.GetExcepts(except);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.FontFamily)))
-            target.WBind(ElementType.FontFamilyProperty, source, TextBlock.FontFamilyProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.FontSize)))
-            target.WBind(ElementType.FontSizeProperty, source, TextBlock.FontSizeProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.FontStretch)))
-            target.WBind(ElementType.FontStretchProperty, source, TextBlock.FontStretchProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.FontStyle)))
-            target.WBind(ElementType.FontStyleProperty, source, TextBlock.FontStyleProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.FontWeight)))
-            target.WBind(ElementType.FontWeightProperty, source, TextBlock.FontWeightProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.Foreground)))
-            target.WBind(ElementType.ForegroundProperty, source, TextBlock.ForegroundProperty, bindingMode);
-        return target;
-    }
-
-    public static TElement WBindTextProperties<TElement>(this TElement target, TextBlock source, BindingMode bindingMode = BindingMode.OneWay, object except = null) where TElement : ElementType
-    {
-        var excepts = InternalHelpers.GetExcepts(except);
-        target.WBindFont(source, bindingMode, excepts);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.IsTextScaleFactorEnabledProperty)))
-            target.WBind(ElementType.IsTextScaleFactorEnabledProperty, source, TextBlock.IsTextScaleFactorEnabledProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.LineHeightProperty)))
-            target.WBind(ElementType.LineHeightProperty, source, TextBlock.LineHeightProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.LineStackingStrategyProperty)))
-            target.WBind(ElementType.LineStackingStrategyProperty, source, TextBlock.LineStackingStrategyProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.MaxLinesProperty)))
-            target.WBind(ElementType.MaxLinesProperty, source, TextBlock.MaxLinesProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.TextLineBoundsProperty)))
-            target.WBind(ElementType.TextLineBoundsProperty, source, TextBlock.TextLineBoundsProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(TextBlock.TextWrappingProperty)))
-            target.WBind(ElementType.TextWrappingProperty, source, TextBlock.TextWrappingProperty, bindingMode);
-
-        return target;
-    }
-
-
-
-    public static TElement WBindFont<TElement>(this TElement target, ContentPresenter source, BindingMode bindingMode = BindingMode.OneWay, object except = null) where TElement : ElementType
-    {
-        var excepts = InternalHelpers.GetExcepts(except);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.FontFamily)))
-            target.WBind(ElementType.FontFamilyProperty, source, ContentPresenter.FontFamilyProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.FontSize)))
-            target.WBind(ElementType.FontSizeProperty, source, ContentPresenter.FontSizeProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.FontStretch)))
-            target.WBind(ElementType.FontStretchProperty, source, ContentPresenter.FontStretchProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.FontStyle)))
-            target.WBind(ElementType.FontStyleProperty, source, ContentPresenter.FontStyleProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.FontWeight)))
-            target.WBind(ElementType.FontWeightProperty, source, ContentPresenter.FontWeightProperty, bindingMode);
-        if (excepts is null || !excepts.Contains(nameof(ContentPresenter.Foreground)))
-            target.WBind(ElementType.ForegroundProperty, source, ContentPresenter.ForegroundProperty, bindingMode);
-
-        return target;
-    }
-
-    public static TElement WBindTextProperties<TElement>(this TElement target, ContentPresenter source, BindingMode bindingMode = BindingMode.OneWay, object except = null) where TElement : ElementType
-    {
-        var excepts = InternalHelpers.GetExcepts(except);
+        var excepts = AltBindingExtensions.GetExcepts(except);
         target.BindFont(source, bindingMode, excepts);
         if (excepts is null || !excepts.Contains(nameof(ContentPresenter.IsTextScaleFactorEnabled)))
-            target.Bind(ElementType.IsTextScaleFactorEnabledProperty, source, nameof(ContentPresenter.IsTextScaleFactorEnabled), bindingMode);
+            target.AltBind(ElementType.IsTextScaleFactorEnabledProperty, source, ContentPresenter.IsTextScaleFactorEnabledProperty, bindingMode);
         if (excepts is null || !excepts.Contains(nameof(ContentPresenter.LineHeightProperty)))
-            target.Bind(ElementType.LineHeightProperty, source, nameof(ContentPresenter.LineHeight), bindingMode);
+            target.AltBind(ElementType.LineHeightProperty, source, ContentPresenter.LineHeightProperty, bindingMode);
         if (excepts is null || !excepts.Contains(nameof(ContentPresenter.LineStackingStrategyProperty)))
-            target.Bind(ElementType.LineStackingStrategyProperty, source, nameof(ContentPresenter.LineStackingStrategy), bindingMode);
+            target.AltBind(ElementType.LineStackingStrategyProperty, source, ContentPresenter.LineStackingStrategyProperty, bindingMode);
         if (excepts is null || !excepts.Contains(nameof(ContentPresenter.MaxLinesProperty)))
-            target.Bind(ElementType.MaxLinesProperty, source, nameof(ContentPresenter.MaxLines), bindingMode);
+            target.AltBind(ElementType.MaxLinesProperty, source, ContentPresenter.MaxLinesProperty, bindingMode);
         if (excepts is null || !excepts.Contains(nameof(ContentPresenter.TextLineBoundsProperty)))
-            target.Bind(ElementType.TextLineBoundsProperty, source, nameof(ContentPresenter.TextLineBounds), bindingMode);
+            target.AltBind(ElementType.TextLineBoundsProperty, source, ContentPresenter.TextLineBoundsProperty, bindingMode);
         if (excepts is null || !excepts.Contains(nameof(ContentPresenter.TextWrappingProperty)))
-            target.Bind(ElementType.TextWrappingProperty, source, nameof(ContentPresenter.TextWrapping), bindingMode);
+            target.AltBind(ElementType.TextWrappingProperty, source, ContentPresenter.TextWrappingProperty, bindingMode);
 
         return target;
     }
+
+    public static TElement BindTextProperties<TElement>(this TElement target, TextBlock source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
+    {
+        var excepts = AltBindingExtensions.GetExcepts(except);
+        target.BindFont(source, bindingMode, excepts);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.IsTextScaleFactorEnabledProperty)))
+            target.AltBind(ElementType.IsTextScaleFactorEnabledProperty, source, TextBlock.IsTextScaleFactorEnabledProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.LineHeightProperty)))
+            target.AltBind(ElementType.LineHeightProperty, source, TextBlock.LineHeightProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.LineStackingStrategyProperty)))
+            target.AltBind(ElementType.LineStackingStrategyProperty, source, TextBlock.LineStackingStrategyProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.MaxLinesProperty)))
+            target.AltBind(ElementType.MaxLinesProperty, source, TextBlock.MaxLinesProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.TextLineBoundsProperty)))
+            target.AltBind(ElementType.TextLineBoundsProperty, source, TextBlock.TextLineBoundsProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.TextWrappingProperty)))
+            target.AltBind(ElementType.TextWrappingProperty, source, TextBlock.TextWrappingProperty, bindingMode);
+
+        return target;
+    }
+
+    public static TElement BindTextProperties<TElement>(this TElement target, TextBox source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
+    {
+        var excepts = AltBindingExtensions.GetExcepts(except);
+        target.BindFont(source, bindingMode, excepts);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.IsTextScaleFactorEnabledProperty)))
+            target.AltBind(ElementType.IsTextScaleFactorEnabledProperty, source, TextBox.IsTextScaleFactorEnabledProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.TextWrappingProperty)))
+            target.AltBind(ElementType.TextWrappingProperty, source, TextBox.TextWrappingProperty, bindingMode);
+
+        return target;
+    }
+
+    public static TElement BindTextProperties<TElement>(this TElement target, RichTextBlock source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
+    {
+        var excepts = AltBindingExtensions.GetExcepts(except);
+        target.BindFont(source, bindingMode, excepts);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.IsTextScaleFactorEnabledProperty)))
+            target.AltBind(ElementType.IsTextScaleFactorEnabledProperty, source, RichTextBlock.IsTextScaleFactorEnabledProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.LineHeightProperty)))
+            target.AltBind(ElementType.LineHeightProperty, source, RichTextBlock.LineHeightProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.LineStackingStrategyProperty)))
+            target.AltBind(ElementType.LineStackingStrategyProperty, source, RichTextBlock.LineStackingStrategyProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.MaxLinesProperty)))
+            target.AltBind(ElementType.MaxLinesProperty, source, RichTextBlock.MaxLinesProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.TextLineBoundsProperty)))
+            target.AltBind(ElementType.TextLineBoundsProperty, source, RichTextBlock.TextLineBoundsProperty, bindingMode);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.TextWrappingProperty)))
+            target.AltBind(ElementType.TextWrappingProperty, source, RichTextBlock.TextWrappingProperty, bindingMode);
+
+        return target;
+    }
+
+    public static TElement BindTextProperties<TElement>(this TElement target, RichEditBox source, BindingMode bindingMode = BindingMode.OneWay, object? except = null) where TElement : ElementType
+    {
+        var excepts = AltBindingExtensions.GetExcepts(except);
+        target.BindFont(source, bindingMode, excepts);
+        if (excepts is null || !excepts.Contains(nameof(TextBlock.IsTextScaleFactorEnabledProperty)))
+            target.AltBind(ElementType.IsTextScaleFactorEnabledProperty, source, RichEditBox.IsTextScaleFactorEnabledProperty, bindingMode);
+
+        return target;
+    }
+
+
+    #endregion
+
 
     #endregion
 
@@ -492,9 +530,10 @@ public static class BubbleBorderExtensions
 
 
     #region BorderBrush
+    /*
     public static TElement BorderColor<TElement>(this TElement element, Color value) where TElement : ElementType
     { element.BorderColor = value; return element; }
-
+    */
     public static TElement BorderBrush<TElement>(this TElement element, string color) where TElement : ElementType
     { element.BorderColor = color.ColorFromString(); return element; }
 
@@ -507,23 +546,23 @@ public static class BubbleBorderExtensions
 
     public static TElement BindBorder<TElement>(this TElement target, Control source, BindingMode bindingMode = BindingMode.OneWay) where TElement : ElementType
     {
-        target.Bind(ElementType.BorderColorProperty, source, nameof(Control.BorderBrush), bindingMode, converter: ColorConverter.);
-        target.Bind(ElementType.BorderThicknessProperty, source, nameof(Control.BorderThickness), bindingMode);
-        target.Bind(ElementType.CornerRadiusProperty, source, nameof(Control.CornerRadius), bindingMode);
+        target.AltBind(ElementType.BorderColorProperty, source, Control.BorderBrush), bindingMode, converter: ColorConverter.);
+        target.AltBind(ElementType.BorderThicknessProperty, source, Control.BorderThicknessProperty, bindingMode);
+        target.AltBind(ElementType.CornerRadiusProperty, source, Control.CornerRadiusProperty, bindingMode);
         return target;
     }
     public static TElement BindBorder<TElement>(this TElement target, ContentPresenter source, BindingMode bindingMode = BindingMode.OneWay) where TElement : ElementType
     {
-        target.Bind(ElementType.BorderBrushProperty, source, nameof(ContentPresenter.BorderBrush), bindingMode);
-        target.Bind(ElementType.BorderThicknessProperty, source, nameof(ContentPresenter.BorderThickness), bindingMode);
-        target.Bind(ElementType.CornerRadiusProperty, source, nameof(ContentPresenter.CornerRadius), bindingMode);
+        target.AltBind(ElementType.BorderBrushProperty, source, ContentPresenter.BorderBrushProperty, bindingMode);
+        target.AltBind(ElementType.BorderThicknessProperty, source, ContentPresenter.BorderThicknessProperty, bindingMode);
+        target.AltBind(ElementType.CornerRadiusProperty, source, ContentPresenter.CornerRadiusProperty, bindingMode);
         return target;
     }
     public static TElement BindBorder<TElement>(this TElement target, Border source, BindingMode bindingMode = BindingMode.OneWay) where TElement : ElementType
     {
-        target.Bind(ElementType.BorderBrushProperty, source, nameof(Border.BorderBrush), bindingMode);
-        target.Bind(ElementType.BorderThicknessProperty, source, nameof(Border.BorderThickness), bindingMode);
-        target.Bind(ElementType.CornerRadiusProperty, source, nameof(Border.CornerRadius), bindingMode);
+        target.AltBind(ElementType.BorderBrushProperty, source, Border.BorderBrushProperty, bindingMode);
+        target.AltBind(ElementType.BorderThicknessProperty, source, Border.BorderThicknessProperty, bindingMode);
+        target.AltBind(ElementType.CornerRadiusProperty, source, Border.CornerRadiusProperty, bindingMode);
         return target;
     }
 
@@ -532,9 +571,10 @@ public static class BubbleBorderExtensions
     #endregion
 
     #region Background
+    /*
     public static TElement BackgroundColor<TElement>(this TElement element, Color color) where TElement : ElementType
     { element.BackgroundColor = color; return element; }
-
+    */
     public static TElement BackgroundColor<TElement>(this TElement element, string color) where TElement : ElementType
     { element.BackgroundColor = color.ColorFromString(); return element; }
 
@@ -592,3 +632,4 @@ public static class BubbleBorderExtensions
 
     #endregion
 }
+

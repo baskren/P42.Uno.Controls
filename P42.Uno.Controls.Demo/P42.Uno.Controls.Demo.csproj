@@ -1,6 +1,6 @@
-<Project Sdk="Uno.Sdk">
+﻿<Project Sdk="Uno.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst;net10.0-browserwasm;net10.0-desktop</TargetFrameworks>
+    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-browserwasm;net10.0-desktop</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) or '$(EnableWindowsTargeting)' == 'true'">
       $(TargetFrameworks);
       net10.0-windows10.0.19041
@@ -40,7 +40,7 @@
       Lottie;
       Toolkit;
       ThemeService;
-      Skia;
+      SkiaRenderer;
       Svg;
     </UnoFeatures>
   </PropertyGroup>
@@ -51,8 +51,7 @@
   <ItemGroup>
     <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="../P42.Uno.Controls/P42.Uno.Controls.csproj " />
     <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Uno.Controls" />
-    <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\P42.Uno.Markup\P42.Uno.Markup\P42.Uno.Markup.csproj" />
-    <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Uno.Markup" />
+    <PackageReference Include="P42.Uno.WinUI.Markup" />
   </ItemGroup>
 
 </Project>

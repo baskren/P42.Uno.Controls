@@ -1,4 +1,4 @@
-﻿namespace P42.Uno.Controls;
+namespace P42.Uno.Controls;
 
 /// <summary>
 /// System Sound Effects
@@ -10,7 +10,11 @@ public enum Effect
     /// </summary>
     None,
     /// <summary>
-    /// Give the system keyclick response
+    /// Give the system tap (press) response
+    /// </summary>
+    Press,
+    /// <summary>
+    /// Give the system selection response
     /// </summary>
     Select,
     /// <summary>
@@ -45,4 +49,20 @@ public enum Effect
     /// Progress made
     /// </summary>
     Progress
+}
+
+
+internal static partial class EffectExtensions
+{
+    extension(Effect effect)
+    {
+        public string? ChimeAssetAbsolutePath
+            => effect == Effect.None ? null : AssetExtensions.AssetPath(effect.ChimeAssetRelativePath!);
+
+        public string? ChimeAssetRelativePath
+            => effect == Effect.None ? null : $"P42.Uno.Controls/Assets/Sounds/{effect}.mp3";
+
+        internal Uri? ChimeAssetUri
+        => effect == Effect.None ? null : new($"ms-appx:///{effect.ChimeAssetRelativePath}");
+    }
 }

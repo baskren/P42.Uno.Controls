@@ -13,19 +13,13 @@ public partial class BusyPopup : Toast
         _iconPresenter.Collapsed();
             
         ProgressRing
-            .Active(false)
+            .IsActive(false)
             .RowSpan(2)
             .Width(40)
             .Height(40)
             .Margin(10);
-                
-#if MACCATALYST
-#elif __IOS__
-            if (Runtime.Arch == Arch.SIMULATOR)
-                return;
-#endif
-            
-        ProgressRing.WBind(ProgressRing.IsActiveProperty, this, IsPushedProperty);
+                            
+        ProgressRing.AltBind(ProgressRing.IsActiveProperty, this, IsPushedProperty);
         _bubbleContentGrid.Children.Add(ProgressRing);
     }
 }

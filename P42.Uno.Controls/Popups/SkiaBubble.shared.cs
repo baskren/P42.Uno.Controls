@@ -22,7 +22,7 @@ public class SkiaBubble : SKXamlCanvas
 
     #region Properties
 
-    private void Redraw([CallerMemberName] string caller = null)
+    private void Redraw([CallerMemberName] string caller = "")
     {
         //System.Diagnostics.Debug.WriteLine($"SkiaBubble.Redraw : [{caller}]");
         Invalidate();
@@ -223,10 +223,6 @@ public class SkiaBubble : SKXamlCanvas
     public SkiaBubble()
     {
         _instance = _instances++;
-#if __IOS__
-            ((UIView)this).BackgroundColor = UIColor.Clear;
-#endif
-
         //RegisterPropertyChangedCallback(MarginProperty, OnMarginChanged);
     }
 
@@ -311,9 +307,9 @@ public class SkiaBubble : SKXamlCanvas
         float cornerRadius,
         float tipRadius,
         float filetRadius,
-        [CallerMemberName] string callerMember = null,
-        [CallerFilePath] string callerPath = null,
-        [CallerLineNumber] int callerLineNumber = default)
+        [CallerMemberName] string callerMember = "",
+        [CallerFilePath] string callerPath = "",
+        [CallerLineNumber] int callerLineNumber = -1)
     {
         if (measuredSize == default)
             return new SKPath();
@@ -341,8 +337,8 @@ public class SkiaBubble : SKXamlCanvas
         var right = width - (borderWidth / 2.0f + 0.5f);
         var bottom = height - (borderWidth / 2.0f + 0.5f);
 
-        width -= pointerDirection.IsHorizontal() ? pointerLength : 0;
-        height -= pointerDirection.IsVertical() ? pointerLength : 0;
+        width -= pointerDirection.IsHorizontal ? pointerLength : 0;
+        height -= pointerDirection.IsVertical ? pointerLength : 0;
 
         //System.Diagnostics.Debug.WriteLine($"Bubble.GeneratePath : [{width},{height}]");
         //System.Diagnostics.Debug.WriteLine($"Bubble.GeneratePath : [{left},{top},{right},{bottom}]");
@@ -409,7 +405,7 @@ public class SkiaBubble : SKXamlCanvas
             result.ArcTo(new SKRect(left, top, left + 2 * cornerRadius, top + 2 * cornerRadius), 180, 90, false);
             result.Close();
         }
-        else if (pointerDirection.IsHorizontal())
+        else if (pointerDirection.IsHorizontal)
         {
             var start = left;
             var end = right;

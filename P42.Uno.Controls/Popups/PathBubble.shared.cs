@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using Windows.Foundation;
 using Path = Microsoft.UI.Xaml.Shapes.Path;
 
@@ -174,7 +174,7 @@ public class PathBubble : Path
     }
         
 
-    protected void UpdatePath([CallerMemberName] string caller = null, bool force = false)
+    protected void UpdatePath([CallerMemberName] string caller = "", bool force = false)
     {
         var size = new Size(ActualWidth, ActualHeight);
         if (force)
@@ -206,16 +206,17 @@ public class PathBubble : Path
             (float)PointerTipRadius,
             (float)PointerCornerRadius);
         var data = path.ToSvgPathData();
-
+        /*
 #if __WASM__
             //System.Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
             //var x = this.GetFirstHtmlDescendent();
             if (GetEnumerator() is { } enumerator && enumerator.MoveNext() && enumerator.Current is FrameworkElement x)
                 x.SetHtmlContent($"<path fill-rule=\"even-odd\" d=\"{data}\"></path>");
 #else
+        */
         //System.Console.WriteLine($"BubbleBorder.RegeneratePath [{data}]");
         Data = StringToPathGeometryConverter.Current.Convert(data);
-#endif
+// #endif
 
         if (_pendingUpdatePath)
             UpdatePath($"pending({_pendingPathSize})", true);

@@ -26,18 +26,18 @@ public partial class PermissionPopup : Alert
         {
             var t = tb.Text;
             if (string.IsNullOrWhiteSpace(t))
-                t = tb.GetHtml();
+                t = tb.Html;
             _cancelButton.Collapsed(string.IsNullOrWhiteSpace(t));
             _cancelButton.Content = tb;
         }
         else if (args.NewValue is string text)
         {
             _cancelButton.Collapsed(string.IsNullOrWhiteSpace(text));
-            if (_cancelButton.IsVisible())
+            if (_cancelButton.IsVisible)
             {
                 _cancelButton.Content = new TextBlock()
-                    .WBindFont(_cancelButton)
-                    .WrapWords()
+                    .BindFont(_cancelButton)
+                    .WrapWholeWords()
                     .SetHtml(text);
             }
             else
@@ -53,9 +53,9 @@ public partial class PermissionPopup : Alert
     /// <summary>
     /// Content for Cancel button
     /// </summary>
-    public object CancelButtonContent
+    public object? CancelButtonContent
     {
-        get => (object)GetValue(CancelButtonContentProperty);
+        get => GetValue(CancelButtonContentProperty);
         set => SetValue(CancelButtonContentProperty, value);
     }
     #endregion CancelText Property
@@ -125,7 +125,7 @@ public partial class PermissionPopup : Alert
         
     public PermissionPopup() : this(null) {}
         
-    public PermissionPopup(UIElement target) : base(target)
+    public PermissionPopup(UIElement? target) : base(target)
     {
         Build();
     }
@@ -145,7 +145,7 @@ public partial class PermissionPopup : Alert
     /// <param name="okButtonTextColor"></param>
     /// <param name="cancelTextColor"></param>
     /// <returns></returns>
-    public static async Task<PermissionPopup> CreateAsync(string titleText, string messageText, string okButtonText = null, string cancelButtonText = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default, Effect effect = Effect.Inquiry, EffectMode effectMode = EffectMode.Default)
+    public static async Task<PermissionPopup> CreateAsync(string titleText, string messageText, string okButtonText = "", string cancelButtonText = null, Color okButtonColor = default, Color cancelButtonColor = default, Color okButtonTextColor = default, Color cancelTextColor = default, Effect effect = Effect.Inquiry, EffectMode effectMode = EffectMode.Default)
     {
         var popup = new PermissionPopup
         { 

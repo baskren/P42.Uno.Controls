@@ -4,7 +4,7 @@ using AsyncAwaitBestPractices;
 namespace P42.Uno.Controls.AnimateBar;
 
 [Bindable]
-public class Base : Grid, IDisposable
+public partial class Base : Grid, IDisposable
 {
     private static readonly Brush DefaultBrush = SystemColors.BaseHigh.ToBrush();
 

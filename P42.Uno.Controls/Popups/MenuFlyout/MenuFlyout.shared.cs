@@ -43,9 +43,9 @@ public partial class MenuFlyout : DependencyObject
         new PropertyMetadata(default(UIElement), OnTargetChanged)
     );
 
-    public UIElement Target
+    public UIElement? Target
     {
-        get => (UIElement)GetValue(TargetProperty);
+        get => (UIElement?)GetValue(TargetProperty);
         set => SetValue(TargetProperty, value);
     }
     #endregion Target Property
@@ -59,7 +59,7 @@ public partial class MenuFlyout : DependencyObject
 
 
     #region Constructor
-    public MenuFlyout(FrameworkElement target= null) 
+    public MenuFlyout(FrameworkElement? target= null) 
     {
         //ObsvItems = new ObservableCollection<MenuItemBase>();
         //SetValue(ItemsProperty, ObsvItems);

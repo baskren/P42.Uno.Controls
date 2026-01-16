@@ -2,8 +2,8 @@ namespace P42.Uno.Controls;
 
 public static class ChimePlayer
 {
-    private static INativeChimePlayer nativeChimePlayer;
-    private static INativeChimePlayer NativeChimePlayer => nativeChimePlayer ??= new NativeChimePlayer();
+    //private static INativeChimePlayer nativeChimePlayer;
+    private static INativeChimePlayer NativeChimePlayer => field ??= new NativeChimePlayer();
 
     public static EffectMode DefaultEffectMode { get; set; }
 
@@ -15,13 +15,14 @@ public static class ChimePlayer
         await NativeChimePlayer.PlayAsync(chime, mode);
     }
 
+    /*
     internal static async Task<string> GetPathAsync(Effect chime)
-        => (await GetStorageFileAsync(chime)).Path;
+        => AssetExtensions.AssetPath(chime.ChimeAssetPath);
 
-    internal static async Task<StorageFile> GetStorageFileAsync(Effect chime)
+    internal static async Task<StorageFile?> GetStorageFileAsync(Effect chime)
     {
         Console.WriteLine($"ChimePlayer.GetStorageFileAsync({chime})  ==== ENTER ====");
-        var uri = GetAssetUri(chime);
+        var uri = chime.ChimeAssetUri;
         Console.WriteLine($"ChimePlayer.GetStorageFileAsync  uri=[{uri}]");
         if (await StorageFile.GetFileFromApplicationUriAsync(uri) is { } file)
         {
@@ -32,11 +33,5 @@ public static class ChimePlayer
         return null;
     }
 
-    internal static Uri GetAssetUri(Effect chime)
-        => new($"ms-appx:///{GetAssetRelativePath(chime)}");
-
-    internal static string GetAssetRelativePath(Effect chime)
-        => new($"P42.Uno.Controls/Assets/Sounds/{chime}.mp3");
-
-
+    */
 }

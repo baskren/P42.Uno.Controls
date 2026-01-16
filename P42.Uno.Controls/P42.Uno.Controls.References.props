@@ -1,11 +1,10 @@
 <Project ToolsVersion="15.0">
 
-
   <PropertyGroup>
-    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <AllowUnsafeBlocks Condition=" $(TargetFramework.Contains('windows')) ">true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-
+  
   <!-- SHARED ITEMS -->
   <ItemGroup>
     <!--
@@ -15,10 +14,16 @@
     -->
 
     <PackageReference Include="P42.Uno.WinUI.Markup" />
+    <PackageReference Include="P42.Utils.Uno.HtmlTextBlock" />
+    <!--
     <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\P42.Utils\P42.Utils\P42.Utils.csproj" />
     <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Utils"  />
     <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\P42.Utils\P42.Utils.Uno\P42.Utils.Uno.csproj" />
     <PackageReference Condition=" '$(Configuration)' == 'Release' " Include="P42.Utils.Uno"  />
+    -->
+
+    <PackageReference Include="Svg.Skia" />
+    <PackageReference Include="CommunityToolkit.Diagnostics" />
 
   </ItemGroup>
 

@@ -3,13 +3,15 @@ using Windows.UI;
 using Windows.UI.Text;
 using Microsoft.UI.Xaml.Media.Animation;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace P42.Uno.Controls;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// Border used by Popups
 /// </summary>
 [Bindable]
-public class BubbleBorder : Grid
+public partial class BubbleBorder : Grid
 // An important note.  It appears that ContentControl does not resize itself smaller if its content gets smaller. Also, it does not resize itself when going from Stretch Alignment to something else
 {
     #region Properties
@@ -21,19 +23,15 @@ public class BubbleBorder : Grid
         nameof(BackgroundColor),
         typeof(Color),
         typeof(BubbleBorder),
-        new PropertyMetadata(SkiaBubble.DefaultFillColor, (d,e) => ((BubbleBorder)d).OnBackgroundColorChanged(e))
+        new PropertyMetadata(SkiaBubble.DefaultFillColor, OnBackgroundColorChanged)
     );
 
-    private void OnBackgroundColorChanged(DependencyPropertyChangedEventArgs e)
+    private static void OnBackgroundColorChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         Debug.WriteLine($"BubbleBorder.OnBackgroundColorChanged : [{e.NewValue}] ");
             
     }
-#if __IOS__ || __MACCATALYST__
-        public new Color BackgroundColor
-#else
     public Color BackgroundColor
-#endif
     {
         get => (Color)GetValue(BackgroundColorProperty);
         set => SetValue(BackgroundColorProperty, value);
@@ -172,23 +170,25 @@ public class BubbleBorder : Grid
         nameof(Content),
         typeof(object),
         typeof(BubbleBorder),
-        new PropertyMetadata(null, (d,p) => ((BubbleBorder)d).OnContentChanged(p))
+        new PropertyMetadata(null, OnContentChanged)
     );
 
-    private void OnContentChanged(DependencyPropertyChangedEventArgs p)
+    private static void OnContentChanged(object sender, DependencyPropertyChangedEventArgs p)
     {
+        if (sender is not BubbleBorder border)
+            return;
 #if __MOBILE__
         if (p.OldValue is FrameworkElement oldContent)
-            oldContent.SizeChanged -= OnContentSizeChanged;
+            oldContent.SizeChanged -= border.OnContentSizeChanged;
         if (p.NewValue is FrameworkElement newContent)
-            newContent.SizeChanged += OnContentSizeChanged;
+            newContent.SizeChanged += border.OnContentSizeChanged;
 #endif
     }
 
 
-    public object Content
+    public object? Content
     {
-        get => (object)GetValue(ContentProperty);
+        get => GetValue(ContentProperty);
         set => SetValue(ContentProperty, value);
     }
     #endregion Content Property
@@ -326,11 +326,8 @@ public class BubbleBorder : Grid
         typeof(BubbleBorder),
         new PropertyMetadata(SystemTextBoxBrushes.Foreground)
     );
-#if __ANDROID__
-    public new Brush Foreground
-#else
-        public Brush Foreground
-#endif
+        
+    public Brush Foreground
     {
         get => (Brush)GetValue(ForegroundProperty);
         set => SetValue(ForegroundProperty, value);
@@ -637,15 +634,15 @@ public class BubbleBorder : Grid
                 new SkiaBubble()
                     //.Assign(out _bubble)
                     .Margin(0)
-                    .WBind(SkiaBubble.BackgroundColorProperty, this, BackgroundColorProperty)
-                    .WBind(SkiaBubble.BorderColorProperty, this, BorderColorProperty)
-                    .WBind(SkiaBubble.BorderWidthProperty, this, BorderWidthProperty)
-                    .WBind(SkiaBubble.CornerRadiusProperty, this, CornerRadiusProperty)
-                    .WBind(SkiaBubble.PointerLengthProperty, this, PointerLengthProperty)
-                    .WBind(SkiaBubble.PointerAxialPositionProperty, this, PointerAxialPositionProperty)
-                    .WBind(SkiaBubble.PointerTipRadiusProperty, this, PointerTipRadiusProperty)
-                    .WBind(SkiaBubble.PointerCornerRadiusProperty, this, PointerCornerRadiusProperty)
-                    .WBind(SkiaBubble.PointerDirectionProperty, this, PointerDirectionProperty),
+                    .AltBind(SkiaBubble.BackgroundColorProperty, this, BackgroundColorProperty)
+                    .AltBind(SkiaBubble.BorderColorProperty, this, BorderColorProperty)
+                    .AltBind(SkiaBubble.BorderWidthProperty, this, BorderWidthProperty)
+                    .AltBind(SkiaBubble.CornerRadiusProperty, this, CornerRadiusProperty)
+                    .AltBind(SkiaBubble.PointerLengthProperty, this, PointerLengthProperty)
+                    .AltBind(SkiaBubble.PointerAxialPositionProperty, this, PointerAxialPositionProperty)
+                    .AltBind(SkiaBubble.PointerTipRadiusProperty, this, PointerTipRadiusProperty)
+                    .AltBind(SkiaBubble.PointerCornerRadiusProperty, this, PointerCornerRadiusProperty)
+                    .AltBind(SkiaBubble.PointerDirectionProperty, this, PointerDirectionProperty),
 
                 /* Does not work in Android - perhaps a bug with Shape.Path in Android?
                     new PathBubble()
@@ -666,41 +663,41 @@ public class BubbleBorder : Grid
                     */
 
                 new ContentPresenter()
-                    .Assign(out _contentPresenter)
+                    .Name(out _contentPresenter)
                     .Padding(0)
                     .Margin(0)
                     //Background
                     //BackgroundSizing
                     //BorderBrush
                     //BorderThickness
-                    .WBind(MinHeightProperty, this, MinHeightProperty)
-                    .WBind(MaxHeightProperty, this, MaxHeightProperty)
-                    .WBind(MinWidthProperty, this, MinWidthProperty)
-                    .WBind(MaxWidthProperty, this, MaxWidthProperty)
+                    .AltBind(MinHeightProperty, this, MinHeightProperty)
+                    .AltBind(MaxHeightProperty, this, MaxHeightProperty)
+                    .AltBind(MinWidthProperty, this, MinWidthProperty)
+                    .AltBind(MaxWidthProperty, this, MaxWidthProperty)
 
-                    .WBind(ContentPresenter.ContentProperty, this, ContentProperty)
-                    .WBind(ContentPresenter.ContentTemplateProperty, this, ContentTemplateProperty)
-                    .WBind(ContentPresenter.ContentTemplateSelectorProperty, this, ContentTemplateSelectorProperty)
-                    .WBind(ContentPresenter.ContentTransitionsProperty, this, ContentTransitionsProperty)
+                    .AltBind(ContentPresenter.ContentProperty, this, ContentProperty)
+                    .AltBind(ContentPresenter.ContentTemplateProperty, this, ContentTemplateProperty)
+                    .AltBind(ContentPresenter.ContentTemplateSelectorProperty, this, ContentTemplateSelectorProperty)
+                    .AltBind(ContentPresenter.ContentTransitionsProperty, this, ContentTransitionsProperty)
                     //CornerRadius
 
-                    .WBind(ContentPresenter.CharacterSpacingProperty, this, CharacterSpacingProperty)
-                    .WBind(ContentPresenter.FontFamilyProperty, this, FontFamilyProperty)
-                    .WBind(ContentPresenter.FontSizeProperty, this, FontSizeProperty)
-                    .WBind(ContentPresenter.FontStretchProperty, this, FontStretchProperty)
-                    .WBind(ContentPresenter.FontStyleProperty, this, FontStyleProperty)
-                    .WBind(ContentPresenter.FontWeightProperty, this, FontWeightProperty)
-                    .WBind(ContentPresenter.ForegroundProperty, this, ForegroundProperty)
-                    .WBind(ContentPresenter.IsTextScaleFactorEnabledProperty, this, IsTextScaleFactorEnabledProperty)
-                    .WBind(ContentPresenter.LineHeightProperty, this, LineHeightProperty)
-                    .WBind(ContentPresenter.LineStackingStrategyProperty, this, LineStackingStrategyProperty)
-                    .WBind(ContentPresenter.MaxLinesProperty, this, MaxLinesProperty)
-                    .WBind(ContentPresenter.OpticalMarginAlignmentProperty, this, OpticalMarginAlignmentProperty)
-                    .WBind(ContentPresenter.TextLineBoundsProperty, this, TextLineBoundsProperty)
-                    .WBind(ContentPresenter.TextWrappingProperty, this, TextWrappingProperty)
+                    .AltBind(ContentPresenter.CharacterSpacingProperty, this, CharacterSpacingProperty)
+                    .AltBind(ContentPresenter.FontFamilyProperty, this, FontFamilyProperty)
+                    .AltBind(ContentPresenter.FontSizeProperty, this, FontSizeProperty)
+                    .AltBind(ContentPresenter.FontStretchProperty, this, FontStretchProperty)
+                    .AltBind(ContentPresenter.FontStyleProperty, this, FontStyleProperty)
+                    .AltBind(ContentPresenter.FontWeightProperty, this, FontWeightProperty)
+                    .AltBind(ContentPresenter.ForegroundProperty, this, ForegroundProperty)
+                    .AltBind(ContentPresenter.IsTextScaleFactorEnabledProperty, this, IsTextScaleFactorEnabledProperty)
+                    .AltBind(ContentPresenter.LineHeightProperty, this, LineHeightProperty)
+                    .AltBind(ContentPresenter.LineStackingStrategyProperty, this, LineStackingStrategyProperty)
+                    .AltBind(ContentPresenter.MaxLinesProperty, this, MaxLinesProperty)
+                    .AltBind(ContentPresenter.OpticalMarginAlignmentProperty, this, OpticalMarginAlignmentProperty)
+                    .AltBind(ContentPresenter.TextLineBoundsProperty, this, TextLineBoundsProperty)
+                    .AltBind(ContentPresenter.TextWrappingProperty, this, TextWrappingProperty)
 
-                    .WBind(ContentPresenter.HorizontalContentAlignmentProperty, this, HorizontalContentAlignmentProperty)
-                    .WBind(ContentPresenter.VerticalContentAlignmentProperty, this, VerticalContentAlignmentProperty)
+                    .AltBind(ContentPresenter.HorizontalContentAlignmentProperty, this, HorizontalContentAlignmentProperty)
+                    .AltBind(ContentPresenter.VerticalContentAlignmentProperty, this, VerticalContentAlignmentProperty)
 
             );
 

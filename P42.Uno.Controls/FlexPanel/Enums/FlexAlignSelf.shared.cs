@@ -46,4 +46,9 @@ public enum FlexAlignSelf
     /// Whether an item should be packed at the end.
     /// </summary>
     End = 4,
+
+    /// <summary>
+    /// Something went wrong
+    /// </summary>
+    Unknown = 5
 }

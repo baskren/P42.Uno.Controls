@@ -8,32 +8,14 @@ namespace P42.Uno.Controls;
 
 internal class NativeChimePlayer : Object, INativeChimePlayer, MediaPlayer.IOnPreparedListener
 {
-    private static AudioManager _audio;
+    private static AudioManager? _audio;
     //static SoundPool _soundPool;
-    private static MediaPlayer _mediaPlayer;
+    private static MediaPlayer? _mediaPlayer;
 
-    private static string infoPath;
-    private static string warnPath;
-    private static string errorPath;
-
-    private static string alarmPath;
-    private static string inquiryPath;
-    private static string progressPath;
-
-    /*
-    static int infoId;
-    static int warnId;
-    static int errorId;
-
-    static int alarmId;
-    static int inquiryId;
-    static int progressId;
-    */
-
-    public void OnPrepared(MediaPlayer mp)
+    public void OnPrepared(MediaPlayer? mp)
     {
-        _mediaPlayer.Start();
-
+        _mediaPlayer = mp;
+        _mediaPlayer?.Start();
     }
 
     public async Task PlayAsync(Effect chime, EffectMode mode)
@@ -50,98 +32,40 @@ internal class NativeChimePlayer : Object, INativeChimePlayer, MediaPlayer.IOnPr
 
         if (_audio is null)
         {
-            _audio = (AudioManager)Application.Context.GetSystemService(Context.AudioService);
+            if (Application.Context?.GetSystemService(Context.AudioService) is not AudioManager am)
+                return;
 
-            var audioAttributes = new AudioAttributes.Builder()
-                .SetUsage(AudioUsageKind.NotificationEvent)
-                .SetContentType(AudioContentType.Sonification)
-                .Build();
+            _audio = am;
 
-            infoPath = await ChimePlayer.GetPathAsync(Effect.Info);
-            warnPath = await ChimePlayer.GetPathAsync(Effect.Warning);
-            errorPath = await ChimePlayer.GetPathAsync(Effect.Error);
+            if (new AudioAttributes.Builder() is not AudioAttributes.Builder builder)
+                return;
 
-            alarmPath = await ChimePlayer.GetPathAsync(Effect.Alarm);
-            inquiryPath = await ChimePlayer.GetPathAsync(Effect.Inquiry);
-            progressPath = await ChimePlayer.GetPathAsync(Effect.Progress);
+            builder.SetContentType(AudioContentType.Music);
 
-            /*
-            _soundPool = new SoundPool.Builder()
-                 .SetMaxStreams(6)
-                 .SetAudioAttributes(audioAttributes)
-                 .Build();
-
-            infoId = _soundPool.Load(infoPath, 1);
-            warnId = _soundPool.Load(warnPath, 1);
-            errorId = _soundPool.Load(errorPath, 1);
-
-            alarmId = _soundPool.Load(alarmPath, 1);
-            inquiryId = _soundPool.Load(inquiryPath, 1);
-            progressId = _soundPool.Load(progressPath, 1);
-            */
+            if (builder.Build() is not AudioAttributes audioAttributes)
+                return;
 
             _mediaPlayer = new MediaPlayer();
-            _mediaPlayer.SetAudioAttributes(new AudioAttributes.Builder().SetContentType(AudioContentType.Music).Build());
+            _mediaPlayer.SetAudioAttributes(audioAttributes);
             _mediaPlayer.SetOnPreparedListener(this);
         }
 
-        switch (chime)
-        {
-            case Effect.None:
-                return;
-            case Effect.Select:
-                _audio.PlaySoundEffect(SoundEffect.KeyClick);
-                break;
-            case Effect.Modify:
-                _audio.PlaySoundEffect(SoundEffect.Return);
-                break;
-            case Effect.Delete:
-                _audio.PlaySoundEffect(SoundEffect.Delete);
-                break;
-            case Effect.Info:
-                //_soundPool.Play(infoId, 1, 1, 0, 0, 1);
-                _mediaPlayer.Reset();
-                _mediaPlayer.SetDataSource(infoPath);
-                _mediaPlayer.Prepare();
-                _mediaPlayer.Start();
-                break;
-            case Effect.Warning:
-                //_soundPool.Play(warnId, 1, 1, 0, 0, 1);
-                _mediaPlayer.Reset();
-                _mediaPlayer.SetDataSource(warnPath);
-                _mediaPlayer.Prepare();
-                _mediaPlayer.Start();
-                break;
-            case Effect.Error:
-                //_soundPool.Play(errorId, 1, 1, 0, 0, 1);
-                _mediaPlayer.Reset();
-                _mediaPlayer.SetDataSource(errorPath);
-                _mediaPlayer.Prepare();
-                _mediaPlayer.Start();
-                break;
-            case Effect.Alarm:
-                //_soundPool.Play(alarmId, 1, 1, 0, 0, 1);
-                _mediaPlayer.Reset();
-                _mediaPlayer.SetDataSource(alarmPath);
-                _mediaPlayer.Prepare();
-                _mediaPlayer.Start();
-                break;
-            case Effect.Inquiry:
-                //_soundPool.Play(inquiryId, 1, 1, 0, 0, 1);
-                _mediaPlayer.Reset();
-                _mediaPlayer.SetDataSource(inquiryPath);
-                _mediaPlayer.Prepare();
-                _mediaPlayer.Start();
-                break;
-            case Effect.Progress:
-                // _soundPool.Play(progressId, 1, 1, 0, 0, 1);
-                _mediaPlayer.Reset();
-                _mediaPlayer.SetDataSource(progressPath);
-                _mediaPlayer.Prepare();
-                _mediaPlayer.Start();
-                break;
-        }
+        if (_mediaPlayer is null)
+            return;
 
+        _mediaPlayer.PlayChime(chime);
     }
 
+}
+
+internal static class MediaPlayerExtensions
+{
+    public static void PlayChime(this MediaPlayer mediaPlayer, Effect effect)
+    {
+        if (effect.ChimeAssetAbsolutePath is not string path)
+            return;
+        mediaPlayer.SetDataSource(path);
+        mediaPlayer.Prepare();
+        mediaPlayer.Start();
+    }
 }

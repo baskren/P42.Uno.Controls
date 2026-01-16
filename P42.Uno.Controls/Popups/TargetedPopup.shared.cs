@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using AsyncAwaitBestPractices;
 using Windows.Foundation;
 using Windows.UI;
 
@@ -100,11 +101,7 @@ public partial class TargetedPopup : ITargetedPopup
         typeof(TargetedPopup),
         new PropertyMetadata(SkiaBubble.DefaultFillColor)
     );
-#if __IOS__
-    public new Color BackgroundColor
-#else
     public Color BackgroundColor
-#endif
     {
         get => (Color)GetValue(BackgroundColorProperty);
         set => SetValue(BackgroundColorProperty, value);
@@ -205,7 +202,7 @@ public partial class TargetedPopup : ITargetedPopup
     /// <summary>
     /// The UIElement the popup will point at (no pointer if Target is null or not found)
     /// </summary>
-    public UIElement Target
+    public UIElement? Target
     {
         get
         {
@@ -217,7 +214,7 @@ public partial class TargetedPopup : ITargetedPopup
         {
             if (Target != value)
             {
-                WeakTarget = new WeakReference<UIElement>(value);
+                WeakTarget = new WeakReference<UIElement?>(value);
                 UpdateMarginAndAlignment();
             }
         }
@@ -227,13 +224,13 @@ public partial class TargetedPopup : ITargetedPopup
     #region WeakTarget Property
     public static readonly DependencyProperty WeakTargetProperty = DependencyProperty.Register(
         nameof(WeakTarget),
-        typeof(WeakReference<UIElement>),
+        typeof(WeakReference<UIElement?>),
         typeof(TargetedPopup),
-        new PropertyMetadata(default(WeakReference<UIElement>))
+        new PropertyMetadata(default(WeakReference<UIElement?>))
     );
-    public WeakReference<UIElement> WeakTarget
+    public WeakReference<UIElement?> WeakTarget
     {
-        get => (WeakReference<UIElement>)GetValue(WeakTargetProperty);
+        get => (WeakReference<UIElement?>)GetValue(WeakTargetProperty);
         set => SetValue(WeakTargetProperty, value);
     }
     #endregion WeakTarget Property
@@ -411,9 +408,9 @@ public partial class TargetedPopup : ITargetedPopup
         typeof(TargetedPopup),
         new PropertyMetadata(new SolidColorBrush(Colors.Gray.WithAlpha(0.4)), (d,e)=>((TargetedPopup)d).UpdatePageOverlayVisibility())
     );
-    public Brush PageOverlayBrush
+    public Brush? PageOverlayBrush
     {
-        get => (Brush)GetValue(PageOverlayBrushProperty);
+        get => (Brush?)GetValue(PageOverlayBrushProperty);
         set => SetValue(PageOverlayBrushProperty, value ?? new SolidColorBrush(Colors.Gray.WithAlpha(0.4)));
     }
     #endregion PageOverlayBrush Property
@@ -623,7 +620,7 @@ public partial class TargetedPopup : ITargetedPopup
     /// <summary>
     /// What triggered the popup to pop?
     /// </summary>
-    public object PoppedTrigger { get; private set; }
+    public object? PoppedTrigger { get; private set; }
     #endregion
 
     #region PushPopState Property
@@ -749,7 +746,7 @@ public partial class TargetedPopup : ITargetedPopup
         {
             if (BorderWidth <= 0)
                 return false;
-            if (BorderColor == default(Color))
+            if (BorderColor == default)
                 return SkiaBubble.DefaultBorderColor.A > 0;
 
             return BorderColor.A > 0;
@@ -760,11 +757,11 @@ public partial class TargetedPopup : ITargetedPopup
     {
         get
         {
-            var windowSize = AppWindow.Size(this);
+            var windowSize = AppWindow.Size();
             if (windowSize.Width < 1 || windowSize.Height < 1)
                 return new Size(0,0);
 
-            var safeMargin = AppWindow.SafeMargin(this);
+            var safeMargin = AppWindow.SafeMargin();
             var availableWindowWidth = windowSize.Width - Margin.Horizontal() - safeMargin.Horizontal();
             var availableWindowHeight = windowSize.Height - Margin.Vertical() - safeMargin.Vertical();
 
@@ -775,11 +772,23 @@ public partial class TargetedPopup : ITargetedPopup
 
 
     #region Events
-    public event EventHandler Pushed;
+    private readonly WeakEventManager _pushedWeakEventManager = new();
+    public event EventHandler Pushed
+    {         
+        add => _pushedWeakEventManager.AddEventHandler(value);
+        remove => _pushedWeakEventManager.RemoveEventHandler(value);
+    }
+
+
+    private readonly WeakEventManager _poppedWeakEventManager = new();
     /// <summary>
     /// Occurs when popup has been cancelled.
     /// </summary>
-    public event EventHandler<PopupPoppedEventArgs> Popped;
+    public event EventHandler<PopupPoppedEventArgs> Popped
+    {
+        add => _poppedWeakEventManager.AddEventHandler(value);
+        remove => _poppedWeakEventManager.RemoveEventHandler(value);
+    }
     #endregion
 
 
@@ -808,9 +817,9 @@ public partial class TargetedPopup : ITargetedPopup
             //Content = bubbleContent,
             PopAfter = popAfter,
             PushEffect = pushEffect,
-            PushEffectMode = effectMode
+            PushEffectMode = effectMode,
+            Content = bubbleContent
         };
-        result.Content = bubbleContent;
         await result.PushAsync();
         return result;
     }
@@ -824,7 +833,7 @@ public partial class TargetedPopup : ITargetedPopup
         RegisterPropertyChangedCallback(VisibilityProperty, OnVisibilityChanged);
         RegisterPropertyChangedCallback(ContentControl.CornerRadiusProperty, OnBaseCornerRadiusChanged);
     }
-    public TargetedPopup(UIElement target) : this()
+    public TargetedPopup(UIElement? target) : this()
     {
         Target = target;
     }
@@ -839,7 +848,7 @@ public partial class TargetedPopup : ITargetedPopup
     }
 
     private void UpdatePageOverlayVisibility()
-        => PageOverlayVisible = Visibility.Equals(Visibility.Visible) && (bool)BooleanConverter.Instance.Convert(PageOverlayBrush);
+        => PageOverlayVisible = Visibility.Equals(Visibility.Visible) && (bool)BooleanConverter.Instance.Convert(PageOverlayBrush)!;
 
     private void UpdateShadowVisibility()
         => ShadowVisible = Visibility.Equals(Visibility.Visible) && HasShadow;
@@ -856,13 +865,13 @@ public partial class TargetedPopup : ITargetedPopup
     #region Pointer Move Event Handlers
 
     private Point _enteredPoint = new(-1,-1);
-    private void OnPointerEntered(object sender, PointerRoutedEventArgs e)
+    private void OnPointerEntered(object _, PointerRoutedEventArgs e)
     {
         _enteredPoint = e.GetCurrentPoint(Utils.Uno.Platform.MainWindow.Content).Position;
         //System.Diagnostics.Debug.WriteLine("TargetedPopup.OnPointerEntered e: [" + _enteredPoint.X + ", " + _enteredPoint.Y + "]");
     }
 
-    private async void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+    private async void OnPointerMoved(object _, PointerRoutedEventArgs e)
     {
         if (PopOnPointerMove)
         {
@@ -1006,7 +1015,7 @@ public partial class TargetedPopup : ITargetedPopup
             UpdateMarginAndAlignment();
 
             UpdateOpacity(0.0);
-            Popups.Add(this);
+            await Popups.AddAsync(this);
             await Task.Delay(150);
 
             await Feedback.PlayAsync(PushEffect, PushEffectMode);
@@ -1020,7 +1029,7 @@ public partial class TargetedPopup : ITargetedPopup
 
             if (PopAfter > default(TimeSpan))
             {
-                Utils.Timer.StartTimer(PopAfter, async () =>
+                P42.Utils.PeriodicTimer.StartTimer(PopAfter, async () =>
                 {
                     await PopAsync(PopupPoppedCause.Timeout, animated, "Timeout");
                     return false;
@@ -1034,7 +1043,8 @@ public partial class TargetedPopup : ITargetedPopup
             PushPopState = PushPopState.Pushed;
             await OnPushEndAsync();
             await Task.Delay(50);
-            Pushed?.Invoke(this, EventArgs.Empty);
+            
+            _pushedWeakEventManager.RaiseEvent(this, EventArgs.Empty, nameof(Pushed));
             _pushCompletionSource?.TrySetResult(true);
         }
         catch (Exception)
@@ -1050,7 +1060,7 @@ public partial class TargetedPopup : ITargetedPopup
     /// <param name="animated"></param>
     /// <param name="trigger"></param>
     /// <returns></returns>
-    public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = false, [CallerMemberName] object trigger = null)
+    public virtual async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = false, [CallerMemberName] object? trigger = null)
     {
         if (PushPopState == PushPopState.Popping || PushPopState == PushPopState.Popped)
             return;
@@ -1061,7 +1071,7 @@ public partial class TargetedPopup : ITargetedPopup
         await InnerPop(cause, animated, trigger);
     }
 
-    private async Task InnerPop(PopupPoppedCause cause, bool animated = false, [CallerMemberName] object trigger = null)
+    private async Task InnerPop(PopupPoppedCause cause, bool animated = false, [CallerMemberName] object? trigger = null)
     {
         _pushCompletionSource?.TrySetResult(false);
         _pushCompletionSource = null;
@@ -1081,14 +1091,14 @@ public partial class TargetedPopup : ITargetedPopup
         }
 
         await Task.Delay(50);
-        CompletePop(PoppedCause, PoppedTrigger);
+        await CompletePopAsync(PoppedCause, PoppedTrigger);
         await OnPopEndAsync();
     }
 
-    private void CompletePop(PopupPoppedCause poppedCause, object poppedTrigger)
+    private async Task CompletePopAsync(PopupPoppedCause poppedCause, object? poppedTrigger)
     {
         UpdateOpacity(0.001);
-        Popups.Remove(this);
+        await Popups.RemoveAsync(this);
 
         if (Content is IEventSubscriber subscriber)
             subscriber.DisableEvents();
@@ -1096,11 +1106,11 @@ public partial class TargetedPopup : ITargetedPopup
 
         PushPopState = PushPopState.Popped;
         var result = new PopupPoppedEventArgs(poppedCause, poppedTrigger);
-        Popped?.Invoke(this, result);
+        _poppedWeakEventManager.RaiseEvent(this, result, nameof(Popped));
         _popCompletionSource?.TrySetResult(result);
     }
 
-    private TaskCompletionSource<PopupPoppedEventArgs> _popCompletionSource;
+    private TaskCompletionSource<PopupPoppedEventArgs>? _popCompletionSource;
     /// <summary>
     /// Wait for popup to be popped
     /// </summary>
@@ -1111,7 +1121,7 @@ public partial class TargetedPopup : ITargetedPopup
         return await _popCompletionSource.Task;
     }
 
-    private TaskCompletionSource<bool> _pushCompletionSource;
+    private TaskCompletionSource<bool>? _pushCompletionSource;
     /// <summary>
     /// Wait for popup to be pushed
     /// </summary>
@@ -1178,25 +1188,14 @@ public partial class TargetedPopup : ITargetedPopup
         ContentBorder.Opacity = ShadowBorder.Opacity = PageOverlay.Opacity = value;
     }
 
-    internal class AlignmentMarginsAndPointer
+    internal class AlignmentMarginsAndPointer(Size size, HorizontalAlignment hz, VerticalAlignment vt, Thickness margin, PointerDirection pointerDirection, double axialPosition = 0.5)
     {
-        public HorizontalAlignment HorizontalAlignment { get; private set; }
-        public VerticalAlignment VerticalAlignment { get; private set; }    
-        public Thickness Margin { get; private set; }
-        public PointerDirection PointerDirection { get; private set; }
-        public double PointerAxialPosition { get; private set; } = 0.5;
-
-        public Size Size { get; private set; }
-
-        public AlignmentMarginsAndPointer(Size size, HorizontalAlignment hz, VerticalAlignment vt, Thickness margin, PointerDirection pointerDirection, double axialPosition = 0.5)
-        {
-            Size = size;
-            HorizontalAlignment = hz;
-            VerticalAlignment = vt;
-            Margin = margin;
-            PointerDirection = pointerDirection;
-            PointerAxialPosition = axialPosition;
-        }
+        public HorizontalAlignment HorizontalAlignment { get; private set; } = hz;
+        public VerticalAlignment VerticalAlignment { get; private set; } = vt;
+        public Thickness Margin { get; private set; } = margin;
+        public PointerDirection PointerDirection { get; private set; } = pointerDirection;
+        public double PointerAxialPosition { get; private set; } = axialPosition;
+        public Size Size { get; private set; } = size;
 
         public override string ToString()
         {
@@ -1249,17 +1248,22 @@ public partial class TargetedPopup : ITargetedPopup
             return;
         }
 
-        SetAlignmentMarginsAndPointer(GetAlignmentMarginsAndPointerMeasurements(), newSize);
+        if (GetAlignmentMarginsAndPointerMeasurements() is not { } alignmentMarginsAndPointer)  
+        {
+            //System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment : EXIT - No measurements");
+            return;
+        }
+        SetAlignmentMarginsAndPointer(alignmentMarginsAndPointer, newSize);
         //System.Diagnostics.Debug.WriteLine($"TargetedPopup.UpdateMarginAndAlignment : EXIT");
     }
 
-    internal AlignmentMarginsAndPointer GetAlignmentMarginsAndPointerMeasurements(UIElement content = null)
+    internal AlignmentMarginsAndPointer? GetAlignmentMarginsAndPointerMeasurements(UIElement? content = null)
     {
-        var windowSize = AppWindow.Size(this);
+        var windowSize = AppWindow.Size();
         if (windowSize.Width < 1 || windowSize.Height < 1)
             return null;
 
-        var safeMargin = AppWindow.SafeMargin(this);
+        var safeMargin = AppWindow.SafeMargin();
         var availableWindowSpace = AvailableWindowSpace;
         
 
@@ -1281,7 +1285,8 @@ public partial class TargetedPopup : ITargetedPopup
 #if __ANDROID__
         if (Target != null)
         {
-            var shift = AppWindow.StatusBarHeight();
+            //var shift = AppWindow.StatusBarHeight();
+            var shift = safeMargin.Top;
             targetBounds = new Rect(targetBounds.Left, targetBounds.Top - shift, targetBounds.Width, targetBounds.Height);
         }
 #endif
@@ -1329,7 +1334,7 @@ public partial class TargetedPopup : ITargetedPopup
         var hzAlign = HorizontalAlignment;
         var vtAlign = VerticalAlignment;
 
-        if (stats.PointerDirection.IsHorizontal())
+        if (stats.PointerDirection.IsHorizontal)
         {
             if (stats.PointerDirection == PointerDirection.Left)
             {
@@ -1502,7 +1507,7 @@ public partial class TargetedPopup : ITargetedPopup
                 var space = candidates[direction];
                 if ((direction & (PreferredPointerDirection|FallbackPointerDirection)) > 0)
                 {
-                    if (direction.IsHorizontal())
+                    if (direction.IsHorizontal)
                     {
                         if (space - PointerLength < MinWidth)
                             continue;
@@ -1544,7 +1549,7 @@ public partial class TargetedPopup : ITargetedPopup
 
     private static DirectionStats? GetBestDirectionStat(List<DirectionStats> stats, PointerDirection pointerDirections)
     {
-        if (stats.Where(s=> (s.PointerDirection & pointerDirections) > 0).ToList() is { } acceptable && acceptable.Any())
+        if (stats.Where(s=> (s.PointerDirection & pointerDirections) > 0).ToList() is { } acceptable && acceptable.Count != 0)
             return GetBestDirectionStat(acceptable);
         return null;
     }
@@ -1582,7 +1587,7 @@ public partial class TargetedPopup : ITargetedPopup
 
     private Thickness AvailableSpaceAroundTarget(Rect target, Thickness safeMargin)
     {
-        var windowBounds = AppWindow.Size(this);
+        var windowBounds = AppWindow.Size();
         if (Target != null || TargetRect.Width > 0 || TargetRect.Height > 0)
         {
             if (target.Right > 0 && target.Left < windowBounds.Width && target.Bottom > 0 && target.Top < windowBounds.Height)
@@ -1610,7 +1615,7 @@ public partial class TargetedPopup : ITargetedPopup
         if (IsTooSmall(cleanStat.BorderSize))
             return stats;
 
-        if (pointerDirection.LeftAllowed() && availableSpace.Right - cleanStat.BorderSize.Width >= PointerLength && availableWindowSpace.Height >= cleanStat.BorderSize.Height)
+        if (pointerDirection.LeftAllowed && availableSpace.Right - cleanStat.BorderSize.Width >= PointerLength && availableWindowSpace.Height >= cleanStat.BorderSize.Height)
         {
             var stat = cleanStat;
             stat.PointerDirection = PointerDirection.Left;
@@ -1623,7 +1628,7 @@ public partial class TargetedPopup : ITargetedPopup
             }
         }
 
-        if (pointerDirection.RightAllowed() && availableSpace.Left - cleanStat.BorderSize.Width >= PointerLength && availableWindowSpace.Height >= cleanStat.BorderSize.Height)
+        if (pointerDirection.RightAllowed && availableSpace.Left - cleanStat.BorderSize.Width >= PointerLength && availableWindowSpace.Height >= cleanStat.BorderSize.Height)
         {
             var stat = cleanStat;
             stat.PointerDirection = PointerDirection.Right;
@@ -1636,7 +1641,7 @@ public partial class TargetedPopup : ITargetedPopup
             }
         }
 
-        if (pointerDirection.UpAllowed() && availableSpace.Bottom - cleanStat.BorderSize.Height >= PointerLength && availableWindowSpace.Width >= cleanStat.BorderSize.Width)
+        if (pointerDirection.UpAllowed && availableSpace.Bottom - cleanStat.BorderSize.Height >= PointerLength && availableWindowSpace.Width >= cleanStat.BorderSize.Width)
         {
             var stat = cleanStat;
             stat.PointerDirection = PointerDirection.Up;
@@ -1650,7 +1655,7 @@ public partial class TargetedPopup : ITargetedPopup
         }
 
 
-        if (pointerDirection.DownAllowed() && availableSpace.Top - cleanStat.BorderSize.Height >= PointerLength && availableWindowSpace.Width >= cleanStat.BorderSize.Width)
+        if (pointerDirection.DownAllowed && availableSpace.Top - cleanStat.BorderSize.Height >= PointerLength && availableWindowSpace.Width >= cleanStat.BorderSize.Width)
         {
             var stat = cleanStat;
             stat.PointerDirection = PointerDirection.Down;
@@ -1669,7 +1674,7 @@ public partial class TargetedPopup : ITargetedPopup
     private List<DirectionStats> GetMeasuredStatsForDirection(PointerDirection pointerDirection, DirectionStats cleanStat, Thickness availableSpace, Size availableWindowSpace)
     {
         var stats = new List<DirectionStats>();
-        if (pointerDirection.LeftAllowed())
+        if (pointerDirection.LeftAllowed)
         {
             if (!IsTooSmall(availableSpace.Right - PointerLength, availableWindowSpace.Height))
             {
@@ -1687,7 +1692,7 @@ public partial class TargetedPopup : ITargetedPopup
             }
         }
 
-        if (pointerDirection.RightAllowed())
+        if (pointerDirection.RightAllowed)
         {
             if (!IsTooSmall(availableSpace.Left - PointerLength, availableWindowSpace.Height))
             {
@@ -1705,7 +1710,7 @@ public partial class TargetedPopup : ITargetedPopup
             }
         }
 
-        if (pointerDirection.UpAllowed())
+        if (pointerDirection.UpAllowed)
         {
             if (!IsTooSmall(availableWindowSpace.Width, availableSpace.Bottom - PointerLength))
             {
@@ -1723,7 +1728,7 @@ public partial class TargetedPopup : ITargetedPopup
             }
         }
 
-        if (pointerDirection.DownAllowed())
+        if (pointerDirection.DownAllowed)
         {
             if (!IsTooSmall(availableWindowSpace.Width, availableSpace.Top - PointerLength))
             {
@@ -1786,7 +1791,7 @@ public partial class TargetedPopup : ITargetedPopup
     private bool IsTooSmall(Size measuredSize)
         => IsTooSmall(measuredSize.Width, measuredSize.Height);
 
-    private Size MeasureCleanBorder(Size available, Size failSize = default, UIElement content = null)
+    private Size MeasureCleanBorder(Size available, Size failSize = default, UIElement? content = null)
     {
         //System.Diagnostics.Debug.WriteLine("\n");
         //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder({available})");
@@ -1798,16 +1803,16 @@ public partial class TargetedPopup : ITargetedPopup
         //content ??= ContentBorder._contentPresenter;
         if (content is null)
         {
-            if (this.HasPrescribedWidth())
+            if (this.HasPrescribedWidth)
                 width = Width;
-            else if (this.HasMinWidth())
+            else if (this.HasMinWidth)
                 width = MinWidth;
             else
                 width = Math.Min(MinWidth * 2, MaxWidth);
 
-            if (this.HasPrescribedHeight())
+            if (this.HasPrescribedHeight)
                 height = Height;
-            else if (this.HasMinHeight())
+            else if (this.HasMinHeight)
                 height = MinHeight;
             else
                 height = Math.Min(MinHeight * 2, MaxHeight);
@@ -1817,31 +1822,31 @@ public partial class TargetedPopup : ITargetedPopup
         }
 
 
-        if (this.HasPrescribedWidth())
+        if (this.HasPrescribedWidth)
         {
             //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder HasPrescribedWidth  [{Width}]");
             //width = Math.Min(Width, width);
             width = Width;
         }
         
-        if (this.HasPrescribedHeight())
+        if (this.HasPrescribedHeight)
         {
             //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder HasPrescribedHeight [{Height}]");
             //height = Math.Min(Height, height);
             height = Height;
         }
 
-        if (this.HasPrescribedWidth() && this.HasPrescribedHeight())
+        if (this.HasPrescribedWidth && this.HasPrescribedHeight)
             return new Size(width, height);
 
-        if (this.HasMinWidth())
+        if (this.HasMinWidth)
             width = Math.Max(width, MinWidth);
-        if (this.HasMinHeight())
+        if (this.HasMinHeight)
             height = Math.Max(height, MinHeight);
 
-        if (this.HasMaxWidth())
+        if (this.HasMaxWidth)
             width = Math.Min(width, MaxWidth);
-        if (this.HasMaxHeight())
+        if (this.HasMaxHeight)
             height = Math.Min(height, MaxHeight);
 
         //System.Diagnostics.Debug.WriteLine($"\tTargetedPopup.MeasureCleanBorder width[{width}] height[{height}]");
@@ -1868,9 +1873,9 @@ public partial class TargetedPopup : ITargetedPopup
             result.Height += Padding.Vertical() + border + 1;
 
             var resultSize = new Size(
-                Math.Max(MinWidth, this.HasPrescribedWidth()
+                Math.Max(MinWidth, this.HasPrescribedWidth
                     ? width : result.Width),
-                Math.Max(MinHeight, this.HasPrescribedHeight()
+                Math.Max(MinHeight, this.HasPrescribedHeight
                     ? height : result.Height)
                 );
 

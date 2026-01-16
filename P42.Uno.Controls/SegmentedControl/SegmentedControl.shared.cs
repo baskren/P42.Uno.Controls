@@ -1,12 +1,14 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using AsyncAwaitBestPractices;
 using Windows.Foundation;
 
 namespace P42.Uno.Controls;
 
 [Bindable]
-public class SegmentedControl : UserControl
+public partial class SegmentedControl : UserControl
 {
+
     #region Properties
 
     #region Padding Property
@@ -126,7 +128,7 @@ public class SegmentedControl : UserControl
     /// <summary>
     /// Label text of selected segment
     /// </summary>
-    public string SelectedLabel
+    public string? SelectedLabel
     {
         get => (string)GetValue(SelectedLabelProperty);
         set => SetValue(SelectedLabelProperty, value);
@@ -162,7 +164,7 @@ public class SegmentedControl : UserControl
     /// </summary>
     public List<int> SelectedIndexes
     {
-        get => _selectionTracker.SelectedIndexes.Where(i => i < Labels.Count).ToList();
+        get => [.. _selectionTracker.SelectedIndexes.Where(i => i < Labels.Count)];
         set => _selectionTracker.SelectedIndexes = value;
     }
     #endregion
@@ -201,7 +203,6 @@ public class SegmentedControl : UserControl
     }
     #endregion
 
-
     #region IsOverflowed Property
     public static readonly DependencyProperty IsOverflowedProperty = DependencyProperty.Register(
         nameof(IsOverflowed),
@@ -210,10 +211,10 @@ public class SegmentedControl : UserControl
         new PropertyMetadata(default(bool), (d,e) => ((SegmentedControl)d).OnIsOverflowedChanged(e))
     );
 
-    private void OnIsOverflowedChanged(DependencyPropertyChangedEventArgs e)
+    private void OnIsOverflowedChanged(DependencyPropertyChangedEventArgs _)
     {
         UpdateBorder();
-        IsOverflowedChanged?.Invoke(this, IsOverflowed);
+        _isOverflowedChanged.RaiseEvent(this, IsOverflowed, nameof(IsOverflowed));
     }
 
     public bool IsOverflowed
@@ -227,14 +228,25 @@ public class SegmentedControl : UserControl
 
 
     #region Events
+    private readonly WeakEventManager<bool> _isOverflowedChanged = new();
     /// <summary>
     /// Has there been a change to if there is any labels greater than the available space?
     /// </summary>
-    public event EventHandler<bool> IsOverflowedChanged;
+    public event EventHandler<bool> IsOverflowedChanged
+    {
+        add => _isOverflowedChanged.AddEventHandler(value);
+        remove => _isOverflowedChanged.RemoveEventHandler(value);
+    }
+
+    private readonly WeakEventManager<(int SelectedIndex, string? SelectedLabel)> _selectionChanged = new();
     /// <summary>
     /// Has there been a selection change?
     /// </summary>
-    public event EventHandler<(int SelectedIndex, string SelectedLabel)> SelectionChanged;
+    public event EventHandler<(int SelectedIndex, string? SelectedLabel)> SelectionChanged
+    {
+        add => _selectionChanged.AddEventHandler(value);
+        remove => _selectionChanged.RemoveEventHandler(value);
+    }
     #endregion
 
 
@@ -244,7 +256,11 @@ public class SegmentedControl : UserControl
     private readonly List<Rectangle> _backgrounds = [];
     private readonly CollectionSelectionTracker<string> _selectionTracker = new();
     private readonly TextBlock _testTextBlock = new TextBlock().FontSize(16);
+#pragma warning disable IDE0028 // Simplify collection initialization
     private readonly Grid _grid = new();
+#pragma warning restore IDE0028 // Simplify collection initialization
+
+
     #endregion
 
 
@@ -257,7 +273,7 @@ public class SegmentedControl : UserControl
         Content = _grid;
 
         _testTextBlock
-            .WBind(MarginProperty, this, PaddingProperty);
+            .AltBind(MarginProperty, this, PaddingProperty);
 
         SizeChanged += SegmentedControl_SizeChanged;
         BorderBrush = SystemToggleButtonBrushes.Border;
@@ -277,9 +293,9 @@ public class SegmentedControl : UserControl
         RegisterPropertyChangedCallback(IsEnabledProperty, OnIsEnabledChanged);
         RegisterPropertyChangedCallback(VisibilityProperty, OnSegmentControlVisibilityChanged);
 
-        _grid.WBind(Grid.CornerRadiusProperty, this, CornerRadiusProperty);
-        _grid.WBind(Grid.BorderBrushProperty, this, BorderBrushProperty);
-        _grid.WBind(Grid.BorderThicknessProperty, this, BorderThicknessProperty);
+        _grid.AltBind(Grid.CornerRadiusProperty, this, CornerRadiusProperty);
+        _grid.AltBind(Grid.BorderBrushProperty, this, BorderBrushProperty);
+        _grid.AltBind(Grid.BorderThicknessProperty, this, BorderThicknessProperty);
     }
 
     #endregion
@@ -467,12 +483,12 @@ public class SegmentedControl : UserControl
 
         var background = _backgrounds[index];
         background.Fill = selected
-            ? BorderBrush.AsGesterableEnabled(IsEnabled) 
-            : SystemToggleButtonBrushes.Background.AsGesterableEnabled(IsEnabled);
+            ? BorderBrush.AssureGesturable() 
+            : SystemToggleButtonBrushes.Background.AssureGesturable();
 
         var textBlock = _textBlocks[index];
         textBlock.Foreground = selected
-            ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
+            ? SystemToggleButtonBrushes.CheckedForeground.AssureGesturable()
             : Foreground; // SystemToggleButtonBrushes.Foreground.AsGesterableEnabled(IsEnabled);
 
         if (index >= _separators.Count)
@@ -481,8 +497,8 @@ public class SegmentedControl : UserControl
         var separator = _separators[index];
         separator.Visible(selected == nextSelected);
         separator.Fill = selected
-            ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
-            : BorderBrush.AsGesterableEnabled(IsEnabled);
+            ? SystemToggleButtonBrushes.CheckedForeground.AssureGesturable()
+            : BorderBrush.AssureGesturable();
     }
 
     private void SetTappedProcessingColors(int index)
@@ -518,7 +534,7 @@ public class SegmentedControl : UserControl
 
     #region Change Handlers
     private int _tapProcessing = int.MinValue;
-    private void OnSelectionTracker_SelectionChanged(object sender, CollectionSelectionTrackerSelectionChangedArguments<string> e)
+    private void OnSelectionTracker_SelectionChanged(object? sender, CollectionSelectionTrackerSelectionChangedArguments<string> e)
     {
         // show processing position
         SetTappedProcessingColors(e.NewIndex);
@@ -527,13 +543,13 @@ public class SegmentedControl : UserControl
         _tapProcessing = _selectionTracker.SelectedIndex;
         SetValue(SelectedIndexProperty, e.NewIndex);
         SetValue(SelectedLabelProperty, e.NewItem);
-        SelectionChanged?.Invoke(this, (e.NewIndex, e.NewItem));
+        _selectionChanged.RaiseEvent(this, (e.NewIndex, e.NewItem), nameof(SelectionChanged));
 
         _tapProcessing = int.MinValue;
         DisplaySelections();
     }
 
-    private void OnSelectionTracker_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void OnSelectionTracker_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (_tapProcessing != int.MinValue)
             DisplaySelections();
@@ -579,7 +595,7 @@ public class SegmentedControl : UserControl
 
 
 
-    private void Labels_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void Labels_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs? e)
     {
         if (!IsLoaded)
             return;
@@ -601,7 +617,7 @@ public class SegmentedControl : UserControl
 
     private void AddNewLabel()
         => _textBlocks.Add(new TextBlock()
-            .WBind(MarginProperty, this, PaddingProperty)
+            .AltBind(MarginProperty, this, PaddingProperty)
             .Foreground(SystemToggleButtonBrushes.Foreground)
             .Center()
             .FontSize(16)
@@ -620,7 +636,7 @@ public class SegmentedControl : UserControl
             .Width(1)
             .StretchVertical().CenterHorizontal()
             .ColumnSpan(2).Column(_separators.Count)
-            .WBind(Shape.FillProperty, this, BorderBrushProperty)
+            .AltBind(Shape.FillProperty, this, BorderBrushProperty)
         );
 
     private void AddNewBackground()
@@ -711,7 +727,9 @@ public class SegmentedControl : UserControl
         UpdateBorder();
     }
 
+#pragma warning disable IDE0060 // Remove unused parameter
     private void OnBorderThicknessChanged(DependencyObject sender, DependencyProperty dp)
+#pragma warning restore IDE0060 // Remove unused parameter
     {
         if (IsLoaded && ActualWidth > 50)
             CalculateOverflow(ActualWidth);

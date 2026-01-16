@@ -5,6 +5,62 @@ namespace P42.Uno.Controls;
 [Bindable]
 public class RootFrame : Frame
 {
+    #region Static Properties
+    internal static bool Initiated { get; private set; }
+    #endregion
+
+
+    #region Static Fields
+    private static RootFrame? m_current = null;
+    private static Grid? m_grid = null;
+    #endregion
+
+
+    #region Static Methods 
+    internal static async Task<Grid> GetPopupGridAsync()
+        => m_grid ??= (Grid)((await GetCurrentAsync()).FindChildByName("PopupGrid") ?? throw new Exception("Failure to access PopupGrid"));
+
+    public static async Task<RootFrame> GetCurrentAsync()
+    {
+        if (m_current is not null)
+            return m_current;
+
+        Frame? targetFrame;
+        do
+        {
+            targetFrame = P42.Utils.Uno.Platform.MainWindow.Content as Frame;
+        } while (targetFrame is not null);
+
+        while (targetFrame is not null)
+        {
+            if (targetFrame.Parent is RootFrame current)
+                return current;
+            if (targetFrame.Parent is Frame parentFrame)
+                targetFrame = parentFrame;
+            else
+                break;
+        }
+
+        var rootFrame = new RootFrame();
+        Utils.Uno.Platform.MainWindow.Content = null;
+        Utils.Uno.Platform.MainWindow.Content = rootFrame;
+        rootFrame.InnerFrame = targetFrame;
+
+        return rootFrame;
+    }
+
+    public static bool TryGoBack()
+    {
+        if (m_current != null && m_current.CanGoBack)
+        {
+            m_current.GoBack();
+            return true;
+        }
+        return false;
+    }
+    #endregion
+
+
     #region Frame Properties
 
     public new int BackStackDepth => InnerFrame?.BackStackDepth ?? base.BackStackDepth;
@@ -58,7 +114,6 @@ public class RootFrame : Frame
 
 
     #region Frame Events
-
     public new event NavigatedEventHandler Navigated
     {
         add
@@ -133,21 +188,8 @@ public class RootFrame : Frame
     #endregion
 
 
-    #region Private Properties
-
-    private static Grid _popupGrid;
-    internal static Grid PopupGrid => _popupGrid ??= (Grid)Current.FindChildByName("PopupGrid");
-
-    private static RootFrame _current;
-    internal static RootFrame Current => _current ??= Inject();
-
-    internal static bool Initiated { get; private set; }
-    #endregion
-
-
     #region Fields
-
-    private Frame InnerFrame;
+    private Frame? InnerFrame;
     #endregion
 
 
@@ -155,7 +197,7 @@ public class RootFrame : Frame
     public RootFrame()
     {
         DefaultStyleKey = typeof(RootFrame);
-        _current = this;
+        m_current = this;
         SizeChanged += Popups.OnRootFrameSizeChanged;
         Initiated = true;
     }
@@ -214,41 +256,6 @@ public class RootFrame : Frame
     }
     #endregion
 
-
-    #region Apply
-
-    private static RootFrame Inject()
-    {
-        var targetFrame = Utils.Uno.Platform.MainWindow.Content as Frame;
-
-        while (targetFrame is not null)
-        {
-            if (targetFrame.Parent is RootFrame current)
-                return current;
-            if (targetFrame.Parent is Frame parentFrame)
-                targetFrame = parentFrame;
-            else
-                break;
-        }
-
-        var rootFrame = new RootFrame();
-        Utils.Uno.Platform.MainWindow.Content = null;
-        Utils.Uno.Platform.MainWindow.Content = rootFrame;
-        rootFrame.InnerFrame = targetFrame;
-
-        return rootFrame;
-    }
-
-    public static bool TryGoBack()
-    {
-        if (_current != null && _current.CanGoBack)
-        {
-            _current.GoBack();
-            return true;
-        }
-        return false;
-    }
-    #endregion
 
 
 }
