@@ -61,7 +61,7 @@ public partial class Toast : TargetedPopup
             {
                 _titleBlock.Content = new TextBlock()
                     .BindFont(_titleBlock)
-                    .WrapWholeWords()
+                    .WrapWholeWordsText()
                     .SetHtml(text);
             }
             else
@@ -136,7 +136,7 @@ public partial class Toast : TargetedPopup
             {
                 _messageBlock.Content = new TextBlock()
                     .BindFont(_messageBlock)
-                    .WrapWholeWords()
+                    .WrapWholeWordsText()
                     .SetHtml(text);
             }
             else

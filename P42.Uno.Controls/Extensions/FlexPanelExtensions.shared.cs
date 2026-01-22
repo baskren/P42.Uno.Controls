@@ -19,20 +19,5 @@ public static class FlexPanelExtensions
     public static TElement FlexPanelBasis<TElement>(this TElement element, FlexBasis value) where TElement : EType
     { FlexPanel.SetFlexBasis(element, value); return element; }
 
-    public static TElement AlignContent<TElement>(this TElement panel, FlexAlignContent value) where TElement : FlexPanel
-    { panel.AlignContent = value; return panel; }
-
-    public static TElement AlignItems<TElement>(this TElement panel, FlexAlignItems value) where TElement : FlexPanel
-    { panel.AlignItems = value; return panel; }
-
-    public static TElement Direction<TElement>(this TElement panel, FlexDirection value) where TElement : FlexPanel
-    { panel.Direction = value; return panel; }
-
-    public static TElement JustifyContent<TElement>(this TElement panel, FlexJustify value) where TElement : FlexPanel
-    { panel.JustifyContent = value; return panel; }
-
-    public static TElement Wrap<TElement>(this TElement panel, FlexWrap value) where TElement : FlexPanel
-    { panel.Wrap = value; return panel; }
-
 
 }

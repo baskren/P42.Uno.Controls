@@ -238,11 +238,11 @@ public partial class SegmentedControl : UserControl
         remove => _isOverflowedChanged.RemoveEventHandler(value);
     }
 
-    private readonly WeakEventManager<(int SelectedIndex, string? SelectedLabel)> _selectionChanged = new();
+    private readonly WeakEventManager<(int SelectedIndex, string SelectedLabel)> _selectionChanged = new();
     /// <summary>
     /// Has there been a selection change?
     /// </summary>
-    public event EventHandler<(int SelectedIndex, string? SelectedLabel)> SelectionChanged
+    public event EventHandler<(int SelectedIndex, string SelectedLabel)> SelectionChanged
     {
         add => _selectionChanged.AddEventHandler(value);
         remove => _selectionChanged.RemoveEventHandler(value);
@@ -543,7 +543,7 @@ public partial class SegmentedControl : UserControl
         _tapProcessing = _selectionTracker.SelectedIndex;
         SetValue(SelectedIndexProperty, e.NewIndex);
         SetValue(SelectedLabelProperty, e.NewItem);
-        _selectionChanged.RaiseEvent(this, (e.NewIndex, e.NewItem), nameof(SelectionChanged));
+        _selectionChanged.RaiseEvent(this, (e.NewIndex, e.NewItem ?? ""), nameof(SelectionChanged));
 
         _tapProcessing = int.MinValue;
         DisplaySelections();
@@ -634,7 +634,7 @@ public partial class SegmentedControl : UserControl
             .Margin(0,5)
             .Opacity(0.5)
             .Width(1)
-            .StretchVertical().CenterHorizontal()
+            .StretchVt().CenterHz()
             .ColumnSpan(2).Column(_separators.Count)
             .AltBind(Shape.FillProperty, this, BorderBrushProperty)
         );

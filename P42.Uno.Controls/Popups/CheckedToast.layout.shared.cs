@@ -2,16 +2,16 @@ namespace P42.Uno.Controls;
 
 public partial class CheckedToast : Alert
 {
-    protected CheckBox _checkBox;
+    protected CheckBox _checkBox = new();
 
     private void Build()
     {
         _bubbleContentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         _okButton.Row(3);
 
-        _checkBox = new CheckBox()
+        _checkBox
             .Row(2).Column(1).Margin(0)
-            .StretchHorizontal()
+            .Stretch()
             .HorizontalContentAlignment(HorizontalAlignment.Left)
             .AltBind(ToggleButton.IsCheckedProperty, this, IsCheckedProperty, BindingMode.TwoWay)
             .AltBind(ContentProperty, this, CheckContentProperty);

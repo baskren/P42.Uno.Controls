@@ -13,6 +13,10 @@
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
     -->
 
+
+    <PackageReference Include="P42.Uno.Extensions.Markup" />
+    <PackageReference Include="P42.Uno.Extensions.Markup.Generators" />
+   
     <PackageReference Include="P42.Uno.WinUI.Markup" />
     <PackageReference Include="P42.Utils.Uno.HtmlTextBlock" />
     <!--

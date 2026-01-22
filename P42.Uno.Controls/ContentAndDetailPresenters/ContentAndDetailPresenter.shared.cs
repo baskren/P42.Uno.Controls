@@ -649,7 +649,7 @@ public partial class ContentAndDetailPresenter : Grid
         _popCompletionSource?.SetResult(true);
     }
 
-    private async void OnTargetedPopupPopped(object sender, PopupPoppedEventArgs e)
+    private async void OnTargetedPopupPopped(object? sender, PopupPoppedEventArgs e)
     {
         if (e.Trigger == popupToDrawerResizeTrigger)
             return;

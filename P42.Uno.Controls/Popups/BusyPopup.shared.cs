@@ -95,7 +95,7 @@ public partial class BusyPopup : Toast
     /// </summary>
     public BusyPopup() : this(null) {}
 
-    public BusyPopup(UIElement target) : base(target)
+    public BusyPopup(UIElement? target) : base(target)
     {
         Build();
     }

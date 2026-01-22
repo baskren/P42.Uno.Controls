@@ -1,3 +1,5 @@
+using AsyncAwaitBestPractices;
+
 namespace P42.Uno.Controls;
 // TODO: Obsolete P42.Uno.Control.MenuFlyout after 2025.01.01
 
@@ -120,19 +122,25 @@ public partial class MenuItemBase : DependencyObject
 
 
     #region Events
-    public event RoutedEventHandler Click;
+    private WeakEventManager _clickEventManager = new(); 
+    public event RoutedEventHandler Click
+    {
+        add => _clickEventManager.AddEventHandler(value);
+        remove => _clickEventManager.RemoveEventHandler(value);
+    }
     #endregion
 
 
-    public object Tag;
+    public object? Tag;
 #if !HAS_UNO
         //internal WeakReference<MenuFlyout> MenuFlyoutWeakRef;
-        internal WeakReference<MenuFlyoutCell> MenuFlyoutCellWeakRef;
+        internal WeakReference<MenuFlyoutCell>? MenuFlyoutCellWeakRef;
 #endif
 
     public void OnItemClicked()
     {
-        Click?.Invoke(this, new RoutedEventArgs());
+        //Click?.Invoke(this, new RoutedEventArgs());
+        _clickEventManager.RaiseEvent(this, new RoutedEventArgs(), nameof(Click));
         Command?.Execute(CommandParameter);
     }
 }

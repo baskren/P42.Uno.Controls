@@ -103,7 +103,7 @@ public partial class CheckedToast : Alert
 
     public CheckedToast() : this(null) {}
 
-    public CheckedToast(UIElement target) : base(target)
+    public CheckedToast(UIElement? target) : base(target)
     {
         Build();
     }

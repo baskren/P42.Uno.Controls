@@ -37,7 +37,7 @@ public partial class Alert : Toast
             {
                 _okButton.Content = new TextBlock()
                     .BindFont(_okButton)
-                    .WrapWholeWords()
+                    .WrapWholeWordsText()
                     .SetHtml(text);
             }
             else
@@ -211,7 +211,7 @@ public partial class Alert : Toast
     /// <param name="animated"></param>
     /// <param name="trigger"></param>
     /// <returns></returns>
-    public override async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = true, [CallerMemberName] object trigger = null)
+    public override async Task PopAsync(PopupPoppedCause cause = PopupPoppedCause.MethodCalled, bool animated = true, [CallerMemberName] object? trigger = null)
     {
         _okButton.Click -= OnOkButtonClickedAsync;
         await base.PopAsync(cause, animated, trigger);

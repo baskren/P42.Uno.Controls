@@ -44,11 +44,7 @@ public class SkiaBubble : SKXamlCanvas
         Redraw(nameof(BackgroundColor));
     }
 
-#if __IOS__
-        public new Color BackgroundColor
-#else
     public Color BackgroundColor
-#endif
     {
         get => (Color)GetValue(BackgroundColorProperty);
         set => SetValue(BackgroundColorProperty, value);

@@ -3,11 +3,10 @@ namespace P42.Uno.Controls;
 
 public partial class MenuFlyout : IDisposable
 {
-    private Microsoft.UI.Xaml.Controls.MenuFlyout _flyout;
+    private Microsoft.UI.Xaml.Controls.MenuFlyout _flyout = new Microsoft.UI.Xaml.Controls.MenuFlyout();
 
     private void Build()
     {
-        _flyout = new Microsoft.UI.Xaml.Controls.MenuFlyout();
     }
 
     private static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -165,7 +164,7 @@ internal static class MenuItemExtensions
     }
 
 
-    public static MenuFlyoutItemBase AsMenuFlyoutItem(this MenuItemBase itemBase)
+    public static MenuFlyoutItemBase? AsMenuFlyoutItem(this MenuItemBase itemBase)
     {
         if (itemBase is MenuItem)
         {

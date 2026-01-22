@@ -1,3 +1,4 @@
+//[assembly: P42.Uno.Extensions.Markup.Generator.GenerateMarkupForAssembly(typeof(P42.Uno.Controls.TargetedPopup))]
 
 namespace P42.Uno.Controls;
 

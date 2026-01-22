@@ -10,11 +10,15 @@
 
     <PackageVersion Include="P42.Utils" Version="$(P42UtilsVersion)" />
     <PackageVersion Include="P42.Utils.Uno" Version="$(P42UtilsUnoVersion)" />
-    <PackageVersion Include="P42.Uno.WinUI.Markup" Version="$(UnoVersion)" />
     <PackageVersion Include="P42.Utils.Uno.HtmlTextBlock" Version="$(UnoVersion)" />
+    <PackageVersion Include="P42.Uno.Extensions.Markup" Version="$(P42UnoExtensionsMarkupVersion)" />
+    <PackageVersion Include="P42.Uno.Extensions.Markup.Generators" Version="$(P42UnoExtensionsMarkupVersion)" />
+    <PackageVersion Include="P42.Uno.WinUI.Markup" Version="$(UnoVersion)" />
 
-    <PackageVersion Include="Svg.Skia" Version="3.4.0" />
+    <PackageVersion Include="Svg.Skia" Version="3.4.1" />
     <PackageVersion Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
+
+    <PackageVersion Include="SkiaSharp.Skottie" Version="3.119.1" />
     
   </ItemGroup>
 </Project>

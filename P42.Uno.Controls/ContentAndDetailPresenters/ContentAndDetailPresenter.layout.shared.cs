@@ -2,9 +2,9 @@ namespace P42.Uno.Controls;
 
 public partial class ContentAndDetailPresenter : Grid
 {
-    private TargetedPopup _targetedPopup;
-    private Border _detailDrawer;
-    private Rectangle _overlay;
+    private TargetedPopup _targetedPopup = new TargetedPopup();
+    private Border _detailDrawer = new Border();
+    private Rectangle _overlay = new Rectangle();
 
     private ColumnDefinition _drawerColumnDefinition = new ColumnDefinition().Auto();
     private RowDefinition _drawerRowDefinition = new RowDefinition().Auto();
@@ -17,7 +17,7 @@ public partial class ContentAndDetailPresenter : Grid
         // r1,c0 : Footer
         this.Rows("*", _drawerRowDefinition);
         this.Columns("*", _drawerColumnDefinition);
-        _overlay = new Rectangle()
+        _overlay 
             .Row(0)
             .RowSpan(2)
             .AltBind(Shape.FillProperty, this, PageOverlayBrushProperty)
@@ -25,20 +25,20 @@ public partial class ContentAndDetailPresenter : Grid
             .AltBind(VisibilityProperty, this, PageOverlayBrushProperty, converter: VisibilityConverter.Instance)
             .AddTappedHandler(OnDismissPointerPressed);
 
-        _detailDrawer = new Border()
+        _detailDrawer 
             .AltBind(Border.BorderBrushProperty, this, DetailBorderColorProperty, converter: SolidBrushConverter.Instance)
             .AltBind(Border.BorderThicknessProperty, this, BorderThicknessProperty)
             .AltBind(BackgroundProperty, this, DetailBackgroundColorProperty, converter: SolidBrushConverter.Instance);
 
-        _targetedPopup = new TargetedPopup()
+        _targetedPopup 
                 .Padding(0)
                 .Opacity(0)
                 .Margin(popupMargin)
-                .ContentStretch()
+                .StretchContent()
                 .HasShadow(true)
                 .PreferredPointerDirection(PointerDirection.Up)
                 .FallbackPointerDirection(PointerDirection.Any)
-                .PageOverlay(Colors.Transparent)
+                .PageOverlayBrush(Colors.Transparent)
                 .IsPageOverlayHitTestVisible(false)
                 .AltBind(TargetedPopup.WeakTargetProperty, this, WeakTargetProperty)
                 .AltBind(TargetedPopup.BorderColorProperty, this, DetailBorderColorProperty)

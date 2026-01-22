@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Animation;
 
 namespace P42.Uno.Controls;
 
@@ -6,8 +6,8 @@ internal static class AnimationExtensions
 {
     public static Task BeginAsync(this Storyboard storyboard)
     {
-        var taskSource = new TaskCompletionSource<object>();
-        EventHandler<object> completed = null;
+        var taskSource = new TaskCompletionSource<object?>();
+        EventHandler<object>? completed = null;
         completed += (s, e) =>
         {
             storyboard.Completed -= completed;

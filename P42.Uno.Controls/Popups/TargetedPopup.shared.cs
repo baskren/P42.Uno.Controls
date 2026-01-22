@@ -72,28 +72,6 @@ public partial class TargetedPopup : ITargetedPopup
 
     #region Border Properties
 
-    #region Background Property
-    [Obsolete("Use BackgroundColor, instead")]
-    public new static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register(
-        nameof(Background),
-        typeof(Brush),
-        typeof(TargetedPopup),
-        new PropertyMetadata(default)
-    );
-    [Obsolete("Use BackgroundColor, instead")]
-    public new Brush Background
-    {
-        get => new SolidColorBrush(BackgroundColor);
-        set
-        {
-            if (value is SolidColorBrush brush)
-                BackgroundColor = brush.Color;
-            else
-                throw new Exception("Background not supported, use BackgroundColor instead");
-        }
-    }
-    #endregion Background Property
-
     #region BackgroundColor Property
     public static readonly DependencyProperty BackgroundColorProperty = DependencyProperty.Register(
         nameof(BackgroundColor),
@@ -108,28 +86,6 @@ public partial class TargetedPopup : ITargetedPopup
     }
     #endregion BackgroundColor Property
 
-    #region BorderBrush Property
-    [Obsolete("Use BorderColor, instead")]
-    public new static readonly DependencyProperty BorderBrushProperty = DependencyProperty.Register(
-        nameof(BorderBrush),
-        typeof(Brush),
-        typeof(TargetedPopup),
-        new PropertyMetadata(default)
-    );
-    [Obsolete("Use BorderColor, instead")]
-    public new Brush BorderBrush
-    {
-        get => new SolidColorBrush(BorderColor);
-        set
-        {
-            if (value is SolidColorBrush brush)
-                BorderColor = brush.Color;
-            else
-                throw new Exception("BorderBrush not supported, use BorderColor instead");
-        }
-    }
-    #endregion BorderBrush Property
-
     #region BorderColor Property
     public static readonly DependencyProperty BorderColorProperty = DependencyProperty.Register(
         nameof(BorderColor),
@@ -143,26 +99,6 @@ public partial class TargetedPopup : ITargetedPopup
         set => SetValue(BorderColorProperty, value);
     }
     #endregion BorderColor Property
-
-    #region BorderThickness Property
-    [Obsolete("Use BorderWidth instead")]
-    public new static readonly DependencyProperty BorderThicknessProperty = DependencyProperty.Register(
-        nameof(BorderThickness),
-        typeof(Thickness),
-        typeof(TargetedPopup),
-        new PropertyMetadata(new Thickness(SkiaBubble.DefaultBorderWidth))
-    );
-    [Obsolete("Use BorderWidth instead")]
-    public new Thickness BorderThickness
-    {
-        get => new(BorderWidth);
-        set
-        {
-            if (value is Thickness thickness)
-                BorderWidth = thickness.Max();
-        }
-    }
-    #endregion BorderThickness Property
 
     #region BorderWidth Property
     public static readonly DependencyProperty BorderWidthProperty = DependencyProperty.Register(
@@ -228,7 +164,7 @@ public partial class TargetedPopup : ITargetedPopup
         typeof(TargetedPopup),
         new PropertyMetadata(default(WeakReference<UIElement?>))
     );
-    public WeakReference<UIElement?> WeakTarget
+    private WeakReference<UIElement?> WeakTarget
     {
         get => (WeakReference<UIElement?>)GetValue(WeakTargetProperty);
         set => SetValue(WeakTargetProperty, value);

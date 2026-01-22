@@ -12,7 +12,30 @@ namespace P42.Uno.Controls;
 
 internal class NativeHapticPlayer : INativeHapticPlayer
 {
-    private static Vibrator? Vibrator => field ??= (Vibrator?)Application.Context.GetSystemService(Context.VibratorService);
+    private static Vibrator? Vibrator 
+    { 
+        get 
+        { 
+            if (field is not null)
+                return field;
+
+            if (Android.OS.BuildVersionCodes.S >= Build.VERSION.SdkInt)
+            {
+#pragma warning disable CA1416 // Validate platform compatibility
+                var vibratorManager = (VibratorManager?)Application.Context.GetSystemService(Context.VibratorManagerService);
+                field = vibratorManager?.DefaultVibrator;
+#pragma warning restore CA1416 // Validate platform compatibility
+            }
+            else
+            {
+#pragma warning disable CA1422 // Validate platform compatibility
+                field = (Vibrator?)Application.Context.GetSystemService(Context.VibratorService);
+#pragma warning restore CA1422 // Validate platform compatibility
+            }
+            
+            return field;
+        }
+    }
 
     private static bool _appEnabledTested;
     private static bool AppEnabled
@@ -38,6 +61,7 @@ internal class NativeHapticPlayer : INativeHapticPlayer
                 using var builder = new AudioAttributes.Builder();
                 builder.SetContentType(AudioContentType.Sonification);
                 field = builder.Build();
+                _audioAttributesTested = true;
             }
             return field;
         }

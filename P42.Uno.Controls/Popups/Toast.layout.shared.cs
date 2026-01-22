@@ -29,7 +29,7 @@ public partial class Toast : TargetedPopup
 
                 _titleBlock
                     .RowCol(0,1)
-                    .CenterVertical()
+                    .CenterVt()
                     .VerticalContentAlignment(VerticalAlignment.Center)
                     .TextWrapping(TextWrapping.WrapWholeWords)
                     .BindFont(this, except: nameof(FontWeight))
@@ -45,7 +45,7 @@ public partial class Toast : TargetedPopup
                     .Content(
                         _messageBlock
                             .RowCol(1,1)
-                            .CenterVertical()
+                            .CenterVt()
                             .VerticalContentAlignment(VerticalAlignment.Center)
                             .TextWrapping(TextWrapping.WrapWholeWords)
                             .BindFont(this)
