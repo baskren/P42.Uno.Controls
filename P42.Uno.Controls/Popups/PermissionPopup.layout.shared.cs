@@ -25,7 +25,7 @@ public partial class PermissionPopup : Alert
             .Column(1)
             .ColumnSpacing(5)
             .Columns(
-                GridRowsColumns.Star, GridRowsColumns.Star
+                GridLengthExtensions.Star(), GridLengthExtensions.Star()
             )
             .Children(
                 _okButton, _cancelButton
