@@ -8,6 +8,16 @@
     <projectFile>P42.Uno.Controls.Native.Test/P42.Uno.Controls.Native.Test.csproj</projectFile>
     <projectFile kind="XamarinAndroid">P42.Uno.Controls/P42.Uno.Controls.csproj</projectFile>
     <projectFile kind="XamarinIOS">P42.Uno.Controls/P42.Uno.Controls.csproj</projectFile>
+    <projectFile kind="XamarinAndroid">P42.Uno.Markup/P42.Uno.Extensions.Markup/Demo/Demo.csproj</projectFile>
+    <projectFile kind="XamarinIOS">P42.Uno.Markup/P42.Uno.Extensions.Markup/Demo/Demo.csproj</projectFile>
+    <projectFile kind="XamarinAndroid">P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/TextElementSearch.csproj</projectFile>
+    <projectFile kind="XamarinIOS">P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/TextElementSearch.csproj</projectFile>
+    <projectFile profileName="TextElementSearch (Desktop)">P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/TextElementSearch.csproj</projectFile>
+    <projectFile profileName="TextElementSearch (WebAssembly)">P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/TextElementSearch.csproj</projectFile>
+    <projectFile profileName="TextElementSearch (WinAppSDK Unpackaged)">P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/TextElementSearch.csproj</projectFile>
+    <projectFile pubXmlPath="P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/Properties/PublishProfiles/win-arm64.pubxml">P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/TextElementSearch.csproj</projectFile>
+    <projectFile pubXmlPath="P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/Properties/PublishProfiles/win-x64.pubxml">P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/TextElementSearch.csproj</projectFile>
+    <projectFile pubXmlPath="P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/Properties/PublishProfiles/win-x86.pubxml">P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/TextElementSearch.csproj</projectFile>
     <projectFile kind="XamarinAndroid">P42.Uno.Markup/P42.Uno.Markup/P42.Uno.Markup.csproj</projectFile>
     <projectFile kind="XamarinIOS">P42.Uno.Markup/P42.Uno.Markup/P42.Uno.Markup.csproj</projectFile>
     <projectFile kind="XamarinAndroid">P42.Uno.Markup/P42.Uno.WinUI.Markup/P42.Uno.WinUI.Markup.csproj</projectFile>
@@ -23,118 +33,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9b3d3cc-1f6e-4c5b-839d-f967067bcc12" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.." beforeDir="false" afterPath="$PROJECT_DIR$/.." afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Bc3.Cloud/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Bc3.Cloud/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Bc3.Forms/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Bc3.Forms/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$" beforeDir="false" afterPath="$PROJECT_DIR$" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.P42.Uno.Controls/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.P42.Uno.Controls/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.P42.Uno.Controls/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.P42.Uno.Controls/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Demo/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/Demo/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Directory.Packages.props" beforeDir="false" afterPath="$PROJECT_DIR$/Directory.Packages.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls.Demo/P42.Uno.Controls.Demo.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls.Demo/P42.Uno.Controls.Demo.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls.sln" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/AnimatedBar/Base.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/AnimatedBar/Base.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/ChimePlayer.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/ChimePlayer.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.android.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.android.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.desktop.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.desktop.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.ios.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.ios.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.wasm.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.wasm.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.winui.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/ContentAndDetailPresenters/ContentAndDetailPresenter.layout.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/ContentAndDetailPresenters/ContentAndDetailPresenter.layout.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/EmbeddedSvgImage/EmbeddedSvgImage.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/EmbeddedSvgImage/EmbeddedSvgImage.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Enums/Effect.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Enums/Effect.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Feedback/Feedback.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Feedback/Feedback.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/BandAids/Guard.Comparable.Generic.shared.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/BandAids/Guard.Comparable.Numeric.shared.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/BandAids/Guard.shared.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/BandAids/ThrowHelper.Generic.shared.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/BandAids/ThrowHelper.shared.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/Enums/FlexAlignSelf.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/Enums/FlexAlignSelf.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/Extensions/DependencyObjectExtensions.shared.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/Extensions/FlexItemExtensions.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/Extensions/FlexItemExtensions.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/FlexBasis.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/FlexBasis.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/FlexPanel.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/FlexPanel.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/TypeConverters/FlexAlignContentTypeConverter.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/TypeConverters/FlexAlignContentTypeConverter.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/TypeConverters/FlexAlignItemsTypeConverter.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/TypeConverters/FlexAlignItemsTypeConverter.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/TypeConverters/FlexAlignSelfTypeConverter.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/TypeConverters/FlexAlignSelfTypeConverter.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/TypeConverters/FlexDirectionTypeConverter.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/TypeConverters/FlexDirectionTypeConverter.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/TypeConverters/FlexJustifyTypeConverter.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/TypeConverters/FlexJustifyTypeConverter.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/TypeConverters/FlexWrapTypeConverter.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/FlexPanel/TypeConverters/FlexWrapTypeConverter.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/HapticPlayer/HapticPlayer.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/HapticPlayer/HapticPlayer.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/HapticPlayer/INativeHapticPlayer.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/HapticPlayer/INativeHapticPlayer.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/HapticPlayer/NativeHapticPlayer.android.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/HapticPlayer/NativeHapticPlayer.android.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/HapticPlayer/NativeHapticPlayer.ios.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/HapticPlayer/NativeHapticPlayer.ios.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/HapticPlayer/NativeHapticPlayer.macos.net.desktop.x.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/HapticPlayer/NativeHapticPlayer.wasm.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/HapticPlayer/NativeHapticPlayer.wasm.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/HapticPlayer/NativeHapticPlayer.winui.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/InsetShadow/InsetShadow.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/InsetShadow/InsetShadow.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Label/Label.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Label/Label.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Label/LabelExtensions.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Label/LabelExtensions.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/LoopingFlipView/LoopingFlipView.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/LoopingFlipView/LoopingFlipView.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/LoopingFlipView/LoopingFlipViewItem.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/LoopingFlipView/LoopingFlipViewItem.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/P42.Uno.Controls.References.props" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/P42.Uno.Controls.References.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/P42.Uno.Controls.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/P42.Uno.Controls.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Platform.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Platform.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Alert.layout.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Alert.layout.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Alert.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Alert.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/BubbleBorder.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/BubbleBorder.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/BusyPopup.layout.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/BusyPopup.layout.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/CheckedToast.layout.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/CheckedToast.layout.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/EventArgs/PopupPoppedEventArgs.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/EventArgs/PopupPoppedEventArgs.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Extensions/BubbleBorderExtensions.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Extensions/BubbleBorderExtensions.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Interfaces/ITargetedPopup.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Interfaces/ITargetedPopup.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/PermissionPopup.layout.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/PermissionPopup.layout.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/PermissionPopup.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/PermissionPopup.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Popup.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Popup.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/RootFrame.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/RootFrame.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Structs/DirectionStats.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Structs/DirectionStats.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/TargetedPopup.layout.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/TargetedPopup.layout.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/TargetedPopup.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/TargetedPopup.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Toast.layout.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Toast.layout.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Toast.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/Popups/Toast.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/SegmentedControl/CollectionSelectionTracker.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/SegmentedControl/CollectionSelectionTracker.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/SegmentedControl/SegmentedControl.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/SegmentedControl/SegmentedControl.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/SegmentedControl/SegmentedControlExtensions.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/SegmentedControl/SegmentedControlExtensions.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/SimpleStringGrid/SimpleStringGrid.shared.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/SimpleStringGrid/SimpleStringGrid.shared.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Controls/global.json.DELETEME" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Controls/global.json.DELETEME" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Markup" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Markup" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/DependencyObjectExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/DependencyObjectExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/RichEditBoxExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/RichEditBoxExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/RichTextBlockExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/RichTextBlockExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/RowDefinitionExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/RowDefinitionExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/SemanticZoomLocationExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/SemanticZoomLocationExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/StyleExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/StyleExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/SvgImageSource.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/SvgImageSource.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/TextBlockExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/TextBlockExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/ToggleButtonExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/ToggleButtonExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/UIElementExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.WinUI.Markup/ElementMarkupExtensions/UIElementExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Utils" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Utils" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Utils/P42.Utils.Uno.HtmlTextBlock/TextBlockExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Utils/P42.Utils.Uno.HtmlTextBlock/TextBlockExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P42.Utils/P42.Utils.Uno/ElementExtensions/UIElementExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/P42.Utils/P42.Utils.Uno/ElementExtensions/UIElementExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WBindDemo/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/WBindDemo/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../P42.Uno.HardwareKeys" beforeDir="false" afterPath="$PROJECT_DIR$/../P42.Uno.HardwareKeys" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../P42.Uno.HardwareKeys/Demo/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/../P42.Uno.HardwareKeys/Demo/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../P42.Uno.HardwareKeys/P42.Uno.HardwareKeys/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/../P42.Uno.HardwareKeys/P42.Uno.HardwareKeys/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../P42.Uno.HtmlExtensions" beforeDir="false" afterPath="$PROJECT_DIR$/../P42.Uno.HtmlExtensions" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../P42.Uno.HtmlExtensions/Demo/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/../P42.Uno.HtmlExtensions/Demo/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../P42.Uno.HtmlExtensions/P42.Uno.HtmlExtensions/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/../P42.Uno.HtmlExtensions/P42.Uno.HtmlExtensions/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../P42.Uno.Xamarin.Essentials" beforeDir="false" afterPath="$PROJECT_DIR$/../P42.Uno.Xamarin.Essentials" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../P42.Uno.Xamarin.Essentials/Samples/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/../P42.Uno.Xamarin.Essentials/Samples/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../P42.Uno.Xamarin.Essentials/Xamarin.Essentials/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/../P42.Uno.Xamarin.Essentials/Xamarin.Essentials/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../P42.VirtualKeyboard" beforeDir="false" afterPath="$PROJECT_DIR$/../P42.VirtualKeyboard" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../P42.VirtualKeyboard/Demo/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/../P42.VirtualKeyboard/Demo/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../P42.VirtualKeyboard/P42.VirtualKeyboard/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/../P42.VirtualKeyboard/P42.VirtualKeyboard/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../global.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../global.json" afterDir="false" />
-    </list>
+    <list default="true" id="e9b3d3cc-1f6e-4c5b-839d-f967067bcc12" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/P42.Uno.Markup" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -149,24 +55,25 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/626b70f9c5e24a73baebccf6a838424731a1e8/71/1beed57b/StyleMarkup.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d63375f46c4a413cbc0a64b35e2605f728e00/12/2e7e017d/AltBindingExtensions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f22149983bac48248d71c7a379de87496f7620/06/2e919a3c/RichEditBox.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f22149983bac48248d71c7a379de87496f7620/a2/6dc0d492/RichTextBlock.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/P42.Uno.Controls.Demo/Pages/BubblePointerAdjust.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.android.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.desktop.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.ios.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/P42.Uno.Controls/ChimePlayer/NativeChimePlayer.wasm.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/P42.Uno.Controls/Popups/MenuFlyout/MenuFlyout.layout.winui.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/540b580817fb48a880a15b8aed0eaf8752e00/2f/fcc7a6c3/ColumnDefinitionExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/540b580817fb48a880a15b8aed0eaf8752e00/9c/6feaedf4/GridExtensions.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
+      <facet id="Demo/invalid/Android Facet - Demo" />
       <facet id="P42.Uno.Controls.Demo/invalid/Android Facet - P42.Uno.Controls.Demo" />
       <facet id="P42.Uno.Controls/invalid/Android Facet - P42.Uno.Controls" />
       <facet id="P42.Uno.Markup/invalid/Android Facet - P42.Uno.Markup" />
       <facet id="P42.Uno.WinUI.Markup/invalid/Android Facet - P42.Uno.WinUI.Markup" />
       <facet id="P42.Utils.Uno.HtmlTextBlock/invalid/Android Facet - P42.Utils.Uno.HtmlTextBlock" />
       <facet id="P42.Utils.Uno/invalid/Android Facet - P42.Utils.Uno" />
+      <facet id="TextElementSearch/invalid/Android Facet - TextElementSearch" />
     </ignored-facets>
   </component>
   <component name="ProblemsViewState">
@@ -205,6 +112,18 @@
   }
 }</component>
   <component name="RunManager" selected="iOS.P42.Uno.Controls.Demo">
+    <configuration name="TextElementSearch: win-arm64" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish publish_profile="win-arm64.pubxml" pubxml_path="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/Properties/PublishProfiles/win-arm64.pubxml" uuid_high="6287094763832475737" uuid_low="-5870185762192999386" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TextElementSearch: win-x64" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish publish_profile="win-x64.pubxml" pubxml_path="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/Properties/PublishProfiles/win-x64.pubxml" uuid_high="6287094763832475737" uuid_low="-5870185762192999386" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TextElementSearch: win-x86" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish publish_profile="win-x86.pubxml" pubxml_path="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/Properties/PublishProfiles/win-x86.pubxml" uuid_high="6287094763832475737" uuid_low="-5870185762192999386" />
+      <method v="2" />
+    </configuration>
     <configuration name="P42.Uno.Controls.Native.Test" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -274,6 +193,61 @@
         <option name="Build" />
       </method>
     </configuration>
+    <configuration name="TextElementSearch: TextElementSearch (Desktop)" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/TextElementSearch.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value="net10.0-desktop" />
+      <option name="LAUNCH_PROFILE_NAME" value="TextElementSearch (Desktop)" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+    <configuration name="TextElementSearch: TextElementSearch (WebAssembly)" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/TextElementSearch.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value="net10.0-browserwasm" />
+      <option name="LAUNCH_PROFILE_NAME" value="TextElementSearch (WebAssembly)" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+    <configuration name="TextElementSearch: TextElementSearch (WinAppSDK Unpackaged)" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/TextElementSearch.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value="net10.0-windows10.0.26100.0" />
+      <option name="LAUNCH_PROFILE_NAME" value="TextElementSearch (WinAppSDK Unpackaged)" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+    <configuration name="Demo" type="XamarinAndroidProject" factoryName="Xamarin.Android">
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.Extensions.Markup/Demo/Demo.csproj" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="DEPLOY_BEHAVIOUR_NAME" value="Default" />
+      <method v="2" />
+    </configuration>
     <configuration name="P42.Uno.Controls" type="XamarinAndroidProject" factoryName="Xamarin.Android">
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/P42.Uno.Controls/P42.Uno.Controls.csproj" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -324,6 +298,21 @@
       <option name="DEPLOY_BEHAVIOUR_NAME" value="Default" />
       <method v="2" />
     </configuration>
+    <configuration name="TextElementSearch" type="XamarinAndroidProject" factoryName="Xamarin.Android">
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/TextElementSearch.csproj" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="DEPLOY_BEHAVIOUR_NAME" value="Default" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Demo" type="XamarinIOSProject" factoryName="Xamarin.iOS">
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.Extensions.Markup/Demo/Demo.csproj" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="IS_PASS_PARENT_ENVS" value="false" />
+      <option name="EXTRA_MLAUNCH_PARAMETERS" value="" />
+      <option name="PLATFORM_TYPE" value="IOS" />
+      <method v="2" />
+    </configuration>
     <configuration name="P42.Uno.Controls" type="XamarinIOSProject" factoryName="Xamarin.iOS">
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/P42.Uno.Controls/P42.Uno.Controls.csproj" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -372,6 +361,14 @@
       <option name="PLATFORM_TYPE" value="IOS" />
       <method v="2" />
     </configuration>
+    <configuration name="TextElementSearch" type="XamarinIOSProject" factoryName="Xamarin.iOS">
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/P42.Uno.Markup/P42.Uno.Extensions.Markup/TextElementSearch/TextElementSearch.csproj" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="IS_PASS_PARENT_ENVS" value="false" />
+      <option name="EXTRA_MLAUNCH_PARAMETERS" value="" />
+      <option name="PLATFORM_TYPE" value="IOS" />
+      <method v="2" />
+    </configuration>
     <configuration name="P42.Uno.Controls.Demo" type="XamarinMacProject" factoryName="Xamarin.Mac">
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/P42.Uno.Controls.Demo/P42.Uno.Controls.Demo.csproj" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -400,6 +397,8 @@
       <workItem from="1766679306294" duration="991000" />
       <workItem from="1766681731406" duration="7937000" />
       <workItem from="1766769402964" duration="4355000" />
+      <workItem from="1769529294010" duration="759000" />
+      <workItem from="1770137905574" duration="1011000" />
     </task>
     <servers />
   </component>
