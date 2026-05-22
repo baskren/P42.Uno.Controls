@@ -19,8 +19,8 @@
     CS0162: Unreachable code detected
     MT7156: The BundleResource item x was ignored, because there's another item with the same LogicalName
     -->
-
     <NoWarn>$(NoWarn);NU5118;NU5123;Uno0001;CS0162;CS0618;MT7156;</NoWarn>
+    
     <NoWarn Condition=" $(Configuration) != 'Release' ">$(NoWarn)</NoWarn>
     <BuildInParallel>false</BuildInParallel>
   </PropertyGroup>
