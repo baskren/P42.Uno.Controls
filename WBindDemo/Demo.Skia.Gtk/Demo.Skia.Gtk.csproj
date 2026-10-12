@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
     <OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   
@@ -27,6 +27,6 @@
   <Target Name="ValidateOverrides" BeforeTargets="Restore;_CheckForUnsupportedTargetFramework" Condition="'$(OverrideTargetFramework)' != ''">
     <Error
         Text="OverrideTargetFramework set to '$(OverrideTargetFramework)' is invalid. Set OverrideTargetFramework to $([MSBuild]::Escape('$'))(DotNetVersion) or skip building this project (eg unload the project in Visual Studio)"
-        Condition="'$(OverrideTargetFramework)'!='net9.0'" />
+        Condition="'$(OverrideTargetFramework)'!='net10.0'" />
   </Target>
 </Project>
