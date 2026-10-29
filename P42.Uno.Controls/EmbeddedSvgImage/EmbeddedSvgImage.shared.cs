@@ -217,7 +217,7 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
                 // : fillRect.Width / _skSvg.CanvasSize.Width;
                 ? fillRect.Height / _canvasHeight
                 : fillRect.Width / _canvasWidth;
-            System.Diagnostics.Debug.WriteLine($"\t scale:[{scale}]");
+            //System.Diagnostics.Debug.WriteLine($"\t scale:[{scale}]");
             workingCanvas.Scale(scale, scale);
         }
         else if (Stretch == Stretch.Uniform)
@@ -227,7 +227,7 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
                 // : fillRect.Height / _skSvg.CanvasSize.Height;
                 ? fillRect.Width / _canvasWidth
                 : fillRect.Height / _canvasHeight;
-            System.Diagnostics.Debug.WriteLine($"\t scale:[{scale}]");
+            //System.Diagnostics.Debug.WriteLine($"\t scale:[{scale}]");
             workingCanvas.Scale(scale, scale);
         }
         else if (Stretch == Stretch.Fill)
