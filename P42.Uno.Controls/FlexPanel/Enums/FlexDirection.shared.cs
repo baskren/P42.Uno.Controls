@@ -14,32 +14,31 @@
 
 using System.ComponentModel;
 
-namespace P42.Uno.Controls
+namespace P42.Uno.Controls;
+
+/// <summary>
+/// Values for <see cref="P:P42.Uno.Controls.FlexItem.Direction" />.
+/// </summary>
+[TypeConverter(typeof(FlexDirectionTypeConverter))]
+public enum FlexDirection
 {
     /// <summary>
-    /// Values for <see cref="P:P42.Uno.Controls.FlexItem.Direction" />.
+    /// Whether items should be stacked horizontally.
     /// </summary>
-    [TypeConverter(typeof(FlexDirectionTypeConverter))]
-    public enum FlexDirection
-    {
-        /// <summary>
-        /// Whether items should be stacked horizontally.
-        /// </summary>
-        Row = 0,
+    Row = 0,
 
-        /// <summary>
-        /// Like Row but in reverse order.
-        /// </summary>
-        RowReverse = 1,
+    /// <summary>
+    /// Like Row but in reverse order.
+    /// </summary>
+    RowReverse = 1,
 
-        /// <summary>
-        /// Whether items should be stacked vertically.
-        /// </summary>
-        Column = 2,
+    /// <summary>
+    /// Whether items should be stacked vertically.
+    /// </summary>
+    Column = 2,
 
-        /// <summary>
-        /// Like Column but in reverse order.
-        /// </summary>
-        ColumnReverse = 3,
-    }
+    /// <summary>
+    /// Like Column but in reverse order.
+    /// </summary>
+    ColumnReverse = 3,
 }

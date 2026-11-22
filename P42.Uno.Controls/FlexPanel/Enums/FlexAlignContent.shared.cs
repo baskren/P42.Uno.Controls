@@ -14,47 +14,46 @@
 
 using System.ComponentModel;
 
-namespace P42.Uno.Controls
+namespace P42.Uno.Controls;
+
+/// <summary>
+/// Values for <see cref="P:P42.Uno.Controls.FlexItem.AlignContent" />.
+/// </summary>
+[TypeConverter(typeof(FlexAlignContentTypeConverter))]
+public enum FlexAlignContent
 {
     /// <summary>
-    /// Values for <see cref="P:P42.Uno.Controls.FlexItem.AlignContent" />.
+    /// Whether an item's should be stretched out.
     /// </summary>
-    [TypeConverter(typeof(FlexAlignContentTypeConverter))]
-    public enum FlexAlignContent
-    {
-        /// <summary>
-        /// Whether an item's should be stretched out.
-        /// </summary>
-        Stretch = 1,
+    Stretch = 1,
 
-        /// <summary>
-        /// Whether an item should be packed around the center.
-        /// </summary>
-        Center = 2,
+    /// <summary>
+    /// Whether an item should be packed around the center.
+    /// </summary>
+    Center = 2,
 
-        /// <summary>
-        /// Whether an item should be packed at the start.
-        /// </summary>
-        Start = 3,
+    /// <summary>
+    /// Whether an item should be packed at the start.
+    /// </summary>
+    Start = 3,
 
-        /// <summary>
-        /// Whether an item should be packed at the end.
-        /// </summary>
-        End = 4,
+    /// <summary>
+    /// Whether an item should be packed at the end.
+    /// </summary>
+    End = 4,
 
-        /// <summary>
-        /// Whether items should be distributed evenly, the first item being at the start and the last item being at the end.
-        /// </summary>
-        SpaceBetween = 5,
+    /// <summary>
+    /// Whether items should be distributed evenly, the first item being at the start and the last item being at the end.
+    /// </summary>
+    SpaceBetween = 5,
 
-        /// <summary>
-        /// Whether items should be distributed evenly, the first and last items having a half-size space.
-        /// </summary>
-        SpaceAround = 6,
+    /// <summary>
+    /// Whether items should be distributed evenly, the first and last items having a half-size space.
+    /// </summary>
+    SpaceAround = 6,
 
-        /// <summary>
-        /// Whether items should be distributed evenly, all items having equal space around them.
-        /// </summary>
-        SpaceEvenly = 7,
-    }
+    /// <summary>
+    /// Whether items should be distributed evenly, all items having equal space around them.
+    /// </summary>
+    SpaceEvenly = 7,
 }

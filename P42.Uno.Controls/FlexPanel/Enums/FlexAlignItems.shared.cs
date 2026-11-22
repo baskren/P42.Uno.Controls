@@ -14,32 +14,31 @@
 
 using System.ComponentModel;
 
-namespace P42.Uno.Controls
+namespace P42.Uno.Controls;
+
+/// <summary>
+/// Values for <see cref="P:P42.Uno.Controls.FlexItem.AlignItems" />.
+/// </summary>
+[TypeConverter(typeof(FlexAlignItemsTypeConverter))]
+public enum FlexAlignItems
 {
     /// <summary>
-    /// Values for <see cref="P:P42.Uno.Controls.FlexItem.AlignItems" />.
+    /// Whether an item's should be stretched out.
     /// </summary>
-    [TypeConverter(typeof(FlexAlignItemsTypeConverter))]
-    public enum FlexAlignItems
-    {
-        /// <summary>
-        /// Whether an item's should be stretched out.
-        /// </summary>
-        Stretch = 1,
+    Stretch = 1,
 
-        /// <summary>
-        /// Whether an item should be packed around the center.
-        /// </summary>
-        Center = 2,
+    /// <summary>
+    /// Whether an item should be packed around the center.
+    /// </summary>
+    Center = 2,
 
-        /// <summary>
-        /// Whether an item should be packed at the start.
-        /// </summary>
-        Start = 3,
+    /// <summary>
+    /// Whether an item should be packed at the start.
+    /// </summary>
+    Start = 3,
 
-        /// <summary>
-        /// Whether an item should be packed at the end.
-        /// </summary>
-        End = 4,
-    }
+    /// <summary>
+    /// Whether an item should be packed at the end.
+    /// </summary>
+    End = 4,
 }

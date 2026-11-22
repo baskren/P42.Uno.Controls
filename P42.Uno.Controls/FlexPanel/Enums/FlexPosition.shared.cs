@@ -12,22 +12,21 @@
 //  - Ben Askren (UWP/Uno port)
 //
 
-namespace P42.Uno.Controls
+namespace P42.Uno.Controls;
+
+/// <summary>
+/// Not implemented at this time
+/// Values for <see cref="P:P42.Uno.Controls.FlexItem.Position" />.
+/// </summary>
+internal enum FlexPosition
 {
     /// <summary>
-    /// Not implemented at this time
-    /// Values for <see cref="P:P42.Uno.Controls.FlexItem.Position" />.
+    /// Whether the elements's frame will be determined by the flex rules of the layout system.
     /// </summary>
-    internal enum FlexPosition
-    {
-        /// <summary>
-        /// Whether the elements's frame will be determined by the flex rules of the layout system.
-        /// </summary>
-        Relative = 0,
+    Relative = 0,
 
-        /// <summary>
-        /// Whether the elements's frame will be determined by fixed position values (<see cref="P:P42.Uno.Controls.FlexItem.Left" />, <see cref="P:P42.Uno.Controls.FlexItem.Right" />, <see cref="P:P42.Uno.Controls.FlexItem.Top" /> and <see cref="P:P42.Uno.Controls.FlexItem.Bottom" />).
-        /// </summary>
-        Absolute = 1,
-    }
+    /// <summary>
+    /// Whether the elements's frame will be determined by fixed position values (<see cref="P:P42.Uno.Controls.FlexItem.Left" />, <see cref="P:P42.Uno.Controls.FlexItem.Right" />, <see cref="P:P42.Uno.Controls.FlexItem.Top" /> and <see cref="P:P42.Uno.Controls.FlexItem.Bottom" />).
+    /// </summary>
+    Absolute = 1,
 }

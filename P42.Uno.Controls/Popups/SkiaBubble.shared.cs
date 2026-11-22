@@ -4,8 +4,10 @@ using Microsoft.UI.Xaml;
 using SkiaSharp;
 using Windows.UI;
 using P42.Uno.Markup;
-using SkiaSharp.Views.Windows;
 using System.Runtime.CompilerServices;
+using Microsoft.UI;
+using Microsoft.UI.Composition;
+using Uno.WinUI.Graphics2DSK;
 
 namespace P42.Uno.Controls
 {
@@ -14,7 +16,7 @@ namespace P42.Uno.Controls
     /// </summary>
     [Microsoft.UI.Xaml.Data.Bindable]
     //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
-    public partial class SkiaBubble : SkiaSharp.Views.Windows.SKXamlCanvas
+    public partial class SkiaBubble : SKCanvasElement
     {
 
         internal static readonly Color DefaultBorderColor = SystemColors.BaseMedium;
@@ -24,7 +26,7 @@ namespace P42.Uno.Controls
 
         #region Properties
 
-        void Redraw([CallerMemberName] string caller = null)
+        private void Redraw([CallerMemberName] string caller = null)
         {
             //System.Diagnostics.Debug.WriteLine($"SkiaBubble.Redraw : [{caller}]");
             Invalidate();
@@ -41,7 +43,7 @@ namespace P42.Uno.Controls
             new PropertyMetadata(DefaultFillColor,(d,e) => ((SkiaBubble)d).OnBackgroundColorChanged(e)) //.Redraw(nameof(BackgroundColor)))
         );
 
-        private void OnBackgroundColorChanged(DependencyPropertyChangedEventArgs e)
+        private void OnBackgroundColorChanged(DependencyPropertyChangedEventArgs _)
         {
             Redraw(nameof(BackgroundColor));
         }
@@ -60,7 +62,7 @@ namespace P42.Uno.Controls
             nameof(BorderColor),
             typeof(Color),
             typeof(SkiaBubble),
-            new PropertyMetadata(DefaultBorderColor, (d, e) => ((SkiaBubble)d).Redraw(nameof(BorderColor)))
+            new PropertyMetadata(DefaultBorderColor, (d, _) => ((SkiaBubble)d).Redraw(nameof(BorderColor)))
         );
         public Color BorderColor
         {
@@ -75,7 +77,7 @@ namespace P42.Uno.Controls
             nameof(BorderWidth),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(DefaultBorderWidth, (d, e) => ((SkiaBubble)d).Redraw(nameof(BorderWidth)))
+            new PropertyMetadata(DefaultBorderWidth, (d, _) => ((SkiaBubble)d).Redraw(nameof(BorderWidth)))
         );
         public double BorderWidth
         {
@@ -86,13 +88,13 @@ namespace P42.Uno.Controls
 
 
         #region CornerRadius Property
-        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
+        public new static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
             nameof(CornerRadius),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(DefaultCornerRadius, (d, e) => ((SkiaBubble)d).Redraw(nameof(CornerRadius)))
+            new PropertyMetadata(DefaultCornerRadius, (d, _) => ((SkiaBubble)d).Redraw(nameof(CornerRadius)))
         );
-        public double CornerRadius
+        public new double CornerRadius
         {
             get => (double)GetValue(CornerRadiusProperty);
             set => SetValue(CornerRadiusProperty, value);
@@ -110,7 +112,7 @@ namespace P42.Uno.Controls
             nameof(PointerLength),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(10.0, (d, e) => ((SkiaBubble)d).Redraw(nameof(PointerLength)))
+            new PropertyMetadata(10.0, (d, _) => ((SkiaBubble)d).Redraw(nameof(PointerLength)))
         );
         /// <summary>
         /// Gets or sets the length of the bubble layout's pointer.
@@ -129,7 +131,7 @@ namespace P42.Uno.Controls
             nameof(PointerTipRadius),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(1.0, (d, e) => ((SkiaBubble)d).Redraw(nameof(PointerTipRadius)))
+            new PropertyMetadata(1.0, (d, _) => ((SkiaBubble)d).Redraw(nameof(PointerTipRadius)))
         );
         /// <summary>
         /// Gets or sets the radius of the bubble's pointer tip.
@@ -148,7 +150,7 @@ namespace P42.Uno.Controls
             nameof(PointerAxialPosition),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(0.5, (d, e) => ((SkiaBubble)d).Redraw(nameof(PointerAxialPosition)))
+            new PropertyMetadata(0.5d, (d, _) => ((SkiaBubble)d).Redraw(nameof(PointerAxialPosition)))
         );
         /// <summary>
         /// Gets or sets the position of the bubble's pointer along the face it's on.
@@ -167,7 +169,7 @@ namespace P42.Uno.Controls
             nameof(PointerDirection),
             typeof(PointerDirection),
             typeof(SkiaBubble),
-            new PropertyMetadata(PointerDirection.None, (d, e) => ((SkiaBubble)d).Redraw(nameof(PointerDirection)))
+            new PropertyMetadata(PointerDirection.None, (d, _) => ((SkiaBubble)d).Redraw(nameof(PointerDirection)))
         );
         /// <summary>
         /// Gets or sets the direction in which the pointer pointing.
@@ -186,7 +188,7 @@ namespace P42.Uno.Controls
             nameof(PointerCornerRadius),
             typeof(double),
             typeof(SkiaBubble),
-            new PropertyMetadata(default(double), (d, e) => ((SkiaBubble)d).Redraw(nameof(PointerCornerRadius)))
+            new PropertyMetadata(0.0, (d, _) => ((SkiaBubble)d).Redraw(nameof(PointerCornerRadius)))
         );
         public double PointerCornerRadius
         {
@@ -213,13 +215,11 @@ namespace P42.Uno.Controls
         #region Fields
         internal float BlurSigma = 6f;
         internal bool ApplyBlur = false;
-        static long _instances;
-        long _instance;
         #endregion
 
         public SkiaBubble()
         {
-            _instance = _instances++;
+            BackgroundColor = Colors.Transparent;
 //#if __IOS__
 //            ((UIKit.UIView)this).BackgroundColor = UIKit.UIColor.Clear;
 //#endif
@@ -227,29 +227,31 @@ namespace P42.Uno.Controls
             //RegisterPropertyChangedCallback(MarginProperty, OnMarginChanged);
         }
 
+        /*
         private void OnMarginChanged(DependencyObject sender, DependencyProperty dp)
         {
             Invalidate();
 
             System.Diagnostics.Debug.WriteLine($"SkiaBubble.OnMarginChanged: {Margin}");
         }
+        */
 
-        protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
+        protected override void RenderOverride(SKCanvas canvas, Size area)
         {
             //System.Diagnostics.Debug.WriteLine($"Bubble.OnPaintSurface : ENTER");
-            SKImageInfo info = e.Info;
-            SKSurface surface = e.Surface;
-            SKCanvas canvas = surface.Canvas;
-
-            canvas.Clear(SKColor.Empty);
+            //SKImageInfo info = e.Info;
+            //SKSurface surface = e.Surface;
             
+            // Do NOT canvas.Clear(): SKCanvasElement draws onto the shared window canvas, so Clear()
+            // punches a transparent hole through everything beneath it (rendered as black).
+
             SKPaint paint = new SKPaint();
             //paint.IsAntialias = true;
-            var scale = info.Width / (float)ActualWidth;
-            var size = new Size(info.Width, info.Height);
+            var scale = (float)(area.Width / ActualWidth);
+            var size = new Size(area.Width, area.Height);
             var borderWidth = 0.0f;
             if (WorkingBorderColor.A > 0 && BorderWidth > 0)
-                borderWidth = (float)BorderWidth * scale;
+                borderWidth = (float)(BorderWidth * scale);
             var pointerLength = PointerDirection == PointerDirection.None ? 0 : (float)PointerLength;
             pointerLength *= scale;
             var blurOffset = 0.0f;
@@ -281,9 +283,8 @@ namespace P42.Uno.Controls
             paint.Color = WorkingBackgroundColor.ToSKColor();
 
             if (ApplyBlur)
-            {
                 paint.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, BlurSigma * scale);
-            }
+
             if (paint.Color.Alpha > 0)
                 canvas.DrawPath(path, paint);
 
@@ -310,7 +311,7 @@ namespace P42.Uno.Controls
             float filetRadius,
             [CallerMemberName] string callerMember = null,
             [CallerFilePath] string callerPath = null,
-            [CallerLineNumber] int callerLineNumber = default)
+            [CallerLineNumber] int callerLineNumber = 0)
         {
             if (measuredSize == default)
                 return new SKPath();
@@ -362,7 +363,7 @@ namespace P42.Uno.Controls
             if (pointerLength - filetRadius / 2.0 < tipRadius / 2.0)
                 tipRadius = 2 * (pointerLength - filetRadius / 2.0f);
 
-            var result = new SKPath();
+            var result = new SKPathBuilder();
             if (Math.Abs(pointerPosition) <= 1.0)
             {
                 if(pointerPosition > 0)
@@ -383,16 +384,16 @@ namespace P42.Uno.Controls
             //System.Diagnostics.Debug.WriteLine($"SkiaBubble.GeneratePath : pointerPosition [{pointerPosition}]");
 
             const float sqrt3 = 1.732050807568877f;
-            const float sqrt3d2 = 0.86602540378444f;
+            const float sqrt3D2 = 0.86602540378444f;
 
-            var tipCornerHalfWidth = tipRadius * sqrt3d2;
+            var tipCornerHalfWidth = tipRadius * sqrt3D2;
             var pointerToCornerIntercept = Math.Sqrt((2 * cornerRadius * Math.Sin(Math.PI / 12.0f)) * (2 * cornerRadius * Math.Sin(Math.PI / 12.0f)) - (cornerRadius * cornerRadius / 4.0f));
 
             var pointerAtLimitSansTipHalfWidth = pointerToCornerIntercept + cornerRadius / (2.0f * sqrt3) + (pointerLength - tipRadius / 2.0f) / sqrt3;
-            var pointerAtLimitHalfWidth = pointerAtLimitSansTipHalfWidth + tipRadius * sqrt3d2;
+            var pointerAtLimitHalfWidth = pointerAtLimitSansTipHalfWidth + tipRadius * sqrt3D2;
 
             var pointerSansFiletHalfWidth = tipCornerHalfWidth + (pointerLength - filetRadius / 2.0f - tipRadius / 2.0f) / sqrt3;
-            var pointerFiletWidth = filetRadius * sqrt3d2;
+            var pointerFiletWidth = filetRadius * sqrt3D2;
             var pointerAndFiletHalfWidth = pointerSansFiletHalfWidth + pointerFiletWidth;
 
             var dir = 1;
@@ -418,8 +419,8 @@ namespace P42.Uno.Controls
                 }
                 //var baseX = start + dir * pointerLength;
 
-                var tipY = Math.Min(pointerPosition, bottom - tipRadius * sqrt3d2);
-                tipY = Math.Max(tipY, top + tipRadius * sqrt3d2);
+                var tipY = Math.Min(pointerPosition, bottom - tipRadius * sqrt3D2);
+                tipY = Math.Max(tipY, top + tipRadius * sqrt3D2);
                 if (height <= 2 * pointerAtLimitHalfWidth)
                     tipY = (top + bottom) / 2.0f;
                 result.MoveTo(start + dir * (pointerLength + cornerRadius), top);
@@ -441,7 +442,7 @@ namespace P42.Uno.Controls
                     result.CubicTo(
                         start + dir * (pointerLength + cornerRadius - endRatio * 4 * cornerRadius / 3.0f),
                         bottom,
-                        start + dir * (pointerLength - filetRadius / 2.0f + filetRadius * sqrt3d2),
+                        start + dir * (pointerLength - filetRadius / 2.0f + filetRadius * sqrt3D2),
                         Math.Min(tipY + pointerSansFiletHalfWidth + filetRadius / 2.0f, bottom),
                         start + dir * (pointerLength - filetRadius / 2.0f),
                         Math.Min(tipY + pointerSansFiletHalfWidth, bottom));
@@ -470,7 +471,7 @@ namespace P42.Uno.Controls
                 {
                     var startRatio = tipY / (pointerAndFiletHalfWidth + cornerRadius);
                     result.CubicTo(
-                        start + dir * (pointerLength - filetRadius / 2.0f + filetRadius * sqrt3d2),
+                        start + dir * (pointerLength - filetRadius / 2.0f + filetRadius * sqrt3D2),
                         Math.Max(tipY - pointerSansFiletHalfWidth - filetRadius / 2.0f, top),
                         start + dir * (pointerLength + cornerRadius - startRatio * 4 * cornerRadius / 3.0f),
                         top,
@@ -488,12 +489,12 @@ namespace P42.Uno.Controls
                         top + cornerRadius,
                         cornerRadius, 90 + dir * 90, dir * 90);
                 }
-
+    
                 if (dir > 0)
                 {
-                    var reverse = new SKPath();
-                    reverse.AddPathReverse(result);
-                    return reverse;
+                    var reverse = new SKPathBuilder();
+                    reverse.ReverseAddPath(result.Detach());
+                    result = reverse;
                 }
             }
             else
@@ -506,8 +507,8 @@ namespace P42.Uno.Controls
                     start = bottom;
                     end = top;
                 }
-                var tipX = Math.Min(pointerPosition, (right - tipRadius * sqrt3d2));     // 1
-                tipX = Math.Max(tipX, left + tipRadius * sqrt3d2);                               // 1
+                var tipX = Math.Min(pointerPosition, (right - tipRadius * sqrt3D2));     // 1
+                tipX = Math.Max(tipX, left + tipRadius * sqrt3D2);                               // 1
                 if (width <= 2 * pointerAtLimitHalfWidth)
                     tipX = (left + right) / 2.0f;   // 8
                 result.MoveTo(left, start + dir * (pointerLength + cornerRadius));
@@ -531,7 +532,7 @@ namespace P42.Uno.Controls
                         right,
                         start + dir * (pointerLength + cornerRadius - endRatio * 4 * cornerRadius / 3.0f),
                         Math.Min(tipX + pointerSansFiletHalfWidth + filetRadius / 2.0f, right),
-                        start + dir * (pointerLength - filetRadius / 2.0f + filetRadius * sqrt3d2),   //3
+                        start + dir * (pointerLength - filetRadius / 2.0f + filetRadius * sqrt3D2),   //3
                         Math.Min(tipX + pointerSansFiletHalfWidth, right),
                         start + dir * (pointerLength - filetRadius / 2.0f)                                                 // 3
                         );
@@ -565,7 +566,7 @@ namespace P42.Uno.Controls
                     var startRatio = tipX / (pointerAndFiletHalfWidth + cornerRadius);
                     result.CubicTo(
                             Math.Max(tipX - pointerSansFiletHalfWidth - filetRadius / 2.0f, left), //6
-                            start + dir * (pointerLength - filetRadius / 2.0f + filetRadius * sqrt3d2),
+                            start + dir * (pointerLength - filetRadius / 2.0f + filetRadius * sqrt3D2),
                             left,
                             start + dir * (pointerLength + cornerRadius - startRatio * 4 * cornerRadius / 3.0f),
                             left,
@@ -585,12 +586,12 @@ namespace P42.Uno.Controls
                 }
                 if (dir < 0)
                 {
-                    var reverse = new SKPath();
-                    reverse.AddPathReverse(result);
-                    return reverse;
+                    var reverse = new SKPathBuilder();
+                    reverse.ReverseAddPath(result.Detach());
+                    result = reverse;
                 }
             }
-            return result;
+            return result.Detach();
         }
 
 

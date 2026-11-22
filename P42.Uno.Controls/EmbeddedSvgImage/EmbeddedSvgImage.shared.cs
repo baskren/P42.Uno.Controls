@@ -1,37 +1,34 @@
 using SkiaSharp;
 using System;
 using System.IO;
-using System.Net;
 using System.Reflection;
 using Windows.Foundation;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
-using SkiaSharp.Views.Windows;
 using P42.Uno.Markup;
-using Svg;
 using System.Net.Http;
 using System.Threading.Tasks;
 using P42.Utils;
+using Uno.WinUI.Graphics2DSK;
 
 namespace P42.Uno.Controls;
 
 [Microsoft.UI.Xaml.Data.Bindable]
 //[System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
-public partial class EmbeddedSvgImage : SKXamlCanvas
+public partial class EmbeddedSvgImage : SKCanvasElement
 {
     #region Properties
 
     #region Stretch Property
     public static readonly DependencyProperty StretchProperty = DependencyProperty.Register(
         nameof(Stretch),
-        typeof(Stretch),
+        typeof(Microsoft.UI.Xaml.Media.Stretch),
         typeof(EmbeddedSvgImage),
         new PropertyMetadata(Microsoft.UI.Xaml.Media.Stretch.Uniform)
     );
-    public Stretch Stretch
+    public Microsoft.UI.Xaml.Media.Stretch Stretch
     {
-        get => (Stretch)GetValue(StretchProperty);
+        get => (Microsoft.UI.Xaml.Media.Stretch)GetValue(StretchProperty);
         set => SetValue(StretchProperty, value);
     }
     #endregion Stretch Property
@@ -45,10 +42,10 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
     private Svg.Skia.SKSvg _skSvg;
     //private SkiaSharp.Extended.Svg.SKSvg _skSvg;
     private double _canvasAspect = 1.0;
-    private float _canvasWidth = 0;
-    private float _canvasHeight = 0;
+    private float _canvasWidth;
+    private float _canvasHeight;
 
-    private HttpClient _httpClient = new();
+    private readonly HttpClient _httpClient = new();
     #endregion
 
 
@@ -56,13 +53,6 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
     public EmbeddedSvgImage()
     {
         Background = Colors.Transparent.ToBrush();
-        PaintSurface += OnPaintSurface;
-        //MinHeight = 20;
-        //MinWidth = 20;
-//#if __IOS__
-//        Opaque = false;
-//#endif
-
     }
 
     public EmbeddedSvgImage(string resourceId, Assembly assembly = null) : this()
@@ -90,7 +80,7 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
             return;
         }
             
-        assembly = assembly ?? P42.Utils.Uno.EmbeddedResourceExtensions.FindAssemblyForResourceId(resourceId);
+        assembly ??= P42.Utils.Uno.EmbeddedResourceExtensions.FindAssemblyForResourceId(resourceId);
         if (assembly == null)
             return;
 
@@ -189,74 +179,74 @@ public partial class EmbeddedSvgImage : SKXamlCanvas
     #endregion
     
     
-    private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
+    //private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
+    protected override void RenderOverride(SKCanvas canvas, Size area)
     {
-        if (e?.Surface?.Canvas is not SKCanvas workingCanvas)
+        // Do NOT canvas.Clear(): SKCanvasElement draws onto the shared window canvas, so Clear()
+        // punches a transparent hole through everything beneath it (rendered as black).
+        if (_skSvg?.Picture is not { } picture)
             return;
+        canvas.Save();
 
-        workingCanvas.Clear();
-        if (_skSvg?.Picture is not SKPicture picture)
-            return;
-        workingCanvas.Save();
-
-        var fillRect = e.Info.Rect;
-        var fillRectAspect = (float)fillRect.Width / (float)fillRect.Height;
+        //var fillRect = area; //e.Info.Rect;
+        var fillRectAspect = (float)area.Width / (float)area.Height;
         
         // System.Diagnostics.Debug.WriteLine($"{nameof(EmbeddedSvgImage)}.OnPaintSurface");
         // System.Diagnostics.Debug.WriteLine($"\t fillRect:[{fillRect.Width}x{fillRect.Height}] aspect: {fillRectAspect}  Stretch:[{Stretch}]");
 
         //if (_skSvg.CanvasSize.Width <= 0 || _skSvg.CanvasSize.Height <= 0)
-        if (_skSvg.Drawable.Bounds.Width <= 0 || _skSvg.Drawable.Bounds.Height <= 0)
+        if (_skSvg?.SourceDocument?.Width.Value <= 0 || _skSvg?.SourceDocument?.Height.Value <= 0)
+        //if (_skSvg.Drawable.Bounds.Width <= 0 || _skSvg.Drawable.Bounds.Height <= 0)
         {
             Console.WriteLine("Cannot tile, scale or justify an SVG image with zero or negative Width or Height. Verify, in the SVG source, that the x, y, width, height, and viewBox attributes of the <SVG> tag are present and set correctly.");
         }
-        else if (Stretch == Stretch.UniformToFill)
+        else if (Stretch == Microsoft.UI.Xaml.Media.Stretch.UniformToFill)
         {
             var scale = _canvasAspect > fillRectAspect
                 // ? fillRect.Height / _skSvg.CanvasSize.Height 
                 // : fillRect.Width / _skSvg.CanvasSize.Width;
-                ? fillRect.Height / _canvasHeight
-                : fillRect.Width / _canvasWidth;
+                ? (float)(area.Height / _canvasHeight)
+                : (float)(area.Width / _canvasWidth);
             //System.Diagnostics.Debug.WriteLine($"\t scale:[{scale}]");
-            workingCanvas.Scale(scale, scale);
+            canvas.Scale(scale, scale);
         }
-        else if (Stretch == Stretch.Uniform)
+        else if (Stretch == Microsoft.UI.Xaml.Media.Stretch.Uniform)
         {
             var scale = _canvasAspect > fillRectAspect
                 // ? fillRect.Width / _skSvg.CanvasSize.Width 
                 // : fillRect.Height / _skSvg.CanvasSize.Height;
-                ? fillRect.Width / _canvasWidth
-                : fillRect.Height / _canvasHeight;
+                ? (float)(area.Width / _canvasWidth)
+                : (float)(area.Height / _canvasHeight);
             //System.Diagnostics.Debug.WriteLine($"\t scale:[{scale}]");
-            workingCanvas.Scale(scale, scale);
+            canvas.Scale(scale, scale);
         }
-        else if (Stretch == Stretch.Fill)
+        else if (Stretch == Microsoft.UI.Xaml.Media.Stretch.Fill)
         {
             // var scaleX = fillRect.Width / _skSvg.CanvasSize.Width;
             // var scaleY = fillRect.Height / _skSvg.CanvasSize.Height;
-            var scaleX = fillRect.Width / _canvasWidth;
-            var scaleY = fillRect.Height / _canvasHeight;
-            workingCanvas.Scale(scaleX, scaleY);
+            var scaleX = (float)(area.Width / _canvasWidth);
+            var scaleY = (float)(area.Height / _canvasHeight);
+            canvas.Scale(scaleX, scaleY);
         }
 
 
-        if (Opacity < 1.0 && Opacity >= 0)
+        if (Opacity is < 1.0 and >= 0)
         {
             var alpha = (byte)(Opacity * 255);
             var transparency = SKColors.White.WithAlpha(alpha); 
             var paint = new SKPaint { ColorFilter = SKColorFilter.CreateBlendMode(transparency, SKBlendMode.DstIn) };
-            workingCanvas.DrawPicture(picture, paint);
+            canvas.DrawPicture(picture, paint);
         }
         else
-            workingCanvas.DrawPicture(picture);
+            canvas.DrawPicture(picture);
 
-        workingCanvas.Restore();
+        canvas.Restore();
     }
 
     
     protected override Size MeasureOverride(Size availableSize)
     {
-        if (_skSvg?.Picture is not SKPicture)
+        if (_skSvg?.Picture is null)
             return new Size(MinWidth, MinHeight);
         
         

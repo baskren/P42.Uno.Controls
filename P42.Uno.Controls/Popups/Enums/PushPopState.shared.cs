@@ -1,11 +1,10 @@
-﻿namespace P42.Uno.Controls
-{
-    public enum PushPopState
+﻿namespace P42.Uno.Controls;
 
-    {
-        Popped,
-        Pushing,
-        Pushed,
-        Popping,
-    }
+public enum PushPopState
+
+{
+    Popped,
+    Pushing,
+    Pushed,
+    Popping,
 }

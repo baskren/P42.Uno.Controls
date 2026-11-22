@@ -16,45 +16,44 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace P42.Uno.Controls
+namespace P42.Uno.Controls;
+
+/// <summary>
+/// String to FlexDirection type converter
+/// </summary>
+internal class FlexDirectionTypeConverter : TypeConverter
 {
-    /// <summary>
-    /// String to FlexDirection type converter
-    /// </summary>
-    internal class FlexDirectionTypeConverter : TypeConverter
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
     {
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        if (sourceType == typeof(string))
         {
-            if (sourceType == typeof(string))
-            {
-                return true;
-            }
-
-            return base.CanConvertFrom(context, sourceType);
+            return true;
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        return base.CanConvertFrom(context, sourceType);
+    }
+
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+    {
+        if (value is string stringValue)
         {
-            if (value is string stringValue)
+            if (Enum.TryParse(stringValue, true, out FlexDirection aligncontent))
             {
-                if (Enum.TryParse(stringValue, true, out FlexDirection aligncontent))
-                {
-                    return aligncontent;
-                }
-
-                if (stringValue.Equals("row-reverse", StringComparison.OrdinalIgnoreCase))
-                {
-                    return FlexDirection.RowReverse;
-                }
-
-                if (stringValue.Equals("column-reverse", StringComparison.OrdinalIgnoreCase))
-                {
-                    return FlexDirection.ColumnReverse;
-                }
+                return aligncontent;
             }
 
-            ThrowHelper.ThrowInvalidOperationException(string.Format("Cannot convert \"{0}\" into {1}", value, typeof(FlexDirection)));
-            return null;
+            if (stringValue.Equals("row-reverse", StringComparison.OrdinalIgnoreCase))
+            {
+                return FlexDirection.RowReverse;
+            }
+
+            if (stringValue.Equals("column-reverse", StringComparison.OrdinalIgnoreCase))
+            {
+                return FlexDirection.ColumnReverse;
+            }
         }
+
+        ThrowHelper.ThrowInvalidOperationException(string.Format("Cannot convert \"{0}\" into {1}", value, typeof(FlexDirection)));
+        return null;
     }
 }

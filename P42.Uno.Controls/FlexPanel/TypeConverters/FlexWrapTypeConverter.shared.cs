@@ -16,40 +16,39 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace P42.Uno.Controls
+namespace P42.Uno.Controls;
+
+/// <summary>
+/// String to FlexWrap type converter
+/// </summary>
+internal class FlexWrapTypeConverter : TypeConverter
 {
-    /// <summary>
-    /// String to FlexWrap type converter
-    /// </summary>
-    internal class FlexWrapTypeConverter : TypeConverter
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
     {
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        if (sourceType == typeof(string))
         {
-            if (sourceType == typeof(string))
-            {
-                return true;
-            }
-
-            return base.CanConvertFrom(context, sourceType);
+            return true;
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-        {
-            if (value is string stringValue)
-            {
-                if (Enum.TryParse(stringValue, true, out FlexWrap wrap))
-                {
-                    return wrap;
-                }
+        return base.CanConvertFrom(context, sourceType);
+    }
 
-                if (stringValue.Equals("wrap-reverse", StringComparison.OrdinalIgnoreCase))
-                {
-                    return FlexWrap.Reverse;
-                }
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+    {
+        if (value is string stringValue)
+        {
+            if (Enum.TryParse(stringValue, true, out FlexWrap wrap))
+            {
+                return wrap;
             }
 
-            ThrowHelper.ThrowInvalidOperationException(string.Format("Cannot convert \"{0}\" into {1}", value, typeof(FlexWrap)));
-            return null;
+            if (stringValue.Equals("wrap-reverse", StringComparison.OrdinalIgnoreCase))
+            {
+                return FlexWrap.Reverse;
+            }
         }
+
+        ThrowHelper.ThrowInvalidOperationException(string.Format("Cannot convert \"{0}\" into {1}", value, typeof(FlexWrap)));
+        return null;
     }
 }

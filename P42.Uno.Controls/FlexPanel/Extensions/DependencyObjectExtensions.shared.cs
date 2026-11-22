@@ -10,17 +10,16 @@
 
 using Microsoft.UI.Xaml;
 
-namespace P42.Uno.Controls.InternalFlexPanelExtensions
+namespace P42.Uno.Controls.InternalFlexPanelExtensions;
+
+internal static class DependencyObjectExtensions
 {
-    internal static class DependencyObjectExtensions
+    public static void SetNewValue(this DependencyObject obj, DependencyProperty dp, object value)
     {
-        public static void SetNewValue(this DependencyObject obj, DependencyProperty dp, object value)
+        var currentValue = obj.GetValue(dp);
+        if ((currentValue is null && !(value is null)) || !currentValue.Equals(value))
         {
-            var currentValue = obj.GetValue(dp);
-            if ((currentValue is null && !(value is null)) || !currentValue.Equals(value))
-            {
-                obj.SetValue(dp, value);
-            }
+            obj.SetValue(dp, value);
         }
     }
 }

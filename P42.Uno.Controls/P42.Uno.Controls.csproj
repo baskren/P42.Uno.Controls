@@ -3,18 +3,18 @@
 
   <PropertyGroup>
      <TargetFrameworks>
-       net10.0;
-       net10.0-ios;
-       net10.0-android
+       net11.0;
+       net11.0-ios;
+       net11.0-android
      </TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) or '$(EnableWindowsTargeting)' == 'true'">
       $(TargetFrameworks);
-      net10.0-windows10.0.26100
+      net11.0-windows10.0.26100
     </TargetFrameworks>
     <TargetFrameworks>
       $(TargetFrameworks);
-      net10.0-browserwasm;
-      net10.0-desktop;
+      net11.0-browserwasm;
+      net11.0-desktop;
     </TargetFrameworks>
     <UnoSingleProject>true</UnoSingleProject>
     <OutputType>Library</OutputType>
@@ -31,10 +31,10 @@
     <UnoFeatures>
       Lottie;
       Skia;
-      SkiaRenderer;
       $(UnoFeatures)
     </UnoFeatures>
 
+    <UnoEnableSkiaOnWinAppSdk>true</UnoEnableSkiaOnWinAppSdk>
 
     <BuildInParallel>true</BuildInParallel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -65,6 +65,12 @@
 
   <ItemGroup>
     <None Include="HapticPlayer\NativeHapticPlayer.wasm.x.cs" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="11.0.100" />
+    <PackageReference Update="Svg.Skia" Version="5.2.3" />
   </ItemGroup>
 
 
