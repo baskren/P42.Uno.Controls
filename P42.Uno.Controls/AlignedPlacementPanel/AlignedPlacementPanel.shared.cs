@@ -54,7 +54,6 @@ public partial class AlignedPlacementPanel : Panel
 
     public AlignedPlacementPanel()
     {
-        //Background = SystemColors.BaseLow.ToBrush();
         Children.Add(_moreButton);
         _moreButton.Click += OnMoreButtonClicked;
     }

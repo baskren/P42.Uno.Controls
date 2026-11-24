@@ -62,8 +62,6 @@ public partial class ContentAndDetailPresenter : Grid
             ;
 
         PageOverlayBrush = Colors.Black.WithAlpha(0.01).ToBrush();
-            
-
     }
 
 
