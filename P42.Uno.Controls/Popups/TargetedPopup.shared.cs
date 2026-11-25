@@ -1213,6 +1213,16 @@ public partial class TargetedPopup : ITargetedPopup
 
     void SetAlignmentMarginsAndPointer(AlignmentMarginsAndPointer value, Size bubbleSize = default)
     {
+#if __IOS__ || __MACCATALYST__
+        // UpdateMarginAndAlignment runs on every frame SizeChanged while pushed; only force a re-measure
+        // when the placement actually changes (changed values invalidate on their own anyway).
+        var placementChanged =
+            ContentBorder.HorizontalAlignment != value.HorizontalAlignment
+            || ContentBorder.VerticalAlignment != value.VerticalAlignment
+            || ContentBorder.Margin != value.Margin
+            || ContentBorder.PointerDirection != value.PointerDirection
+            || ContentBorder.PointerAxialPosition != value.PointerAxialPosition;
+#endif
         ContentBorder.HorizontalAlignment = ShadowBorder.HorizontalAlignment = value.HorizontalAlignment;
         ContentBorder.VerticalAlignment = ShadowBorder.VerticalAlignment = value.VerticalAlignment;
         ShadowBorder.Margin = value.Margin.Subtract(ShadowBorder.BlurSigma * 2);
@@ -1222,7 +1232,8 @@ public partial class TargetedPopup : ITargetedPopup
         ShadowBorder.PointerAxialPosition = ContentBorder.PointerAxialPosition + ShadowBorder.BlurSigma * 2;
 
 #if __IOS__ || __MACCATALYST__
-        ContentBorder.InvalidateMeasure();
+        if (placementChanged)
+            ContentBorder.InvalidateMeasure();
 #endif
 
 #if __ANDROID__ && !HAS_UNO_SKIA

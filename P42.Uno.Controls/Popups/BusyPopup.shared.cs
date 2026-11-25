@@ -110,12 +110,6 @@ public partial class BusyPopup : Toast
 
 
 
-    protected override void OnPushPopStateChanged(DependencyPropertyChangedEventArgs e)
-    {
-        base.OnPushPopStateChanged(e);
-        ProgressRing.IsActive = PushPopState == PushPopState.Pushed;
-    }
-
     protected override void OnTitleChanged(DependencyPropertyChangedEventArgs args)
     {
         base.OnTitleChanged(args);

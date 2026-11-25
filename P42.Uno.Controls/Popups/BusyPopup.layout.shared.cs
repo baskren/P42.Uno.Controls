@@ -28,6 +28,8 @@ public partial class BusyPopup : Toast
                 return;
 #endif
             
+        // Sole driver of IsActive (IsPushed == PushPopState is Pushed). A local IsActive set in
+        // OnPushPopStateChanged used to duplicate this and, on first use, silently replaced the binding.
         ProgressRing.WBind(ProgressRing.IsActiveProperty, this, IsPushedProperty);
         _bubbleContentGrid.Children.Add(ProgressRing);
     }
