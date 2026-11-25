@@ -11,6 +11,7 @@ using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
 
 namespace P42.Uno.Controls;
@@ -73,7 +74,13 @@ public partial class SegmentedControl : UserControl
             // System.Diagnostics.Debug.WriteLine($"SegmentedContro[{control._instance}] OnLabelsChanged : --C-- Labels=[{string.Join(",",control.Labels)}]  SELECTEDINDEXES=[{string.Join(",",control.SelectedIndexes)}] SelectedLabel=[{control.SelectedLabel}]");
             if (args.NewValue is ObservableCollection<string> newCollection)
                 newCollection.CollectionChanged += control.Labels_CollectionChanged;
-            control.Labels_CollectionChanged(null, null);
+
+            // Recalculate overflow here (and only when the label text actually differs); the single
+            // UpdateChildren() below rebuilds. Previously Labels_CollectionChanged(null, null) ran
+            // UpdateChildren() and then it was run a second time below.
+            var sameLabels = args.OldValue is IList<string> oldList && oldList.SequenceEqual(newList);
+            if (control.IsLoaded && !sameLabels)
+                control.IsOverflowed = control.CalculateOverflow(control.ActualSize.X);
         }
         else
         {
@@ -347,6 +354,8 @@ public partial class SegmentedControl : UserControl
 #endif
         RegisterPropertyChangedCallback(UserControl.IsEnabledProperty, OnIsEnabledChanged);
         RegisterPropertyChangedCallback(UserControl.VisibilityProperty, OnSegmentControlVisibilityChanged);
+        // segment/separator colors derive from BorderBrush, but are set locally, so re-apply them when it changes
+        RegisterPropertyChangedCallback(UserControl.BorderBrushProperty, (_, _) => DisplaySelections());
 
         _grid.WBind(Grid.CornerRadiusProperty, this, CornerRadiusProperty);
         _grid.WBind(Grid.BorderBrushProperty, this, BorderBrushProperty);
@@ -481,8 +490,7 @@ public partial class SegmentedControl : UserControl
         if (!IsLoaded)
             return;
 
-        for (var i = 0; i < Labels.Count; i++)
-            UpdateElementColors(i);
+        DisplaySelections();
     }
 
     private void OnSegmentTapped(object sender, TappedRoutedEventArgs e)
@@ -525,7 +533,7 @@ public partial class SegmentedControl : UserControl
         UpdateElementColors(index);
     }
 
-    private void UpdateElementColors(int index)
+    private void UpdateElementColors(int index, List<int> selectedIndexes = null)
     {
         if (index < 0 || index >= Labels.Count || index >= _textBlocks.Count || index >= _backgrounds.Count)
             return;
@@ -533,33 +541,27 @@ public partial class SegmentedControl : UserControl
         if (_tapProcessing == index)
             return;
 
-        var selected = SelectedIndexes.Contains(index);
-        var nextSelected = SelectedIndexes.Contains(index + 1);
+        // SelectedIndexes builds a new list on every get; callers looping over segments pass it in once
+        selectedIndexes ??= SelectedIndexes;
+        var selected = selectedIndexes.Contains(index);
+        var nextSelected = selectedIndexes.Contains(index + 1);
 
-            
-        // if (_instance == 13)
-        //System.Diagnostics.Debug.WriteLine(
-        //    $"\t UpdateElementColors[{_instance}]({index}:{Labels[index]}) Selected:{selected} SelectedIndexes=[{string.Join(",", SelectedIndexes)}]");
-            
-            
-        var background = _backgrounds[index];
-        background.Fill = selected
-            ? BorderBrush.AsGesterableEnabled(IsEnabled) 
-            : SystemToggleButtonBrushes.Background.AsGesterableEnabled(IsEnabled);
+        SetFill(_backgrounds[index], selected
+            ? BorderBrush.AsGesterableEnabled(IsEnabled)
+            : SystemToggleButtonBrushes.Background.AsGesterableEnabled(IsEnabled));
 
-        var textBlock = _textBlocks[index];
-        textBlock.Foreground = selected
+        SetForeground(_textBlocks[index], selected
             ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
-            : Foreground; // SystemToggleButtonBrushes.Foreground.AsGesterableEnabled(IsEnabled);
+            : Foreground); // SystemToggleButtonBrushes.Foreground.AsGesterableEnabled(IsEnabled);
 
         if (index >= _separators.Count)
             return;
 
         var separator = _separators[index];
         separator.Visible(selected == nextSelected);
-        separator.Fill = selected
+        SetFill(separator, selected
             ? SystemToggleButtonBrushes.CheckedForeground.AsGesterableEnabled(IsEnabled)
-            : BorderBrush.AsGesterableEnabled(IsEnabled);
+            : BorderBrush.AsGesterableEnabled(IsEnabled));
     }
 
     private void SetTappedProcessingColors(int index)
@@ -567,28 +569,43 @@ public partial class SegmentedControl : UserControl
         if (index < 0 || index >= _textBlocks.Count)
             return;
 
-        var background = _backgrounds[index];
-        background.Fill = SystemToggleButtonBrushes.BackgroundCheckedPressed;
-        var textBlock = _textBlocks[index];
-        textBlock.Foreground = SystemToggleButtonBrushes.ForegroundCheckedPressed;
+        SetFill(_backgrounds[index], SystemToggleButtonBrushes.BackgroundCheckedPressed);
+        SetForeground(_textBlocks[index], SystemToggleButtonBrushes.ForegroundCheckedPressed);
     }
 
     private void SetHoverOverColors(int index)
     {
         if (index < 0 || index >= _textBlocks.Count)
             return;
- 
+
         var selected = SelectedIndexes.Contains(index);
         if (_tapProcessing == index)
             return;
-        var background = _backgrounds[index];
-        background.Fill = selected
+        SetFill(_backgrounds[index], selected
             ? SystemToggleButtonBrushes.CheckedPointerOverBackground.AssureGesturable()
-            : SystemButtonBrushes.BackgroundPointerOver.AssureGesturable();
-        var textBlock = _textBlocks[index];
-        textBlock.Foreground = selected
+            : SystemButtonBrushes.BackgroundPointerOver.AssureGesturable());
+        SetForeground(_textBlocks[index], selected
             ? SystemToggleButtonBrushes.ForegroundCheckedPointerOver
-            : SystemButtonBrushes.ForegroundPointerOver;
+            : SystemButtonBrushes.ForegroundPointerOver);
+    }
+
+    // The brush helpers (AsGesterableEnabled, AssureGesturable) return a new SolidColorBrush on every call,
+    // and brushes compare by reference, so assigning one always registered as a change and re-rendered
+    // the segment. Only assign when the resulting color actually differs.
+    private static bool IsSameBrush(Brush current, Brush next)
+        => ReferenceEquals(current, next)
+           || (current is SolidColorBrush a && next is SolidColorBrush b && a.Color == b.Color && a.Opacity == b.Opacity);
+
+    private static void SetFill(Shape shape, Brush brush)
+    {
+        if (!IsSameBrush(shape.Fill, brush))
+            shape.Fill = brush;
+    }
+
+    private static void SetForeground(TextBlock textBlock, Brush brush)
+    {
+        if (!IsSameBrush(textBlock.Foreground, brush))
+            textBlock.Foreground = brush;
     }
     #endregion
 
@@ -597,8 +614,9 @@ public partial class SegmentedControl : UserControl
     private int _tapProcessing = int.MinValue;
     private void OnSelectionTracker_SelectionChanged(object sender, CollectionSelectionTrackerSelectionChangedArguments<string> e)
     {
-        // show processing position
-        SetTappedProcessingColors(e.NewIndex);
+        // No "processing" colors here: everything below runs synchronously, so no frame can show them before
+        // DisplaySelections() (at the end) overwrites them, which made every selection recolor twice.
+        // (Taps still show the pressed color via OnSegmentTapped.)
 
         // fire events
         _tapProcessing = _selectionTracker.SelectedIndex;
@@ -630,8 +648,9 @@ public partial class SegmentedControl : UserControl
         }
         */
 
+        var selectedIndexes = SelectedIndexes;
         for (var i=0; i< Labels.Count;i++)
-            UpdateElementColors(i);
+            UpdateElementColors(i, selectedIndexes);
 
         /*
         if (_instance == 13)
@@ -669,6 +688,9 @@ public partial class SegmentedControl : UserControl
         
     private void OnSegmentControlVisibilityChanged(DependencyObject sender, DependencyProperty dp)
     {
+        // nothing to rebuild while hidden; catch up when shown again
+        if (Visibility == Visibility.Collapsed)
+            return;
         UpdateChildren();
     }
 
@@ -715,7 +737,9 @@ public partial class SegmentedControl : UserControl
             .Width(1)
             .StretchVertical().CenterHorizontal()
             .ColumnSpan(2).Column(_separators.Count)
-            .WBind(Shape.FillProperty, this, BorderBrushProperty)
+            // initial value only: UpdateElementColors sets Fill locally (which used to silently replace a binding);
+            // BorderBrush changes are re-applied via the BorderBrush callback in the constructor
+            .Fill(BorderBrush)
         );
 
     private void AddNewBackground()
