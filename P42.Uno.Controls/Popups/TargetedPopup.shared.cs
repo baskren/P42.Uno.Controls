@@ -1002,6 +1002,8 @@ public partial class TargetedPopup : ITargetedPopup
         try
         {
             //System.Diagnostics.Debug.WriteLine("TargetedPopup.InnerPushAsync ======= ");
+            await WaitForTargetReadyAsync();
+            
             UpdateMarginAndAlignment();
 
             UpdateOpacity(0.0);
@@ -1587,6 +1589,17 @@ public partial class TargetedPopup : ITargetedPopup
         return null;
     }
 
+    public async Task WaitForTargetReadyAsync()
+    {
+        if (Target?.GetBounds() is not Rect targetBounds)
+            return;
+        while (targetBounds.Width == 0 || targetBounds.Height == 0)
+        {
+            await Task.Delay(100);
+            targetBounds = Target?.GetBounds() ?? Rect.Empty;
+        }
+    }
+    
     Rect TargetBounds()
     {
         var targetBounds = Target is null ? Rect.Empty : Target.GetBounds();
